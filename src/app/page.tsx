@@ -23,6 +23,7 @@ export default function Home() {
       setMessage(data.result);
     } catch (err) {
       setMessage("お告げの取得に失敗しました…🐾");
+      console.error(err);
     } finally {
       setLoading(false);
     }

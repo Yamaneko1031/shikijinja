@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(req: NextRequest) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function POST(_: NextRequest) {
   const prompt = "あなたは神社の神様です。今日の運勢を一言で教えてください。";
 
   const res = await fetch("https://api.openai.com/v1/chat/completions", {
