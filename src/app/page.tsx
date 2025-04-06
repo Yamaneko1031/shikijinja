@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from "react";
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from "next/image";
 
@@ -9,6 +10,23 @@ export default function Home() {
   const toriiOpacity = useTransform(scrollY, [100, 500], [1, 0]);
   const titleOpacity = useTransform(scrollY, [50, 300], [1, 0]);
 
+  const [message, setMessage] = useState("まだお告げはありません");
+  const [loading, setLoading] = useState(false);
+
+  const fetchOmikuji = async () => {
+    setLoading(true);
+    setMessage("神様と交信中…⛩️");
+
+    try {
+      const res = await fetch("/api/omikuji", { method: "POST" });
+      const data = await res.json();
+      setMessage(data.result);
+    } catch (err) {
+      setMessage("お告げの取得に失敗しました…🐾");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <main className="relative w-full w-full min-h-[200vh] overflow-x-hidden">
@@ -51,10 +69,24 @@ export default function Home() {
         </motion.h1>
       </section>
       
-
+      {/* スクロール後に出てくるコンテンツ */}
+      <section className="relative z-30 w-full text-white text-center py-40">
+        <h2 className="text-2xl sm:text-4xl font-semibold">
+          <button
+            onClick={fetchOmikuji}
+            className={`px-4 py-2 rounded ${
+              loading ? "bg-gray-500 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-700"
+            }`}
+            disabled={loading}
+          >
+            {loading ? "おみくじ引き中…" : "おみくじを引く"}
+          </button>
+          <p className="mt-6 text-center">{message}</p>
+        </h2>
+      </section>
 
       {/* スクロール後に出てくるコンテンツ */}
-      <section className="relative z-30 w-full text-white text-center py-140">
+      <section className="relative z-30 w-full text-white text-center py-40">
         <h2 className="text-2xl sm:text-4xl font-semibold">ようこそ式岐神社へ</h2>
       </section>
       
