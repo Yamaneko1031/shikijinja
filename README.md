@@ -1,36 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 式岐神社
 
-## Getting Started
+## 📖 概要（What is this?）
 
-First, run the development server:
+このプロジェクトは、Next.js + Tailwind CSS を使って構築する仮想IT神社サイトです。  
+ユーザーは「心得」「おみくじ」「神様紹介」などのセクションを体験できます。
+
+## 🧰 使用技術（Tech Stack）
+
+- [Next.js](https://nextjs.org/)
+- [React](https://react.dev/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- WSL2（Ubuntu）+ Cursor + GitHub（開発環境）
+
+
+## 🧙‍♂️ コンセプト／世界観（Optional）
+
+「しきねこ」「彩白」「纏点」という3柱のIT神が祀られるバーチャル神社。  
+現代の開発者にご利益と癒しを与えることを目的に制作中です。
+
+## ✍️ 今後の予定（ToDo）
+
+- トップページ構成（鳥居 → 心得 → 絵馬 → おみくじ → 神様紹介 → 拝殿）
+- キャラクター紹介コンポーネント
+- おみくじの簡易演出
+- 拝殿での「擬似お賽銭」体験（決済なし）
+
+## 🚀 開発環境での起動方法（Getting Started）
 
 ```bash
+git clone https://github.com/Yamaneko1031/shikijinja.git
+cd shikijinja
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+ブラウザで `http://localhost:3000` にアクセス！
