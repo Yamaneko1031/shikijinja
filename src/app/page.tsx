@@ -35,13 +35,14 @@ export default function Home() {
   };
 
   return (
-    <main className="relative w-full bg-[url('/images/bg_tile.webp')] bg-repeat bg-[length:128px_128px] overflow-hidden">
+    <main className="relative w-full overflow-hidden">
       {/* 背景画像：固定 + クロスフェード + イベント無視 */}
       {/* 背景A */}
       <motion.div
         style={{
           opacity: bg1Opacity,
           height: '100lvh',
+          transform: 'translateZ(0.01px)',
         }}
         className="fixed top-0 left-0 w-full pointer-events-none z-100"
       >
@@ -53,6 +54,7 @@ export default function Home() {
         style={{
           opacity: bg2Opacity,
           height: '100lvh',
+          transform: 'translateZ(0.01px)',
         }}
         className="fixed top-0 left-0 w-full pointer-events-none z-90"
       >
