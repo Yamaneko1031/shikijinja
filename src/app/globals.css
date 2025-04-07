@@ -34,3 +34,7 @@ body {
 .font-fude {
   font-family: 'KouzanMouhitu', serif !important;
 }
+
+:root {
+  --vh: 1vh; /* もしJSが動かないときのフォールバック */
+}
