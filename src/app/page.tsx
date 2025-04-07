@@ -40,9 +40,15 @@ export default function Home() {
       document.documentElement.style.setProperty('--vh', `${vh}px`);
     };
 
-    setVh(); // 初期実行
-    window.addEventListener('resize', setVh); // 画面回転などにも対応
-    return () => window.removeEventListener('resize', setVh);
+    // 初回だけセット
+    setVh();
+
+    const handleOrientationChange = () => {
+      setTimeout(setVh, 100); // iOS対策にちょっと遅延させる
+    };
+
+    window.addEventListener('orientationchange', handleOrientationChange);
+    return () => window.removeEventListener('orientationchange', handleOrientationChange);
   }, []);
 
   return (
