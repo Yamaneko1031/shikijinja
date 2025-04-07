@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import FadeInSection from './components/FadeInSection';
@@ -34,44 +34,29 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
-    const setVh = () => {
-      const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--vh', `${vh}px`);
-    };
-
-    // 初回だけセット
-    setVh();
-
-    const handleOrientationChange = () => {
-      setTimeout(setVh, 100); // iOS対策にちょっと遅延させる
-    };
-
-    window.addEventListener('orientationchange', handleOrientationChange);
-    return () => window.removeEventListener('orientationchange', handleOrientationChange);
-  }, []);
-
   return (
     <main className="relative w-full overflow-hidden">
       {/* 背景画像：固定 + クロスフェード + イベント無視 */}
+      {/* 背景A */}
       <motion.div
         style={{
           opacity: bg1Opacity,
-          height: 'calc(var(--vh, 1vh) * 110)',
+          height: '100lvh',
         }}
-        className="fixed top-0 left-0 w-full z-0 pointer-events-none"
+        className="fixed top-0 left-0 w-full pointer-events-none"
       >
-        <Image src="/images/bg.webp" alt="背景A" fill className="object-cover" />
+        <Image src="/images/bg.webp" alt="背景A" fill className="object-cover" priority />
       </motion.div>
 
+      {/* 背景B */}
       <motion.div
         style={{
           opacity: bg2Opacity,
-          height: 'calc(var(--vh, 1vh) * 110)',
+          height: '100lvh',
         }}
-        className="fixed top-0 left-0 w-full z-0 pointer-events-none"
+        className="fixed top-0 left-0 w-full pointer-events-none"
       >
-        <Image src="/images/sando.webp" alt="背景B" fill className="object-cover" />
+        <Image src="/images/sando.webp" alt="背景B" fill className="object-cover" priority />
       </motion.div>
 
       {/* 通常のコンテンツセクション群 */}
