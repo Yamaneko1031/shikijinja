@@ -35,7 +35,7 @@ export default function Home() {
   };
 
   return (
-    <main className="relative w-full overflow-hidden">
+    <main className="relative w-full bg-[#1a2d26] overflow-hidden">
       {/* 背景画像：固定 + クロスフェード + イベント無視 */}
       {/* 背景A */}
       <motion.div
