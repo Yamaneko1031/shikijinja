@@ -57,7 +57,7 @@ export default function Home() {
       <motion.div
         style={{
           opacity: bg1Opacity,
-          height: 'calc(var(--vh, 1vh) * 105)',
+          height: 'calc(var(--vh, 1vh) * 110)',
         }}
         className="fixed top-0 left-0 w-full z-0 pointer-events-none"
       >
@@ -67,7 +67,7 @@ export default function Home() {
       <motion.div
         style={{
           opacity: bg2Opacity,
-          height: 'calc(var(--vh, 1vh) * 105)',
+          height: 'calc(var(--vh, 1vh) * 110)',
         }}
         className="fixed top-0 left-0 w-full z-0 pointer-events-none"
       >
