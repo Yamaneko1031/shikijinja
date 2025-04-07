@@ -12,7 +12,6 @@
 - [Tailwind CSS](https://tailwindcss.com/)
 - WSL2（Ubuntu）+ Cursor + GitHub（開発環境）
 
-
 ## 🧙‍♂️ コンセプト／世界観（Optional）
 
 「しきねこ」「彩白」「纏点」という3柱のIT神が祀られるバーチャル神社。  
