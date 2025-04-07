@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import Image from "next/image";
+import Image from 'next/image';
 
 export default function Home() {
   const { scrollY } = useScroll();
@@ -10,19 +10,19 @@ export default function Home() {
   const toriiOpacity = useTransform(scrollY, [100, 500], [1, 0]);
   const titleOpacity = useTransform(scrollY, [50, 300], [1, 0]);
 
-  const [message, setMessage] = useState("まだお告げはありません");
+  const [message, setMessage] = useState('まだお告げはありません');
   const [loading, setLoading] = useState(false);
 
   const fetchOmikuji = async () => {
     setLoading(true);
-    setMessage("神様と交信中…⛩️");
+    setMessage('神様と交信中…⛩️');
 
     try {
-      const res = await fetch("/api/omikuji", { method: "POST" });
+      const res = await fetch('/api/omikuji', { method: 'POST' });
       const data = await res.json();
       setMessage(data.result);
     } catch (err) {
-      setMessage("お告げの取得に失敗しました…🐾");
+      setMessage('お告げの取得に失敗しました…🐾');
       console.error(err);
     } finally {
       setLoading(false);
@@ -33,13 +33,7 @@ export default function Home() {
     <main className="relative w-full w-full min-h-[200vh] overflow-x-hidden">
       {/* 背景画像 */}
       <div className="fixed inset-0 z-0">
-        <Image
-          src="/images/bg.webp"
-          alt="背景"
-          fill
-          className="object-cover"
-          priority
-        />
+        <Image src="/images/bg.webp" alt="背景" fill className="object-cover" priority />
       </div>
 
       <section className="relative w-full h-[100vh] z-30">
@@ -56,7 +50,7 @@ export default function Home() {
           <Image
             src="/images/torii.webp"
             alt="式岐神社の鳥居"
-            fill
+            fill={true}
             className="object-contain"
           />
         </motion.div>
@@ -69,18 +63,18 @@ export default function Home() {
           式岐神社
         </motion.h1>
       </section>
-      
+
       {/* スクロール後に出てくるコンテンツ */}
       <section className="relative z-30 w-full text-white text-center py-40">
         <h2 className="text-2xl sm:text-4xl font-semibold">
           <button
             onClick={fetchOmikuji}
             className={`px-4 py-2 rounded ${
-              loading ? "bg-gray-500 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-700"
+              loading ? 'bg-gray-500 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'
             }`}
             disabled={loading}
           >
-            {loading ? "おみくじ引き中…" : "おみくじを引く"}
+            {loading ? 'おみくじ引き中…' : 'おみくじを引く'}
           </button>
           <p className="mt-6 text-center">{message}</p>
         </h2>
@@ -90,7 +84,6 @@ export default function Home() {
       <section className="relative z-30 w-full text-white text-center py-40">
         <h2 className="text-2xl sm:text-4xl font-semibold">ようこそ式岐神社へ</h2>
       </section>
-      
 
       {/* <section id="kokoroe">
         <div>心得</div>
