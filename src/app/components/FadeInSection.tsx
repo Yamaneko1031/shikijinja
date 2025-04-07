@@ -10,7 +10,7 @@ export default function FadeInSection({ children }: { children: ReactNode }) {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: 'easeOut' }}
       viewport={{ once: true, amount: 0.2 }}
-      className="relative z-30 w-full text-white text-center py-120"
+      className="relative z-1000 w-full text-white text-center py-120"
     >
       {children}
     </motion.section>

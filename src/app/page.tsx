@@ -9,7 +9,7 @@ export default function Home() {
   const { scrollY } = useScroll();
 
   const bg1Opacity = useTransform(scrollY, [250, 800], [1, 0]);
-  const bg2Opacity = useTransform(scrollY, [250, 800], [0, 1]);
+  const bg2Opacity = useTransform(scrollY, [250, 800], [1, 1]);
 
   const toriiScale = useTransform(scrollY, [0, 500], [1, 4.0]);
   const toriiOpacity = useTransform(scrollY, [100, 500], [1, 0]);
@@ -35,7 +35,7 @@ export default function Home() {
   };
 
   return (
-    <main className="relative w-full bg-[#1a2d26] overflow-hidden">
+    <main className="relative w-full bg-[url('/images/bg_tile.webp')] bg-repeat bg-[length:128px_128px] overflow-hidden">
       {/* 背景画像：固定 + クロスフェード + イベント無視 */}
       {/* 背景A */}
       <motion.div
@@ -43,7 +43,7 @@ export default function Home() {
           opacity: bg1Opacity,
           height: '100lvh',
         }}
-        className="fixed top-0 left-0 w-full pointer-events-none"
+        className="fixed top-0 left-0 w-full pointer-events-none z-100"
       >
         <Image src="/images/bg.webp" alt="背景A" fill className="object-cover" priority />
       </motion.div>
@@ -54,13 +54,13 @@ export default function Home() {
           opacity: bg2Opacity,
           height: '100lvh',
         }}
-        className="fixed top-0 left-0 w-full pointer-events-none"
+        className="fixed top-0 left-0 w-full pointer-events-none z-90"
       >
         <Image src="/images/sando.webp" alt="背景B" fill className="object-cover" priority />
       </motion.div>
 
       {/* 通常のコンテンツセクション群 */}
-      <section className="relative w-full min-h-screen z-30">
+      <section className="relative w-full min-h-screen z-101">
         <motion.div
           className="absolute top-[60%] left-1/2 -translate-x-1/2 -translate-y-1/2"
           style={{
@@ -75,7 +75,7 @@ export default function Home() {
 
         <motion.h1
           style={{ opacity: titleOpacity }}
-          className="absolute top-[40%] left-1/2 -translate-x-1/2 text-white text-4xl sm:text-6xl font-fude font-bold drop-shadow-[0_0_5px_rgba(0,0,0,1)] z-40 pointer-events-none"
+          className="absolute top-[40%] left-1/2 -translate-x-1/2 text-white text-4xl sm:text-6xl font-fude font-bold drop-shadow-[0_0_5px_rgba(0,0,0,1)] z-1000 pointer-events-none"
         >
           式岐神社
         </motion.h1>
