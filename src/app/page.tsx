@@ -3,10 +3,15 @@
 import { useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
+import FadeInSection from './components/FadeInSection';
 
 export default function Home() {
   const { scrollY } = useScroll();
-  const toriiScale = useTransform(scrollY, [0, 500], [1, 4.0]); // スクロール0〜300pxで1倍→1.8倍
+
+  const bg1Opacity = useTransform(scrollY, [250, 800], [1, 0]);
+  const bg2Opacity = useTransform(scrollY, [250, 800], [0, 1]);
+
+  const toriiScale = useTransform(scrollY, [0, 500], [1, 4.0]);
   const toriiOpacity = useTransform(scrollY, [100, 500], [1, 0]);
   const titleOpacity = useTransform(scrollY, [50, 300], [1, 0]);
 
@@ -30,42 +35,59 @@ export default function Home() {
   };
 
   return (
-    <main className="relative w-full w-full min-h-[200vh] overflow-x-hidden">
-      {/* 背景画像 */}
-      <div className="fixed inset-0 z-0">
-        <Image src="/images/bg.webp" alt="背景" fill className="object-cover" priority />
-      </div>
+    <main className="relative w-full overflow-hidden">
+      {/* 背景画像：固定 + クロスフェード + イベント無視 */}
+      <motion.div style={{ opacity: bg1Opacity }} className="fixed inset-0 z-0 pointer-events-none">
+        <Image src="/images/bg.webp" alt="背景A" fill className="object-cover" />
+      </motion.div>
 
-      <section className="relative w-full h-[100vh] z-30">
-        {/* 鳥居だけ拡大 */}
+      <motion.div style={{ opacity: bg2Opacity }} className="fixed inset-0 z-0 pointer-events-none">
+        <Image src="/images/sando.webp" alt="背景B" fill className="object-cover" />
+      </motion.div>
+
+      {/* 通常のコンテンツセクション群 */}
+      <section className="relative w-full min-h-screen z-30">
         <motion.div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+          className="absolute top-[60%] left-1/2 -translate-x-1/2 -translate-y-1/2"
           style={{
             scale: toriiScale,
             opacity: toriiOpacity,
-            width: '70vw',
-            height: 'calc(70vw * 1)',
+            width: '65vw',
+            height: 'calc(65vw * 1)',
           }}
         >
-          <Image
-            src="/images/torii.webp"
-            alt="式岐神社の鳥居"
-            fill={true}
-            className="object-contain"
-          />
+          <Image src="/images/torii.webp" alt="式岐神社の鳥居" fill className="object-contain" />
         </motion.div>
 
-        {/* テキスト：拡大しない・位置は鳥居に合わせて */}
         <motion.h1
           style={{ opacity: titleOpacity }}
-          className="absolute top-[30%] left-1/2 -translate-x-1/2 text-white text-4xl sm:text-6xl font-fude font-bold drop-shadow-[0_0_5px_rgba(0,0,0,1)] z-40 pointer-events-none"
+          className="absolute top-[40%] left-1/2 -translate-x-1/2 text-white text-4xl sm:text-6xl font-fude font-bold drop-shadow-[0_0_5px_rgba(0,0,0,1)] z-40 pointer-events-none"
         >
           式岐神社
         </motion.h1>
       </section>
 
-      {/* スクロール後に出てくるコンテンツ */}
-      <section className="relative z-30 w-full text-white text-center py-40">
+      <FadeInSection>
+        <h2 className="text-2xl sm:text-4xl font-semibold">ようこそ式岐神社へ</h2>
+      </FadeInSection>
+
+      <FadeInSection>
+        <h2 className="text-2xl sm:text-4xl font-semibold">心得</h2>
+      </FadeInSection>
+
+      <FadeInSection>
+        <h2 className="text-2xl sm:text-4xl font-semibold">絵馬</h2>
+      </FadeInSection>
+
+      <FadeInSection>
+        <h2 className="text-2xl sm:text-4xl font-semibold">御守り</h2>
+      </FadeInSection>
+
+      <FadeInSection>
+        <h2 className="text-2xl sm:text-4xl font-semibold">撫で猫</h2>
+      </FadeInSection>
+
+      <FadeInSection>
         <h2 className="text-2xl sm:text-4xl font-semibold">
           <button
             onClick={fetchOmikuji}
@@ -78,40 +100,15 @@ export default function Home() {
           </button>
           <p className="mt-6 text-center">{message}</p>
         </h2>
-      </section>
+      </FadeInSection>
 
-      {/* スクロール後に出てくるコンテンツ */}
-      <section className="relative z-30 w-full text-white text-center py-40">
-        <h2 className="text-2xl sm:text-4xl font-semibold">ようこそ式岐神社へ</h2>
-      </section>
+      <FadeInSection>
+        <h2 className="text-2xl sm:text-4xl font-semibold">神様紹介</h2>
+      </FadeInSection>
 
-      {/* <section id="kokoroe">
-        <div>心得</div>
-      </section>
-
-      <section id="ema">
-        <div>絵馬</div>
-      </section>
-
-      <section id="omamori">
-        <div>御守り</div>
-      </section>
-
-      <section id="nade-neko">
-        <div>撫で猫</div>
-      </section>
-
-      <section id="omikuji">
-        <div>おみくじ</div>
-      </section>
-
-      <section id="kamigami">
-        <div>神様紹介</div>
-      </section>
-
-      <section id="haiden">
-        <div>拝殿</div>
-      </section> */}
+      <FadeInSection>
+        <h2 className="text-2xl sm:text-4xl font-semibold">拝殿</h2>
+      </FadeInSection>
     </main>
   );
 }
