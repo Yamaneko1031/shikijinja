@@ -1,22 +1,28 @@
 'use client';
 
 import { useState } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { useScroll, useTransform, useSpring, motion } from 'framer-motion';
 import Image from 'next/image';
 import FadeInSection from './components/FadeInSection';
 
 export default function Home() {
   const { scrollY } = useScroll();
 
-  const bgTopOpacity = useTransform(scrollY, [250, 800], [1, 0]);
-  const bgSandoOpacity = useTransform(scrollY, [2250, 2800], [1, 0]);
-  const bgEmaOpacity = useTransform(scrollY, [3250, 3800], [1, 0]);
-  const bgOmamoriOpacity = useTransform(scrollY, [5250, 5800], [1, 0]);
-  const bgOmikujiOpacity = useTransform(scrollY, [6250, 6800], [1, 1]);
+  // 慣性付きスクロール位置
+  const smoothScrollY = useSpring(scrollY, {
+    stiffness: 60, // 硬さ（小さいほど柔らかく）
+    damping: 20, // 減衰（大きいほどブレーキが効く）
+  });
 
-  const toriiScale = useTransform(scrollY, [0, 500], [1, 4.0]);
-  const toriiOpacity = useTransform(scrollY, [100, 500], [1, 0]);
-  const titleOpacity = useTransform(scrollY, [50, 300], [1, 0]);
+  const bgTopOpacity = useTransform(smoothScrollY, [250, 800], [1, 0]);
+  const bgSandoOpacity = useTransform(smoothScrollY, [2250, 2800], [1, 0]);
+  const bgEmaOpacity = useTransform(smoothScrollY, [3250, 3800], [1, 0]);
+  const bgOmamoriOpacity = useTransform(smoothScrollY, [5250, 5800], [1, 0]);
+  const bgOmikujiOpacity = useTransform(smoothScrollY, [6250, 6800], [1, 1]);
+
+  const toriiScale = useTransform(smoothScrollY, [0, 500], [1, 4.0]);
+  const toriiOpacity = useTransform(smoothScrollY, [100, 500], [1, 0]);
+  const titleOpacity = useTransform(smoothScrollY, [50, 300], [1, 0]);
 
   const [message, setMessage] = useState('まだお告げはありません');
   const [loading, setLoading] = useState(false);
@@ -50,6 +56,19 @@ export default function Home() {
         className="fixed top-0 left-0 w-full pointer-events-none z-100"
       >
         <Image src="/images/bg_top.webp" alt="背景TOP" fill className="object-cover" priority />
+      </motion.div>
+
+      <motion.div
+        className="fixed top-1/2 left-1/2 z-100 pointer-events-none -translate-x-1/2 -translate-y-1/2"
+        style={{
+          scale: toriiScale,
+          opacity: toriiOpacity,
+          width: '65vw',
+          height: 'calc(65vw * 1)',
+          transformOrigin: 'center center', // ← 拡大の基準を中心にする
+        }}
+      >
+        <Image src="/images/torii.webp" alt="式岐神社の鳥居" fill className="object-contain" />
       </motion.div>
 
       {/* 背景参道 */}
@@ -114,18 +133,6 @@ export default function Home() {
 
       {/* 通常のコンテンツセクション群 */}
       <section className="relative w-full min-h-screen z-101">
-        <motion.div
-          className="absolute top-[60%] left-1/2 -translate-x-1/2 -translate-y-1/2"
-          style={{
-            scale: toriiScale,
-            opacity: toriiOpacity,
-            width: '65vw',
-            height: 'calc(65vw * 1)',
-          }}
-        >
-          <Image src="/images/torii.webp" alt="式岐神社の鳥居" fill className="object-contain" />
-        </motion.div>
-
         <motion.h1
           style={{ opacity: titleOpacity }}
           className="absolute top-[40%] left-1/2 -translate-x-1/2 text-white text-4xl sm:text-6xl font-fude font-bold drop-shadow-[0_0_5px_rgba(0,0,0,1)] z-1000 pointer-events-none"
