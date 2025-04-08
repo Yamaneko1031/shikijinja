@@ -8,8 +8,11 @@ import FadeInSection from './components/FadeInSection';
 export default function Home() {
   const { scrollY } = useScroll();
 
-  const bg1Opacity = useTransform(scrollY, [250, 800], [1, 0]);
-  const bg2Opacity = useTransform(scrollY, [250, 800], [1, 1]);
+  const bgTopOpacity = useTransform(scrollY, [250, 800], [1, 0]);
+  const bgSandoOpacity = useTransform(scrollY, [2250, 2800], [1, 0]);
+  const bgEmaOpacity = useTransform(scrollY, [3250, 3800], [1, 0]);
+  const bgOmamoriOpacity = useTransform(scrollY, [5250, 5800], [1, 0]);
+  const bgOmikujiOpacity = useTransform(scrollY, [6250, 6800], [1, 1]);
 
   const toriiScale = useTransform(scrollY, [0, 500], [1, 4.0]);
   const toriiOpacity = useTransform(scrollY, [100, 500], [1, 0]);
@@ -36,29 +39,77 @@ export default function Home() {
 
   return (
     <main className="relative w-full overflow-hidden">
-      {/* 背景画像：固定 + クロスフェード + イベント無視 */}
-      {/* 背景A */}
+      {/* 背景画像：固定 + フェード */}
+      {/* 背景TOP */}
       <motion.div
         style={{
-          opacity: bg1Opacity,
+          opacity: bgTopOpacity,
           height: '100lvh',
           transform: 'translateZ(0.01px)',
         }}
         className="fixed top-0 left-0 w-full pointer-events-none z-100"
       >
-        <Image src="/images/bg.webp" alt="背景A" fill className="object-cover" priority />
+        <Image src="/images/bg_top.webp" alt="背景TOP" fill className="object-cover" priority />
       </motion.div>
 
-      {/* 背景B */}
+      {/* 背景参道 */}
       <motion.div
         style={{
-          opacity: bg2Opacity,
+          opacity: bgSandoOpacity,
           height: '100lvh',
           transform: 'translateZ(0.01px)',
         }}
         className="fixed top-0 left-0 w-full pointer-events-none z-90"
       >
-        <Image src="/images/sando.webp" alt="背景B" fill className="object-cover" priority />
+        <Image src="/images/bg_sando.webp" alt="背景参道" fill className="object-cover" priority />
+      </motion.div>
+
+      {/* 背景絵馬 */}
+      <motion.div
+        style={{
+          opacity: bgEmaOpacity,
+          height: '100lvh',
+          transform: 'translateZ(0.01px)',
+        }}
+        className="fixed top-0 left-0 w-full pointer-events-none z-80"
+      >
+        <Image src="/images/bg_ema.webp" alt="背景絵馬" fill className="object-cover" priority />
+      </motion.div>
+
+      {/* 背景御守り */}
+      <motion.div
+        style={{
+          opacity: bgOmamoriOpacity,
+          height: '100lvh',
+          transform: 'translateZ(0.01px)',
+        }}
+        className="fixed top-0 left-0 w-full pointer-events-none z-70"
+      >
+        <Image
+          src="/images/bg_omamori.webp"
+          alt="背景御守り"
+          fill
+          className="object-cover"
+          priority
+        />
+      </motion.div>
+
+      {/* 背景おみくじ */}
+      <motion.div
+        style={{
+          opacity: bgOmikujiOpacity,
+          height: '100lvh',
+          transform: 'translateZ(0.01px)',
+        }}
+        className="fixed top-0 left-0 w-full pointer-events-none z-60"
+      >
+        <Image
+          src="/images/bg_omikuji.webp"
+          alt="背景おみくじ"
+          fill
+          className="object-cover"
+          priority
+        />
       </motion.div>
 
       {/* 通常のコンテンツセクション群 */}
