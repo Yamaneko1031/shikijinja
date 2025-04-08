@@ -63,9 +63,9 @@ export default function Home() {
         style={{
           scale: toriiScale,
           opacity: toriiOpacity,
-          width: '65vw',
-          height: 'calc(65vw * 1)',
-          transformOrigin: 'center center', // ← 拡大の基準を中心にする
+          width: '75vw',
+          height: 'calc(75vw * 1)',
+          transformOrigin: '50% 70%', // ← 拡大の基準を中心にする
         }}
       >
         <Image src="/images/torii.webp" alt="式岐神社の鳥居" fill className="object-contain" />
