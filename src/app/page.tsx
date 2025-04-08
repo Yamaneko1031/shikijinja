@@ -42,8 +42,9 @@ export default function Home() {
         style={{
           opacity: bg1Opacity,
           height: '100lvh',
+          transform: 'translateZ(0.01px)',
         }}
-        className="fixed top-0 left-0 w-full pointer-events-none z-100 gpu-layer"
+        className="fixed top-0 left-0 w-full pointer-events-none z-100"
       >
         <Image src="/images/bg.webp" alt="背景A" fill className="object-cover" priority />
       </motion.div>
@@ -53,8 +54,9 @@ export default function Home() {
         style={{
           opacity: bg2Opacity,
           height: '100lvh',
+          transform: 'translateZ(0.01px)',
         }}
-        className="fixed top-0 left-0 w-full pointer-events-none z-90 gpu-layer"
+        className="fixed top-0 left-0 w-full pointer-events-none z-90"
       >
         <Image src="/images/sando.webp" alt="背景B" fill className="object-cover" priority />
       </motion.div>
