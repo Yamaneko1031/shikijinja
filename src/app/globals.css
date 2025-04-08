@@ -35,8 +35,6 @@ body {
   font-family: 'KouzanMouhitu', serif !important;
 }
 
-@layer utilities {
-  .gpu-layer {
-    will-change: transform;
-  }
+.gpu-layer {
+  will-change: transform;
 }
