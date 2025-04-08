@@ -59,10 +59,13 @@ export default function Home() {
       </motion.div>
 
       <motion.div
-        className="fixed top-1/2 left-1/2 z-100 pointer-events-none -translate-x-1/2 -translate-y-1/2"
+        className="fixed z-100 pointer-events-none -translate-x-1/2 -translate-y-1/2"
         style={{
+          top: 'calc(50lvh)', // ← 明示的に高さを使う
+          left: '50%',
           scale: toriiScale,
           opacity: toriiOpacity,
+          transform: 'translate(-50%, -50%)',
           width: '75vw',
           height: 'calc(75vw * 1)',
           transformOrigin: '50% 70%', // ← 拡大の基準を中心にする
