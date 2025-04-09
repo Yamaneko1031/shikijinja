@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useScroll, useTransform, useSpring, motion } from 'framer-motion';
 import Image from 'next/image';
 import FadeInSection from './components/FadeInSection';
+import BackgroundLayer from './components/BackgroundLayer';
 
 export default function Home() {
   const { scrollY } = useScroll();
@@ -27,6 +28,37 @@ export default function Home() {
   const [message, setMessage] = useState('まだお告げはありません');
   const [loading, setLoading] = useState(false);
 
+  const backgroundLayers = [
+    {
+      src: '/images/bg_top.webp',
+      opacity: bgTopOpacity,
+      zIndex: 100,
+    },
+    {
+      src: '/images/bg_sando.webp',
+      opacity: bgSandoOpacity,
+      zIndex: 90,
+    },
+    {
+      src: '/images/bg_ema.webp',
+      opacity: bgEmaOpacity,
+      zIndex: 80,
+      objectPosition: '40% center',
+    },
+    {
+      src: '/images/bg_omamori.webp',
+      opacity: bgOmamoriOpacity,
+      zIndex: 70,
+      objectPosition: '35% center',
+    },
+    {
+      src: '/images/bg_omikuji.webp',
+      opacity: bgOmikujiOpacity,
+      zIndex: 60,
+      objectPosition: '35% center',
+    },
+  ];
+
   const fetchOmikuji = async () => {
     setLoading(true);
     setMessage('神様と交信中…⛩️');
@@ -45,19 +77,18 @@ export default function Home() {
 
   return (
     <main className="relative w-full overflow-hidden">
-      {/* 背景画像：固定 + フェード */}
-      {/* 背景TOP */}
-      <motion.div
-        style={{
-          opacity: bgTopOpacity,
-          height: '100lvh',
-          transform: 'translateZ(0.01px)',
-        }}
-        className="fixed top-0 left-0 w-full pointer-events-none z-100"
-      >
-        <Image src="/images/bg_top.webp" alt="背景TOP" fill className="object-cover" priority />
-      </motion.div>
+      {/* 背景画像 */}
+      {backgroundLayers.map((layer, index) => (
+        <BackgroundLayer
+          key={index}
+          src={layer.src}
+          opacity={layer.opacity}
+          zIndex={layer.zIndex}
+          objectPosition={layer.objectPosition}
+        />
+      ))}
 
+      {/* 鳥居 */}
       <motion.div
         className="fixed z-100 pointer-events-none -translate-x-1/2 -translate-y-1/2"
         style={{
@@ -71,71 +102,11 @@ export default function Home() {
           transformOrigin: '50% 70%', // ← 拡大の基準を中心にする
         }}
       >
-        <Image src="/images/torii.webp" alt="式岐神社の鳥居" fill className="object-contain" />
-      </motion.div>
-
-      {/* 背景参道 */}
-      <motion.div
-        style={{
-          opacity: bgSandoOpacity,
-          height: '100lvh',
-          transform: 'translateZ(0.01px)',
-        }}
-        className="fixed top-0 left-0 w-full pointer-events-none z-90"
-      >
-        <Image src="/images/bg_sando.webp" alt="背景参道" fill className="object-cover" priority />
-      </motion.div>
-
-      {/* 背景絵馬 */}
-      <motion.div
-        style={{
-          opacity: bgEmaOpacity,
-          height: '100lvh',
-          transform: 'translateZ(0.01px)',
-        }}
-        className="fixed top-0 left-0 w-full pointer-events-none z-80"
-      >
         <Image
-          src="/images/bg_ema.webp"
-          alt="背景絵馬"
+          src="/images/torii.webp"
+          alt="式岐神社の鳥居"
           fill
-          className="object-cover object-[40%_center]"
-          priority
-        />
-      </motion.div>
-
-      {/* 背景御守り */}
-      <motion.div
-        style={{
-          opacity: bgOmamoriOpacity,
-          height: '100lvh',
-          transform: 'translateZ(0.01px)',
-        }}
-        className="fixed top-0 left-0 w-full pointer-events-none z-70"
-      >
-        <Image
-          src="/images/bg_omamori.webp"
-          alt="背景御守り"
-          fill
-          className="object-cover object-[35%_center]"
-          priority
-        />
-      </motion.div>
-
-      {/* 背景おみくじ */}
-      <motion.div
-        style={{
-          opacity: bgOmikujiOpacity,
-          height: '100lvh',
-          transform: 'translateZ(0.01px)',
-        }}
-        className="fixed top-0 left-0 w-full pointer-events-none z-60"
-      >
-        <Image
-          src="/images/bg_omikuji.webp"
-          alt="背景おみくじ"
-          fill
-          className="object-cover object-[35%_center]"
+          className="object-contain"
           priority
         />
       </motion.div>
