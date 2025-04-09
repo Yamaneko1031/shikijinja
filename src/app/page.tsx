@@ -95,7 +95,13 @@ export default function Home() {
         }}
         className="fixed top-0 left-0 w-full pointer-events-none z-80"
       >
-        <Image src="/images/bg_ema.webp" alt="背景絵馬" fill className="object-cover" priority />
+        <Image
+          src="/images/bg_ema.webp"
+          alt="背景絵馬"
+          fill
+          className="object-cover object-[40%_center]"
+          priority
+        />
       </motion.div>
 
       {/* 背景御守り */}
@@ -111,7 +117,7 @@ export default function Home() {
           src="/images/bg_omamori.webp"
           alt="背景御守り"
           fill
-          className="object-cover"
+          className="object-cover object-[35%_center]"
           priority
         />
       </motion.div>
@@ -129,7 +135,7 @@ export default function Home() {
           src="/images/bg_omikuji.webp"
           alt="背景おみくじ"
           fill
-          className="object-cover"
+          className="object-cover object-[35%_center]"
           priority
         />
       </motion.div>
