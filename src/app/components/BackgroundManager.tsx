@@ -1,8 +1,7 @@
+// BackgroundManager.tsx
 'use client';
 
-import { motion } from 'framer-motion';
 import { useState, useRef, useImperativeHandle, forwardRef } from 'react';
-import Image from 'next/image';
 
 export type BackgroundManagerHandle = {
   isReadyForTransition: () => boolean;
@@ -14,13 +13,21 @@ type Props = {
   initialBgPosition?: string;
 };
 
+const allUrls = [
+  '/images/bg_top.webp',
+  '/images/bg_sando.webp',
+  '/images/bg_ema.webp',
+  '/images/bg_omamori.webp',
+  '/images/bg_omikuji.webp',
+];
+
 export const BackgroundManager = forwardRef<BackgroundManagerHandle, Props>((props, ref) => {
-  const [prevUrl, setPrevUrl] = useState<string | null>(null);
   const [activeUrl, setActiveUrl] = useState<string>(props.initialUrl);
+  const [prevUrl, setPrevUrl] = useState<string | null>(null);
   const [bgPosition, setBgPosition] = useState<string>(props.initialBgPosition || 'center');
   const [prevBgPosition, setPrevBgPosition] = useState<string>('center');
   const isReadyForTransitionRef = useRef(true);
-  const fadeDuration = 1.2;
+  const fadeDuration = 1.2 * 1000;
 
   useImperativeHandle(ref, () => ({
     isReadyForTransition: () => isReadyForTransitionRef.current,
@@ -32,64 +39,52 @@ export const BackgroundManager = forwardRef<BackgroundManagerHandle, Props>((pro
         setActiveUrl(url);
         setBgPosition(bgPos);
 
-        // アニメーションが6割り終わったら次のアニメーションを許可
-        setTimeout(
-          () => {
-            setPrevUrl(null);
-            isReadyForTransitionRef.current = true;
-          },
-          fadeDuration * 1000 * 0.6
-        );
+        setTimeout(() => {
+          setPrevUrl(null);
+          isReadyForTransitionRef.current = true;
+        }, fadeDuration * 0.6);
       }
     },
   }));
 
   return (
     <div className="fixed inset-0 z-[-1] pointer-events-none">
-      {/* 最初の背景だけ優先的にプリロード */}
-      {prevUrl === null && activeUrl && (
-        <Image
-          src={activeUrl}
-          alt="initial background preload"
-          priority
-          style={{ display: 'none' }}
-          width={1}
-          height={1}
-        />
-      )}
+      {/* 最初の画像を明示的にプリロード（最優先） */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={props.initialUrl}
+        alt="initial preload"
+        style={{ display: 'none' }}
+        width={1}
+        height={1}
+        loading="eager"
+      />
 
-      {prevUrl && (
-        <motion.div
-          key={prevUrl + '-prev'}
-          className="absolute inset-0 bg-cover"
-          style={{
-            backgroundImage: `url(${prevUrl})`,
-            backgroundPosition: prevBgPosition,
-            height: '100lvh',
-            transform: 'translateZ(0.01px)',
-          }}
-          initial={{ opacity: 1 }}
-          animate={{ opacity: 0 }}
-          transition={{ duration: fadeDuration * 0.8 }}
-        />
-      )}
-
-      {activeUrl && (
-        <motion.div
-          key={activeUrl + '-active'}
-          className="absolute inset-0 bg-cover"
-          style={{
-            backgroundImage: `url(${activeUrl})`,
-            backgroundPosition: bgPosition,
-            height: '100lvh',
-            transform: 'translateZ(0.01px)',
-          }}
-          initial={{ opacity: prevUrl ? 0 : 1 }}
-          animate={{ opacity: 1 }}
-          // クロスフェードの新しい背景表示の方が少し速く完了させる
-          transition={{ duration: prevUrl ? fadeDuration : 0 }}
-        />
-      )}
+      {/* 全ての画像をDOMに保持し、active/prevだけ表示 */}
+      {allUrls.map((url) => {
+        return (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            key={url}
+            src={url}
+            alt=""
+            style={{
+              position: 'absolute',
+              inset: 0,
+              width: '100%',
+              height: '100lvh',
+              objectFit: 'cover',
+              objectPosition:
+                url === activeUrl ? bgPosition : url === prevUrl ? prevBgPosition : 'center',
+              opacity: url === activeUrl ? 1 : url === prevUrl ? 0 : 0,
+              zIndex: url === activeUrl ? 1 : url === prevUrl ? 0 : -1,
+              transition: 'opacity 1.2s ease',
+              display: 'block',
+              transform: 'translateZ(0.01px)',
+            }}
+          />
+        );
+      })}
     </div>
   );
 });
