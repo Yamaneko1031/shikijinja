@@ -34,7 +34,3 @@ body {
 .font-fude {
   font-family: 'KouzanMouhitu', serif !important;
 }
-
-.gpu-layer {
-  will-change: transform;
-}
