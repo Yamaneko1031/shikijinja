@@ -65,10 +65,12 @@ export const BackgroundManager = forwardRef<BackgroundManagerHandle, Props>((pro
           style={{
             backgroundImage: `url(${prevUrl})`,
             backgroundPosition: prevBgPosition,
+            height: '100lvh',
+            transform: 'translateZ(0.01px)',
           }}
           initial={{ opacity: 1 }}
           animate={{ opacity: 0 }}
-          transition={{ duration: fadeDuration }}
+          transition={{ duration: fadeDuration * 0.8 }}
         />
       )}
 
@@ -79,11 +81,13 @@ export const BackgroundManager = forwardRef<BackgroundManagerHandle, Props>((pro
           style={{
             backgroundImage: `url(${activeUrl})`,
             backgroundPosition: bgPosition,
+            height: '100lvh',
+            transform: 'translateZ(0.01px)',
           }}
           initial={{ opacity: prevUrl ? 0 : 1 }}
           animate={{ opacity: 1 }}
           // クロスフェードの新しい背景表示の方が少し速く完了させる
-          transition={{ duration: prevUrl ? fadeDuration * 0.8 : 0 }}
+          transition={{ duration: prevUrl ? fadeDuration : 0 }}
         />
       )}
     </div>
