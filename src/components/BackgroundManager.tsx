@@ -1,7 +1,6 @@
-// BackgroundManager.tsx
 'use client';
 
-import { useState, useRef, useImperativeHandle, forwardRef } from 'react';
+import { useState, useRef, useImperativeHandle, forwardRef, useEffect } from 'react';
 
 export type BackgroundManagerHandle = {
   isReadyForTransition: () => boolean;
@@ -11,23 +10,22 @@ export type BackgroundManagerHandle = {
 type Props = {
   initialUrl: string;
   initialBgPosition?: string;
+  allUrls: string[];
 };
-
-const allUrls = [
-  '/images/bg_top.webp',
-  '/images/bg_sando.webp',
-  '/images/bg_ema.webp',
-  '/images/bg_omamori.webp',
-  '/images/bg_omikuji.webp',
-];
 
 export const BackgroundManager = forwardRef<BackgroundManagerHandle, Props>((props, ref) => {
   const [activeUrl, setActiveUrl] = useState<string>(props.initialUrl);
   const [prevUrl, setPrevUrl] = useState<string | null>(null);
   const [bgPosition, setBgPosition] = useState<string>(props.initialBgPosition || 'center');
   const [prevBgPosition, setPrevBgPosition] = useState<string>('center');
+  const [delayedLoad, setDelayedLoad] = useState(false);
   const isReadyForTransitionRef = useRef(true);
   const fadeDuration = 1.2 * 1000;
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDelayedLoad(true), 300);
+    return () => clearTimeout(timer);
+  }, []);
 
   useImperativeHandle(ref, () => ({
     isReadyForTransition: () => isReadyForTransitionRef.current,
@@ -49,7 +47,7 @@ export const BackgroundManager = forwardRef<BackgroundManagerHandle, Props>((pro
 
   return (
     <div className="fixed inset-0 z-[-1] pointer-events-none">
-      {/* 最初の画像を明示的にプリロード（最優先） */}
+      {/* 最初の画像を明示的にプリロード */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={props.initialUrl}
@@ -60,8 +58,11 @@ export const BackgroundManager = forwardRef<BackgroundManagerHandle, Props>((pro
         loading="eager"
       />
 
-      {/* 全ての画像をDOMに保持し、active/prevだけ表示 */}
-      {allUrls.map((url) => {
+      {/* 全ての画像をDOMに保持し、active/prevだけ表示、残りは遅延で表示 */}
+      {props.allUrls.map((url) => {
+        const shouldRender = url === activeUrl || url === prevUrl || delayedLoad;
+        if (!shouldRender) return null;
+
         return (
           // eslint-disable-next-line @next/next/no-img-element
           <img
