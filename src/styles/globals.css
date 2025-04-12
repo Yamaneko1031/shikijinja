@@ -52,6 +52,7 @@ body {
   font-style: normal;
 }
 
+/* bodyで全体に当てているフォントが優先されるので、特殊フォントは!importantをつける */
 .font-fude {
   font-family: 'KouzanMouhitu', serif !important;
 }
@@ -72,7 +73,6 @@ body {
 .no-scrollbar {
   -ms-overflow-style: none; /* IE & Edge */
   scrollbar-width: none; /* Firefox */
-  scroll-snap-type: none !important; /* iOSのスクロールで表示が消える対策 */
 }
 
 .text-shadow {

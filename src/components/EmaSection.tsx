@@ -156,6 +156,12 @@ const EmaSection = () => {
     const interval = setInterval(() => {
       if (carouselRef.current) {
         carouselRef.current.scrollBy({ left: 2, behavior: 'auto' });
+
+        // 強制リフロー（再描画トリガー）
+        carouselRef.current.style.transform = 'scale(1)';
+        void carouselRef.current.offsetHeight; // 読み取りで reflow 発生
+        carouselRef.current.style.transform = '';
+
         if (
           carouselRef.current.scrollLeft >=
           carouselRef.current.scrollWidth - carouselRef.current.clientWidth
