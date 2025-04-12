@@ -177,6 +177,9 @@ const EmaSection = () => {
         <div
           ref={carouselRef}
           className="flex gap-4 whitespace-nowrap overflow-x-auto no-scrollbar"
+          style={{
+            transform: 'translateZ(0.01px)',
+          }}
         >
           {displayPosts.map((displayPost: DisplayPost, index) => {
             return (
