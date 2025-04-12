@@ -177,16 +177,12 @@ const EmaSection = () => {
         <div
           ref={carouselRef}
           className="flex gap-4 whitespace-nowrap overflow-x-auto no-scrollbar"
-          style={{
-            transform: 'translateZ(0.01px)',
-            willChange: 'transform',
-          }}
         >
           {displayPosts.map((displayPost: DisplayPost, index) => {
             return (
               <div
                 key={index}
-                className="min-w-[240px] h-[240px] bg-cover bg-center bg-no-repeat rounded text-center px-4 py-2 transition-transform duration-300 relative will-change-transform"
+                className="min-w-[240px] h-[240px] bg-cover bg-center bg-no-repeat rounded text-center px-4 py-2 transition-transform duration-300 relative"
                 style={{
                   backgroundImage: `url(/images/ema/${emaList.find((e) => e.key === displayPost.emaImage)?.filename})`,
                   transform: `rotate(${displayPost.rotate}deg) translateY(${displayPost.translateY}px)`,
