@@ -13,6 +13,7 @@ type Post = {
 
 // 絵馬表示用データ
 type DisplayPost = Post & {
+  drawKey: string;
   rotate: string;
   translateY: string;
   marginRight: string;
@@ -21,9 +22,10 @@ type DisplayPost = Post & {
 // 絵馬表示用データを生成
 const createDisplayPost = (post: Post): DisplayPost => ({
   ...post,
+  drawKey: crypto.randomUUID(),
   rotate: (Math.random() * 10 - 5).toFixed(2),
   translateY: (Math.random() * 10 - 5).toFixed(2),
-  marginRight: `${-10 - Math.floor(Math.random() * 20)}px`,
+  marginRight: `${-25 - Math.floor(Math.random() * 20)}px`,
 });
 
 // モックデータ作成
@@ -44,7 +46,10 @@ const generateMockPosts = (): Post[] => {
   return texts.map((text) => ({
     text,
     font: ['ackaisyo', 'aoyagi', 'otsutome'][Math.floor(Math.random() * 3)] as FontKey,
-    fontSize: ['small', 'medium', 'large'][Math.floor(Math.random() * 3)] as FontSize,
+    fontSize:
+      text.length >= 11
+        ? (['small', 'medium'][Math.floor(Math.random() * 2)] as FontSize)
+        : (['small', 'medium', 'large'][Math.floor(Math.random() * 3)] as FontSize),
     fontColor: ['black', 'red', 'blue', 'green'][Math.floor(Math.random() * 4)] as FontColorKey,
     emaImage: ['iroha', 'nadeneko', 'shikineko', 'tenten'][
       Math.floor(Math.random() * 4)
@@ -140,7 +145,13 @@ const EmaSection = () => {
   // 絵馬投稿処理
   const handlePostWish = () => {
     if (!wish.trim()) return;
-    const newPost: Post = { text: wish, font, fontSize, fontColor, emaImage };
+    const newPost: Post = {
+      text: wish,
+      font,
+      fontSize,
+      fontColor,
+      emaImage,
+    };
     setDisplayPosts((prev) => [...prev, createDisplayPost(newPost)]);
     setWish('');
   };
@@ -155,16 +166,39 @@ const EmaSection = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       if (carouselRef.current) {
+        // scrollByだとiOSで表示が再描画されないことがあるので、scrollToを使用
         carouselRef.current.scrollTo({
           left: carouselRef.current.scrollLeft + 2,
           behavior: 'auto',
         });
 
-        if (
-          carouselRef.current.scrollLeft >=
-          carouselRef.current.scrollWidth - carouselRef.current.clientWidth
-        ) {
-          carouselRef.current.scrollLeft = 0;
+        const container = carouselRef.current;
+        if (!container) return;
+
+        const scrollLeft = container.scrollLeft;
+        const scrollWidth = container.scrollWidth;
+        const middleX = scrollWidth / 2;
+
+        if (scrollLeft > middleX) {
+          const shiftWidth = Array.from(container.children)
+            .slice(0, 3)
+            .reduce((acc, child) => {
+              const childElement = child as HTMLElement;
+              const width = childElement.offsetWidth;
+              const margin = parseFloat(getComputedStyle(childElement).marginRight);
+              return acc + width + margin;
+            }, 0);
+
+          setDisplayPosts((prev) => {
+            const moved = prev.slice(0, 3);
+            const rest = prev.slice(3);
+            return [...rest, ...moved];
+          });
+
+          // requestAnimationFrameでDOM更新の次のフレームでスクロール補正
+          requestAnimationFrame(() => {
+            container.scrollLeft -= shiftWidth;
+          });
         }
       }
     }, 50); // ゆっくり流れる
@@ -178,14 +212,11 @@ const EmaSection = () => {
       <p className="text-lg mb-4">絵馬投稿や他の人の投稿した絵馬をみるコンテンツ</p>
 
       <div className="overflow-hidden">
-        <div
-          ref={carouselRef}
-          className="flex gap-4 whitespace-nowrap overflow-x-auto no-scrollbar"
-        >
-          {displayPosts.map((displayPost: DisplayPost, index) => {
+        <div ref={carouselRef} className="flex whitespace-nowrap overflow-x-auto no-scrollbar">
+          {displayPosts.map((displayPost: DisplayPost) => {
             return (
               <div
-                key={index}
+                key={displayPost.drawKey}
                 className="min-w-[240px] h-[240px] bg-cover bg-center bg-no-repeat rounded text-center px-4 py-2 transition-transform duration-300 relative"
                 style={{
                   backgroundImage: `url(/images/ema/${emaList.find((e) => e.key === displayPost.emaImage)?.filename})`,
