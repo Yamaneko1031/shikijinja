@@ -1,0 +1,50 @@
+@font-face {
+  font-family: 'KouzanMouhitu';
+  src: url('/fonts/KouzanMouhituFontOTF.otf') format('opentype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'AoyagiKouzan';
+  src: url('/fonts/AoyagiKouzanTOTF.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Ackaisyo';
+  src: url('/fonts/ackaisyo.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'OtsutomeFont';
+  src: url('/fonts/OtsutomeFont_Ver3_16.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'YuseiMagic';
+  src: url('/fonts/YuseiMagic-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* bodyで全体に当てているフォントが優先されるので、特殊フォントは!importantをつける */
+.font-fude {
+  font-family: 'KouzanMouhitu', serif !important;
+}
+.font-ackaisyo {
+  font-family: 'Ackaisyo', serif !important;
+}
+.font-aoyagi {
+  font-family: 'AoyagiKouzan', serif !important;
+}
+.font-otsutome {
+  font-family: 'OtsutomeFont', serif !important;
+}
+.font-yusei {
+  font-family: 'YuseiMagic', serif !important;
+}

@@ -1,0 +1,34 @@
+@keyframes fade-in-out {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  20%,
+  80% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+.animate-fade-in-out {
+  animation: fade-in-out var(--ema-animate-fade-in-out-duration) ease-in-out forwards;
+}
+
+@keyframes ema-insert {
+  0% {
+    transform: scale(1.5) rotate(var(--rotate)) translateY(var(--ty));
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) rotate(var(--rotate)) translateY(var(--ty));
+    opacity: 1;
+  }
+}
+
+.animate-ema-insert {
+  animation: ema-insert var(--ema-insert-duration) ease-out forwards;
+}

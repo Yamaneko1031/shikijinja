@@ -1,0 +1,13 @@
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --ema-animate-fade-in-out-duration: 2000ms;
+  --ema-insert-duration: 700ms;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}

@@ -1,5 +1,6 @@
 'use client';
 
+import { getCssDuration } from '@/utils/getCssDuration';
 import { useState, useEffect, useRef } from 'react';
 
 // 絵馬投稿データ
@@ -159,6 +160,7 @@ const EmaSection = () => {
   const [textOffset, setTextOffset] = useState({ x: 0, y: 0 });
   const [isOverflowing, setIsOverflowing] = useState(false);
   const [isPosting, setIsPosting] = useState(false);
+  const [showPostedMessage, setShowPostedMessage] = useState(false);
 
   const [textRectStyle, setTextRectStyle] = useState<{
     top: number;
@@ -203,6 +205,21 @@ const EmaSection = () => {
       window.removeEventListener('touchend', handleEnd);
     };
   }, []);
+
+  const scrollToCarousel = () => {
+    if (!carouselRef.current) return;
+
+    const offsetTop =
+      carouselRef.current.getBoundingClientRect().top +
+      window.scrollY +
+      carouselRef.current.offsetHeight / 2;
+    const targetY = offsetTop - window.innerHeight / 2; // 端末の高さ/2分上に余白を空けたい
+
+    window.scrollTo({
+      top: targetY,
+      behavior: 'smooth',
+    });
+  };
 
   // 絵馬投稿位置を取得
   const getInsertIndex = () => {
@@ -265,12 +282,13 @@ const EmaSection = () => {
       return next;
     });
 
-    // アニメーション終了後にhighlightedをfalseに
+    const insertDuration = getCssDuration('--ema-insert-duration');
+    // 挿入アニメーションの付けはずし
     setTimeout(() => {
       setDisplayPosts((prev) =>
         prev.map((p) => (p.drawKey === newDisplayPost.drawKey ? { ...p, highlighted: false } : p))
       );
-    }, 1); // アニメーション時間と同じ
+    }, insertDuration);
 
     // 入力内容リセット
     setWish('');
@@ -282,6 +300,15 @@ const EmaSection = () => {
     setLineHeight(1.4);
     setTextOffset({ x: 0, y: 0 });
     setIsPosting(false);
+
+    // 投稿メッセージ表示
+    setShowPostedMessage(true);
+
+    const fadeInOutDuration = getCssDuration('--ema-animate-fade-in-out-duration');
+    setTimeout(() => setShowPostedMessage(false), fadeInOutDuration);
+
+    // 絵馬投稿後にスクロール
+    scrollToCarousel();
   };
 
   // 初期データをセット（モック）
@@ -334,25 +361,8 @@ const EmaSection = () => {
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    if (!previewContainerRef.current || !previewTextRef.current) return;
-
-    const containerRect = previewContainerRef.current.getBoundingClientRect();
-    const textRect = previewTextRef.current.getBoundingClientRect();
-
-    const margin = 5; // 許容範囲（px）
-
-    const isOver =
-      textRect.left < containerRect.left - margin ||
-      textRect.top < containerRect.top - margin ||
-      textRect.right > containerRect.right + margin ||
-      textRect.bottom > containerRect.bottom + margin;
-
-    setIsOverflowing(isOver);
-  }, [wish, textRotate, lineHeight, fontSize, font]);
-
-  // 表示位置の監視（wish, rotate, lineHeight が変わるたび）
-  useEffect(() => {
+  // テキストのはみ出しをチェック
+  const checkTextOverflowAndRect = () => {
     if (!previewTextRef.current || !previewWrapperRef.current || !previewContainerRef.current)
       return;
 
@@ -375,7 +385,19 @@ const EmaSection = () => {
       textRect.bottom > containerRect.bottom + margin;
 
     setIsOverflowing(isOver);
+  };
+
+  // 表示位置の監視（wish, rotate, lineHeight が変わるたび）
+  useEffect(() => {
+    checkTextOverflowAndRect();
   }, [wish, textRotate, lineHeight, fontSize, font, textOffset]);
+
+  // 投稿を開いた時に表示位置のチェック
+  useEffect(() => {
+    if (isPosting) {
+      setTimeout(checkTextOverflowAndRect, 0);
+    }
+  }, [isPosting]);
 
   useEffect(() => {
     if (isPosting) {
@@ -395,6 +417,15 @@ const EmaSection = () => {
       <h2 className="text-4xl font-bold mb-2">絵馬</h2>
       <p className="text-lg mb-4">絵馬投稿や他の人の投稿した絵馬をみるコンテンツ</p>
 
+      {/* 投稿メッセージ表示 */}
+      {showPostedMessage && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
+          <div className="bg-black/60 text-white text-lg px-6 py-3 rounded-lg shadow-lg animate-fade-in-out">
+            絵馬を投稿しました！
+          </div>
+        </div>
+      )}
+
       {/* 絵馬一覧カルーセル表示 */}
       <div className="overflow-hidden">
         <div ref={carouselRef} className="flex whitespace-nowrap overflow-x-auto no-scrollbar">
@@ -404,19 +435,18 @@ const EmaSection = () => {
                 key={displayPost.drawKey}
                 className={`
                   min-w-[240px] h-[240px] bg-cover bg-center bg-no-repeat 
-                  rounded text-center px-4 py-2 relative
-                  transition-all duration-700 ease-in-out
+                  text-center relative
+                  ${displayPost.highlighted ? 'animate-ema-insert' : ''}
                 `}
-                style={{
-                  backgroundImage: `url(/images/ema/${emaList.find((e) => e.key === displayPost.emaImage)?.filename})`,
-                  transform: `
-                    rotate(${displayPost.rotate}deg)
-                    translateY(${displayPost.translateY}px)
-                    scale(${displayPost.highlighted ? 1.3 : 1})
-                  `,
-                  opacity: displayPost.highlighted ? 0.3 : 1.0,
-                  marginRight: displayPost.marginRight,
-                }}
+                style={
+                  {
+                    backgroundImage: `url(/images/ema/${emaList.find((e) => e.key === displayPost.emaImage)?.filename})`,
+                    '--rotate': `${displayPost.rotate}deg`,
+                    '--ty': `${displayPost.translateY}px`,
+                    transform: `rotate(var(--rotate)) translateY(var(--ty)) scale(1)`,
+                    marginRight: displayPost.marginRight,
+                  } as React.CSSProperties
+                }
               >
                 <div
                   className="absolute overflow-hidden flex items-center justify-center"
@@ -456,7 +486,7 @@ const EmaSection = () => {
       {isPosting && (
         <div className="fixed inset-0 z-50 bg-black/20 flex items-center justify-center p-4">
           <div className="bg-black/80 rounded-lg p-6 max-w-sm w-full shadow-xl relative text-white">
-            {/* ✨閉じるボタン */}
+            {/* 閉じるボタン */}
             <button
               onClick={() => setIsPosting(false)}
               className="absolute top-2 right-2 text-gray-600 hover:text-black"
@@ -555,11 +585,8 @@ const EmaSection = () => {
                     style={{
                       color: fontColorList.find((c) => c.key === fontColor)?.value,
                       transform: `rotate(${textRotate}deg) translate(${textOffset.x}px, ${textOffset.y}px)`,
-                      touchAction: 'none', // ← これでスマホのスクロールと干渉しない
+                      touchAction: 'none',
                       lineHeight: lineHeight,
-                      // outline: isOverflowing ? '1px solid red' : '1px solid lime',
-                      // outlineOffset: '-2px', // 内側に表示
-                      // boxSizing: 'border-box',
                     }}
                   >
                     {wish || 'ここに表示されます'}
