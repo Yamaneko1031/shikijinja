@@ -52,6 +52,13 @@ body {
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'YuseiMagic';
+  src: url('/fonts/YuseiMagic-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 /* bodyで全体に当てているフォントが優先されるので、特殊フォントは!importantをつける */
 .font-fude {
   font-family: 'KouzanMouhitu', serif !important;
@@ -64,6 +71,9 @@ body {
 }
 .font-otsutome {
   font-family: 'OtsutomeFont', serif !important;
+}
+.font-yusei {
+  font-family: 'YuseiMagic', serif !important;
 }
 
 .no-scrollbar::-webkit-scrollbar {

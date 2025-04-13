@@ -8,6 +8,7 @@ module.exports = {
         ackaisyo: ['Ackaisyo', 'serif'],
         aoyagi: ['AoyagiKouzan', 'serif'],
         otsutome: ['OtsutomeFont', 'serif'],
+        yusei: ['YuseiMagic', 'serif'],
       },
     },
   },
