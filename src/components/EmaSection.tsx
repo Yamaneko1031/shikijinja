@@ -2,6 +2,7 @@
 
 import { getCssDuration } from '@/utils/getCssDuration';
 import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 
 // 絵馬投稿データ
 type Post = {
@@ -14,6 +15,7 @@ type Post = {
   lineHeight: string;
   offsetX: number;
   offsetY: number;
+  textWidth: number;
 };
 
 // 絵馬表示用データ
@@ -64,6 +66,7 @@ const generateMockPosts = (): Post[] => {
     lineHeight: (Math.random() * 0.2 + 1.2).toFixed(1),
     offsetX: 0,
     offsetY: 0,
+    textWidth: defaultTextRectSize.width,
   }));
 };
 
@@ -100,47 +103,47 @@ type FontSizeListItem = (typeof fontSizeList)[number];
 type FontSize = FontSizeListItem['key'];
 
 // 絵馬背景テーブル
-const emaList = [
-  { key: 'iroha', label: 'いろは', filename: 'ema_iroha.webp' },
-  { key: 'nadeneko', label: 'なでねこ', filename: 'ema_nadeneko.webp' },
-  { key: 'shikineko', label: 'しきねこ', filename: 'ema_shikineko.webp' },
-  { key: 'tenten', label: 'てんてん', filename: 'ema_tenten.webp' },
-] as const;
-
-type EmaListItem = (typeof emaList)[number];
-type EmaImageKey = EmaListItem['key'];
-
-type FontSizeStyle = {
-  className: string;
-  top: string;
-  left: string;
-  width: string;
-  height: string;
-};
-
-// フォントサイズに応じた絵馬上のスタイルテーブル
-const fontSizeMap: Record<FontSize, FontSizeStyle> = {
-  small: {
-    className: 'text-[17px]',
-    top: '110px',
-    left: '35px',
-    width: '170px',
-    height: '100px',
+const emaList = {
+  iroha: {
+    label: 'いろは',
+    filename: 'ema_iroha.webp',
+    illustname: 'illust_iroha.webp',
+    description: '健康に過ごせますように',
+    grace: '主にデザイン業務において\nご利益があるとされている',
   },
-  medium: {
-    className: 'text-[24px]',
-    top: '110px',
-    left: '35px',
-    width: '170px',
-    height: '100px',
+  nadeneko: {
+    label: 'なでねこ',
+    filename: 'ema_nadeneko.webp',
+    illustname: 'illust_nadeneko.webp',
+    grace: '幸運を招くとされている',
   },
-  large: {
-    className: 'text-[32px]',
-    top: '110px',
-    left: '35px',
-    width: '170px',
-    height: '100px',
+  shikineko: {
+    label: 'しきねこ',
+    filename: 'ema_shikineko.webp',
+    illustname: 'illust_shikineko.webp',
+    grace: '主にエンジニア業務において\nご利益があるとされている',
   },
+  tenten: {
+    label: 'てんてん',
+    filename: 'ema_tenten.webp',
+    illustname: 'illust_tenten.webp',
+    grace: '主にPM業務において\nご利益があるとされている',
+  },
+} as const;
+
+type EmaImageKey = keyof typeof emaList;
+
+const fontSizeMap = {
+  small: 'text-[17px]',
+  medium: 'text-[24px]',
+  large: 'text-[32px]',
+} as const;
+
+const defaultTextRectSize = {
+  top: 110,
+  left: 35,
+  width: 170,
+  height: 100,
 };
 
 const EmaSection = () => {
@@ -158,6 +161,7 @@ const EmaSection = () => {
   const [textRotate, setTextRotate] = useState(0);
   const [lineHeight, setLineHeight] = useState(1.4);
   const [textOffset, setTextOffset] = useState({ x: 0, y: 0 });
+  const [textWidth, setTextWidth] = useState(defaultTextRectSize.width);
   const [isOverflowing, setIsOverflowing] = useState(false);
   const [isPosting, setIsPosting] = useState(false);
   const [showPostedMessage, setShowPostedMessage] = useState(false);
@@ -268,6 +272,7 @@ const EmaSection = () => {
       lineHeight: lineHeight.toFixed(1),
       offsetX: textOffset.x,
       offsetY: textOffset.y,
+      textWidth,
     };
 
     const insertIndex = getInsertIndex();
@@ -300,6 +305,7 @@ const EmaSection = () => {
     setLineHeight(1.4);
     setTextOffset({ x: 0, y: 0 });
     setIsPosting(false);
+    setTextWidth(defaultTextRectSize.width);
 
     // 投稿メッセージ表示
     setShowPostedMessage(true);
@@ -390,18 +396,27 @@ const EmaSection = () => {
   // 表示位置の監視（wish, rotate, lineHeight が変わるたび）
   useEffect(() => {
     checkTextOverflowAndRect();
-  }, [wish, textRotate, lineHeight, fontSize, font, textOffset]);
-
-  // 投稿を開いた時に表示位置のチェック
-  useEffect(() => {
-    if (isPosting) {
-      setTimeout(checkTextOverflowAndRect, 0);
-    }
-  }, [isPosting]);
+  }, [wish, textRotate, lineHeight, fontSize, font, textOffset, textWidth]);
 
   useEffect(() => {
     if (isPosting) {
       document.body.style.overflow = 'hidden';
+
+      // 投稿フォームが開かれたタイミングでランダム初期化
+      setFont(
+        ['ackaisyo', 'aoyagi', 'otsutome', 'yusei'][Math.floor(Math.random() * 4)] as FontKey
+      );
+      setFontColor(
+        ['black', 'red', 'blue', 'green'][Math.floor(Math.random() * 4)] as FontColorKey
+      );
+      setFontSize('medium');
+      setTextRotate(0);
+      setLineHeight([1.0, 1.1, 1.2, 1.3, 1.4][Math.floor(Math.random() * 5)]);
+      setTextWidth(defaultTextRectSize.width);
+      setTextOffset({ x: 0, y: 0 });
+
+      // 投稿を開いた時に表示位置のチェック
+      setTimeout(checkTextOverflowAndRect, 0);
     } else {
       document.body.style.overflow = '';
     }
@@ -440,7 +455,7 @@ const EmaSection = () => {
                 `}
                 style={
                   {
-                    backgroundImage: `url(/images/ema/${emaList.find((e) => e.key === displayPost.emaImage)?.filename})`,
+                    backgroundImage: `url(/images/ema/${emaList[displayPost.emaImage].filename})`,
                     '--rotate': `${displayPost.rotate}deg`,
                     '--ty': `${displayPost.translateY}px`,
                     transform: `rotate(var(--rotate)) translateY(var(--ty)) scale(1)`,
@@ -451,17 +466,20 @@ const EmaSection = () => {
                 <div
                   className="absolute overflow-hidden flex items-center justify-center"
                   style={{
-                    top: fontSizeMap[displayPost.fontSize].top,
-                    left: fontSizeMap[displayPost.fontSize].left,
-                    width: fontSizeMap[displayPost.fontSize].width,
-                    height: fontSizeMap[displayPost.fontSize].height,
+                    top: `${defaultTextRectSize.top}px`,
+                    left: `${defaultTextRectSize.left}px`,
+                    width: `${defaultTextRectSize.width}px`,
+                    height: `${defaultTextRectSize.height}px`,
                   }}
                 >
                   <p
-                    className={`${fontList.find((f) => f.key === displayPost.font)?.className} ${fontSizeMap[displayPost.fontSize].className} text-center break-all whitespace-pre-wrap text-shadow`}
+                    className={`${fontList.find((f) => f.key === displayPost.font)?.className} ${fontSizeMap[displayPost.fontSize]} text-center break-all whitespace-pre-wrap text-shadow`}
                     style={{
+                      top: `${defaultTextRectSize.top}px`,
+                      left: `${defaultTextRectSize.left + (defaultTextRectSize.width - displayPost.textWidth) / 2}px`,
+                      width: `${displayPost.textWidth}px`,
                       color: fontColorList.find((c) => c.key === displayPost.fontColor)?.value,
-                      transform: `rotate(${displayPost.textRotate}deg) translate(${displayPost.offsetX}px, ${displayPost.offsetY}px)`,
+                      transform: `translate(${displayPost.offsetX}px, ${displayPost.offsetY}px) rotate(${displayPost.textRotate}deg)`,
                       lineHeight: displayPost.lineHeight,
                     }}
                   >
@@ -493,25 +511,10 @@ const EmaSection = () => {
             >
               ✕
             </button>
-
-            {/* 絵馬投稿フォーム */}
-            <div className="flex gap-4 mb-4">
-              {/* 絵馬選択 */}
-              <div className="flex gap-2 items-center">
-                {emaList.map(({ key, label }) => (
-                  <button
-                    key={key}
-                    className={`px-2 py-1 rounded ${
-                      emaImage === key ? 'bg-white text-black' : 'bg-gray-800 text-white'
-                    }`}
-                    onClick={() => setEmaImage(key)}
-                  >
-                    {label}
-                  </button>
-                ))}
-              </div>
-
-              <div className="flex flex-col gap-4 mb-4">
+            <div className="grid grid-cols-2 gap-1 mb-1 bg-black border border-white p-4 rounded">
+              <div className="col-span-2 text-center text-base font-semibold">文字選択</div>
+              {/* 左カラム：ボタン・セレクト系 */}
+              <div className="flex flex-col gap-5">
                 {/* フォント選択 */}
                 <select value={font} onChange={(e) => setFont(e.target.value as FontKey)}>
                   {fontList.map(({ key, label }) => (
@@ -536,38 +539,127 @@ const EmaSection = () => {
                   ))}
                 </div>
 
-                {/* カラー選択 */}
+                {/* フォントカラー */}
                 <div className="flex gap-2 items-center">
-                  {fontColorList.map(({ key, label, value }) => (
+                  {fontColorList.map(({ key, value }) => (
                     <button
                       key={key}
-                      className={`w-6 h-6 rounded-full border-2 ${fontColor === key ? 'border-white' : 'border-transparent'}`}
+                      className={`w-6 h-6 rounded-full border-2 ${
+                        fontColor === key ? 'border-white' : 'border-transparent'
+                      }`}
                       style={{ backgroundColor: value }}
                       onClick={() => setFontColor(key)}
-                      title={label}
+                      title={key}
                     />
                   ))}
                 </div>
               </div>
+
+              {/* 右カラム：スライダー系 */}
+              <div className="flex flex-col gap-1 text-white">
+                {/* 角度 */}
+                <div className="flex flex-col">
+                  <label className="text-sm mb-1">文字の角度</label>
+                  <input
+                    type="range"
+                    min={-10}
+                    max={10}
+                    step={1}
+                    value={textRotate}
+                    onChange={(e) => setTextRotate(Number(e.target.value))}
+                  />
+                </div>
+
+                {/* 行間 */}
+                <div className="flex flex-col">
+                  <label className="text-sm mb-1">行間</label>
+                  <input
+                    type="range"
+                    min={1.0}
+                    max={2.0}
+                    step={0.1}
+                    value={lineHeight}
+                    onChange={(e) => setLineHeight(Number(e.target.value))}
+                  />
+                </div>
+
+                {/* 横幅 */}
+                <div className="flex flex-col">
+                  <label className="text-sm mb-1">横幅</label>
+                  <input
+                    type="range"
+                    min={80}
+                    max={defaultTextRectSize.width}
+                    step={5}
+                    value={textWidth}
+                    onChange={(e) => setTextWidth(Number(e.target.value))}
+                  />
+                </div>
+              </div>
             </div>
 
+            {/* 挿絵・説明 */}
+            <div className="flex items-center justify-between gap-1 bg-black p-2 rounded border border-white h-[90px]">
+              <button
+                onClick={() =>
+                  setEmaImage((prev) => {
+                    const keys = Object.keys(emaList);
+                    const currentIndex = keys.indexOf(prev);
+                    const prevIndex = (currentIndex - 1 + keys.length) % keys.length;
+                    return keys[prevIndex] as EmaImageKey;
+                  })
+                }
+              >
+                {'◀'}
+              </button>
+              <div className="flex-1 text-center">
+                <div>
+                  <label className="text-white">絵馬【{emaList[emaImage].label}】</label>
+                </div>
+                <div className="flex items-center">
+                  <div className="text-sm text-white">
+                    <Image
+                      src={`/images/illust/${emaList[emaImage].illustname}`}
+                      alt=""
+                      width={50}
+                      height={50}
+                    />
+                  </div>
+                  <div className="text-xs text-gray-300 ml-2 whitespace-pre-line text-center flex-1">
+                    {emaList[emaImage].grace}
+                  </div>
+                </div>
+              </div>
+              <button
+                onClick={() =>
+                  setEmaImage((prev) => {
+                    const keys = Object.keys(emaList);
+                    const currentIndex = keys.indexOf(prev);
+                    const nextIndex = (currentIndex + 1) % keys.length;
+                    return keys[nextIndex] as EmaImageKey;
+                  })
+                }
+              >
+                {'▶'}
+              </button>
+            </div>
             {/* 絵馬プレビュー */}
-            <div className="flex flex-col items-center gap-4">
+            <div className="flex flex-col items-center gap-1 mt-[-30px]">
               <div
                 ref={previewWrapperRef}
                 className="relative w-[240px] h-[240px] bg-cover bg-center bg-no-repeat"
                 style={{
-                  backgroundImage: `url(/images/ema/${emaList.find((e) => e.key === emaImage)?.filename})`,
+                  backgroundImage: `url(/images/ema/${emaList[emaImage].filename})`,
                 }}
               >
                 <div
                   ref={previewContainerRef}
                   className="absolute overflow-hidden flex items-center justify-center"
                   style={{
-                    top: fontSizeMap[fontSize].top,
-                    left: fontSizeMap[fontSize].left,
-                    width: fontSizeMap[fontSize].width,
-                    height: fontSizeMap[fontSize].height,
+                    top: `${defaultTextRectSize.top}px`,
+                    left: `${defaultTextRectSize.left}px`,
+                    width: `${defaultTextRectSize.width}px`,
+                    height: `${defaultTextRectSize.height}px`,
                   }}
                 >
                   <p
@@ -581,10 +673,13 @@ const EmaSection = () => {
                       const touch = e.touches[0];
                       startPosRef.current = { x: touch.clientX, y: touch.clientY };
                     }}
-                    className={`${fontList.find((f) => f.key === font)?.className} ${fontSizeMap[fontSize].className} text-center break-all whitespace-pre-wrap text-shadow`}
+                    className={`${fontList.find((f) => f.key === font)?.className} ${fontSizeMap[fontSize]} text-center break-all whitespace-pre-wrap text-shadow`}
                     style={{
+                      top: `${defaultTextRectSize.top}px`,
+                      left: `${defaultTextRectSize.left + (defaultTextRectSize.width - textWidth) / 2}px`,
+                      width: `${textWidth}px`,
                       color: fontColorList.find((c) => c.key === fontColor)?.value,
-                      transform: `rotate(${textRotate}deg) translate(${textOffset.x}px, ${textOffset.y}px)`,
+                      transform: `translate(${textOffset.x}px, ${textOffset.y}px) rotate(${textRotate}deg)`,
                       touchAction: 'none',
                       lineHeight: lineHeight,
                     }}
@@ -596,10 +691,10 @@ const EmaSection = () => {
                 <div
                   className="absolute border border-yellow-400 rounded"
                   style={{
-                    top: fontSizeMap[fontSize].top,
-                    left: fontSizeMap[fontSize].left,
-                    width: fontSizeMap[fontSize].width,
-                    height: fontSizeMap[fontSize].height,
+                    top: `${defaultTextRectSize.top}px`,
+                    left: `${defaultTextRectSize.left}px`,
+                    width: `${defaultTextRectSize.width}px`,
+                    height: `${defaultTextRectSize.height}px`,
                     pointerEvents: 'none',
                   }}
                 ></div>
@@ -619,40 +714,6 @@ const EmaSection = () => {
                 )}
               </div>
 
-              {/* 文字の角度 */}
-              <div className="flex flex-col items-center w-[240px] text-white">
-                <label htmlFor="rotateRange" className="text-sm mb-1">
-                  文字の角度
-                </label>
-                <input
-                  id="rotateRange"
-                  type="range"
-                  min={-10}
-                  max={10}
-                  step={1}
-                  value={textRotate}
-                  onChange={(e) => setTextRotate(Number(e.target.value))}
-                  className="w-full"
-                />
-              </div>
-
-              {/* 行間 */}
-              <div className="flex flex-col items-center w-[240px] text-white">
-                <label htmlFor="lineHeightRange" className="text-sm mb-1">
-                  行間: {lineHeight}
-                </label>
-                <input
-                  id="lineHeightRange"
-                  type="range"
-                  min={1.0}
-                  max={2.0}
-                  step={0.1}
-                  value={lineHeight}
-                  onChange={(e) => setLineHeight(Number(e.target.value))}
-                  className="w-full"
-                />
-              </div>
-
               {/* テキストエリアは下に別で表示 */}
               <textarea
                 maxLength={40} // ← これ！
@@ -662,12 +723,26 @@ const EmaSection = () => {
                 className="w-[240px] max-w-md p-2 border rounded bg-black/90"
                 placeholder="願い事を入力..."
               />
-              <button
-                onClick={handlePostWish}
-                className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
-              >
-                投稿する
-              </button>
+              <div className="flex space-x-2">
+                <button
+                  onClick={() => setIsPosting(false)}
+                  className="bg-red-400 text-white px-4 py-2 rounded hover:bg-red-700"
+                >
+                  閉じる
+                </button>
+                <button
+                  onClick={handlePostWish}
+                  className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
+                >
+                  投稿する
+                </button>
+                <button
+                  onClick={() => setTextOffset({ x: 0, y: 0 })}
+                  className="bg-gray-600 text-white text-sm px-2 py-1 rounded hover:bg-gray-700"
+                >
+                  位置リセット
+                </button>
+              </div>
             </div>
           </div>
         </div>
