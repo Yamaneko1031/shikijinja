@@ -7,8 +7,9 @@ import Image from 'next/image';
 // 絵馬投稿データ
 type Post = {
   text: string;
+  reply: string;
   font: FontKey;
-  fontSize: FontSize;
+  fontSize: number;
   fontColor: FontColorKey;
   emaImage: EmaImageKey;
   textRotate: string;
@@ -38,26 +39,54 @@ const createDisplayPost = (post: Post): DisplayPost => ({
 
 // モックデータ作成
 const generateMockPosts = (): Post[] => {
-  const texts = [
-    '健康に過ごせますように',
-    '試験に合格しますように',
-    '推しがずっと輝いてますように',
-    '仕事がうまくいきますように',
-    '世界が平和になりますように',
-    '友達ができますように',
-    'ゲームがうまくなりますように',
-    '猫と仲良くなれますように',
-    '美味しいご飯が食べられますように',
-    '宝くじ当たりますように',
+  const mockWishesWithResponses = [
+    {
+      text: '健康に過ごせますように',
+      responseText: '日々の穏やかに福あり',
+    },
+    {
+      text: '試験に合格しますように',
+      responseText: '知恵の風、汝に届く',
+    },
+    {
+      text: '推しがずっと輝いてますように',
+      responseText: '光は絶えぬ、想いの中に',
+    },
+    {
+      text: '仕事がうまくいきますように',
+      responseText: '一歩ずつ、道ひらけん',
+    },
+    {
+      text: '世界が平和になりますように',
+      responseText: '祈り、空に舞い昇る',
+    },
+    {
+      text: '友達ができますように',
+      responseText: '縁は笑顔の先にあり',
+    },
+    {
+      text: 'ゲームがうまくなりますように',
+      responseText: '楽しむ心が力となる',
+    },
+    {
+      text: '猫と仲良くなれますように',
+      responseText: '優しさは、尾をふる',
+    },
+    {
+      text: '美味しいご飯が食べられますように',
+      responseText: 'いただきに感謝を添えて',
+    },
+    {
+      text: '宝くじ当たりますように',
+      responseText: '運は巡る、静かに待て',
+    },
   ];
 
-  return texts.map((text) => ({
+  return mockWishesWithResponses.map(({ text, responseText }) => ({
     text,
+    reply: responseText,
     font: ['ackaisyo', 'aoyagi', 'otsutome', 'yusei'][Math.floor(Math.random() * 4)] as FontKey,
-    fontSize:
-      text.length >= 11
-        ? (['small', 'medium'][Math.floor(Math.random() * 2)] as FontSize)
-        : (['small', 'medium', 'large'][Math.floor(Math.random() * 3)] as FontSize),
+    fontSize: 24,
     fontColor: ['black', 'red', 'blue', 'green'][Math.floor(Math.random() * 4)] as FontColorKey,
     emaImage: ['iroha', 'nadeneko', 'shikineko', 'tenten'][
       Math.floor(Math.random() * 4)
@@ -92,16 +121,6 @@ const fontColorList = [
 type FontColorListItem = (typeof fontColorList)[number];
 type FontColorKey = FontColorListItem['key'];
 
-// フォントサイズテーブル
-const fontSizeList = [
-  { key: 'small', label: '小' },
-  { key: 'medium', label: '中' },
-  { key: 'large', label: '大' },
-] as const;
-
-type FontSizeListItem = (typeof fontSizeList)[number];
-type FontSize = FontSizeListItem['key'];
-
 // 絵馬背景テーブル
 const emaList = {
   iroha: {
@@ -133,11 +152,10 @@ const emaList = {
 
 type EmaImageKey = keyof typeof emaList;
 
-const fontSizeMap = {
-  small: 'text-[17px]',
-  medium: 'text-[24px]',
-  large: 'text-[32px]',
-} as const;
+const fontSizePxRange = {
+  min: 14,
+  max: 32,
+};
 
 const defaultTextRectSize = {
   top: 110,
@@ -157,7 +175,7 @@ const EmaSection = () => {
   const [emaImage, setEmaImage] = useState<EmaImageKey>('iroha');
   const [font, setFont] = useState<FontKey>('ackaisyo');
   const [fontColor, setFontColor] = useState<FontColorKey>('black');
-  const [fontSize, setFontSize] = useState<FontSize>('medium');
+  const [fontSize, setFontSize] = useState(24);
   const [textRotate, setTextRotate] = useState(0);
   const [lineHeight, setLineHeight] = useState(1.4);
   const [textOffset, setTextOffset] = useState({ x: 0, y: 0 });
@@ -165,6 +183,42 @@ const EmaSection = () => {
   const [isOverflowing, setIsOverflowing] = useState(false);
   const [isPosting, setIsPosting] = useState(false);
   const [showPostedMessage, setShowPostedMessage] = useState(false);
+  const [popupMap, setPopupMap] = useState<Record<string, boolean>>({});
+  const [bounceMap, setBounceMap] = useState<Record<string, boolean>>({});
+  const popupTimerMap = useRef<Record<string, ReturnType<typeof setTimeout> | undefined>>({});
+
+  const handleTap = (key: string) => {
+    const popupDuration = getCssDuration('--ema-popup-duration');
+    const bounceDuration = getCssDuration('--ema-bounce-duration');
+
+    // --- ポップアップ ---
+    setPopupMap((prev) => ({ ...prev, [key]: false }));
+    setTimeout(() => {
+      setPopupMap((prev) => ({ ...prev, [key]: true }));
+    }, 10);
+
+    // 前のタイマーがあればキャンセル
+    if (popupTimerMap.current[key]) {
+      clearTimeout(popupTimerMap.current[key]);
+    }
+
+    // 新しいタイマーをセットして記録
+    const newPopupTimer = setTimeout(() => {
+      setPopupMap((prev) => ({ ...prev, [key]: false }));
+      popupTimerMap.current[key] = undefined;
+    }, popupDuration);
+    popupTimerMap.current[key] = newPopupTimer;
+
+    // --- バウンス ---
+    setBounceMap((prev) => ({ ...prev, [key]: false }));
+    setTimeout(() => {
+      setBounceMap((prev) => ({ ...prev, [key]: true }));
+    }, 10);
+
+    setTimeout(() => {
+      setBounceMap((prev) => ({ ...prev, [key]: false }));
+    }, bounceDuration + 10);
+  };
 
   const [textRectStyle, setTextRectStyle] = useState<{
     top: number;
@@ -264,6 +318,7 @@ const EmaSection = () => {
 
     const newPost: Post = {
       text: wish,
+      reply: '返信待ち',
       font,
       fontSize,
       fontColor,
@@ -299,7 +354,7 @@ const EmaSection = () => {
     setWish('');
     setFont('ackaisyo');
     setFontColor('black');
-    setFontSize('medium');
+    setFontSize(24);
     setEmaImage('iroha');
     setTextRotate(0);
     setLineHeight(1.4);
@@ -409,7 +464,7 @@ const EmaSection = () => {
       setFontColor(
         ['black', 'red', 'blue', 'green'][Math.floor(Math.random() * 4)] as FontColorKey
       );
-      setFontSize('medium');
+      setFontSize(24);
       setTextRotate(0);
       setLineHeight([1.0, 1.1, 1.2, 1.3, 1.4][Math.floor(Math.random() * 5)]);
       setTextWidth(defaultTextRectSize.width);
@@ -448,43 +503,62 @@ const EmaSection = () => {
             return (
               <div
                 key={displayPost.drawKey}
-                className={`
-                  min-w-[240px] h-[240px] bg-cover bg-center bg-no-repeat 
-                  text-center relative
-                  ${displayPost.highlighted ? 'animate-ema-insert' : ''}
-                `}
-                style={
-                  {
-                    backgroundImage: `url(/images/ema/${emaList[displayPost.emaImage].filename})`,
-                    '--rotate': `${displayPost.rotate}deg`,
-                    '--ty': `${displayPost.translateY}px`,
-                    transform: `rotate(var(--rotate)) translateY(var(--ty)) scale(1)`,
-                    marginRight: displayPost.marginRight,
-                  } as React.CSSProperties
-                }
+                className="min-w-[240px] h-[240px] relative text-center"
+                style={{
+                  marginRight: displayPost.marginRight,
+                }}
+                onClick={() => handleTap(displayPost.drawKey)}
               >
+                {/* ✅ ポップアップ（絵馬本体とは別に表示） */}
+                {popupMap[displayPost.drawKey] && (
+                  <div className="absolute top-10 left-1/2 z-50 animate-ema-popup">
+                    <div className="w-[200px] bg-black/70 backdrop-blur-sm text-sm text-w-800 px-3 py-2 rounded shadow-lg text-center break-words whitespace-pre-wrap select-none">
+                      {displayPost.reply}
+                    </div>
+                  </div>
+                )}
+
+                {/* ✅ 絵馬本体（ここだけバウンス） */}
                 <div
-                  className="absolute overflow-hidden flex items-center justify-center"
-                  style={{
-                    top: `${defaultTextRectSize.top}px`,
-                    left: `${defaultTextRectSize.left}px`,
-                    width: `${defaultTextRectSize.width}px`,
-                    height: `${defaultTextRectSize.height}px`,
-                  }}
+                  className={`
+              w-full h-full bg-cover bg-center bg-no-repeat
+              ${displayPost.highlighted ? 'animate-ema-insert' : ''}
+              ${bounceMap[displayPost.drawKey] ? 'animate-ema-bounce' : ''}
+            `}
+                  style={
+                    {
+                      backgroundImage: `url(/images/ema/${emaList[displayPost.emaImage].filename})`,
+                      '--rotate': `${displayPost.rotate}deg`,
+                      '--ty': `${displayPost.translateY}px`,
+                      transform: `rotate(var(--rotate)) translateY(var(--ty)) scale(1)`,
+                    } as React.CSSProperties
+                  }
                 >
-                  <p
-                    className={`${fontList.find((f) => f.key === displayPost.font)?.className} ${fontSizeMap[displayPost.fontSize]} text-center break-all whitespace-pre-wrap text-shadow`}
+                  {/* 絵馬の文字 */}
+                  <div
+                    className="absolute overflow-hidden flex items-center justify-center"
                     style={{
                       top: `${defaultTextRectSize.top}px`,
-                      left: `${defaultTextRectSize.left + (defaultTextRectSize.width - displayPost.textWidth) / 2}px`,
-                      width: `${displayPost.textWidth}px`,
-                      color: fontColorList.find((c) => c.key === displayPost.fontColor)?.value,
-                      transform: `translate(${displayPost.offsetX}px, ${displayPost.offsetY}px) rotate(${displayPost.textRotate}deg)`,
-                      lineHeight: displayPost.lineHeight,
+                      left: `${defaultTextRectSize.left}px`,
+                      width: `${defaultTextRectSize.width}px`,
+                      height: `${defaultTextRectSize.height}px`,
                     }}
                   >
-                    {displayPost.text}
-                  </p>
+                    <p
+                      className={`${fontList.find((f) => f.key === displayPost.font)?.className} text-center break-all whitespace-pre-wrap text-shadow select-none`}
+                      style={{
+                        top: `${defaultTextRectSize.top}px`,
+                        left: `${defaultTextRectSize.left + (defaultTextRectSize.width - displayPost.textWidth) / 2}px`,
+                        width: `${displayPost.textWidth}px`,
+                        color: fontColorList.find((c) => c.key === displayPost.fontColor)?.value,
+                        transform: `translate(${displayPost.offsetX}px, ${displayPost.offsetY}px) rotate(${displayPost.textRotate}deg)`,
+                        lineHeight: displayPost.lineHeight,
+                        fontSize: `${displayPost.fontSize}px`,
+                      }}
+                    >
+                      {displayPost.text}
+                    </p>
+                  </div>
                 </div>
               </div>
             );
@@ -511,92 +585,6 @@ const EmaSection = () => {
             >
               ✕
             </button>
-            <div className="grid grid-cols-2 gap-1 mb-1 bg-black border border-white p-4 rounded">
-              <div className="col-span-2 text-center text-base font-semibold">文字選択</div>
-              {/* 左カラム：ボタン・セレクト系 */}
-              <div className="flex flex-col gap-5">
-                {/* フォント選択 */}
-                <select value={font} onChange={(e) => setFont(e.target.value as FontKey)}>
-                  {fontList.map(({ key, label }) => (
-                    <option key={key} value={key}>
-                      {label}
-                    </option>
-                  ))}
-                </select>
-
-                {/* フォントサイズ選択 */}
-                <div className="flex gap-2 items-center">
-                  {fontSizeList.map(({ key, label }) => (
-                    <button
-                      key={key}
-                      className={`px-2 py-1 rounded border ${
-                        fontSize === key ? 'bg-white text-black' : 'bg-gray-800 text-white'
-                      }`}
-                      onClick={() => setFontSize(key)}
-                    >
-                      {label}
-                    </button>
-                  ))}
-                </div>
-
-                {/* フォントカラー */}
-                <div className="flex gap-2 items-center">
-                  {fontColorList.map(({ key, value }) => (
-                    <button
-                      key={key}
-                      className={`w-6 h-6 rounded-full border-2 ${
-                        fontColor === key ? 'border-white' : 'border-transparent'
-                      }`}
-                      style={{ backgroundColor: value }}
-                      onClick={() => setFontColor(key)}
-                      title={key}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              {/* 右カラム：スライダー系 */}
-              <div className="flex flex-col gap-1 text-white">
-                {/* 角度 */}
-                <div className="flex flex-col">
-                  <label className="text-sm mb-1">文字の角度</label>
-                  <input
-                    type="range"
-                    min={-10}
-                    max={10}
-                    step={1}
-                    value={textRotate}
-                    onChange={(e) => setTextRotate(Number(e.target.value))}
-                  />
-                </div>
-
-                {/* 行間 */}
-                <div className="flex flex-col">
-                  <label className="text-sm mb-1">行間</label>
-                  <input
-                    type="range"
-                    min={1.0}
-                    max={2.0}
-                    step={0.1}
-                    value={lineHeight}
-                    onChange={(e) => setLineHeight(Number(e.target.value))}
-                  />
-                </div>
-
-                {/* 横幅 */}
-                <div className="flex flex-col">
-                  <label className="text-sm mb-1">横幅</label>
-                  <input
-                    type="range"
-                    min={80}
-                    max={defaultTextRectSize.width}
-                    step={5}
-                    value={textWidth}
-                    onChange={(e) => setTextWidth(Number(e.target.value))}
-                  />
-                </div>
-              </div>
-            </div>
 
             {/* 挿絵・説明 */}
             <div className="flex items-center justify-between gap-1 bg-black p-2 rounded border border-white h-[90px]">
@@ -643,86 +631,182 @@ const EmaSection = () => {
                 {'▶'}
               </button>
             </div>
-            {/* 絵馬プレビュー */}
-            <div className="flex flex-col items-center gap-1 mt-[-30px]">
-              <div
-                ref={previewWrapperRef}
-                className="relative w-[240px] h-[240px] bg-cover bg-center bg-no-repeat"
-                style={{
-                  backgroundImage: `url(/images/ema/${emaList[emaImage].filename})`,
-                }}
-              >
-                <div
-                  ref={previewContainerRef}
-                  className="absolute overflow-hidden flex items-center justify-center"
-                  style={{
-                    top: `${defaultTextRectSize.top}px`,
-                    left: `${defaultTextRectSize.left}px`,
-                    width: `${defaultTextRectSize.width}px`,
-                    height: `${defaultTextRectSize.height}px`,
-                  }}
-                >
-                  <p
-                    ref={previewTextRef}
-                    onMouseDown={(e) => {
-                      draggingRef.current = true;
-                      startPosRef.current = { x: e.clientX, y: e.clientY };
-                    }}
-                    onTouchStart={(e) => {
-                      draggingRef.current = true;
-                      const touch = e.touches[0];
-                      startPosRef.current = { x: touch.clientX, y: touch.clientY };
-                    }}
-                    className={`${fontList.find((f) => f.key === font)?.className} ${fontSizeMap[fontSize]} text-center break-all whitespace-pre-wrap text-shadow`}
-                    style={{
-                      top: `${defaultTextRectSize.top}px`,
-                      left: `${defaultTextRectSize.left + (defaultTextRectSize.width - textWidth) / 2}px`,
-                      width: `${textWidth}px`,
-                      color: fontColorList.find((c) => c.key === fontColor)?.value,
-                      transform: `translate(${textOffset.x}px, ${textOffset.y}px) rotate(${textRotate}deg)`,
-                      touchAction: 'none',
-                      lineHeight: lineHeight,
-                    }}
+            {/* 文字設定UI */}
+            <div className="flex justify-center mb-4">
+              {/* 左カラム：フォント/サイズ/色 */}
+              <div className="flex flex-col text-white w-[120px]">
+                {/* フォント選択 */}
+                <div>
+                  <label className="text-sm">フォント</label>
+                  <select
+                    value={font}
+                    onChange={(e) => setFont(e.target.value as FontKey)}
+                    className="w-full text-white bg-black/80 rounded px-1"
                   >
-                    {wish || 'ここに表示されます'}
-                  </p>
+                    {fontList.map(({ key, label }) => (
+                      <option key={key} value={key}>
+                        {label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
-                {/* バリデーション用の境界線 */}
-                <div
-                  className="absolute border border-yellow-400 rounded"
-                  style={{
-                    top: `${defaultTextRectSize.top}px`,
-                    left: `${defaultTextRectSize.left}px`,
-                    width: `${defaultTextRectSize.width}px`,
-                    height: `${defaultTextRectSize.height}px`,
-                    pointerEvents: 'none',
-                  }}
-                ></div>
-                {/* ガイド枠（はみ出しチェック用） */}
-                {textRectStyle && (
-                  <div
-                    className="absolute pointer-events-none z-50"
-                    style={{
-                      top: `${textRectStyle.top}px`,
-                      left: `${textRectStyle.left}px`,
-                      width: `${textRectStyle.width}px`,
-                      height: `${textRectStyle.height}px`,
-                      border: `2px dashed ${isOverflowing ? 'red' : 'lime'}`,
-                      borderRadius: '4px',
-                    }}
+
+                {/* フォントカラー */}
+                <div>
+                  <label className="text-sm">文字色</label>
+                  <div className="flex gap-2 mt-1">
+                    {fontColorList.map(({ key, value }) => (
+                      <button
+                        key={key}
+                        className={`w-6 h-6 rounded-full border-2 ${
+                          fontColor === key ? 'border-white' : 'border-transparent'
+                        }`}
+                        style={{ backgroundColor: value }}
+                        onClick={() => setFontColor(key)}
+                        title={key}
+                      />
+                    ))}
+                  </div>
+                </div>
+                {/* フォントサイズ */}
+                <div>
+                  <label className="text-sm">文字サイズ</label>
+                  <input
+                    type="range"
+                    min={fontSizePxRange.min}
+                    max={fontSizePxRange.max}
+                    step={1}
+                    value={fontSize}
+                    onChange={(e) => setFontSize(Number(e.target.value))}
+                    className="w-full"
                   />
-                )}
+                </div>
+
+                {/* 角度 */}
+                <div>
+                  <label className="text-sm">角度</label>
+                  <input
+                    type="range"
+                    min={-10}
+                    max={10}
+                    step={1}
+                    value={textRotate}
+                    onChange={(e) => setTextRotate(Number(e.target.value))}
+                    className="w-full"
+                  />
+                </div>
+
+                {/* 行間 */}
+                <div>
+                  <label className="text-sm">行間</label>
+                  <input
+                    type="range"
+                    min={1.0}
+                    max={2.0}
+                    step={0.1}
+                    value={lineHeight}
+                    onChange={(e) => setLineHeight(Number(e.target.value))}
+                    className="w-full"
+                  />
+                </div>
+
+                {/* 横幅 */}
+                <div>
+                  <label className="text-sm">横幅</label>
+                  <input
+                    type="range"
+                    min={80}
+                    max={defaultTextRectSize.width}
+                    step={5}
+                    value={textWidth}
+                    onChange={(e) => setTextWidth(Number(e.target.value))}
+                    className="w-full"
+                  />
+                </div>
               </div>
 
-              {/* テキストエリアは下に別で表示 */}
-              <textarea
-                maxLength={40} // ← これ！
-                rows={4}
-                value={wish}
-                onChange={(e) => setWish(e.target.value)}
-                className="w-[240px] max-w-md p-2 border rounded bg-black/90"
-                placeholder="願い事を入力..."
-              />
+              <div className="flex flex-col items-center mt-[-20px]">
+                {/* 絵馬（中央）→ 今までの絵馬プレビューをここに挿入 */}
+                <div
+                  ref={previewWrapperRef}
+                  className="relative w-[240px] min-w-[240px] h-[240px] bg-cover bg-center bg-no-repeat"
+                  style={{
+                    backgroundImage: `url(/images/ema/${emaList[emaImage].filename})`,
+                  }}
+                >
+                  <div
+                    ref={previewContainerRef}
+                    className="absolute overflow-hidden flex items-center justify-center"
+                    style={{
+                      top: `${defaultTextRectSize.top}px`,
+                      left: `${defaultTextRectSize.left}px`,
+                      width: `${defaultTextRectSize.width}px`,
+                      height: `${defaultTextRectSize.height}px`,
+                    }}
+                  >
+                    <p
+                      ref={previewTextRef}
+                      onMouseDown={(e) => {
+                        draggingRef.current = true;
+                        startPosRef.current = { x: e.clientX, y: e.clientY };
+                      }}
+                      onTouchStart={(e) => {
+                        draggingRef.current = true;
+                        const touch = e.touches[0];
+                        startPosRef.current = { x: touch.clientX, y: touch.clientY };
+                      }}
+                      className={`${fontList.find((f) => f.key === font)?.className} text-center break-all whitespace-pre-wrap text-shadow`}
+                      style={{
+                        width: `${textWidth}px`,
+                        color: fontColorList.find((c) => c.key === fontColor)?.value,
+                        transform: `translate(${textOffset.x}px, ${textOffset.y}px) rotate(${textRotate}deg)`,
+                        touchAction: 'none',
+                        lineHeight: lineHeight,
+                        fontSize: `${fontSize}px`,
+                      }}
+                    >
+                      {wish || 'ここに表示されます'}
+                    </p>
+                  </div>
+                  {/* バリデーション用の境界線 */}
+                  <div
+                    className="absolute border border-yellow-400 rounded"
+                    style={{
+                      top: `${defaultTextRectSize.top}px`,
+                      left: `${defaultTextRectSize.left}px`,
+                      width: `${defaultTextRectSize.width}px`,
+                      height: `${defaultTextRectSize.height}px`,
+                      pointerEvents: 'none',
+                    }}
+                  ></div>
+                  {/* ガイド枠（はみ出しチェック用） */}
+                  {textRectStyle && (
+                    <div
+                      className="absolute pointer-events-none z-50"
+                      style={{
+                        top: `${textRectStyle.top}px`,
+                        left: `${textRectStyle.left}px`,
+                        width: `${textRectStyle.width}px`,
+                        height: `${textRectStyle.height}px`,
+                        border: `2px dashed ${isOverflowing ? 'red' : 'lime'}`,
+                        borderRadius: '4px',
+                      }}
+                    />
+                  )}
+                </div>
+                {/* テキストエリアは下に別で表示 */}
+                <textarea
+                  maxLength={40}
+                  rows={3}
+                  value={wish}
+                  onChange={(e) => setWish(e.target.value)}
+                  className="w-[220px] max-w-md p-2 border rounded bg-black/90  mt-[-10px]"
+                  placeholder="願い事を入力..."
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col items-center gap-1">
               <div className="flex space-x-2">
                 <button
                   onClick={() => setIsPosting(false)}
