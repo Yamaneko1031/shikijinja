@@ -123,30 +123,30 @@ type FontColorKey = FontColorListItem['key'];
 
 // 絵馬背景テーブル
 const emaList = {
+  shikineko: {
+    label: 'しきねこ',
+    filename: 'ema_shikineko.webp',
+    illustname: 'illust_shikineko.webp',
+    grace: '主にエンジニア業務における\nご利益があるとされている',
+  },
   iroha: {
     label: 'いろは',
     filename: 'ema_iroha.webp',
     illustname: 'illust_iroha.webp',
     description: '健康に過ごせますように',
-    grace: '主にデザイン業務において\nご利益があるとされている',
-  },
-  nadeneko: {
-    label: 'なでねこ',
-    filename: 'ema_nadeneko.webp',
-    illustname: 'illust_nadeneko.webp',
-    grace: '幸運を招くとされている',
-  },
-  shikineko: {
-    label: 'しきねこ',
-    filename: 'ema_shikineko.webp',
-    illustname: 'illust_shikineko.webp',
-    grace: '主にエンジニア業務において\nご利益があるとされている',
+    grace: '主にデザイン業務における\nご利益があるとされている',
   },
   tenten: {
     label: 'てんてん',
     filename: 'ema_tenten.webp',
     illustname: 'illust_tenten.webp',
-    grace: '主にPM業務において\nご利益があるとされている',
+    grace: '主にPM業務における\nご利益があるとされている',
+  },
+  nadeneko: {
+    label: 'なでねこ',
+    filename: 'ema_nadeneko.webp',
+    illustname: 'illust_nadeneko.webp',
+    grace: '撫でられると喜ぶ\n幸運を招くとされている',
   },
 } as const;
 
@@ -186,6 +186,7 @@ const EmaSection = () => {
   const [popupMap, setPopupMap] = useState<Record<string, boolean>>({});
   const [bounceMap, setBounceMap] = useState<Record<string, boolean>>({});
   const popupTimerMap = useRef<Record<string, ReturnType<typeof setTimeout> | undefined>>({});
+  const [isSettingOpen, setIsSettingOpen] = useState(false);
 
   const handleTap = (key: string) => {
     const popupDuration = getCssDuration('--ema-popup-duration');
@@ -577,15 +578,7 @@ const EmaSection = () => {
 
       {isPosting && (
         <div className="fixed inset-0 z-50 bg-black/20 flex items-center justify-center p-4">
-          <div className="bg-black/80 rounded-lg p-6 max-w-sm w-full shadow-xl relative text-white">
-            {/* 閉じるボタン */}
-            <button
-              onClick={() => setIsPosting(false)}
-              className="absolute top-2 right-2 text-gray-600 hover:text-black"
-            >
-              ✕
-            </button>
-
+          <div className="bg-black/80 rounded-lg p-6 max-w-sm min-w-[320px] w-full shadow-xl relative text-white">
             {/* 挿絵・説明 */}
             <div className="flex items-center justify-between gap-1 bg-black p-2 rounded border border-white h-[90px]">
               <button
@@ -601,11 +594,12 @@ const EmaSection = () => {
                 {'◀'}
               </button>
               <div className="flex-1 text-center">
-                <div>
-                  <label className="text-white">絵馬【{emaList[emaImage].label}】</label>
+                <div className="flex">
+                  <div className="text-white">絵馬の種類を選ぶ</div>
+                  <div className="text-white ml-2">【{emaList[emaImage].label}】</div>
                 </div>
                 <div className="flex items-center">
-                  <div className="text-sm text-white">
+                  <div className="ml-4">
                     <Image
                       src={`/images/illust/${emaList[emaImage].illustname}`}
                       alt=""
@@ -613,7 +607,7 @@ const EmaSection = () => {
                       height={50}
                     />
                   </div>
-                  <div className="text-xs text-gray-300 ml-2 whitespace-pre-line text-center flex-1">
+                  <div className="text-xs text-gray-300 ml-1 whitespace-pre-line text-center flex-1">
                     {emaList[emaImage].grace}
                   </div>
                 </div>
@@ -631,182 +625,211 @@ const EmaSection = () => {
                 {'▶'}
               </button>
             </div>
-            {/* 文字設定UI */}
-            <div className="flex justify-center mb-4">
-              {/* 左カラム：フォント/サイズ/色 */}
-              <div className="flex flex-col text-white w-[120px]">
-                {/* フォント選択 */}
-                <div>
-                  <label className="text-sm">フォント</label>
-                  <select
-                    value={font}
-                    onChange={(e) => setFont(e.target.value as FontKey)}
-                    className="w-full text-white bg-black/80 rounded px-1"
-                  >
-                    {fontList.map(({ key, label }) => (
-                      <option key={key} value={key}>
-                        {label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
 
-                {/* フォントカラー */}
-                <div>
-                  <label className="text-sm">文字色</label>
-                  <div className="flex gap-2 mt-1">
-                    {fontColorList.map(({ key, value }) => (
-                      <button
-                        key={key}
-                        className={`w-6 h-6 rounded-full border-2 ${
-                          fontColor === key ? 'border-white' : 'border-transparent'
-                        }`}
-                        style={{ backgroundColor: value }}
-                        onClick={() => setFontColor(key)}
-                        title={key}
+            {/* 絵馬プレビュー＆テキストエリア + 設定UI ラッパー */}
+            <div className="relative flex justify-center w-full">
+              <button
+                onClick={() => setIsSettingOpen(!isSettingOpen)}
+                className="absolute left-0 top-4 px-3 py-1 bg-gray-700 text-white text-sm rounded-full shadow-md hover:bg-gray-600 z-50 flex items-center"
+              >
+                <Image
+                  src="/images/icon/icon_hude.webp"
+                  alt="icon"
+                  width={24}
+                  height={24}
+                  className="mr-2"
+                />
+                {isSettingOpen ? '←' : '文字のカスタム'}
+              </button>
+              {/* 開閉式設定UI（左側、プレビューより前面に） */}
+              <div
+                className={`
+                  absolute top-45 left-0 -translate-y-1/2 z-50
+                  bg-black/90 text-white rounded-r-lg shadow-lg
+                  transition-all duration-300 ease-in-out
+                  ${isSettingOpen ? 'w-[100px] opacity-100' : 'w-[24px] opacity-60'}
+                `}
+              >
+                {isSettingOpen && (
+                  <div className="px-2 text-xs space-y-2 w-[100px]">
+                    <div>
+                      <label>フォント</label>
+                      <select
+                        value={font}
+                        onChange={(e) => setFont(e.target.value as FontKey)}
+                        className="w-full bg-black border border-white rounded px-1"
+                      >
+                        {fontList.map((f) => (
+                          <option key={f.key} value={f.key}>
+                            {f.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label>文字色</label>
+                      <div className="flex gap-1 mt-1">
+                        {fontColorList.map(({ key, value }) => (
+                          <button
+                            key={key}
+                            className={`w-4 h-4 rounded-full border-2 ${
+                              fontColor === key ? 'border-white' : 'border-transparent'
+                            }`}
+                            style={{ backgroundColor: value }}
+                            onClick={() => setFontColor(key)}
+                            title={key}
+                          />
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label>サイズ</label>
+                      <input
+                        type="range"
+                        min={fontSizePxRange.min}
+                        max={fontSizePxRange.max}
+                        step={1}
+                        value={fontSize}
+                        onChange={(e) => setFontSize(Number(e.target.value))}
+                        className="w-full"
                       />
-                    ))}
+                    </div>
+
+                    <div>
+                      <label>角度</label>
+                      <input
+                        type="range"
+                        min={-10}
+                        max={10}
+                        step={1}
+                        value={textRotate}
+                        onChange={(e) => setTextRotate(Number(e.target.value))}
+                        className="w-full"
+                      />
+                    </div>
+
+                    <div>
+                      <label>行間</label>
+                      <input
+                        type="range"
+                        min={1.0}
+                        max={2.0}
+                        step={0.1}
+                        value={lineHeight}
+                        onChange={(e) => setLineHeight(Number(e.target.value))}
+                        className="w-full"
+                      />
+                    </div>
+
+                    <div>
+                      <label>最大幅</label>
+                      <input
+                        type="range"
+                        min={80}
+                        max={defaultTextRectSize.width}
+                        step={5}
+                        value={textWidth}
+                        onChange={(e) => setTextWidth(Number(e.target.value))}
+                        className="w-full"
+                      />
+                    </div>
                   </div>
-                </div>
-                {/* フォントサイズ */}
-                <div>
-                  <label className="text-sm">文字サイズ</label>
-                  <input
-                    type="range"
-                    min={fontSizePxRange.min}
-                    max={fontSizePxRange.max}
-                    step={1}
-                    value={fontSize}
-                    onChange={(e) => setFontSize(Number(e.target.value))}
-                    className="w-full"
-                  />
-                </div>
-
-                {/* 角度 */}
-                <div>
-                  <label className="text-sm">角度</label>
-                  <input
-                    type="range"
-                    min={-10}
-                    max={10}
-                    step={1}
-                    value={textRotate}
-                    onChange={(e) => setTextRotate(Number(e.target.value))}
-                    className="w-full"
-                  />
-                </div>
-
-                {/* 行間 */}
-                <div>
-                  <label className="text-sm">行間</label>
-                  <input
-                    type="range"
-                    min={1.0}
-                    max={2.0}
-                    step={0.1}
-                    value={lineHeight}
-                    onChange={(e) => setLineHeight(Number(e.target.value))}
-                    className="w-full"
-                  />
-                </div>
-
-                {/* 横幅 */}
-                <div>
-                  <label className="text-sm">横幅</label>
-                  <input
-                    type="range"
-                    min={80}
-                    max={defaultTextRectSize.width}
-                    step={5}
-                    value={textWidth}
-                    onChange={(e) => setTextWidth(Number(e.target.value))}
-                    className="w-full"
-                  />
-                </div>
+                )}
               </div>
 
-              <div className="flex flex-col items-center mt-[-20px]">
-                {/* 絵馬（中央）→ 今までの絵馬プレビューをここに挿入 */}
+              <div className="relative z-10">
+                {/* 右にずらされるプレビュー */}
                 <div
-                  ref={previewWrapperRef}
-                  className="relative w-[240px] min-w-[240px] h-[240px] bg-cover bg-center bg-no-repeat"
-                  style={{
-                    backgroundImage: `url(/images/ema/${emaList[emaImage].filename})`,
-                  }}
+                  className={`
+                    relative z-10 transition-all duration-300
+                    ${isSettingOpen ? 'ml-[90px]' : 'ml-[24px]'}
+                  `}
                 >
-                  <div
-                    ref={previewContainerRef}
-                    className="absolute overflow-hidden flex items-center justify-center"
-                    style={{
-                      top: `${defaultTextRectSize.top}px`,
-                      left: `${defaultTextRectSize.left}px`,
-                      width: `${defaultTextRectSize.width}px`,
-                      height: `${defaultTextRectSize.height}px`,
-                    }}
-                  >
-                    <p
-                      ref={previewTextRef}
-                      onMouseDown={(e) => {
-                        draggingRef.current = true;
-                        startPosRef.current = { x: e.clientX, y: e.clientY };
-                      }}
-                      onTouchStart={(e) => {
-                        draggingRef.current = true;
-                        const touch = e.touches[0];
-                        startPosRef.current = { x: touch.clientX, y: touch.clientY };
-                      }}
-                      className={`${fontList.find((f) => f.key === font)?.className} text-center break-all whitespace-pre-wrap text-shadow`}
+                  {/* 絵馬プレビュー＆テキストエリア */}
+                  <div className="flex flex-col items-center">
+                    <div
+                      ref={previewWrapperRef}
+                      className="relative w-[240px] min-w-[240px] h-[240px] bg-cover bg-center bg-no-repeat"
                       style={{
-                        width: `${textWidth}px`,
-                        color: fontColorList.find((c) => c.key === fontColor)?.value,
-                        transform: `translate(${textOffset.x}px, ${textOffset.y}px) rotate(${textRotate}deg)`,
-                        touchAction: 'none',
-                        lineHeight: lineHeight,
-                        fontSize: `${fontSize}px`,
+                        backgroundImage: `url(/images/ema/${emaList[emaImage].filename})`,
                       }}
                     >
-                      {wish || 'ここに表示されます'}
-                    </p>
-                  </div>
-                  {/* バリデーション用の境界線 */}
-                  <div
-                    className="absolute border border-yellow-400 rounded"
-                    style={{
-                      top: `${defaultTextRectSize.top}px`,
-                      left: `${defaultTextRectSize.left}px`,
-                      width: `${defaultTextRectSize.width}px`,
-                      height: `${defaultTextRectSize.height}px`,
-                      pointerEvents: 'none',
-                    }}
-                  ></div>
-                  {/* ガイド枠（はみ出しチェック用） */}
-                  {textRectStyle && (
-                    <div
-                      className="absolute pointer-events-none z-50"
-                      style={{
-                        top: `${textRectStyle.top}px`,
-                        left: `${textRectStyle.left}px`,
-                        width: `${textRectStyle.width}px`,
-                        height: `${textRectStyle.height}px`,
-                        border: `2px dashed ${isOverflowing ? 'red' : 'lime'}`,
-                        borderRadius: '4px',
-                      }}
+                      <div
+                        ref={previewContainerRef}
+                        className="absolute overflow-hidden flex items-center justify-center"
+                        style={{
+                          top: `${defaultTextRectSize.top}px`,
+                          left: `${defaultTextRectSize.left}px`,
+                          width: `${defaultTextRectSize.width}px`,
+                          height: `${defaultTextRectSize.height}px`,
+                        }}
+                      >
+                        <p
+                          ref={previewTextRef}
+                          onMouseDown={(e) => {
+                            draggingRef.current = true;
+                            startPosRef.current = { x: e.clientX, y: e.clientY };
+                          }}
+                          onTouchStart={(e) => {
+                            draggingRef.current = true;
+                            const touch = e.touches[0];
+                            startPosRef.current = { x: touch.clientX, y: touch.clientY };
+                          }}
+                          className={`${fontList.find((f) => f.key === font)?.className} text-center break-all whitespace-pre-wrap text-shadow`}
+                          style={{
+                            maxWidth: `${textWidth}px`,
+                            color: fontColorList.find((c) => c.key === fontColor)?.value,
+                            transform: `translate(${textOffset.x}px, ${textOffset.y}px) rotate(${textRotate}deg)`,
+                            touchAction: 'none',
+                            lineHeight: lineHeight,
+                            fontSize: `${fontSize}px`,
+                          }}
+                        >
+                          {wish || 'ここに表示されます'}
+                        </p>
+                      </div>
+                      {/* バリデーション用の境界線 */}
+                      <div
+                        className="absolute border border-yellow-400 rounded"
+                        style={{
+                          top: `${defaultTextRectSize.top}px`,
+                          left: `${defaultTextRectSize.left}px`,
+                          width: `${defaultTextRectSize.width}px`,
+                          height: `${defaultTextRectSize.height}px`,
+                          pointerEvents: 'none',
+                        }}
+                      ></div>
+                      {/* ガイド枠（はみ出しチェック用） */}
+                      {textRectStyle && (
+                        <div
+                          className="absolute pointer-events-none z-50"
+                          style={{
+                            top: `${textRectStyle.top}px`,
+                            left: `${textRectStyle.left}px`,
+                            width: `${textRectStyle.width}px`,
+                            height: `${textRectStyle.height}px`,
+                            border: `2px dashed ${isOverflowing ? 'red' : 'lime'}`,
+                            borderRadius: '4px',
+                          }}
+                        />
+                      )}
+                    </div>
+                    <textarea
+                      maxLength={40}
+                      rows={3}
+                      value={wish}
+                      onChange={(e) => setWish(e.target.value)}
+                      className="w-[200px] max-w-md p-2 border rounded bg-black/90 mt-[-10px]"
+                      placeholder="願い事を入力..."
                     />
-                  )}
+                  </div>
                 </div>
-                {/* テキストエリアは下に別で表示 */}
-                <textarea
-                  maxLength={40}
-                  rows={3}
-                  value={wish}
-                  onChange={(e) => setWish(e.target.value)}
-                  className="w-[220px] max-w-md p-2 border rounded bg-black/90  mt-[-10px]"
-                  placeholder="願い事を入力..."
-                />
               </div>
             </div>
 
-            <div className="flex flex-col items-center gap-1">
+            <div className="flex flex-col items-center gap-1 mt-4">
               <div className="flex space-x-2">
                 <button
                   onClick={() => setIsPosting(false)}
