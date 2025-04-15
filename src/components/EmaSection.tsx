@@ -1,22 +1,26 @@
 'use client';
 
 import { getCssDuration } from '@/utils/getCssDuration';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 
-// 絵馬投稿データ
-type Post = {
+type TextBlock = {
   text: string;
-  reply: string;
   font: FontKey;
   fontSize: number;
   fontColor: FontColorKey;
-  emaImage: EmaImageKey;
   textRotate: string;
   lineHeight: string;
   offsetX: number;
   offsetY: number;
   textWidth: number;
+};
+
+// 絵馬投稿データ
+type Post = {
+  texts: TextBlock[];
+  reply: string;
+  emaImage: EmaImageKey;
 };
 
 // 絵馬表示用データ
@@ -82,21 +86,37 @@ const generateMockPosts = (): Post[] => {
     },
   ];
 
-  return mockWishesWithResponses.map(({ text, responseText }) => ({
-    text,
-    reply: responseText,
-    font: ['ackaisyo', 'aoyagi', 'otsutome', 'yusei'][Math.floor(Math.random() * 4)] as FontKey,
-    fontSize: 24,
-    fontColor: ['black', 'red', 'blue', 'green'][Math.floor(Math.random() * 4)] as FontColorKey,
-    emaImage: ['iroha', 'nadeneko', 'shikineko', 'tenten'][
+  return mockWishesWithResponses.map(({ text, responseText }) => {
+    const font = ['ackaisyo', 'aoyagi', 'otsutome', 'yusei'][
       Math.floor(Math.random() * 4)
-    ] as EmaImageKey,
-    textRotate: (Math.random() * 6 - 3).toFixed(1),
-    lineHeight: (Math.random() * 0.2 + 1.2).toFixed(1),
-    offsetX: 0,
-    offsetY: 0,
-    textWidth: defaultTextRectSize.width,
-  }));
+    ] as FontKey;
+    const fontColor = ['black', 'red', 'blue', 'green'][
+      Math.floor(Math.random() * 4)
+    ] as FontColorKey;
+    const fontSize = 24;
+    const lineHeight = (Math.random() * 0.2 + 1.2).toFixed(1);
+    const textRotate = (Math.random() * 6 - 3).toFixed(1);
+
+    const textBlock: TextBlock = {
+      text,
+      font,
+      fontSize,
+      fontColor,
+      textRotate,
+      lineHeight,
+      offsetX: 0,
+      offsetY: 0,
+      textWidth: defaultTextRectSize.width,
+    };
+
+    return {
+      texts: [textBlock],
+      reply: responseText,
+      emaImage: ['iroha', 'nadeneko', 'shikineko', 'tenten'][
+        Math.floor(Math.random() * 4)
+      ] as EmaImageKey,
+    };
+  });
 };
 
 // フォントテーブル
@@ -169,17 +189,10 @@ const EmaSection = () => {
   const previewContainerRef = useRef<HTMLDivElement>(null);
   const previewTextRef = useRef<HTMLParagraphElement>(null);
   const previewWrapperRef = useRef<HTMLDivElement>(null);
+  const previewTextRefs = useRef<(HTMLParagraphElement | null)[]>([]);
 
-  const [wish, setWish] = useState('');
   const [displayPosts, setDisplayPosts] = useState<DisplayPost[]>([]);
   const [emaImage, setEmaImage] = useState<EmaImageKey>('iroha');
-  const [font, setFont] = useState<FontKey>('ackaisyo');
-  const [fontColor, setFontColor] = useState<FontColorKey>('black');
-  const [fontSize, setFontSize] = useState(24);
-  const [textRotate, setTextRotate] = useState(0);
-  const [lineHeight, setLineHeight] = useState(1.4);
-  const [textOffset, setTextOffset] = useState({ x: 0, y: 0 });
-  const [textWidth, setTextWidth] = useState(defaultTextRectSize.width);
   const [isOverflowing, setIsOverflowing] = useState(false);
   const [isPosting, setIsPosting] = useState(false);
   const [showPostedMessage, setShowPostedMessage] = useState(false);
@@ -187,6 +200,47 @@ const EmaSection = () => {
   const [bounceMap, setBounceMap] = useState<Record<string, boolean>>({});
   const popupTimerMap = useRef<Record<string, ReturnType<typeof setTimeout> | undefined>>({});
   const [isSettingOpen, setIsSettingOpen] = useState(false);
+
+  const [currentTextIndex, setCurrentTextIndex] = useState<0 | 1>(0);
+  const [texts, setTexts] = useState<TextBlock[]>([
+    {
+      text: '',
+      font: 'ackaisyo',
+      fontSize: 24,
+      fontColor: 'black',
+      textRotate: '0',
+      lineHeight: '1.4',
+      offsetX: 0,
+      offsetY: 0,
+      textWidth: defaultTextRectSize.width,
+    },
+    {
+      text: '',
+      font: 'ackaisyo',
+      fontSize: 24,
+      fontColor: 'black',
+      textRotate: '0',
+      lineHeight: '1.4',
+      offsetX: 0,
+      offsetY: 0,
+      textWidth: defaultTextRectSize.width,
+    },
+  ]);
+
+  const updateCurrentText = useCallback(
+    (patch: Partial<TextBlock> | ((prev: TextBlock) => TextBlock)) => {
+      setTexts((prev) => {
+        const updated = [...prev];
+        const prevBlock = updated[currentTextIndex];
+
+        updated[currentTextIndex] =
+          typeof patch === 'function' ? patch(prevBlock) : { ...prevBlock, ...patch };
+
+        return updated;
+      });
+    },
+    [currentTextIndex]
+  );
 
   const handleTap = (key: string) => {
     const popupDuration = getCssDuration('--ema-popup-duration');
@@ -228,11 +282,13 @@ const EmaSection = () => {
     height: number;
   } | null>(null);
 
-  const draggingRef = useRef(false);
+  const draggingRef = useRef<number | false>(false);
   const startPosRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   useEffect(() => {
     const handleMove = (e: MouseEvent | TouchEvent) => {
-      if (!draggingRef.current) return;
+      if (draggingRef.current === false) return;
+
+      const index = draggingRef.current;
 
       const clientX = 'touches' in e ? e.touches[0].clientX : (e as MouseEvent).clientX;
       const clientY = 'touches' in e ? e.touches[0].clientY : (e as MouseEvent).clientY;
@@ -240,10 +296,16 @@ const EmaSection = () => {
       const dx = clientX - startPosRef.current.x;
       const dy = clientY - startPosRef.current.y;
 
-      setTextOffset((prev) => ({
-        x: prev.x + dx,
-        y: prev.y + dy,
-      }));
+      setTexts((prev) => {
+        const updated = [...prev];
+        const target = updated[index];
+        updated[index] = {
+          ...target,
+          offsetX: target.offsetX + dx,
+          offsetY: target.offsetY + dy,
+        };
+        return updated;
+      });
 
       startPosRef.current = { x: clientX, y: clientY };
     };
@@ -263,7 +325,7 @@ const EmaSection = () => {
       window.removeEventListener('touchmove', handleMove);
       window.removeEventListener('touchend', handleEnd);
     };
-  }, []);
+  }, [updateCurrentText]);
 
   const scrollToCarousel = () => {
     if (!carouselRef.current) return;
@@ -305,7 +367,7 @@ const EmaSection = () => {
 
   // 絵馬投稿処理
   const handlePostWish = () => {
-    if (!wish.trim()) return;
+    if (!texts[currentTextIndex].text.trim()) return;
 
     const container = previewContainerRef.current;
     const text = previewTextRef.current;
@@ -318,17 +380,9 @@ const EmaSection = () => {
     }
 
     const newPost: Post = {
-      text: wish,
+      texts: texts,
       reply: '返信待ち',
-      font,
-      fontSize,
-      fontColor,
       emaImage,
-      textRotate: textRotate.toFixed(1),
-      lineHeight: lineHeight.toFixed(1),
-      offsetX: textOffset.x,
-      offsetY: textOffset.y,
-      textWidth,
     };
 
     const insertIndex = getInsertIndex();
@@ -352,16 +406,33 @@ const EmaSection = () => {
     }, insertDuration);
 
     // 入力内容リセット
-    setWish('');
-    setFont('ackaisyo');
-    setFontColor('black');
-    setFontSize(24);
+    setTexts([
+      {
+        text: '',
+        font: 'ackaisyo',
+        fontSize: 24,
+        fontColor: 'black',
+        textRotate: '0',
+        lineHeight: '1.4',
+        offsetX: 0,
+        offsetY: 0,
+        textWidth: defaultTextRectSize.width,
+      },
+      {
+        text: '',
+        font: 'ackaisyo',
+        fontSize: 24,
+        fontColor: 'black',
+        textRotate: '0',
+        lineHeight: '1.4',
+        offsetX: 0,
+        offsetY: 0,
+        textWidth: defaultTextRectSize.width,
+      },
+    ]);
     setEmaImage('iroha');
-    setTextRotate(0);
-    setLineHeight(1.4);
-    setTextOffset({ x: 0, y: 0 });
     setIsPosting(false);
-    setTextWidth(defaultTextRectSize.width);
+    setCurrentTextIndex(0);
 
     // 投稿メッセージ表示
     setShowPostedMessage(true);
@@ -424,11 +495,11 @@ const EmaSection = () => {
   }, []);
 
   // テキストのはみ出しをチェック
-  const checkTextOverflowAndRect = () => {
-    if (!previewTextRef.current || !previewWrapperRef.current || !previewContainerRef.current)
-      return;
+  const checkTextOverflowAndRect = useCallback(() => {
+    const textEl = previewTextRefs.current[currentTextIndex];
+    if (!textEl || !previewWrapperRef.current || !previewContainerRef.current) return;
 
-    const textRect = previewTextRef.current.getBoundingClientRect();
+    const textRect = textEl.getBoundingClientRect();
     const wrapperRect = previewWrapperRef.current.getBoundingClientRect();
     const containerRect = previewContainerRef.current.getBoundingClientRect();
 
@@ -447,29 +518,49 @@ const EmaSection = () => {
       textRect.bottom > containerRect.bottom + margin;
 
     setIsOverflowing(isOver);
-  };
+  }, [currentTextIndex]);
 
-  // 表示位置の監視（wish, rotate, lineHeight が変わるたび）
+  const currentText = texts[currentTextIndex];
   useEffect(() => {
     checkTextOverflowAndRect();
-  }, [wish, textRotate, lineHeight, fontSize, font, textOffset, textWidth]);
+  }, [currentText, currentTextIndex, checkTextOverflowAndRect]);
 
   useEffect(() => {
     if (isPosting) {
       document.body.style.overflow = 'hidden';
 
+      const initFont = ['ackaisyo', 'aoyagi', 'otsutome', 'yusei'][
+        Math.floor(Math.random() * 4)
+      ] as FontKey;
+      const initFontColor = ['black', 'red', 'blue', 'green'][
+        Math.floor(Math.random() * 4)
+      ] as FontColorKey;
       // 投稿フォームが開かれたタイミングでランダム初期化
-      setFont(
-        ['ackaisyo', 'aoyagi', 'otsutome', 'yusei'][Math.floor(Math.random() * 4)] as FontKey
-      );
-      setFontColor(
-        ['black', 'red', 'blue', 'green'][Math.floor(Math.random() * 4)] as FontColorKey
-      );
-      setFontSize(24);
-      setTextRotate(0);
-      setLineHeight([1.0, 1.1, 1.2, 1.3, 1.4][Math.floor(Math.random() * 5)]);
-      setTextWidth(defaultTextRectSize.width);
-      setTextOffset({ x: 0, y: 0 });
+      setTexts([
+        {
+          text: '',
+          font: initFont,
+          fontSize: 24,
+          fontColor: initFontColor,
+          textRotate: '0',
+          lineHeight: [1.0, 1.1, 1.2, 1.3, 1.4][Math.floor(Math.random() * 5)].toFixed(1),
+          offsetX: 0,
+          offsetY: 0,
+          textWidth: defaultTextRectSize.width,
+        },
+        {
+          text: '',
+          font: initFont,
+          fontSize: 16,
+          fontColor: initFontColor,
+          textRotate: '0',
+          lineHeight: '1.4',
+          offsetX: 0,
+          offsetY: 35,
+          textWidth: defaultTextRectSize.width,
+        },
+      ]);
+      setCurrentTextIndex(0);
 
       // 投稿を開いた時に表示位置のチェック
       setTimeout(checkTextOverflowAndRect, 0);
@@ -537,7 +628,7 @@ const EmaSection = () => {
                 >
                   {/* 絵馬の文字 */}
                   <div
-                    className="absolute overflow-hidden flex items-center justify-center"
+                    className="absolute flex items-center justify-center overflow-hidden"
                     style={{
                       top: `${defaultTextRectSize.top}px`,
                       left: `${defaultTextRectSize.left}px`,
@@ -545,20 +636,22 @@ const EmaSection = () => {
                       height: `${defaultTextRectSize.height}px`,
                     }}
                   >
-                    <p
-                      className={`${fontList.find((f) => f.key === displayPost.font)?.className} text-center break-all whitespace-pre-wrap text-shadow select-none`}
-                      style={{
-                        top: `${defaultTextRectSize.top}px`,
-                        left: `${defaultTextRectSize.left + (defaultTextRectSize.width - displayPost.textWidth) / 2}px`,
-                        width: `${displayPost.textWidth}px`,
-                        color: fontColorList.find((c) => c.key === displayPost.fontColor)?.value,
-                        transform: `translate(${displayPost.offsetX}px, ${displayPost.offsetY}px) rotate(${displayPost.textRotate}deg)`,
-                        lineHeight: displayPost.lineHeight,
-                        fontSize: `${displayPost.fontSize}px`,
-                      }}
-                    >
-                      {displayPost.text}
-                    </p>
+                    {displayPost.texts.map((block, i) => (
+                      <p
+                        key={i}
+                        className={`absolute ${fontList.find((f) => f.key === block.font)?.className} text-center whitespace-pre-wrap text-shadow select-none`}
+                        style={{
+                          maxWidth: `${block.textWidth}px`,
+                          color: fontColorList.find((c) => c.key === block.fontColor)?.value,
+                          transform: `translate(${block.offsetX}px, ${block.offsetY}px) rotate(${block.textRotate}deg)`,
+                          touchAction: 'none',
+                          lineHeight: block.lineHeight,
+                          fontSize: `${block.fontSize}px`,
+                        }}
+                      >
+                        {block.text}
+                      </p>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -578,7 +671,7 @@ const EmaSection = () => {
 
       {isPosting && (
         <div className="fixed inset-0 z-50 bg-black/20 flex items-center justify-center p-4">
-          <div className="bg-black/80 rounded-lg p-6 max-w-sm min-w-[320px] w-full shadow-xl relative text-white">
+          <div className="bg-black/80 rounded-lg p-2 max-w-[400px] min-w-[320px] w-full shadow-xl relative text-white">
             {/* 挿絵・説明 */}
             <div className="flex items-center justify-between gap-1 bg-black p-2 rounded border border-white h-[90px]">
               <button
@@ -630,7 +723,7 @@ const EmaSection = () => {
             <div className="relative flex justify-center w-full">
               <button
                 onClick={() => setIsSettingOpen(!isSettingOpen)}
-                className="absolute left-0 top-4 px-3 py-1 bg-gray-700 text-white text-sm rounded-full shadow-md hover:bg-gray-600 z-50 flex items-center"
+                className="absolute left-2 top-2 px-3 py-1 bg-gray-700 text-white text-sm rounded-full shadow-md hover:bg-gray-600 z-50 flex items-center"
               >
                 <Image
                   src="/images/icon/icon_hude.webp"
@@ -641,22 +734,40 @@ const EmaSection = () => {
                 />
                 {isSettingOpen ? '←' : '文字のカスタム'}
               </button>
+
+              {/* 編集対象テキストの選択 */}
+              <div className="absolute right-2 top-2 flex flex-col gap-2 z-20">
+                {[0, 1].map((index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentTextIndex(index as 0 | 1)}
+                    className={`px-2 py-1 rounded-full border ${
+                      currentTextIndex === index
+                        ? 'bg-white text-black border-white'
+                        : 'bg-gray-600 text-white border-gray-400'
+                    }`}
+                  >
+                    {index === 0 ? '本文' : 'ニックネーム'}
+                  </button>
+                ))}
+              </div>
+
               {/* 開閉式設定UI（左側、プレビューより前面に） */}
               <div
                 className={`
-                  absolute top-45 left-0 -translate-y-1/2 z-50
+                  absolute top-46 left-0 -translate-y-1/2 z-50
                   bg-black/90 text-white rounded-r-lg shadow-lg
                   transition-all duration-300 ease-in-out
-                  ${isSettingOpen ? 'w-[100px] opacity-100' : 'w-[24px] opacity-60'}
+                  ${isSettingOpen ? 'w-[120px] opacity-100' : 'w-[24px] opacity-60'}
                 `}
               >
                 {isSettingOpen && (
-                  <div className="px-2 text-xs space-y-2 w-[100px]">
+                  <div className="px-2 text-sm space-y-2 w-[120px]">
                     <div>
                       <label>フォント</label>
                       <select
-                        value={font}
-                        onChange={(e) => setFont(e.target.value as FontKey)}
+                        value={currentText.font}
+                        onChange={(e) => updateCurrentText({ font: e.target.value as FontKey })}
                         className="w-full bg-black border border-white rounded px-1"
                       >
                         {fontList.map((f) => (
@@ -674,10 +785,10 @@ const EmaSection = () => {
                           <button
                             key={key}
                             className={`w-4 h-4 rounded-full border-2 ${
-                              fontColor === key ? 'border-white' : 'border-transparent'
+                              currentText.fontColor === key ? 'border-white' : 'border-transparent'
                             }`}
                             style={{ backgroundColor: value }}
-                            onClick={() => setFontColor(key)}
+                            onClick={() => updateCurrentText({ fontColor: key })}
                             title={key}
                           />
                         ))}
@@ -691,8 +802,8 @@ const EmaSection = () => {
                         min={fontSizePxRange.min}
                         max={fontSizePxRange.max}
                         step={1}
-                        value={fontSize}
-                        onChange={(e) => setFontSize(Number(e.target.value))}
+                        value={currentText.fontSize}
+                        onChange={(e) => updateCurrentText({ fontSize: Number(e.target.value) })}
                         className="w-full"
                       />
                     </div>
@@ -704,8 +815,8 @@ const EmaSection = () => {
                         min={-10}
                         max={10}
                         step={1}
-                        value={textRotate}
-                        onChange={(e) => setTextRotate(Number(e.target.value))}
+                        value={currentText.textRotate}
+                        onChange={(e) => updateCurrentText({ textRotate: e.target.value })}
                         className="w-full"
                       />
                     </div>
@@ -717,8 +828,8 @@ const EmaSection = () => {
                         min={1.0}
                         max={2.0}
                         step={0.1}
-                        value={lineHeight}
-                        onChange={(e) => setLineHeight(Number(e.target.value))}
+                        value={currentText.lineHeight}
+                        onChange={(e) => updateCurrentText({ lineHeight: e.target.value })}
                         className="w-full"
                       />
                     </div>
@@ -730,8 +841,8 @@ const EmaSection = () => {
                         min={80}
                         max={defaultTextRectSize.width}
                         step={5}
-                        value={textWidth}
-                        onChange={(e) => setTextWidth(Number(e.target.value))}
+                        value={currentText.textWidth}
+                        onChange={(e) => updateCurrentText({ textWidth: Number(e.target.value) })}
                         className="w-full"
                       />
                     </div>
@@ -758,7 +869,7 @@ const EmaSection = () => {
                     >
                       <div
                         ref={previewContainerRef}
-                        className="absolute overflow-hidden flex items-center justify-center"
+                        className="absolute flex items-center justify-center overflow-hidden"
                         style={{
                           top: `${defaultTextRectSize.top}px`,
                           left: `${defaultTextRectSize.left}px`,
@@ -766,29 +877,45 @@ const EmaSection = () => {
                           height: `${defaultTextRectSize.height}px`,
                         }}
                       >
-                        <p
-                          ref={previewTextRef}
-                          onMouseDown={(e) => {
-                            draggingRef.current = true;
-                            startPosRef.current = { x: e.clientX, y: e.clientY };
-                          }}
-                          onTouchStart={(e) => {
-                            draggingRef.current = true;
-                            const touch = e.touches[0];
-                            startPosRef.current = { x: touch.clientX, y: touch.clientY };
-                          }}
-                          className={`${fontList.find((f) => f.key === font)?.className} text-center break-all whitespace-pre-wrap text-shadow`}
-                          style={{
-                            maxWidth: `${textWidth}px`,
-                            color: fontColorList.find((c) => c.key === fontColor)?.value,
-                            transform: `translate(${textOffset.x}px, ${textOffset.y}px) rotate(${textRotate}deg)`,
-                            touchAction: 'none',
-                            lineHeight: lineHeight,
-                            fontSize: `${fontSize}px`,
-                          }}
-                        >
-                          {wish || 'ここに表示されます'}
-                        </p>
+                        {texts.map((block, index) => {
+                          const isCurrent = currentTextIndex === index;
+                          const isEmpty = block.text === '';
+                          // 表示すべき仮テキスト
+                          const placeholder = index === 0 ? 'ここに表示される' : 'ここに表示される';
+                          // 空かつ非アクティブなら描画しない
+                          if (isEmpty && !isCurrent) return null;
+
+                          return (
+                            <p
+                              key={index}
+                              ref={(el) => {
+                                previewTextRefs.current[index] = el;
+                              }}
+                              onMouseDown={(e) => {
+                                if (!isCurrent) return;
+                                draggingRef.current = index;
+                                startPosRef.current = { x: e.clientX, y: e.clientY };
+                              }}
+                              onTouchStart={(e) => {
+                                if (!isCurrent) return;
+                                const touch = e.touches[0];
+                                draggingRef.current = index;
+                                startPosRef.current = { x: touch.clientX, y: touch.clientY };
+                              }}
+                              className={`absolute ${fontList.find((f) => f.key === block.font)?.className} text-center whitespace-pre-wrap text-shadow select-none`}
+                              style={{
+                                maxWidth: `${block.textWidth}px`,
+                                color: fontColorList.find((c) => c.key === block.fontColor)?.value,
+                                transform: `translate(${block.offsetX}px, ${block.offsetY}px) rotate(${block.textRotate}deg)`,
+                                touchAction: 'none',
+                                lineHeight: block.lineHeight,
+                                fontSize: `${block.fontSize}px`,
+                              }}
+                            >
+                              {isEmpty ? placeholder : block.text}
+                            </p>
+                          );
+                        })}
                       </div>
                       {/* バリデーション用の境界線 */}
                       <div
@@ -819,8 +946,8 @@ const EmaSection = () => {
                     <textarea
                       maxLength={40}
                       rows={3}
-                      value={wish}
-                      onChange={(e) => setWish(e.target.value)}
+                      value={currentText.text}
+                      onChange={(e) => updateCurrentText({ text: e.target.value })}
                       className="w-[200px] max-w-md p-2 border rounded bg-black/90 mt-[-10px]"
                       placeholder="願い事を入力..."
                     />
@@ -844,7 +971,7 @@ const EmaSection = () => {
                   投稿する
                 </button>
                 <button
-                  onClick={() => setTextOffset({ x: 0, y: 0 })}
+                  onClick={() => updateCurrentText({ offsetX: 0, offsetY: 0 })}
                   className="bg-gray-600 text-white text-sm px-2 py-1 rounded hover:bg-gray-700"
                 >
                   位置リセット
