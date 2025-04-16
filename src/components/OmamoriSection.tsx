@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import TextReveal from './TextReveal';
 
 const OmamoriSection = () => {
   const [selectedOmamori, setSelectedOmamori] = useState('love');
@@ -11,26 +12,27 @@ const OmamoriSection = () => {
   };
 
   return (
-    <section
-      className="w-[300px] h-[300px] bg-black items-center justify-center p-4"
-      style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
-    >
-      <h2 className="text-4xl font-bold mb-4">御守り</h2>
-      <p className="text-xl mb-4">ご利益を得たい御守りを選択して受け取るコンテンツ</p>
-
-      <select
-        className="p-2 mb-4"
-        value={selectedOmamori}
-        onChange={(e) => setSelectedOmamori(e.target.value)}
-      >
-        <option value="project">プロジェクト運</option>
-        <option value="health">健康運</option>
-        <option value="money">金運</option>
-      </select>
-      <button className="bg-indigo-600 text-white px-4 py-2 rounded" onClick={handlePurchase}>
-        受け取る
-      </button>
-    </section>
+    <div className="relative w-full h-[1500px] items-center justify-center p-4">
+      <div className="relative top-[800px] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] p-10 bg-black/50 rounded-lg">
+        <TextReveal
+          text="ご利益を得たい御守りを選択して受け取るコンテンツ"
+          delayPerChar={0.1}
+          className="text-2xl font-bold mb-4"
+        />
+        <select
+          className="p-2 mb-4"
+          value={selectedOmamori}
+          onChange={(e) => setSelectedOmamori(e.target.value)}
+        >
+          <option value="project">プロジェクト運</option>
+          <option value="health">健康運</option>
+          <option value="money">金運</option>
+        </select>
+        <button className="bg-indigo-600 text-white px-4 py-2 rounded" onClick={handlePurchase}>
+          受け取る
+        </button>
+      </div>
+    </div>
   );
 };
 

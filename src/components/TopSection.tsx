@@ -15,16 +15,16 @@ const TopSection = () => {
   const toriiScale = useTransform(smoothScrollY, [0, 400], [1, 3.5]);
   const toriiOpacity = useTransform(smoothScrollY, [100, 500], [1, 0]);
   const titleOpacity = useTransform(scrollY, [50, 300], [1, 0]);
-  const whiteOverlayOpacity = useTransform(scrollY, [200, 650, 900], [0, 1, 0]);
+  // const whiteOverlayOpacity = useTransform(scrollY, [200, 650, 900], [0, 1, 0]);
   const arrowOpacity = useTransform(scrollY, [0, 200], [1, 0]);
 
   return (
-    <section className="relative w-full min-h-screen overflow-hidden">
+    <div className="relative w-full h-screen overflow-hidden">
       {/* 白背景フェードオーバーレイ */}
-      <motion.div
+      {/* <motion.div
         className="fixed inset-0 z-50 bg-white/30 backdrop-blur-sm pointer-events-none"
         style={{ opacity: whiteOverlayOpacity }}
-      />
+      /> */}
 
       {/* 鳥居 */}
       <motion.div
@@ -55,12 +55,14 @@ const TopSection = () => {
         式岐神社
       </motion.h1>
 
-      <p>IT業界で働く人、IT業界を志す人に ご利益をもたらすと言い伝えられている神社</p>
-
       <motion.p
         style={{ opacity: titleOpacity }}
-        className="absolute top-[52%] left-1/2 -translate-x-1/2 z-1000 text-white text-center text-lg drop-shadow"
-      ></motion.p>
+        className="absolute top-[48%] left-1/2 -translate-x-1/2 z-1000 text-white text-center text-lg drop-shadow"
+      >
+        IT業界で働く人、IT業界を志す人に
+        <br />
+        ご利益をもたらすと言い伝えられている神社
+      </motion.p>
       <motion.div
         className="fixed z-1000 left-1/2 bottom-[8vh] -translate-x-1/2 pointer-events-none text-white"
         style={{ opacity: arrowOpacity }}
@@ -78,7 +80,7 @@ const TopSection = () => {
           <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
         </svg>
       </motion.div>
-    </section>
+    </div>
   );
 };
 

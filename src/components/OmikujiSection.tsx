@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import TextReveal from './TextReveal';
 
 const OmikujiSection = () => {
   const [loading, setLoading] = useState(false);
@@ -20,23 +21,24 @@ const OmikujiSection = () => {
   };
 
   return (
-    <section
-      className="w-[300px] h-[300px] bg-black items-center justify-center p-4"
-      style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
-    >
-      <h2 className="text-4xl font-bold mb-4">おみくじ</h2>
-      <p className="text-xl mb-4">おみくじを引けるコンテンツ</p>
-
-      <button
-        onClick={fetchOmikuji}
-        className={`px-4 py-2 rounded ${
-          loading ? 'bg-gray-500 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'
-        }`}
-        disabled={loading}
-      >
-        {loading ? '神様と交信中…' : 'おみくじを引く'}
-      </button>
-    </section>
+    <div className="relative w-full h-[1500px] items-center justify-center p-4">
+      <div className="relative top-[800px] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] p-10 bg-black/50 rounded-lg">
+        <TextReveal
+          text="おみくじを引けるコンテンツ"
+          delayPerChar={0.1}
+          className="text-2xl font-bold mb-4"
+        />
+        <button
+          onClick={fetchOmikuji}
+          className={`px-4 py-2 rounded ${
+            loading ? 'bg-gray-500 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'
+          }`}
+          disabled={loading}
+        >
+          {loading ? '神様と交信中…' : 'おみくじを引く'}
+        </button>
+      </div>
+    </div>
   );
 };
 

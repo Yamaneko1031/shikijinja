@@ -77,3 +77,23 @@
 .animate-ema-bounce {
   animation: ema-bounce var(--ema-bounce-duration) ease;
 }
+
+@keyframes section-overlay-fade {
+  0% {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  20%,
+  50% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+}
+
+.animate-section-overlay-fade {
+  animation: section-overlay-fade var(--section-overlay-fade-duration) ease-in-out;
+}

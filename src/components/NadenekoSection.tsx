@@ -1,5 +1,7 @@
 'use client';
 
+import TextReveal from './TextReveal';
+
 const NadenekoSection = () => {
   const handlePostWish = () => {
     // 投稿ボタンの処理（例えば、APIに投稿する）
@@ -7,17 +9,18 @@ const NadenekoSection = () => {
   };
 
   return (
-    <section
-      className="w-[300px] h-[400px] bg-black items-center justify-center p-4"
-      style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
-    >
-      <h2 className="text-4xl font-bold mb-4">撫で猫</h2>
-      <p className="text-xl mb-4">猫を撫でるコンテンツ</p>
-
-      <button className="bg-indigo-600 px-4 py-2 rounded" onClick={handlePostWish}>
-        撫でる
-      </button>
-    </section>
+    <div className="relative w-full h-[1500px] items-center justify-center p-4">
+      <div className="relative top-[800px] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] p-10 bg-black/50 rounded-lg">
+        <TextReveal
+          text="猫を撫でるコンテンツ"
+          delayPerChar={0.1}
+          className="text-2xl font-bold mb-4"
+        />
+        <button className="bg-indigo-600 px-4 py-2 rounded" onClick={handlePostWish}>
+          撫でる
+        </button>
+      </div>
+    </div>
   );
 };
 
