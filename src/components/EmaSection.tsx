@@ -589,8 +589,8 @@ const EmaSection = () => {
   }, [isPosting]);
 
   return (
-    <div className="relative w-full h-[1500px] items-center justify-center p-4">
-      <div className="relative top-[600px] w-full max-w-3xl mx-auto p-4 bg-black/50 bg-opacity-80 rounded shadow-lg">
+    <div className="relative w-full h-[1200px] items-center justify-center p-4">
+      <div className="relative top-[400px] w-full max-w-3xl mx-auto p-4 bg-black/50 bg-opacity-80 rounded shadow-lg">
         <TextReveal
           text="絵馬投稿や他の人の投稿した絵馬をみるコンテンツ"
           delayPerChar={0.1}

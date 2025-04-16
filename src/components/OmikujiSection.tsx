@@ -21,8 +21,8 @@ const OmikujiSection = () => {
   };
 
   return (
-    <div className="relative w-full h-[1500px] items-center justify-center p-4">
-      <div className="relative top-[800px] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] p-10 bg-black/50 rounded-lg">
+    <div className="relative w-full h-[1200px] items-center justify-center p-4">
+      <div className="relative top-[600px] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] p-10 bg-black/50 rounded-lg">
         <TextReveal
           text="おみくじを引けるコンテンツ"
           delayPerChar={0.1}
