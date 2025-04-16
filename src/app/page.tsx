@@ -101,6 +101,11 @@ export default function App() {
         <div
           key={`${visibleSectionId}`}
           className="fixed inset-0 z-50 flex justify-center bg-white/10 animate-section-overlay-fade"
+          style={{
+            width: '100%',
+            height: '100lvh',
+            transform: 'translateZ(0.01px)',
+          }}
         >
           <h2 className="absolute top-2/5 text-white text-4xl font-bold">
             {sections.find((s) => s.id === visibleSectionId)?.name}
