@@ -33,6 +33,9 @@
 }
 
 /* bodyで全体に当てているフォントが優先されるので、特殊フォントは!importantをつける */
+.font-default {
+  font-family: 'AoyagiKouzan', serif;
+}
 .font-fude {
   font-family: 'KouzanMouhitu', serif !important;
 }

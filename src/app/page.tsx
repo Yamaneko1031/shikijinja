@@ -4,15 +4,15 @@ import { useRef, useEffect, useState } from 'react';
 import { BackgroundManager, BackgroundManagerHandle } from '../components/BackgroundManager';
 import { sections } from '../config/sections';
 import { getCssDuration } from '../utils/getCssDuration';
+
 export default function App() {
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
   const bgManagerRef = useRef<BackgroundManagerHandle>(null);
   const overlayTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const activeSectionIndexRef = useRef(0);
   const allUrls = sections.map(({ bgUrl }) => bgUrl);
-  const [showSectionOverlay, setShowSectionOverlay] = useState(false);
-  const [visibleSectionId, setVisibleSectionId] = useState<string | null>(null);
-  const [showSectionContent, setShowSectionContent] = useState(false);
+  const [isOverlayActive, setIsOverlayActive] = useState(false);
+  const [overlayText, setOverlayText] = useState<string | null>(null);
 
   useEffect(() => {
     let lastSectionId = '';
@@ -34,35 +34,31 @@ export default function App() {
           bgManagerRef.current.setUrl(section.bgUrl, section.bgCenterPosition);
           lastSectionId = section.id;
 
-          setVisibleSectionId(section.id);
           activeSectionIndexRef.current = sectionIndex;
 
-          if (section.name == '') {
-            setShowSectionOverlay(false);
-            setShowSectionContent(true);
-          } else if (sectionScrollDown) {
-            // オーバーレイ表示
-            setShowSectionOverlay(true);
-            setShowSectionContent(false);
+          const shouldShowOverlay = sectionScrollDown && section.name !== '';
 
-            // 前のタイマーをキャンセル
+          if (shouldShowOverlay) {
+            // キャンセル前のタイマー
             if (overlayTimerRef.current) {
               clearTimeout(overlayTimerRef.current);
+              setOverlayText(null);
+              setIsOverlayActive(false);
             }
 
-            const sectionOverlayFadeDuration = getCssDuration('--section-overlay-fade-duration');
-            // 新しいタイマーを設定
-            overlayTimerRef.current = setTimeout(() => {
-              setShowSectionOverlay(false);
-              overlayTimerRef.current = null;
-            }, sectionOverlayFadeDuration);
-
-            setTimeout(() => {
-              setShowSectionContent(true);
-            }, 200);
+            requestAnimationFrame(() => {
+              setOverlayText(section.name);
+              setIsOverlayActive(true);
+              const sectionOverlayFadeDuration = getCssDuration('--section-overlay-fade-duration');
+              overlayTimerRef.current = setTimeout(() => {
+                setOverlayText(null);
+                overlayTimerRef.current = null;
+                console.log('overlayTimerRef.current');
+              }, sectionOverlayFadeDuration);
+            });
           } else {
-            setShowSectionOverlay(false);
-            setShowSectionContent(true);
+            setOverlayText(null);
+            setIsOverlayActive(false);
           }
         }
       }
@@ -88,28 +84,19 @@ export default function App() {
           ref={(el) => {
             sectionRefs.current[id] = el;
           }}
-          className={`min-h-screen flex items-center justify-center transition-opacity duration-700 ${
-            visibleSectionId === id && showSectionContent
-              ? 'opacity-100'
-              : 'opacity-0 pointer-events-none'
-          }`}
         >
           {SectionComponent && <SectionComponent />}
         </section>
       ))}
-      {showSectionOverlay && visibleSectionId && (
+
+      {overlayText && (
         <div
-          key={`${visibleSectionId}`}
-          className="fixed inset-0 z-50 flex justify-center bg-white/10 animate-section-overlay-fade"
-          style={{
-            width: '100%',
-            height: '100lvh',
-            transform: 'translateZ(0.01px)',
-          }}
+          className={`fixed inset-0 z-50 flex justify-center bg-white/10 pointer-events-none ${
+            isOverlayActive ? 'animate-section-overlay-fade' : ''
+          }`}
+          style={{ transform: 'translateZ(0.01px)', height: '100lvh' }}
         >
-          <h2 className="absolute top-2/5 text-white text-4xl font-bold">
-            {sections.find((s) => s.id === visibleSectionId)?.name}
-          </h2>
+          <h2 className="absolute top-2/5 text-white text-4xl font-bold">{overlayText}</h2>
         </div>
       )}
     </main>

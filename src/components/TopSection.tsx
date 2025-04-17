@@ -50,7 +50,7 @@ const TopSection = () => {
       </motion.div>
       <motion.h1
         style={{ opacity: titleOpacity }}
-        className="absolute top-[40%] left-1/2 -translate-x-1/2 text-white text-4xl sm:text-6xl font-fude font-bold drop-shadow-[0_0_5px_rgba(0,0,0,1)] z-1000 pointer-events-none"
+        className="absolute top-[40%] left-1/2 -translate-x-1/2 text-white text-4xl sm:text-6xl font-bold drop-shadow-[0_0_5px_rgba(0,0,0,1)] z-1000 pointer-events-none"
       >
         式岐神社
       </motion.h1>

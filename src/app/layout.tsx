@@ -1,12 +1,5 @@
 import type { Metadata } from 'next';
-import { Noto_Serif_JP } from 'next/font/google';
 import '../styles/globals.css';
-
-const notoSerifJP = Noto_Serif_JP({
-  weight: ['400', '700'],
-  subsets: ['latin'],
-  display: 'swap',
-});
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -19,8 +12,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja">
-      <body className={`${notoSerifJP.className} antialiased`}>{children}</body>
+    <html lang="ja" suppressHydrationWarning>
+      <body className="font-default antialiased">{children}</body>
     </html>
   );
 }
