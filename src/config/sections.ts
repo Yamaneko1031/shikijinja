@@ -7,61 +7,109 @@ import HaidenSection from '../components/HaidenSection';
 import NadenekoSection from '../components/NadenekoSection';
 import SandoSection from '../components/SandoSection';
 
-export const sections = [
+export type Section = {
+  id: string;
+  bgUrl: string;
+  name: string;
+  component: React.ComponentType;
+  scrollEffect: { ratio: number; posX: number; posY: number; zoom: number }[];
+};
+
+export const sections: Section[] = [
   {
     id: 'top',
     bgUrl: '/images/bg_anim/bg_top.webp',
-    bgCenterPosition: '50% center',
     name: '',
     component: TopSection,
+    scrollEffect: [
+      { ratio: 0.0, posX: 50, posY: 50, zoom: 1.0 },
+      { ratio: 0.5, posX: 50, posY: 50, zoom: 1.0 },
+      { ratio: 0.6, posX: 50, posY: 50, zoom: 1.1 },
+      { ratio: 1.0, posX: 50, posY: 50, zoom: 1.3 },
+    ],
   },
   {
     id: 'sando',
     bgUrl: '/images/bg_anim/bg_sando.webp',
-    bgCenterPosition: '75% center',
     name: '参道',
     component: SandoSection,
+    scrollEffect: [
+      { ratio: 0.0, posX: 40, posY: 50, zoom: 1.0 },
+      { ratio: 0.5, posX: 50, posY: 50, zoom: 1.1 },
+      { ratio: 0.8, posX: 70, posY: 50, zoom: 1.2 },
+      { ratio: 1.0, posX: 75, posY: 50, zoom: 1.3 },
+    ],
   },
   {
     id: 'ema',
     bgUrl: '/images/bg_anim/bg_ema.webp',
-    bgCenterPosition: '55% center',
     name: '絵馬掛所',
     component: EmaSection,
+    scrollEffect: [
+      { ratio: 0.0, posX: 30, posY: 50, zoom: 1.0 },
+      { ratio: 0.4, posX: 50, posY: 50, zoom: 1.1 },
+      { ratio: 0.7, posX: 50, posY: 50, zoom: 1.1 },
+      { ratio: 1.0, posX: 60, posY: 50, zoom: 1.0 },
+    ],
   },
   {
     id: 'omamori',
     bgUrl: '/images/bg_anim/bg_omamori.webp',
-    bgCenterPosition: '35% center',
     name: '授与所',
     component: OmamoriSection,
+    scrollEffect: [
+      { ratio: 0.0, posX: 30, posY: 50, zoom: 1.0 },
+      { ratio: 0.4, posX: 50, posY: 50, zoom: 1.1 },
+      { ratio: 0.7, posX: 50, posY: 50, zoom: 1.1 },
+      { ratio: 1.0, posX: 60, posY: 50, zoom: 1.0 },
+    ],
   },
   {
     id: 'omikuji',
     bgUrl: '/images/bg_anim/bg_omikuji.webp',
-    bgCenterPosition: '50% center',
     name: 'おみくじ結び所',
     component: OmikujiSection,
+    scrollEffect: [
+      { ratio: 0.0, posX: 30, posY: 50, zoom: 1.0 },
+      { ratio: 0.4, posX: 50, posY: 50, zoom: 1.1 },
+      { ratio: 0.7, posX: 50, posY: 50, zoom: 1.1 },
+      { ratio: 1.0, posX: 60, posY: 50, zoom: 1.0 },
+    ],
   },
   {
     id: 'nadeneko',
     bgUrl: '/images/bg_anim/bg_nadeneko.webp',
-    bgCenterPosition: 'center center',
     name: 'なで猫の社',
     component: NadenekoSection,
+    scrollEffect: [
+      { ratio: 0.0, posX: 30, posY: 50, zoom: 1.0 },
+      { ratio: 0.4, posX: 50, posY: 50, zoom: 1.1 },
+      { ratio: 0.7, posX: 50, posY: 50, zoom: 1.1 },
+      { ratio: 1.0, posX: 60, posY: 50, zoom: 1.0 },
+    ],
   },
   {
     id: 'shoukai',
     bgUrl: '/images/bg_anim/bg_shoukai.webp',
-    bgCenterPosition: 'center center',
     name: '宝物殿',
     component: ShoukaiSection,
+    scrollEffect: [
+      { ratio: 0.0, posX: 30, posY: 50, zoom: 1.0 },
+      { ratio: 0.4, posX: 50, posY: 50, zoom: 1.1 },
+      { ratio: 0.7, posX: 50, posY: 50, zoom: 1.1 },
+      { ratio: 1.0, posX: 60, posY: 50, zoom: 1.0 },
+    ],
   },
   {
     id: 'haiden',
     bgUrl: '/images/bg_anim/bg_haiden.webp',
-    bgCenterPosition: 'center center',
     name: '拝殿',
     component: HaidenSection,
+    scrollEffect: [
+      { ratio: 0.0, posX: 50, posY: 50, zoom: 1.0 },
+      { ratio: 0.5, posX: 50, posY: 50, zoom: 1.3 },
+      { ratio: 0.6, posX: 50, posY: 50, zoom: 1.3 },
+      { ratio: 1.0, posX: 50, posY: 50, zoom: 1.3 },
+    ],
   },
 ];

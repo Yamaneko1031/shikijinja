@@ -2,44 +2,40 @@
 
 import { useRef, useEffect, useState } from 'react';
 import { BackgroundManager, BackgroundManagerHandle } from '../components/BackgroundManager';
-import { sections } from '../config/sections';
+import { Section, sections } from '../config/sections';
 import { getCssDuration } from '../utils/getCssDuration';
 
 export default function App() {
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
   const bgManagerRef = useRef<BackgroundManagerHandle>(null);
   const overlayTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const activeSectionIndexRef = useRef(0);
   const allUrls = sections.map(({ bgUrl }) => bgUrl);
   const [isOverlayActive, setIsOverlayActive] = useState(false);
   const [overlayText, setOverlayText] = useState<string | null>(null);
+  const currentSectionRef = useRef<Section>(sections[0]);
 
   useEffect(() => {
-    let lastSectionId = '';
-
     const checkScroll = () => {
       const centerY = window.innerHeight / 2;
-      const sectionIndex = sections.findIndex(({ id }) => {
+
+      const nextSection = sections.find(({ id }) => {
         const el = sectionRefs.current[id];
         if (!el) return false;
         const rect = el.getBoundingClientRect();
         return rect.top <= centerY && rect.bottom >= centerY;
       });
 
-      const section = sectionIndex !== -1 ? sections[sectionIndex] : null;
-      const sectionScrollDown = activeSectionIndexRef.current < sectionIndex;
+      if (nextSection && bgManagerRef.current) {
+        if (
+          currentSectionRef.current.id != nextSection.id &&
+          bgManagerRef.current.isReadyForTransition()
+        ) {
+          const currentSctionIndex = sections.findIndex(
+            (s) => s.id === currentSectionRef.current.id
+          );
+          const nextSctionIndex = sections.findIndex((s) => s.id === nextSection.id);
 
-      if (section && bgManagerRef.current) {
-        if (section.id !== lastSectionId && bgManagerRef.current.isReadyForTransition()) {
-          bgManagerRef.current.setUrl(section.bgUrl, section.bgCenterPosition);
-          lastSectionId = section.id;
-
-          activeSectionIndexRef.current = sectionIndex;
-
-          const shouldShowOverlay = sectionScrollDown && section.name !== '';
-
-          if (shouldShowOverlay) {
-            // キャンセル前のタイマー
+          if (nextSctionIndex > currentSctionIndex && nextSection.name !== '') {
             if (overlayTimerRef.current) {
               clearTimeout(overlayTimerRef.current);
               setOverlayText(null);
@@ -47,19 +43,30 @@ export default function App() {
             }
 
             requestAnimationFrame(() => {
-              setOverlayText(section.name);
+              setOverlayText(currentSectionRef.current.name);
               setIsOverlayActive(true);
               const sectionOverlayFadeDuration = getCssDuration('--section-overlay-fade-duration');
               overlayTimerRef.current = setTimeout(() => {
                 setOverlayText(null);
                 overlayTimerRef.current = null;
-                console.log('overlayTimerRef.current');
               }, sectionOverlayFadeDuration);
             });
           } else {
             setOverlayText(null);
             setIsOverlayActive(false);
           }
+          bgManagerRef.current.setUrl(nextSection.bgUrl, nextSection.scrollEffect);
+          currentSectionRef.current = nextSection;
+        }
+
+        const el = sectionRefs.current[currentSectionRef.current.id];
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          const scrollRatio = Math.min(
+            Math.max((window.innerHeight / 2 - rect.top) / rect.height, 0),
+            1
+          );
+          bgManagerRef.current.setScrollRatio(scrollRatio);
         }
       }
 
@@ -74,8 +81,8 @@ export default function App() {
       <BackgroundManager
         ref={bgManagerRef}
         initialUrl={sections[0].bgUrl}
-        initialBgPosition={sections[0].bgCenterPosition}
         allUrls={allUrls}
+        scrollEffect={sections[0].scrollEffect}
       />
 
       {sections.map(({ id, component: SectionComponent }) => (
