@@ -34,10 +34,9 @@ export const sections: Section[] = [
     name: '参道',
     component: SandoSection,
     scrollEffect: [
-      { ratio: 0.0, posX: 40, posY: 50, zoom: 1.0 },
-      { ratio: 0.5, posX: 50, posY: 50, zoom: 1.1 },
-      { ratio: 0.8, posX: 70, posY: 50, zoom: 1.2 },
-      { ratio: 1.0, posX: 75, posY: 50, zoom: 1.3 },
+      { ratio: 0.0, posX: 45, posY: 50, zoom: 1.0 },
+      { ratio: 0.5, posX: 60, posY: 50, zoom: 1.1 },
+      { ratio: 1.0, posX: 70, posY: 50, zoom: 1.2 },
     ],
   },
   {
@@ -47,7 +46,7 @@ export const sections: Section[] = [
     component: EmaSection,
     scrollEffect: [
       { ratio: 0.0, posX: 30, posY: 50, zoom: 1.0 },
-      { ratio: 0.4, posX: 50, posY: 50, zoom: 1.1 },
+      { ratio: 0.5, posX: 50, posY: 50, zoom: 1.1 },
       { ratio: 0.7, posX: 50, posY: 50, zoom: 1.1 },
       { ratio: 1.0, posX: 60, posY: 50, zoom: 1.0 },
     ],
@@ -59,9 +58,9 @@ export const sections: Section[] = [
     component: OmamoriSection,
     scrollEffect: [
       { ratio: 0.0, posX: 30, posY: 50, zoom: 1.0 },
-      { ratio: 0.4, posX: 50, posY: 50, zoom: 1.1 },
-      { ratio: 0.7, posX: 50, posY: 50, zoom: 1.1 },
-      { ratio: 1.0, posX: 60, posY: 50, zoom: 1.0 },
+      { ratio: 0.5, posX: 55, posY: 50, zoom: 1.1 },
+      { ratio: 0.7, posX: 55, posY: 50, zoom: 1.1 },
+      { ratio: 1.0, posX: 68, posY: 50, zoom: 1.0 },
     ],
   },
   {
@@ -70,9 +69,9 @@ export const sections: Section[] = [
     name: 'おみくじ結び所',
     component: OmikujiSection,
     scrollEffect: [
-      { ratio: 0.0, posX: 30, posY: 50, zoom: 1.0 },
-      { ratio: 0.4, posX: 50, posY: 50, zoom: 1.1 },
-      { ratio: 0.7, posX: 50, posY: 50, zoom: 1.1 },
+      { ratio: 0.0, posX: 40, posY: 50, zoom: 1.0 },
+      { ratio: 0.5, posX: 55, posY: 50, zoom: 1.1 },
+      { ratio: 0.7, posX: 55, posY: 50, zoom: 1.1 },
       { ratio: 1.0, posX: 60, posY: 50, zoom: 1.0 },
     ],
   },
@@ -82,10 +81,11 @@ export const sections: Section[] = [
     name: 'なで猫の社',
     component: NadenekoSection,
     scrollEffect: [
-      { ratio: 0.0, posX: 30, posY: 50, zoom: 1.0 },
-      { ratio: 0.4, posX: 50, posY: 50, zoom: 1.1 },
-      { ratio: 0.7, posX: 50, posY: 50, zoom: 1.1 },
-      { ratio: 1.0, posX: 60, posY: 50, zoom: 1.0 },
+      { ratio: 0.0, posX: 45, posY: 50, zoom: 1.0 },
+      { ratio: 0.4, posX: 60, posY: 50, zoom: 1.15 },
+      { ratio: 0.5, posX: 60, posY: 50, zoom: 1.2 },
+      { ratio: 0.7, posX: 60, posY: 50, zoom: 1.2 },
+      { ratio: 1.0, posX: 65, posY: 50, zoom: 1.1 },
     ],
   },
   {
@@ -95,9 +95,9 @@ export const sections: Section[] = [
     component: ShoukaiSection,
     scrollEffect: [
       { ratio: 0.0, posX: 30, posY: 50, zoom: 1.0 },
-      { ratio: 0.4, posX: 50, posY: 50, zoom: 1.1 },
-      { ratio: 0.7, posX: 50, posY: 50, zoom: 1.1 },
-      { ratio: 1.0, posX: 60, posY: 50, zoom: 1.0 },
+      { ratio: 0.4, posX: 50, posY: 50, zoom: 1.0 },
+      { ratio: 0.7, posX: 55, posY: 50, zoom: 1.0 },
+      { ratio: 1.0, posX: 65, posY: 50, zoom: 1.0 },
     ],
   },
   {
