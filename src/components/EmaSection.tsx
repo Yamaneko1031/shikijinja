@@ -1,7 +1,7 @@
 'use client';
 
 import { getCssDuration } from '@/utils/getCssDuration';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react';
 import Image from 'next/image';
 import TextReveal from './TextReveal';
 
@@ -202,6 +202,7 @@ const EmaSection = () => {
   const previewWrapperRef = useRef<HTMLDivElement>(null);
   const previewTextRefs = useRef<(HTMLParagraphElement | null)[]>([]);
   const popupTimerMap = useRef<Record<string, ReturnType<typeof setTimeout> | undefined>>({});
+  const scrollShiftRef = useRef<number>(0);
 
   const [displayPosts, setDisplayPosts] = useState<DisplayPost[]>([]);
   const [selectedDeity, setSelectedDeity] = useState<EmaImageKey | null>(null);
@@ -440,14 +441,14 @@ const EmaSection = () => {
   // カルーセルの自動スクロール処理
   useEffect(() => {
     const interval = setInterval(() => {
-      if (carouselRef.current) {
+      const container = carouselRef.current;
+      if (container) {
         // scrollByだとiOSで表示が再描画されないことがあるので、scrollToを使用
-        carouselRef.current.scrollTo({
-          left: carouselRef.current.scrollLeft + 2,
+        container.scrollTo({
+          left: container.scrollLeft + 2,
           behavior: 'auto',
         });
 
-        const container = carouselRef.current;
         if (!container) return;
 
         const scrollLeft = container.scrollLeft;
@@ -455,7 +456,8 @@ const EmaSection = () => {
         const middleX = scrollWidth / 2;
 
         if (scrollLeft > middleX) {
-          const shiftWidth = Array.from(container.children)
+          console.log(container.scrollLeft);
+          scrollShiftRef.current = Array.from(container.children)
             .slice(0, 3)
             .reduce((acc, child) => {
               const childElement = child as HTMLElement;
@@ -469,17 +471,20 @@ const EmaSection = () => {
             const rest = prev.slice(3);
             return [...rest, ...moved];
           });
-
-          // requestAnimationFrameでDOM更新の次のフレームでスクロール補正
-          requestAnimationFrame(() => {
-            container.scrollLeft -= shiftWidth;
-          });
         }
       }
     }, 60);
 
     return () => clearInterval(interval);
   }, []);
+
+  // displayPosts更新時にスクロール補正が必要なら補正
+  useLayoutEffect(() => {
+    if (scrollShiftRef.current && carouselRef.current) {
+      carouselRef.current.scrollLeft -= scrollShiftRef.current;
+      scrollShiftRef.current = 0;
+    }
+  }, [displayPosts]);
 
   // テキストのはみ出しをチェック
   useEffect(() => {
@@ -505,7 +510,7 @@ const EmaSection = () => {
       textRect.bottom > containerRect.bottom + margin;
 
     setIsOverflowing(isOver);
-  }, [currentTextIndex, selectedDeity]);
+  }, [currentTextIndex, selectedDeity, texts]);
 
   // 投稿フォームが開かれた時の処理
   useEffect(() => {
