@@ -30,7 +30,7 @@ type DisplayPost = Post & {
   rotate: string;
   translateY: string;
   marginRight: string;
-  highlighted?: boolean; // ← 追加
+  highlighted?: boolean;
 };
 
 // 絵馬表示用データを生成
@@ -201,6 +201,7 @@ const EmaSection = () => {
   const previewTextRef = useRef<HTMLParagraphElement>(null);
   const previewWrapperRef = useRef<HTMLDivElement>(null);
   const previewTextRefs = useRef<(HTMLParagraphElement | null)[]>([]);
+  const popupTimerMap = useRef<Record<string, ReturnType<typeof setTimeout> | undefined>>({});
 
   const [displayPosts, setDisplayPosts] = useState<DisplayPost[]>([]);
   const [selectedDeity, setSelectedDeity] = useState<EmaImageKey | null>(null);
@@ -210,9 +211,7 @@ const EmaSection = () => {
   const [showPostedMessage, setShowPostedMessage] = useState(false);
   const [popupMap, setPopupMap] = useState<Record<string, boolean>>({});
   const [bounceMap, setBounceMap] = useState<Record<string, boolean>>({});
-  const popupTimerMap = useRef<Record<string, ReturnType<typeof setTimeout> | undefined>>({});
   const [isSettingOpen, setIsSettingOpen] = useState(false);
-
   const [currentTextIndex, setCurrentTextIndex] = useState<0 | 1>(0);
   const [texts, setTexts] = useState<TextBlock[]>([
     {
@@ -238,7 +237,9 @@ const EmaSection = () => {
       textWidth: defaultTextRectSize.width,
     },
   ]);
+  const currentText = texts[currentTextIndex];
 
+  // テキスト更新
   const updateCurrentText = useCallback(
     (patch: Partial<TextBlock> | ((prev: TextBlock) => TextBlock)) => {
       setTexts((prev) => {
@@ -254,11 +255,12 @@ const EmaSection = () => {
     [currentTextIndex]
   );
 
+  // 絵馬タップ処理
   const handleTap = (key: string) => {
     const popupDuration = getCssDuration('--ema-popup-duration');
     const bounceDuration = getCssDuration('--ema-bounce-duration');
 
-    // --- ポップアップ ---
+    // ポップアップ
     setPopupMap((prev) => ({ ...prev, [key]: false }));
     setTimeout(() => {
       setPopupMap((prev) => ({ ...prev, [key]: true }));
@@ -276,7 +278,7 @@ const EmaSection = () => {
     }, popupDuration);
     popupTimerMap.current[key] = newPopupTimer;
 
-    // --- バウンス ---
+    // バウンス
     setBounceMap((prev) => ({ ...prev, [key]: false }));
     setTimeout(() => {
       setBounceMap((prev) => ({ ...prev, [key]: true }));
@@ -296,6 +298,8 @@ const EmaSection = () => {
 
   const draggingRef = useRef<number | false>(false);
   const startPosRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+
+  // テキストのドラッグ
   useEffect(() => {
     const handleMove = (e: MouseEvent | TouchEvent) => {
       if (draggingRef.current === false) return;
@@ -339,7 +343,8 @@ const EmaSection = () => {
     };
   }, [updateCurrentText]);
 
-  const scrollToCarousel = () => {
+  // 絵馬投稿セクションにスクロール
+  const scrollToEmaSection = () => {
     if (!carouselRef.current) return;
 
     const offsetTop =
@@ -417,43 +422,13 @@ const EmaSection = () => {
       );
     }, insertDuration);
 
-    // 入力内容リセット
-    setTexts([
-      {
-        text: '',
-        font: 'ackaisyo',
-        fontSize: 24,
-        fontColor: 'black',
-        textRotate: '0',
-        lineHeight: '1.4',
-        offsetX: 0,
-        offsetY: 0,
-        textWidth: defaultTextRectSize.width,
-      },
-      {
-        text: '',
-        font: 'ackaisyo',
-        fontSize: 24,
-        fontColor: 'black',
-        textRotate: '0',
-        lineHeight: '1.4',
-        offsetX: 0,
-        offsetY: 0,
-        textWidth: defaultTextRectSize.width,
-      },
-    ]);
-    setEmaImage('iroha');
     setIsPosting(false);
-    setCurrentTextIndex(0);
 
     // 投稿メッセージ表示
     setShowPostedMessage(true);
 
     const fadeInOutDuration = getCssDuration('--ema-animate-fade-in-out-duration');
     setTimeout(() => setShowPostedMessage(false), fadeInOutDuration);
-
-    // 絵馬投稿後にスクロール
-    scrollToCarousel();
   };
 
   // 初期データをセット（モック）
@@ -462,7 +437,7 @@ const EmaSection = () => {
     setDisplayPosts(mockPosts);
   }, []);
 
-  // 自動スクロール処理
+  // カルーセルの自動スクロール処理
   useEffect(() => {
     const interval = setInterval(() => {
       if (carouselRef.current) {
@@ -507,7 +482,7 @@ const EmaSection = () => {
   }, []);
 
   // テキストのはみ出しをチェック
-  const checkTextOverflowAndRect = useCallback(() => {
+  useEffect(() => {
     const textEl = previewTextRefs.current[currentTextIndex];
     if (!textEl || !previewWrapperRef.current || !previewContainerRef.current) return;
 
@@ -530,15 +505,15 @@ const EmaSection = () => {
       textRect.bottom > containerRect.bottom + margin;
 
     setIsOverflowing(isOver);
-  }, [currentTextIndex]);
+  }, [currentTextIndex, selectedDeity]);
 
-  const currentText = texts[currentTextIndex];
+  // 投稿フォームが開かれた時の処理
   useEffect(() => {
-    checkTextOverflowAndRect();
-  }, [currentText, currentTextIndex, selectedDeity, checkTextOverflowAndRect]);
+    // 投稿を開いた時にスクロール
+    scrollToEmaSection();
 
-  useEffect(() => {
     if (isPosting) {
+      // スクロール抑制
       document.body.style.overflow = 'hidden';
 
       const initFont = ['ackaisyo', 'aoyagi', 'otsutome', 'yusei'][
@@ -547,6 +522,7 @@ const EmaSection = () => {
       const initFontColor = ['black', 'red', 'blue', 'green'][
         Math.floor(Math.random() * 4)
       ] as FontColorKey;
+
       // 投稿フォームが開かれたタイミングでランダム初期化
       setTexts([
         {
@@ -572,21 +548,19 @@ const EmaSection = () => {
           textWidth: defaultTextRectSize.width,
         },
       ]);
+      // 本文に切り替え
       setCurrentTextIndex(0);
-
-      // 投稿を開いた時にスクロール
-      scrollToCarousel();
-      // 投稿を開いた時に表示位置のチェック
-      setTimeout(checkTextOverflowAndRect, 0);
     } else {
+      // スクロール抑制解除
       document.body.style.overflow = '';
     }
 
     // クリーンアップ（万が一の保険）
     return () => {
+      // スクロール抑制解除
       document.body.style.overflow = '';
     };
-  }, [isPosting, checkTextOverflowAndRect]);
+  }, [isPosting]);
 
   return (
     <div className="relative w-full h-[1200px] items-center justify-center p-4">
@@ -634,10 +608,10 @@ const EmaSection = () => {
                   {/* ✅ 絵馬本体（ここだけバウンス） */}
                   <div
                     className={`
-              w-full h-full bg-cover bg-center bg-no-repeat
-              ${displayPost.highlighted ? 'animate-ema-insert' : ''}
-              ${bounceMap[displayPost.drawKey] ? 'animate-ema-bounce' : ''}
-            `}
+                      w-full h-full bg-cover bg-center bg-no-repeat
+                      ${displayPost.highlighted ? 'animate-ema-insert' : ''}
+                      ${bounceMap[displayPost.drawKey] ? 'animate-ema-bounce' : ''}
+                    `}
                     style={
                       {
                         backgroundImage: `url(/images/ema/${emaList[displayPost.emaImage].filename})`,
@@ -665,7 +639,7 @@ const EmaSection = () => {
                             maxWidth: `${block.textWidth}px`,
                             color: fontColorList.find((c) => c.key === block.fontColor)?.value,
                             transform: `translate(${block.offsetX}px, ${block.offsetY}px) rotate(${block.textRotate}deg)`,
-                            touchAction: 'none',
+                            touchAction: 'manipulation',
                             lineHeight: block.lineHeight,
                             fontSize: `${block.fontSize}px`,
                           }}
