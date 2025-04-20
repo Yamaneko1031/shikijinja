@@ -229,6 +229,7 @@ const EmaSection = () => {
   const popupTimerMap = useRef<Record<string, ReturnType<typeof setTimeout> | undefined>>({});
   const scrollShiftRef = useRef<number>(0);
   const scrollSheftSkipCount = useRef<number>(0);
+  const testCount = useRef<number>(0);
   const isTouchingRef = useRef(false);
 
   const [displayPosts, setDisplayPosts] = useState<DisplayPost[]>([]);
@@ -490,6 +491,7 @@ const EmaSection = () => {
   // カルーセルの自動スクロール処理
   useEffect(() => {
     const interval = setInterval(() => {
+      testCount.current++;
       // タッチ中はスキップ
       if (isTouchingRef.current) return;
 
@@ -515,7 +517,7 @@ const EmaSection = () => {
 
         if (scrollLeft > middleX && scrollShiftRef.current === 0) {
           scrollSheftSkipCount.current = 3;
-          addLog('シフト処理');
+          addLog('シフト処理' + testCount.current);
           scrollShiftRef.current = Array.from(container.children)
             .slice(0, 3)
             .reduce((acc, child) => {
