@@ -553,6 +553,7 @@ const EmaSection = () => {
     if (scrollShiftRef.current && carouselRef.current) {
       carouselRef.current.scrollLeft -= scrollShiftRef.current;
       scrollShiftRef.current = 0;
+      scrollLeftInsuranceRef.current = carouselRef.current.scrollLeft;
       const concatenatedTexts = displayPosts.map((post) => post.texts[1].text).join('');
       addLog(
         'スクロール調整: ' + concatenatedTexts + ' scrollLeft:' + carouselRef.current.scrollLeft
