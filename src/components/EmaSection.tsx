@@ -228,9 +228,10 @@ const EmaSection = () => {
   const previewTextRefs = useRef<(HTMLParagraphElement | null)[]>([]);
   const popupTimerMap = useRef<Record<string, ReturnType<typeof setTimeout> | undefined>>({});
   const scrollShiftRef = useRef<number>(0);
-  const scrollSheftSkipCount = useRef<number>(0);
   const testCount = useRef<number>(0);
   const isTouchingRef = useRef(false);
+  // 保険の補正用
+  const scrollLeftInsuranceRef = useRef<number>(0);
 
   const [displayPosts, setDisplayPosts] = useState<DisplayPost[]>([]);
   const [selectedDeity, setSelectedDeity] = useState<EmaImageKey | null>(null);
@@ -509,14 +510,17 @@ const EmaSection = () => {
         const scrollWidth = container.scrollWidth;
         const middleX = scrollWidth / 2;
 
-        if (scrollSheftSkipCount.current !== 0) {
-          scrollSheftSkipCount.current--;
-          addLog('バッファ' + scrollSheftSkipCount.current + ' scrollLeft:' + scrollLeft);
-          return;
-        }
-
         if (scrollLeft > middleX && scrollShiftRef.current === 0) {
-          scrollSheftSkipCount.current = 3;
+          // 保険処理　補正後なのにスクロール値の差が大きい時に補正する
+          if (scrollLeftInsuranceRef.current !== 0 && scrollLeft - middleX > 100) {
+            addLog('保険補正:' + testCount.current + ' scrollLeft:' + scrollLeft);
+            container.scrollTo({
+              left: scrollLeftInsuranceRef.current + 4,
+              behavior: 'auto',
+            });
+            scrollLeftInsuranceRef.current = 0;
+          }
+
           addLog('シフト処理:' + testCount.current + ' scrollLeft:' + scrollLeft);
           scrollShiftRef.current = Array.from(container.children)
             .slice(0, 3)
@@ -543,6 +547,7 @@ const EmaSection = () => {
   useLayoutEffect(() => {
     if (scrollShiftRef.current && carouselRef.current) {
       carouselRef.current.scrollLeft -= scrollShiftRef.current;
+      scrollLeftInsuranceRef.current = carouselRef.current.scrollLeft;
       scrollShiftRef.current = 0;
       const concatenatedTexts = displayPosts.map((post) => post.texts[1].text).join('');
       addLog(
