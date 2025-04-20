@@ -166,7 +166,7 @@ const emaList = {
     label: 'なでねこ',
     filename: 'ema_nadeneko.webp',
     illustname: 'illust_nadeneko.webp',
-    grace: '撫でられると喜ぶ\n幸運を招くとされている',
+    grace: '撫でられると喜ぶ\n心身快癒を招くとされている',
   },
 } as const;
 
@@ -501,7 +501,7 @@ const EmaSection = () => {
           });
         }
       }
-    }, 60); // ゆっくり流れる
+    }, 60);
 
     return () => clearInterval(interval);
   }, []);
@@ -586,7 +586,7 @@ const EmaSection = () => {
     return () => {
       document.body.style.overflow = '';
     };
-  }, [isPosting]);
+  }, [isPosting, checkTextOverflowAndRect]);
 
   return (
     <div className="relative w-full h-[1200px] items-center justify-center p-4">
@@ -740,7 +740,7 @@ const EmaSection = () => {
             ) : (
               <div className="bg-black/80 rounded-lg p-2 max-w-[400px] min-w-[320px] w-full shadow-xl relative text-white">
                 {/* 挿絵・説明 */}
-                <div className="flex items-center justify-between gap-1 bg-black/10 p-2 rounded border border-white h-[90px]">
+                <div className="relative flex items-center gap-2 bg-black/10 p-2 rounded border border-white h-[90px]">
                   <button
                     onClick={() =>
                       setEmaImage((prev) => {
@@ -750,11 +750,12 @@ const EmaSection = () => {
                         return keys[prevIndex] as EmaImageKey;
                       })
                     }
+                    className="w-[30px] h-[30px] px-2 py-1 bg-white/10 hover:bg-white/20 text-white text-sm rounded-full shadow-md z-50 flex items-center justify-center"
                   >
-                    {'◀'}
+                    {'←'}
                   </button>
-                  <div className="flex text-center items-center gap-3">
-                    <div className="w-[80px] rounded-md overflow-hidden">
+                  <div className="flex items-center gap-3 flex-1 overflow-hidden">
+                    <div className="w-[80px] h-[80px] rounded-md overflow-hidden shrink-0">
                       <Image
                         src={`/images/illust/${emaList[emaImage].illustname}`}
                         alt=""
@@ -763,9 +764,9 @@ const EmaSection = () => {
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <div className="flex-1">
+                    <div className="flex-1 overflow-hidden">
                       <div className="text-white">【{emaList[emaImage].label}】</div>
-                      <div className="text-xs text-gray-300 ml-1 whitespace-pre-line text-center flex-1">
+                      <div className="text-xs text-gray-300 ml-1 whitespace-pre-line text-center">
                         {emaList[emaImage].grace}
                       </div>
                     </div>
@@ -779,8 +780,9 @@ const EmaSection = () => {
                         return keys[nextIndex] as EmaImageKey;
                       })
                     }
+                    className="w-[30px] h-[30px] px-2 py-1 bg-white/10 hover:bg-white/20 text-white text-sm rounded-full shadow-md z-50 flex items-center justify-center"
                   >
-                    {'▶'}
+                    {'→'}
                   </button>
                 </div>
 
