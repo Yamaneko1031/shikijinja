@@ -228,7 +228,7 @@ const EmaSection = () => {
   const previewTextRefs = useRef<(HTMLParagraphElement | null)[]>([]);
   const popupTimerMap = useRef<Record<string, ReturnType<typeof setTimeout> | undefined>>({});
   const scrollShiftRef = useRef<number>(0);
-  const scrollSheftSkipCount = useRef<number>(0);
+  // const scrollSheftSkipCount = useRef<number>(0);
   const testCount = useRef<number>(0);
   const isTouchingRef = useRef(false);
   const scrollLeftInsuranceRef = useRef<number>(0);
