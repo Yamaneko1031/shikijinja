@@ -226,6 +226,7 @@ const EmaSection = () => {
   const previewTextRefs = useRef<(HTMLParagraphElement | null)[]>([]);
   const popupTimerMap = useRef<Record<string, ReturnType<typeof setTimeout> | undefined>>({});
   const scrollShiftRef = useRef<number>(0);
+  const isTouchingRef = useRef(false);
 
   const [displayPosts, setDisplayPosts] = useState<DisplayPost[]>([]);
   const [selectedDeity, setSelectedDeity] = useState<EmaImageKey | null>(null);
@@ -461,9 +462,33 @@ const EmaSection = () => {
     setDisplayPosts(mockPosts);
   }, []);
 
+  useEffect(() => {
+    const handleTouchStart = () => (isTouchingRef.current = true);
+    const handleTouchEnd = () => {
+      // 少しだけ遅延を入れる
+      setTimeout(() => {
+        isTouchingRef.current = false;
+      }, 30);
+    };
+
+    const container = carouselRef.current;
+    if (!container) return;
+
+    container.addEventListener('touchstart', handleTouchStart);
+    container.addEventListener('touchend', handleTouchEnd);
+
+    return () => {
+      container.removeEventListener('touchstart', handleTouchStart);
+      container.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, []);
+
   // カルーセルの自動スクロール処理
   useEffect(() => {
     const interval = setInterval(() => {
+      // タッチ中はスキップ
+      if (isTouchingRef.current) return;
+
       const container = carouselRef.current;
       if (container) {
         // scrollByだとiOSで表示が再描画されないことがあるので、scrollToを使用
