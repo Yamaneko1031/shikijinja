@@ -455,8 +455,7 @@ const EmaSection = () => {
         const scrollWidth = container.scrollWidth;
         const middleX = scrollWidth / 2;
 
-        if (scrollLeft > middleX) {
-          console.log(container.scrollLeft);
+        if (scrollLeft > middleX && scrollShiftRef.current === 0) {
           scrollShiftRef.current = Array.from(container.children)
             .slice(0, 3)
             .reduce((acc, child) => {
