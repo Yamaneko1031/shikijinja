@@ -511,13 +511,13 @@ const EmaSection = () => {
 
         if (scrollSheftSkipCount.current !== 0) {
           scrollSheftSkipCount.current--;
-          addLog('バッファ' + scrollSheftSkipCount.current);
+          addLog('バッファ' + scrollSheftSkipCount.current + ' scrollLeft:' + scrollLeft);
           return;
         }
 
         if (scrollLeft > middleX && scrollShiftRef.current === 0) {
           scrollSheftSkipCount.current = 3;
-          addLog('シフト処理' + testCount.current);
+          addLog('シフト処理:' + testCount.current + ' scrollLeft:' + scrollLeft);
           scrollShiftRef.current = Array.from(container.children)
             .slice(0, 3)
             .reduce((acc, child) => {
@@ -545,7 +545,9 @@ const EmaSection = () => {
       carouselRef.current.scrollLeft -= scrollShiftRef.current;
       scrollShiftRef.current = 0;
       const concatenatedTexts = displayPosts.map((post) => post.texts[1].text).join('');
-      addLog('スクロール調整: ' + concatenatedTexts);
+      addLog(
+        'スクロール調整: ' + concatenatedTexts + ' scrollLeft:' + carouselRef.current.scrollLeft
+      );
     }
   }, [displayPosts]);
 
