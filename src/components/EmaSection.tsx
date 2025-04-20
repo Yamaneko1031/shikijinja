@@ -537,7 +537,8 @@ const EmaSection = () => {
       carouselRef.current.scrollLeft -= scrollShiftRef.current;
       isShiftingRef.current = false;
       scrollShiftRef.current = 0;
-      addLog('スクロール調整');
+      const concatenatedTexts = displayPosts.map((post) => post.texts[1].text).join('');
+      addLog('スクロール調整: ' + concatenatedTexts);
     }
   }, [displayPosts]);
 
