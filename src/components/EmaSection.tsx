@@ -507,6 +507,11 @@ const EmaSection = () => {
         const scrollWidth = container.scrollWidth;
         const middleX = scrollWidth / 2;
 
+        if (scrollShiftRef.current !== 0 && isShiftingRef.current === false) {
+          scrollShiftRef.current = 0;
+          return;
+        }
+
         if (scrollLeft > middleX && isShiftingRef.current === false) {
           addLog('シフト処理');
           isShiftingRef.current = true;
