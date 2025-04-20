@@ -4,6 +4,7 @@ import { useRef, useEffect, useState } from 'react';
 import { BackgroundManager, BackgroundManagerHandle } from '../components/BackgroundManager';
 import { Section, sections } from '../config/sections';
 import { getCssDuration } from '../utils/getCssDuration';
+import DebugLogDialog from '@/components/DebugLogDialog';
 
 export default function App() {
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
@@ -106,6 +107,7 @@ export default function App() {
           <h2 className="absolute top-2/5 text-white text-4xl font-bold">{overlayText}</h2>
         </div>
       )}
+      <DebugLogDialog />
     </main>
   );
 }

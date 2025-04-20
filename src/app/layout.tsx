@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { DebugLogProvider } from '@/hooks/useDebugLog';
 import '../styles/globals.css';
 
 export const metadata: Metadata = {
@@ -13,7 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja" suppressHydrationWarning>
-      <body className="font-default antialiased">{children}</body>
+      <body className="font-default antialiased">
+        <DebugLogProvider>{children}</DebugLogProvider>
+      </body>
     </html>
   );
 }

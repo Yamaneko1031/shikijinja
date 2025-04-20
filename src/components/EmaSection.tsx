@@ -5,6 +5,8 @@ import { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react
 import Image from 'next/image';
 import TextReveal from './TextReveal';
 
+import { useDebugLog } from '@/hooks/useDebugLog';
+
 type TextBlock = {
   text: string;
   font: FontKey;
@@ -264,6 +266,7 @@ const EmaSection = () => {
     },
   ]);
   const currentText = texts[currentTextIndex];
+  const { addLog } = useDebugLog();
 
   // テキスト更新
   const updateCurrentText = useCallback(
@@ -505,6 +508,7 @@ const EmaSection = () => {
         const middleX = scrollWidth / 2;
 
         if (scrollLeft > middleX && isShiftingRef.current === false) {
+          addLog('シフト処理');
           isShiftingRef.current = true;
           scrollShiftRef.current = Array.from(container.children)
             .slice(0, 3)
@@ -533,6 +537,7 @@ const EmaSection = () => {
       carouselRef.current.scrollLeft -= scrollShiftRef.current;
       isShiftingRef.current = false;
       scrollShiftRef.current = 0;
+      addLog('スクロール調整');
     }
   }, [displayPosts]);
 
