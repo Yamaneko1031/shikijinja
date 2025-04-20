@@ -231,6 +231,7 @@ const EmaSection = () => {
   const scrollSheftSkipCount = useRef<number>(0);
   const testCount = useRef<number>(0);
   const isTouchingRef = useRef(false);
+  const scrollLeftInsuranceRef = useRef<number>(0);
 
   const [displayPosts, setDisplayPosts] = useState<DisplayPost[]>([]);
   const [selectedDeity, setSelectedDeity] = useState<EmaImageKey | null>(null);
@@ -510,13 +511,21 @@ const EmaSection = () => {
         const middleX = scrollWidth / 2;
 
         if (scrollSheftSkipCount.current !== 0) {
+          if (scrollLeft - middleX > 100 && scrollLeftInsuranceRef.current !== 0) {
+            addLog('保険処理' + scrollLeftInsuranceRef.current + ' scrollLeft:' + scrollLeft);
+            container.scrollTo({
+              left: scrollLeftInsuranceRef.current + 2,
+              behavior: 'auto',
+            });
+            scrollLeftInsuranceRef.current = 0;
+          }
           scrollSheftSkipCount.current--;
           addLog('バッファ' + scrollSheftSkipCount.current + ' scrollLeft:' + scrollLeft);
           return;
         }
 
         if (scrollLeft > middleX && scrollShiftRef.current === 0) {
-          scrollSheftSkipCount.current = 5;
+          scrollSheftSkipCount.current = 3;
           addLog('シフト処理:' + testCount.current + ' scrollLeft:' + scrollLeft);
           scrollShiftRef.current = Array.from(container.children)
             .slice(0, 3)
