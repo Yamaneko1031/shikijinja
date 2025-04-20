@@ -509,6 +509,7 @@ const EmaSection = () => {
 
         if (scrollShiftRef.current !== 0 && isShiftingRef.current === false) {
           scrollShiftRef.current = 0;
+          addLog('バッファ');
           return;
         }
 
@@ -541,7 +542,6 @@ const EmaSection = () => {
     if (scrollShiftRef.current && carouselRef.current) {
       carouselRef.current.scrollLeft -= scrollShiftRef.current;
       isShiftingRef.current = false;
-      scrollShiftRef.current = 0;
       const concatenatedTexts = displayPosts.map((post) => post.texts[1].text).join('');
       addLog('スクロール調整: ' + concatenatedTexts);
     }
