@@ -226,6 +226,7 @@ const EmaSection = () => {
   const previewTextRefs = useRef<(HTMLParagraphElement | null)[]>([]);
   const popupTimerMap = useRef<Record<string, ReturnType<typeof setTimeout> | undefined>>({});
   const scrollShiftRef = useRef<number>(0);
+  const isShiftingRef = useRef<boolean>(false);
   const isTouchingRef = useRef(false);
 
   const [displayPosts, setDisplayPosts] = useState<DisplayPost[]>([]);
@@ -503,7 +504,8 @@ const EmaSection = () => {
         const scrollWidth = container.scrollWidth;
         const middleX = scrollWidth / 2;
 
-        if (scrollLeft > middleX && scrollShiftRef.current === 0) {
+        if (scrollLeft > middleX && isShiftingRef.current === false) {
+          isShiftingRef.current = true;
           scrollShiftRef.current = Array.from(container.children)
             .slice(0, 3)
             .reduce((acc, child) => {
@@ -529,6 +531,7 @@ const EmaSection = () => {
   useLayoutEffect(() => {
     if (scrollShiftRef.current && carouselRef.current) {
       carouselRef.current.scrollLeft -= scrollShiftRef.current;
+      isShiftingRef.current = false;
       scrollShiftRef.current = 0;
     }
   }, [displayPosts]);
