@@ -510,22 +510,22 @@ const EmaSection = () => {
         const scrollWidth = container.scrollWidth;
         const middleX = scrollWidth / 2;
 
-        if (scrollSheftSkipCount.current !== 0) {
-          if (scrollLeft - middleX > 100 && scrollLeftInsuranceRef.current !== 0) {
-            addLog('保険処理' + scrollLeftInsuranceRef.current + ' scrollLeft:' + scrollLeft);
-            container.scrollTo({
-              left: scrollLeftInsuranceRef.current + 2,
-              behavior: 'auto',
-            });
-            scrollLeftInsuranceRef.current = 0;
-          }
-          scrollSheftSkipCount.current--;
-          addLog('バッファ' + scrollSheftSkipCount.current + ' scrollLeft:' + scrollLeft);
-          return;
-        }
+        // if (scrollSheftSkipCount.current !== 0) {
+        //   if (scrollLeft - middleX > 100 && scrollLeftInsuranceRef.current !== 0) {
+        //     addLog('保険処理' + scrollLeftInsuranceRef.current + ' scrollLeft:' + scrollLeft);
+        //     container.scrollTo({
+        //       left: scrollLeftInsuranceRef.current + 2,
+        //       behavior: 'auto',
+        //     });
+        //     scrollLeftInsuranceRef.current = 0;
+        //   }
+        //   scrollSheftSkipCount.current--;
+        //   addLog('バッファ' + scrollSheftSkipCount.current + ' scrollLeft:' + scrollLeft);
+        //   return;
+        // }
 
         if (scrollLeft > middleX && scrollShiftRef.current === 0) {
-          scrollSheftSkipCount.current = 3;
+          // scrollSheftSkipCount.current = 3;
           addLog('シフト処理:' + testCount.current + ' scrollLeft:' + scrollLeft);
           scrollShiftRef.current = Array.from(container.children)
             .slice(0, 3)
@@ -558,6 +558,10 @@ const EmaSection = () => {
       addLog(
         'スクロール調整: ' + concatenatedTexts + ' scrollLeft:' + carouselRef.current.scrollLeft
       );
+      carouselRef.current.scrollTo({
+        left: carouselRef.current.scrollLeft,
+        behavior: 'auto',
+      });
     }
   }, [displayPosts]);
 
