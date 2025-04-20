@@ -228,7 +228,7 @@ const EmaSection = () => {
   const previewTextRefs = useRef<(HTMLParagraphElement | null)[]>([]);
   const popupTimerMap = useRef<Record<string, ReturnType<typeof setTimeout> | undefined>>({});
   const scrollShiftRef = useRef<number>(0);
-  const isShiftingRef = useRef<boolean>(false);
+  const scrollSheftSkipCount = useRef<number>(0);
   const isTouchingRef = useRef(false);
 
   const [displayPosts, setDisplayPosts] = useState<DisplayPost[]>([]);
@@ -507,15 +507,15 @@ const EmaSection = () => {
         const scrollWidth = container.scrollWidth;
         const middleX = scrollWidth / 2;
 
-        if (scrollShiftRef.current !== 0 && isShiftingRef.current === false) {
-          scrollShiftRef.current = 0;
-          addLog('バッファ');
+        if (scrollSheftSkipCount.current !== 0) {
+          scrollSheftSkipCount.current--;
+          addLog('バッファ' + scrollSheftSkipCount.current);
           return;
         }
 
-        if (scrollLeft > middleX && isShiftingRef.current === false) {
+        if (scrollLeft > middleX && scrollShiftRef.current === 0) {
+          scrollSheftSkipCount.current = 3;
           addLog('シフト処理');
-          isShiftingRef.current = true;
           scrollShiftRef.current = Array.from(container.children)
             .slice(0, 3)
             .reduce((acc, child) => {
@@ -541,7 +541,7 @@ const EmaSection = () => {
   useLayoutEffect(() => {
     if (scrollShiftRef.current && carouselRef.current) {
       carouselRef.current.scrollLeft -= scrollShiftRef.current;
-      isShiftingRef.current = false;
+      scrollShiftRef.current = 0;
       const concatenatedTexts = displayPosts.map((post) => post.texts[1].text).join('');
       addLog('スクロール調整: ' + concatenatedTexts);
     }
