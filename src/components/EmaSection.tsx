@@ -47,47 +47,57 @@ const generateMockPosts = (): Post[] => {
   const mockWishesWithResponses = [
     {
       text: '健康に過ごせますように',
+      name: '0',
       responseText: '日々の穏やかに福あり',
     },
     {
       text: '試験に合格しますように',
+      name: '1',
       responseText: '知恵の風、汝に届く',
     },
     {
       text: '推しがずっと輝いてますように',
+      name: '2',
       responseText: '光は絶えぬ、想いの中に',
     },
     {
       text: '仕事がうまくいきますように',
+      name: '3',
       responseText: '一歩ずつ、道ひらけん',
     },
     {
       text: '世界が平和になりますように',
+      name: '4',
       responseText: '祈り、空に舞い昇る',
     },
     {
       text: '友達ができますように',
+      name: '5',
       responseText: '縁は笑顔の先にあり',
     },
     {
       text: 'ゲームがうまくなりますように',
+      name: '6',
       responseText: '楽しむ心が力となる',
     },
     {
       text: '猫と仲良くなれますように',
+      name: '7',
       responseText: '優しさは、尾をふる',
     },
     {
       text: '美味しいご飯が食べられますように',
+      name: '8',
       responseText: 'いただきに感謝を添えて',
     },
     {
       text: '宝くじ当たりますように',
+      name: '9',
       responseText: '運は巡る、静かに待て',
     },
   ];
 
-  return mockWishesWithResponses.map(({ text, responseText }) => {
+  return mockWishesWithResponses.map(({ text, responseText, name }) => {
     const font = ['ackaisyo', 'aoyagi', 'otsutome', 'yusei'][
       Math.floor(Math.random() * 4)
     ] as FontKey;
@@ -98,20 +108,33 @@ const generateMockPosts = (): Post[] => {
     const lineHeight = (Math.random() * 0.2 + 1.2).toFixed(1);
     const textRotate = (Math.random() * 6 - 3).toFixed(1);
 
-    const textBlock: TextBlock = {
-      text,
-      font,
-      fontSize,
-      fontColor,
-      textRotate,
-      lineHeight,
-      offsetX: 0,
-      offsetY: 0,
-      textWidth: defaultTextRectSize.width,
-    };
+    const textBlock: TextBlock[] = [
+      {
+        text: text,
+        font,
+        fontSize,
+        fontColor,
+        textRotate,
+        lineHeight,
+        offsetX: 0,
+        offsetY: 0,
+        textWidth: defaultTextRectSize.width,
+      },
+      {
+        text: name,
+        font,
+        fontSize: 14,
+        fontColor,
+        textRotate,
+        lineHeight,
+        offsetX: 0,
+        offsetY: 35,
+        textWidth: defaultTextRectSize.width,
+      },
+    ];
 
     return {
-      texts: [textBlock],
+      texts: textBlock,
       reply: responseText,
       emaImage: ['iroha', 'nadeneko', 'shikineko', 'tenten'][
         Math.floor(Math.random() * 4)
