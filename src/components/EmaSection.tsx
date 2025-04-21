@@ -473,7 +473,7 @@ const EmaSection = () => {
   useEffect(() => {
     const handleTouchStart = () => (isTouchingRef.current = true);
     const handleTouchEnd = () => {
-      skipCountRef.current = 5;
+      skipCountRef.current = 2;
       isTouchingRef.current = false;
     };
 
@@ -500,13 +500,11 @@ const EmaSection = () => {
         const scrollLeft = container.scrollLeft;
         const scrollWidth = container.scrollWidth;
         const middleX = scrollWidth / 2;
-        let isAutoScroll = false;
 
         if (scrollLeftPrevRef.current === scrollLeft) {
           // スクロールが止まっている間カウンタ更新
           if (skipCountRef.current > 0) {
             skipCountRef.current--;
-            console.log('skipCountRef.current:' + skipCountRef.current);
           }
         }
 
@@ -520,10 +518,7 @@ const EmaSection = () => {
             left: container.scrollLeft + 2,
             behavior: 'auto',
           });
-          isAutoScroll = true;
         }
-
-        if (!isAutoScroll && !isTouchingRef.current) return;
 
         // if (scrollSheftSkipCount.current !== 0) {
         //   if (scrollLeft - middleX > 100 && scrollLeftInsuranceRef.current !== 0) {
