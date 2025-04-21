@@ -511,15 +511,15 @@ const EmaSection = () => {
 
         scrollLeftPrevRef.current = scrollLeft;
 
-        // タッチ中、カウンタが残っている間はスキップ
-        if (isTouchingRef.current || skipCountRef.current > 0) return;
-
-        // 自動スクロール
-        // scrollByだとiOSで表示が再描画されないことがあるので、scrollToを使用
-        container.scrollTo({
-          left: container.scrollLeft + 2,
-          behavior: 'auto',
-        });
+        // タッチ中、カウンタが残っている間は自動スクロールしない
+        if (!isTouchingRef.current && skipCountRef.current === 0) {
+          // 自動スクロール
+          // scrollByだとiOSで表示が再描画されないことがあるので、scrollToを使用
+          container.scrollTo({
+            left: container.scrollLeft + 2,
+            behavior: 'auto',
+          });
+        }
 
         // if (scrollSheftSkipCount.current !== 0) {
         //   if (scrollLeft - middleX > 100 && scrollLeftInsuranceRef.current !== 0) {
