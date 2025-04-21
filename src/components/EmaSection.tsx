@@ -232,6 +232,8 @@ const EmaSection = () => {
   const testCount = useRef<number>(0);
   const isTouchingRef = useRef(false);
   const scrollLeftInsuranceRef = useRef<number>(0);
+  const skipCountRef = useRef<number>(0);
+  const scrollLeftPrevRef = useRef<number>(0);
 
   const [displayPosts, setDisplayPosts] = useState<DisplayPost[]>([]);
   const [selectedDeity, setSelectedDeity] = useState<EmaImageKey | null>(null);
@@ -471,10 +473,8 @@ const EmaSection = () => {
   useEffect(() => {
     const handleTouchStart = () => (isTouchingRef.current = true);
     const handleTouchEnd = () => {
-      // 少しだけ遅延を入れる
-      setTimeout(() => {
-        isTouchingRef.current = false;
-      }, 200);
+      skipCountRef.current = 5;
+      isTouchingRef.current = false;
     };
 
     const container = carouselRef.current;
@@ -494,21 +494,32 @@ const EmaSection = () => {
     const interval = setInterval(() => {
       testCount.current++;
       // タッチ中はスキップ
-      if (isTouchingRef.current) return;
 
       const container = carouselRef.current;
       if (container) {
+        const scrollLeft = container.scrollLeft;
+        const scrollWidth = container.scrollWidth;
+        const middleX = scrollWidth / 2;
+
+        if (scrollLeftPrevRef.current === scrollLeft) {
+          // スクロールが止まっている間カウンタ更新
+          if (skipCountRef.current > 0) {
+            skipCountRef.current--;
+            console.log('skipCountRef.current:' + skipCountRef.current);
+          }
+        }
+
+        scrollLeftPrevRef.current = scrollLeft;
+
+        // タッチ中、カウンタが残っている間はスキップ
+        if (isTouchingRef.current || skipCountRef.current > 0) return;
+
+        // 自動スクロール
         // scrollByだとiOSで表示が再描画されないことがあるので、scrollToを使用
         container.scrollTo({
           left: container.scrollLeft + 2,
           behavior: 'auto',
         });
-
-        if (!container) return;
-
-        const scrollLeft = container.scrollLeft;
-        const scrollWidth = container.scrollWidth;
-        const middleX = scrollWidth / 2;
 
         // if (scrollSheftSkipCount.current !== 0) {
         //   if (scrollLeft - middleX > 100 && scrollLeftInsuranceRef.current !== 0) {
