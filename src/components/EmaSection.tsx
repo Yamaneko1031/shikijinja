@@ -473,7 +473,7 @@ const EmaSection = () => {
   useEffect(() => {
     const handleTouchStart = () => {
       isTouchingRef.current = true;
-      skipCountRef.current = 2;
+      skipCountRef.current = 5;
     };
     const handleTouchEnd = () => {
       isTouchingRef.current = false;
@@ -503,17 +503,18 @@ const EmaSection = () => {
         const scrollWidth = container.scrollWidth;
         const middleX = scrollWidth / 2;
 
-        if (isTouchingRef.current === false && scrollLeftPrevRef.current === scrollLeft) {
-          // スクロールが止まっている間カウンタ更新
-          if (skipCountRef.current > 0) {
-            skipCountRef.current--;
-          }
+        if (
+          isTouchingRef.current === false &&
+          scrollLeftPrevRef.current === scrollLeft &&
+          skipCountRef.current > 0
+        ) {
+          skipCountRef.current--;
         }
 
         scrollLeftPrevRef.current = scrollLeft;
 
         // タッチ中、カウンタが残っている間は自動スクロールしない
-        if (isTouchingRef.current || skipCountRef.current > 0) return;
+        if (skipCountRef.current > 0) return;
 
         // 自動スクロール
         // scrollByだとiOSで表示が再描画されないことがあるので、scrollToを使用
