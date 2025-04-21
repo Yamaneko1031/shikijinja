@@ -5,8 +5,6 @@ import { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react
 import Image from 'next/image';
 import TextReveal from './TextReveal';
 
-import { useDebugLog } from '@/hooks/useDebugLog';
-
 type TextBlock = {
   text: string;
   font: FontKey;
@@ -228,10 +226,7 @@ const EmaSection = () => {
   const previewTextRefs = useRef<(HTMLParagraphElement | null)[]>([]);
   const popupTimerMap = useRef<Record<string, ReturnType<typeof setTimeout> | undefined>>({});
   const scrollShiftRef = useRef<number>(0);
-  // const scrollSheftSkipCount = useRef<number>(0);
-  const testCount = useRef<number>(0);
   const isTouchingRef = useRef(false);
-  const scrollLeftInsuranceRef = useRef<number>(0);
   const skipCountRef = useRef<number>(0);
   const scrollLeftPrevRef = useRef<number>(0);
 
@@ -270,7 +265,6 @@ const EmaSection = () => {
     },
   ]);
   const currentText = texts[currentTextIndex];
-  const { addLog } = useDebugLog();
 
   // テキスト更新
   const updateCurrentText = useCallback(
@@ -494,15 +488,13 @@ const EmaSection = () => {
   // カルーセルの自動スクロール処理
   useEffect(() => {
     const interval = setInterval(() => {
-      testCount.current++;
-      // タッチ中はスキップ
-
       const container = carouselRef.current;
       if (container) {
         const scrollLeft = container.scrollLeft;
         const scrollWidth = container.scrollWidth;
         const middleX = scrollWidth / 2;
 
+        // タッチ中ではなく、スクロール停止している場合にカウンタを減らす
         if (
           isTouchingRef.current === false &&
           scrollLeftPrevRef.current === scrollLeft &&
@@ -511,9 +503,10 @@ const EmaSection = () => {
           skipCountRef.current--;
         }
 
+        // スクロール停止判定用
         scrollLeftPrevRef.current = scrollLeft;
 
-        // タッチ中、カウンタが残っている間は自動スクロールしない
+        // カウンタが残っている間は自動スクロールもスクロール調整もしない
         if (skipCountRef.current > 0) return;
 
         // 自動スクロール
@@ -523,23 +516,8 @@ const EmaSection = () => {
           behavior: 'auto',
         });
 
-        // if (scrollSheftSkipCount.current !== 0) {
-        //   if (scrollLeft - middleX > 100 && scrollLeftInsuranceRef.current !== 0) {
-        //     addLog('保険処理' + scrollLeftInsuranceRef.current + ' scrollLeft:' + scrollLeft);
-        //     container.scrollTo({
-        //       left: scrollLeftInsuranceRef.current + 2,
-        //       behavior: 'auto',
-        //     });
-        //     scrollLeftInsuranceRef.current = 0;
-        //   }
-        //   scrollSheftSkipCount.current--;
-        //   addLog('バッファ' + scrollSheftSkipCount.current + ' scrollLeft:' + scrollLeft);
-        //   return;
-        // }
-
+        // スクロール調整
         if (scrollLeft > middleX && scrollShiftRef.current === 0) {
-          // scrollSheftSkipCount.current = 3;
-          addLog('シフト処理:' + testCount.current + ' scrollLeft:' + scrollLeft);
           scrollShiftRef.current = Array.from(container.children)
             .slice(0, 3)
             .reduce((acc, child) => {
@@ -566,15 +544,6 @@ const EmaSection = () => {
     if (scrollShiftRef.current && carouselRef.current) {
       carouselRef.current.scrollLeft -= scrollShiftRef.current;
       scrollShiftRef.current = 0;
-      scrollLeftInsuranceRef.current = carouselRef.current.scrollLeft;
-      const concatenatedTexts = displayPosts.map((post) => post.texts[1].text).join('');
-      addLog(
-        'スクロール調整: ' + concatenatedTexts + ' scrollLeft:' + carouselRef.current.scrollLeft
-      );
-      carouselRef.current.scrollTo({
-        left: carouselRef.current.scrollLeft,
-        behavior: 'auto',
-      });
     }
   }, [displayPosts]);
 
