@@ -474,7 +474,7 @@ const EmaSection = () => {
       // 少しだけ遅延を入れる
       setTimeout(() => {
         isTouchingRef.current = false;
-      }, 30);
+      }, 200);
     };
 
     const container = carouselRef.current;
