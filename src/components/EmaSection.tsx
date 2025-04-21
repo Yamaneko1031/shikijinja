@@ -471,9 +471,11 @@ const EmaSection = () => {
   }, []);
 
   useEffect(() => {
-    const handleTouchStart = () => (isTouchingRef.current = true);
-    const handleTouchEnd = () => {
+    const handleTouchStart = () => {
+      isTouchingRef.current = true;
       skipCountRef.current = 2;
+    };
+    const handleTouchEnd = () => {
       isTouchingRef.current = false;
     };
 
@@ -501,7 +503,7 @@ const EmaSection = () => {
         const scrollWidth = container.scrollWidth;
         const middleX = scrollWidth / 2;
 
-        if (scrollLeftPrevRef.current === scrollLeft) {
+        if (isTouchingRef.current === false && scrollLeftPrevRef.current === scrollLeft) {
           // スクロールが止まっている間カウンタ更新
           if (skipCountRef.current > 0) {
             skipCountRef.current--;
