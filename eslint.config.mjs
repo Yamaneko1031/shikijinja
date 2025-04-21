@@ -10,6 +10,9 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  {
+    ignores: ['src/generated/**/*'],
+  }, // 追加!!
   ...compat.extends('next/core-web-vitals', 'next/typescript', 'plugin:prettier/recommended'),
 ];
 
