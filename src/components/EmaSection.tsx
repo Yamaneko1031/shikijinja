@@ -634,7 +634,7 @@ const EmaSection = () => {
         <TextReveal
           text="絵馬投稿や他の人の投稿した絵馬をみるコンテンツ"
           delayPerChar={0.1}
-          className="text-2xl font-bold mb-4"
+          className="text-2xl font-bold"
         />
 
         {/* 投稿メッセージ表示 */}
@@ -647,7 +647,10 @@ const EmaSection = () => {
         )}
 
         {/* 絵馬一覧カルーセル表示 */}
-        <div className="overflow-hidden">
+        <div
+          className="overflow-hidden bg-cover bg-center rounded-lg border-4 border-[rgba(40,20,0,0.5)]"
+          style={{ backgroundImage: 'url(/images/ema/bg_ema_view.webp)' }}
+        >
           <div
             ref={carouselRef}
             className="flex whitespace-nowrap overflow-x-auto overflow-y-hidden no-scrollbar"
