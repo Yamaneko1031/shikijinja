@@ -4,6 +4,9 @@ import { getCssDuration } from '@/utils/getCssDuration';
 import { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react';
 import Image from 'next/image';
 import TextReveal from './TextReveal';
+import useSWR from 'swr';
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 type TextBlock = {
   text: string;
@@ -43,105 +46,105 @@ const createDisplayPost = (post: Post): DisplayPost => ({
 });
 
 // モックデータ作成
-const generateMockPosts = (): Post[] => {
-  const mockWishesWithResponses = [
-    {
-      text: '健康に過ごせますように',
-      name: '0',
-      responseText: '日々の穏やかに福あり',
-    },
-    {
-      text: '試験に合格しますように',
-      name: '1',
-      responseText: '知恵の風、汝に届く',
-    },
-    {
-      text: '推しがずっと輝いてますように',
-      name: '2',
-      responseText: '光は絶えぬ、想いの中に',
-    },
-    {
-      text: '仕事がうまくいきますように',
-      name: '3',
-      responseText: '一歩ずつ、道ひらけん',
-    },
-    {
-      text: '世界が平和になりますように',
-      name: '4',
-      responseText: '祈り、空に舞い昇る',
-    },
-    {
-      text: '友達ができますように',
-      name: '5',
-      responseText: '縁は笑顔の先にあり',
-    },
-    {
-      text: 'ゲームがうまくなりますように',
-      name: '6',
-      responseText: '楽しむ心が力となる',
-    },
-    {
-      text: '猫と仲良くなれますように',
-      name: '7',
-      responseText: '優しさは、尾をふる',
-    },
-    {
-      text: '美味しいご飯が食べられますように',
-      name: '8',
-      responseText: 'いただきに感謝を添えて',
-    },
-    {
-      text: '宝くじ当たりますように',
-      name: '9',
-      responseText: '運は巡る、静かに待て',
-    },
-  ];
+// const generateMockPosts = (): Post[] => {
+//   const mockWishesWithResponses = [
+//     {
+//       text: '健康に過ごせますように',
+//       name: '0',
+//       responseText: '日々の穏やかに福あり',
+//     },
+//     {
+//       text: '試験に合格しますように',
+//       name: '1',
+//       responseText: '知恵の風、汝に届く',
+//     },
+//     {
+//       text: '推しがずっと輝いてますように',
+//       name: '2',
+//       responseText: '光は絶えぬ、想いの中に',
+//     },
+//     {
+//       text: '仕事がうまくいきますように',
+//       name: '3',
+//       responseText: '一歩ずつ、道ひらけん',
+//     },
+//     {
+//       text: '世界が平和になりますように',
+//       name: '4',
+//       responseText: '祈り、空に舞い昇る',
+//     },
+//     {
+//       text: '友達ができますように',
+//       name: '5',
+//       responseText: '縁は笑顔の先にあり',
+//     },
+//     {
+//       text: 'ゲームがうまくなりますように',
+//       name: '6',
+//       responseText: '楽しむ心が力となる',
+//     },
+//     {
+//       text: '猫と仲良くなれますように',
+//       name: '7',
+//       responseText: '優しさは、尾をふる',
+//     },
+//     {
+//       text: '美味しいご飯が食べられますように',
+//       name: '8',
+//       responseText: 'いただきに感謝を添えて',
+//     },
+//     {
+//       text: '宝くじ当たりますように',
+//       name: '9',
+//       responseText: '運は巡る、静かに待て',
+//     },
+//   ];
 
-  return mockWishesWithResponses.map(({ text, responseText, name }) => {
-    const font = ['ackaisyo', 'aoyagi', 'otsutome', 'yusei'][
-      Math.floor(Math.random() * 4)
-    ] as FontKey;
-    const fontColor = ['black', 'red', 'blue', 'green'][
-      Math.floor(Math.random() * 4)
-    ] as FontColorKey;
-    const fontSize = 24;
-    const lineHeight = (Math.random() * 0.2 + 1.2).toFixed(1);
-    const textRotate = (Math.random() * 6 - 3).toFixed(1);
+//   return mockWishesWithResponses.map(({ text, responseText, name }) => {
+//     const font = ['ackaisyo', 'aoyagi', 'otsutome', 'yusei'][
+//       Math.floor(Math.random() * 4)
+//     ] as FontKey;
+//     const fontColor = ['black', 'red', 'blue', 'green'][
+//       Math.floor(Math.random() * 4)
+//     ] as FontColorKey;
+//     const fontSize = 24;
+//     const lineHeight = (Math.random() * 0.2 + 1.2).toFixed(1);
+//     const textRotate = (Math.random() * 6 - 3).toFixed(1);
 
-    const textBlock: TextBlock[] = [
-      {
-        text: text,
-        font,
-        fontSize,
-        fontColor,
-        textRotate,
-        lineHeight,
-        offsetX: 0,
-        offsetY: 0,
-        textWidth: defaultTextRectSize.width,
-      },
-      {
-        text: name,
-        font,
-        fontSize: 14,
-        fontColor,
-        textRotate,
-        lineHeight,
-        offsetX: 0,
-        offsetY: 35,
-        textWidth: defaultTextRectSize.width,
-      },
-    ];
+//     const textBlock: TextBlock[] = [
+//       {
+//         text: text,
+//         font,
+//         fontSize,
+//         fontColor,
+//         textRotate,
+//         lineHeight,
+//         offsetX: 0,
+//         offsetY: 0,
+//         textWidth: defaultTextRectSize.width,
+//       },
+//       {
+//         text: name,
+//         font,
+//         fontSize: 14,
+//         fontColor,
+//         textRotate,
+//         lineHeight,
+//         offsetX: 0,
+//         offsetY: 35,
+//         textWidth: defaultTextRectSize.width,
+//       },
+//     ];
 
-    return {
-      texts: textBlock,
-      reply: responseText,
-      emaImage: ['iroha', 'nadeneko', 'shikineko', 'tenten'][
-        Math.floor(Math.random() * 4)
-      ] as EmaImageKey,
-    };
-  });
-};
+//     return {
+//       texts: textBlock,
+//       reply: responseText,
+//       emaImage: ['iroha', 'nadeneko', 'shikineko', 'tenten'][
+//         Math.floor(Math.random() * 4)
+//       ] as EmaImageKey,
+//     };
+//   });
+// };
 
 // フォントテーブル
 const fontList = [
@@ -219,6 +222,12 @@ const defaultOffsetPos = [
 ];
 
 const EmaSection = () => {
+  const {
+    data: emaData,
+    error: emaGetError,
+    isLoading: isEmaLoading,
+  } = useSWR('/api/get-ema', fetcher);
+
   const carouselRef = useRef<HTMLDivElement>(null);
   const previewContainerRef = useRef<HTMLDivElement>(null);
   const previewTextRef = useRef<HTMLParagraphElement>(null);
@@ -456,13 +465,26 @@ const EmaSection = () => {
 
     const fadeInOutDuration = getCssDuration('--ema-animate-fade-in-out-duration');
     setTimeout(() => setShowPostedMessage(false), fadeInOutDuration);
+
+    // 保存は非同期
+    fetch('/api/post-ema', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newPost),
+    }).catch((error) => {
+      console.error('保存に失敗しました:', error);
+    });
   };
 
-  // 初期データをセット（モック）
+  // データ取得後に displayPost に変換してセット
   useEffect(() => {
-    const mockPosts = generateMockPosts().map(createDisplayPost);
-    setDisplayPosts(mockPosts);
-  }, []);
+    if (emaData?.success && emaData.posts) {
+      const display = emaData.posts.map(createDisplayPost);
+      setDisplayPosts(display);
+    }
+  }, [emaData]);
 
   useEffect(() => {
     const handleTouchStart = () => {
@@ -651,77 +673,83 @@ const EmaSection = () => {
           className="overflow-hidden bg-cover bg-center rounded-lg border-4 border-[rgba(40,20,0,0.5)]"
           style={{ backgroundImage: 'url(/images/ema/bg_ema_view.webp)' }}
         >
-          <div
-            ref={carouselRef}
-            className="flex whitespace-nowrap overflow-x-auto overflow-y-hidden no-scrollbar"
-          >
-            {displayPosts.map((displayPost: DisplayPost) => {
-              return (
-                <div
-                  key={displayPost.drawKey}
-                  className="min-w-[240px] h-[240px] relative text-center"
-                  style={{
-                    marginRight: displayPost.marginRight,
-                  }}
-                  onClick={() => handleTap(displayPost.drawKey)}
-                >
-                  {/* ✅ ポップアップ（絵馬本体とは別に表示） */}
-                  {popupMap[displayPost.drawKey] && (
-                    <div className="absolute top-10 left-1/2 z-50 animate-ema-popup">
-                      <div className="w-[200px] bg-black/70 backdrop-blur-sm text-sm text-w-800 px-3 py-2 rounded shadow-lg text-center break-words whitespace-pre-wrap select-none">
-                        {displayPost.reply}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* ✅ 絵馬本体（ここだけバウンス） */}
+          {isEmaLoading ? (
+            <div>読み込み中...</div>
+          ) : emaGetError ? (
+            <div>データの取得に失敗しました</div>
+          ) : (
+            <div
+              ref={carouselRef}
+              className="flex whitespace-nowrap overflow-x-auto overflow-y-hidden no-scrollbar"
+            >
+              {displayPosts.map((displayPost: DisplayPost) => {
+                return (
                   <div
-                    className={`
+                    key={displayPost.drawKey}
+                    className="min-w-[240px] h-[240px] relative text-center"
+                    style={{
+                      marginRight: displayPost.marginRight,
+                    }}
+                    onClick={() => handleTap(displayPost.drawKey)}
+                  >
+                    {/* ✅ ポップアップ（絵馬本体とは別に表示） */}
+                    {popupMap[displayPost.drawKey] && (
+                      <div className="absolute top-10 left-1/2 z-50 animate-ema-popup">
+                        <div className="w-[200px] bg-black/70 backdrop-blur-sm text-sm text-w-800 px-3 py-2 rounded shadow-lg text-center break-words whitespace-pre-wrap select-none">
+                          {displayPost.reply}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* ✅ 絵馬本体（ここだけバウンス） */}
+                    <div
+                      className={`
                       w-full h-full bg-cover bg-center bg-no-repeat
                       ${displayPost.highlighted ? 'animate-ema-insert' : ''}
                       ${bounceMap[displayPost.drawKey] ? 'animate-ema-bounce' : ''}
                     `}
-                    style={
-                      {
-                        backgroundImage: `url(/images/ema/${emaList[displayPost.emaImage].filename})`,
-                        '--rotate': `${displayPost.rotate}deg`,
-                        '--ty': `${displayPost.translateY}px`,
-                        transform: `rotate(var(--rotate)) translateY(var(--ty)) scale(1)`,
-                      } as React.CSSProperties
-                    }
-                  >
-                    {/* 絵馬の文字 */}
-                    <div
-                      className="absolute flex items-center justify-center overflow-hidden"
-                      style={{
-                        top: `${defaultTextRectSize.top}px`,
-                        left: `${defaultTextRectSize.left}px`,
-                        width: `${defaultTextRectSize.width}px`,
-                        height: `${defaultTextRectSize.height}px`,
-                      }}
+                      style={
+                        {
+                          backgroundImage: `url(/images/ema/${emaList[displayPost.emaImage].filename})`,
+                          '--rotate': `${displayPost.rotate}deg`,
+                          '--ty': `${displayPost.translateY}px`,
+                          transform: `rotate(var(--rotate)) translateY(var(--ty)) scale(1)`,
+                        } as React.CSSProperties
+                      }
                     >
-                      {displayPost.texts.map((block, i) => (
-                        <p
-                          key={i}
-                          className={`absolute ${fontList.find((f) => f.key === block.font)?.className} text-center whitespace-pre-wrap text-shadow select-none`}
-                          style={{
-                            maxWidth: `${block.textWidth}px`,
-                            color: fontColorList.find((c) => c.key === block.fontColor)?.value,
-                            transform: `translate(${block.offsetX}px, ${block.offsetY}px) rotate(${block.textRotate}deg)`,
-                            touchAction: 'manipulation',
-                            lineHeight: block.lineHeight,
-                            fontSize: `${block.fontSize}px`,
-                          }}
-                        >
-                          {block.text}
-                        </p>
-                      ))}
+                      {/* 絵馬の文字 */}
+                      <div
+                        className="absolute flex items-center justify-center overflow-hidden"
+                        style={{
+                          top: `${defaultTextRectSize.top}px`,
+                          left: `${defaultTextRectSize.left}px`,
+                          width: `${defaultTextRectSize.width}px`,
+                          height: `${defaultTextRectSize.height}px`,
+                        }}
+                      >
+                        {displayPost.texts.map((block, i) => (
+                          <p
+                            key={i}
+                            className={`absolute ${fontList.find((f) => f.key === block.font)?.className} text-center whitespace-pre-wrap text-shadow select-none`}
+                            style={{
+                              maxWidth: `${block.textWidth}px`,
+                              color: fontColorList.find((c) => c.key === block.fontColor)?.value,
+                              transform: `translate(${block.offsetX}px, ${block.offsetY}px) rotate(${block.textRotate}deg)`,
+                              touchAction: 'manipulation',
+                              lineHeight: block.lineHeight,
+                              fontSize: `${block.fontSize}px`,
+                            }}
+                          >
+                            {block.text}
+                          </p>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {!isPosting && (
