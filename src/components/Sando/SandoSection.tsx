@@ -1,6 +1,6 @@
 'use client';
 
-import TextReveal from './TextReveal';
+import TextReveal from '@/components/shared/TextReveal';
 
 const SandoSection = () => {
   const handlePostWish = () => {

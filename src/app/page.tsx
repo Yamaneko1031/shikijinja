@@ -1,10 +1,10 @@
 'use client';
 
 import { useRef, useEffect, useState } from 'react';
-import { BackgroundManager, BackgroundManagerHandle } from '../components/BackgroundManager';
-import { Section, sections } from '../config/sections';
-import { getCssDuration } from '../utils/getCssDuration';
-import DebugLogDialog from '@/components/DebugLogDialog';
+import { BackgroundManager, BackgroundManagerHandle } from '@/components/shared/BackgroundManager';
+import { Section, sections } from '@/config/sections';
+import { getCssDuration } from '@/utils/getCssDuration';
+import DebugLogDialog from '@/components/shared/DebugLogDialog';
 
 export default function App() {
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});

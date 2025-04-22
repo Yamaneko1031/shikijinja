@@ -1,26 +1,27 @@
 'use client';
 
-import TextReveal from './TextReveal';
+import TextReveal from '@/components/shared/TextReveal';
 
-const HaidenSection = () => {
+const NadenekoSection = () => {
   const handlePostWish = () => {
-    alert(`賽銭を投げました`);
+    // 投稿ボタンの処理（例えば、APIに投稿する）
+    alert(`撫でました`);
   };
 
   return (
     <div className="relative w-full h-[1200px] items-center justify-center p-4">
       <div className="relative top-[600px] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] p-10 bg-black/50 rounded-lg">
         <TextReveal
-          text="拝殿のコンテンツ"
+          text="猫を撫でるコンテンツ"
           delayPerChar={0.1}
           className="text-2xl font-bold mb-4"
         />
         <button className="bg-indigo-600 px-4 py-2 rounded" onClick={handlePostWish}>
-          賽銭を投げる
+          撫でる
         </button>
       </div>
     </div>
   );
 };
 
-export default HaidenSection;
+export default NadenekoSection;

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import TextReveal from './TextReveal';
+import TextReveal from '@/components/shared/TextReveal';
 
 const OmikujiSection = () => {
   const [loading, setLoading] = useState(false);

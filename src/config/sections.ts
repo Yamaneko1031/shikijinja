@@ -1,11 +1,11 @@
-import EmaSection from '../components/EmaSection';
-import OmamoriSection from '../components/OmamoriSection';
-import OmikujiSection from '../components/OmikujiSection';
-import TopSection from '../components/TopSection';
-import ShoukaiSection from '../components/ShoukaiSection';
-import HaidenSection from '../components/HaidenSection';
-import NadenekoSection from '../components/NadenekoSection';
-import SandoSection from '../components/SandoSection';
+import EmaSection from '@/components/Ema/EmaSection';
+import OmamoriSection from '@/components/Omamori/OmamoriSection';
+import OmikujiSection from '@/components/Omikuji/OmikujiSection';
+import TopSection from '@/components/Top/TopSection';
+import ShoukaiSection from '@/components/Shoukai/ShoukaiSection';
+import HaidenSection from '@/components/Haiden/HaidenSection';
+import NadenekoSection from '@/components/Nadeneko/NadenekoSection';
+import SandoSection from '@/components/Sando/SandoSection';
 
 export type Section = {
   id: string;

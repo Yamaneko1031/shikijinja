@@ -1,40 +1,17 @@
 'use client';
 
-import { getCssDuration } from '@/utils/getCssDuration';
 import { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react';
-import Image from 'next/image';
-import TextReveal from './TextReveal';
 import useSWR from 'swr';
+import Image from 'next/image';
+import TextReveal from '@/components/shared/TextReveal';
+import { getCssDuration } from '@/utils/getCssDuration';
+import { TextBlock, Post, DisplayPost, EmaImageKey } from '@/types/ema';
+import { FontKey, FontColorKey } from '@/types/fonts';
+
+import { emaList, fontSizePxRange, defaultTextRectSize, defaultOffsetPos } from '@/config/ema';
+import { fontList, fontColorList } from '@/config/fonts';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
-
-type TextBlock = {
-  text: string;
-  font: FontKey;
-  fontSize: number;
-  fontColor: FontColorKey;
-  textRotate: string;
-  lineHeight: string;
-  offsetX: number;
-  offsetY: number;
-  textWidth: number;
-};
-
-// 絵馬投稿データ
-type Post = {
-  texts: TextBlock[];
-  reply: string;
-  emaImage: EmaImageKey;
-};
-
-// 絵馬表示用データ
-type DisplayPost = Post & {
-  drawKey: string;
-  rotate: string;
-  translateY: string;
-  marginRight: string;
-  highlighted?: boolean;
-};
 
 // 絵馬表示用データを生成
 const createDisplayPost = (post: Post): DisplayPost => ({
@@ -44,182 +21,6 @@ const createDisplayPost = (post: Post): DisplayPost => ({
   translateY: (Math.random() * 10 - 5).toFixed(2),
   marginRight: `${-25 - Math.floor(Math.random() * 20)}px`,
 });
-
-// モックデータ作成
-// const generateMockPosts = (): Post[] => {
-//   const mockWishesWithResponses = [
-//     {
-//       text: '健康に過ごせますように',
-//       name: '0',
-//       responseText: '日々の穏やかに福あり',
-//     },
-//     {
-//       text: '試験に合格しますように',
-//       name: '1',
-//       responseText: '知恵の風、汝に届く',
-//     },
-//     {
-//       text: '推しがずっと輝いてますように',
-//       name: '2',
-//       responseText: '光は絶えぬ、想いの中に',
-//     },
-//     {
-//       text: '仕事がうまくいきますように',
-//       name: '3',
-//       responseText: '一歩ずつ、道ひらけん',
-//     },
-//     {
-//       text: '世界が平和になりますように',
-//       name: '4',
-//       responseText: '祈り、空に舞い昇る',
-//     },
-//     {
-//       text: '友達ができますように',
-//       name: '5',
-//       responseText: '縁は笑顔の先にあり',
-//     },
-//     {
-//       text: 'ゲームがうまくなりますように',
-//       name: '6',
-//       responseText: '楽しむ心が力となる',
-//     },
-//     {
-//       text: '猫と仲良くなれますように',
-//       name: '7',
-//       responseText: '優しさは、尾をふる',
-//     },
-//     {
-//       text: '美味しいご飯が食べられますように',
-//       name: '8',
-//       responseText: 'いただきに感謝を添えて',
-//     },
-//     {
-//       text: '宝くじ当たりますように',
-//       name: '9',
-//       responseText: '運は巡る、静かに待て',
-//     },
-//   ];
-
-//   return mockWishesWithResponses.map(({ text, responseText, name }) => {
-//     const font = ['ackaisyo', 'aoyagi', 'otsutome', 'yusei'][
-//       Math.floor(Math.random() * 4)
-//     ] as FontKey;
-//     const fontColor = ['black', 'red', 'blue', 'green'][
-//       Math.floor(Math.random() * 4)
-//     ] as FontColorKey;
-//     const fontSize = 24;
-//     const lineHeight = (Math.random() * 0.2 + 1.2).toFixed(1);
-//     const textRotate = (Math.random() * 6 - 3).toFixed(1);
-
-//     const textBlock: TextBlock[] = [
-//       {
-//         text: text,
-//         font,
-//         fontSize,
-//         fontColor,
-//         textRotate,
-//         lineHeight,
-//         offsetX: 0,
-//         offsetY: 0,
-//         textWidth: defaultTextRectSize.width,
-//       },
-//       {
-//         text: name,
-//         font,
-//         fontSize: 14,
-//         fontColor,
-//         textRotate,
-//         lineHeight,
-//         offsetX: 0,
-//         offsetY: 35,
-//         textWidth: defaultTextRectSize.width,
-//       },
-//     ];
-
-//     return {
-//       texts: textBlock,
-//       reply: responseText,
-//       emaImage: ['iroha', 'nadeneko', 'shikineko', 'tenten'][
-//         Math.floor(Math.random() * 4)
-//       ] as EmaImageKey,
-//     };
-//   });
-// };
-
-// フォントテーブル
-const fontList = [
-  { key: 'ackaisyo', label: '英椎楷書', className: 'font-ackaisyo' },
-  { key: 'aoyagi', label: '青柳衡山', className: 'font-aoyagi' },
-  { key: 'otsutome', label: 'おつとめフォント', className: 'font-otsutome' },
-  { key: 'yusei', label: 'Yusei Magic', className: 'font-yusei' },
-] as const;
-
-type FontListItem = (typeof fontList)[number];
-type FontKey = FontListItem['key'];
-
-// フォントカラーテーブル
-const fontColorList = [
-  { key: 'black', label: '黒', value: '#0c0c0c' },
-  { key: 'red', label: '赤', value: '#B90000' },
-  { key: 'blue', label: '青', value: '#183B80' },
-  { key: 'green', label: '緑', value: '#0A672C' },
-] as const;
-
-type FontColorListItem = (typeof fontColorList)[number];
-type FontColorKey = FontColorListItem['key'];
-
-// 絵馬背景テーブル
-const emaList = {
-  shikineko: {
-    label: 'しきねこ',
-    filename: 'ema_shikineko.webp',
-    illustname: 'illust_shikineko.webp',
-    grace: '主にエンジニア業務における\nご利益があるとされている',
-  },
-  iroha: {
-    label: 'いろは',
-    filename: 'ema_iroha.webp',
-    illustname: 'illust_iroha.webp',
-    grace: '主にデザイン業務における\nご利益があるとされている',
-  },
-  tenten: {
-    label: 'てんてん',
-    filename: 'ema_tenten.webp',
-    illustname: 'illust_tenten.webp',
-    grace: '主にPM業務における\nご利益があるとされている',
-  },
-  nadeneko: {
-    label: 'なでねこ',
-    filename: 'ema_nadeneko.webp',
-    illustname: 'illust_nadeneko.webp',
-    grace: '撫でられると喜ぶ\n心身快癒を招くとされている',
-  },
-} as const;
-
-type EmaImageKey = keyof typeof emaList;
-
-const fontSizePxRange = {
-  min: 14,
-  max: 32,
-};
-
-const defaultTextRectSize = {
-  top: 110,
-  left: 35,
-  width: 170,
-  height: 100,
-};
-
-const defaultOffsetPos = [
-  {
-    offsetX: 0,
-    offsetY: 0,
-  },
-  {
-    offsetX: 0,
-    offsetY: 35,
-  },
-];
 
 const EmaSection = () => {
   const {
