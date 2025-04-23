@@ -18,19 +18,19 @@ export type Section = {
 export const sections: Section[] = [
   {
     id: 'top',
-    bgUrl: '/images/bg_anim/bg_top.webp',
+    bgUrl: '/images/bg_hude/bg_top.webp',
     name: '',
     component: TopSection,
     scrollEffect: [
-      { ratio: 0.0, posX: 50, posY: 50, zoom: 1.0 },
-      { ratio: 0.5, posX: 50, posY: 50, zoom: 1.0 },
-      { ratio: 0.6, posX: 50, posY: 50, zoom: 1.1 },
-      { ratio: 1.0, posX: 50, posY: 50, zoom: 1.3 },
+      { ratio: 0.0, posX: 60, posY: 50, zoom: 1.0 },
+      { ratio: 0.5, posX: 60, posY: 50, zoom: 1.0 },
+      { ratio: 0.6, posX: 60, posY: 50, zoom: 1.1 },
+      { ratio: 1.0, posX: 60, posY: 50, zoom: 1.3 },
     ],
   },
   {
     id: 'sando',
-    bgUrl: '/images/bg_anim/bg_sando.webp',
+    bgUrl: '/images/bg_hude/bg_sando.webp',
     name: '参道',
     component: SandoSection,
     scrollEffect: [
@@ -41,7 +41,7 @@ export const sections: Section[] = [
   },
   {
     id: 'ema',
-    bgUrl: '/images/bg_anim/bg_ema.webp',
+    bgUrl: '/images/bg_hude/bg_ema.webp',
     name: '絵馬掛所',
     component: EmaSection,
     scrollEffect: [
@@ -53,7 +53,7 @@ export const sections: Section[] = [
   },
   {
     id: 'omamori',
-    bgUrl: '/images/bg_anim/bg_omamori.webp',
+    bgUrl: '/images/bg_hude/bg_omamori.webp',
     name: '授与所',
     component: OmamoriSection,
     scrollEffect: [
@@ -65,7 +65,7 @@ export const sections: Section[] = [
   },
   {
     id: 'omikuji',
-    bgUrl: '/images/bg_anim/bg_omikuji.webp',
+    bgUrl: '/images/bg_hude/bg_omikuji.webp',
     name: 'おみくじ結び所',
     component: OmikujiSection,
     scrollEffect: [
@@ -77,20 +77,20 @@ export const sections: Section[] = [
   },
   {
     id: 'nadeneko',
-    bgUrl: '/images/bg_anim/bg_nadeneko.webp',
+    bgUrl: '/images/bg_hude/bg_nadeneko.webp',
     name: 'なで猫の社',
     component: NadenekoSection,
     scrollEffect: [
       { ratio: 0.0, posX: 45, posY: 50, zoom: 1.0 },
-      { ratio: 0.4, posX: 60, posY: 50, zoom: 1.15 },
-      { ratio: 0.5, posX: 60, posY: 50, zoom: 1.2 },
-      { ratio: 0.7, posX: 60, posY: 50, zoom: 1.2 },
-      { ratio: 1.0, posX: 65, posY: 50, zoom: 1.1 },
+      { ratio: 0.4, posX: 52, posY: 50, zoom: 1.15 },
+      { ratio: 0.5, posX: 55, posY: 50, zoom: 1.2 },
+      { ratio: 0.7, posX: 55, posY: 50, zoom: 1.2 },
+      { ratio: 1.0, posX: 60, posY: 50, zoom: 1.1 },
     ],
   },
   {
     id: 'shoukai',
-    bgUrl: '/images/bg_anim/bg_shoukai.webp',
+    bgUrl: '/images/bg_hude/bg_shoukai.webp',
     name: '宝物殿',
     component: ShoukaiSection,
     scrollEffect: [
@@ -102,7 +102,7 @@ export const sections: Section[] = [
   },
   {
     id: 'haiden',
-    bgUrl: '/images/bg_anim/bg_haiden.webp',
+    bgUrl: '/images/bg_hude/bg_haiden.webp',
     name: '拝殿',
     component: HaidenSection,
     scrollEffect: [

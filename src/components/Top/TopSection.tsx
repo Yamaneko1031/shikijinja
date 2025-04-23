@@ -41,7 +41,7 @@ const TopSection = () => {
         }}
       >
         <Image
-          src="/images/torii.webp"
+          src="/images/bg_hude/torii.webp"
           alt="式岐神社の鳥居"
           fill
           className="object-contain"
