@@ -34,10 +34,10 @@ export const fontSizePxRange = {
 } as const;
 
 export const defaultTextRectSize = {
-  top: 110,
-  left: 35,
-  width: 170,
-  height: 100,
+  top: 120,
+  left: 30,
+  width: 180,
+  height: 105,
 } as const;
 
 export const defaultOffsetPos = [

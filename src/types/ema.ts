@@ -24,11 +24,11 @@ export interface Post {
 
 // カルーセルや表示用に拡張した型
 export type DisplayPost = Post & {
-  drawKey: string; // 一意キー（UUIDなど）
-  rotate: string; // 表示時の回転角度（deg）
-  translateY: string; // 表示時のY方向オフセット（px）
-  marginRight: string; // カルーセル配置時の余白
-  highlighted?: boolean; // 挿入時のハイライトフラグ
+  drawKey: string;
+  rotate: string;
+  translateY: string;
+  marginRight: string;
+  highlighted?: boolean;
 };
 
 export type EmaListItem = {
@@ -40,4 +40,11 @@ export type EmaListItem = {
 
 export type EmaList = {
   [key in EmaImageKey]: EmaListItem;
+};
+
+export type TextRectSize = {
+  top: number;
+  left: number;
+  width: number;
+  height: number;
 };
