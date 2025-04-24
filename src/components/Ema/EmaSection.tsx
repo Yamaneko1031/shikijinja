@@ -32,10 +32,6 @@ const EmaSection = () => {
 
   const carouselRef = useRef<HTMLDivElement>(null);
   const scrollShiftRef = useRef<number>(0);
-  const isTouchingRef = useRef(false);
-  const skipCountRef = useRef<number>(0);
-  // const scrollLeftPrevRef = useRef<number>(0);
-
   const [displayPosts, setDisplayPosts] = useState<DisplayPost[]>([]);
   const [selectedDeity, setSelectedDeity] = useState<EmaImageKey | null>(null);
   const [emaImage, setEmaImage] = useState<EmaImageKey>('iroha');
@@ -55,7 +51,7 @@ const EmaSection = () => {
       carouselRef.current.getBoundingClientRect().top +
       window.scrollY +
       carouselRef.current.offsetHeight / 2;
-    const targetY = offsetTop - window.innerHeight / 2; // 端末の高さ/2分上に余白を空けたい
+    const targetY = offsetTop - window.innerHeight / 2;
 
     window.scrollTo({
       top: targetY,
@@ -136,51 +132,11 @@ const EmaSection = () => {
     }
   }, [emaData]);
 
-  useEffect(() => {
-    const handleTouchStart = () => {
-      isTouchingRef.current = true;
-      skipCountRef.current = 5;
-    };
-    const handleTouchEnd = () => {
-      isTouchingRef.current = false;
-    };
-
-    const container = carouselRef.current;
-    if (!container) return;
-
-    container.addEventListener('touchstart', handleTouchStart);
-    container.addEventListener('touchend', handleTouchEnd);
-
-    return () => {
-      container.removeEventListener('touchstart', handleTouchStart);
-      container.removeEventListener('touchend', handleTouchEnd);
-    };
-  }, []);
-
   // カルーセルの自動スクロール処理
   useEffect(() => {
     const interval = setInterval(() => {
       const container = carouselRef.current;
       if (container) {
-        // const scrollLeft = container.scrollLeft;
-        // const scrollWidth = container.scrollWidth;
-        // const middleX = scrollWidth / 2;
-
-        // // タッチ中ではなく、スクロール停止している場合にカウンタを減らす
-        // if (
-        //   isTouchingRef.current === false &&
-        //   scrollLeftPrevRef.current === scrollLeft &&
-        //   skipCountRef.current > 0
-        // ) {
-        //   skipCountRef.current--;
-        // }
-
-        // // スクロール停止判定用
-        // scrollLeftPrevRef.current = scrollLeft;
-
-        // // カウンタが残っている間は自動スクロールもスクロール調整もしない
-        // if (skipCountRef.current > 0) return;
-
         // 自動スクロール
         // scrollByだとiOSで表示が再描画されないことがあるので、scrollToを使用
         container.scrollTo({
@@ -191,10 +147,10 @@ const EmaSection = () => {
         requestAnimationFrame(() => {
           const container = carouselRef.current;
           if (!container) return;
-          const fifthChild = container.children[6] as HTMLElement;
+          if (container.children.length < 10) return;
+          const fifthChild = container.children[container.children.length - 3] as HTMLElement;
           const fifthChildLeft = fifthChild.getBoundingClientRect().left;
 
-          // console.log(fifthChildLeft, window.innerWidth / 2);
           if (fifthChildLeft < window.innerWidth / 2) {
             scrollShiftRef.current = Array.from(container.children)
               .slice(0, 3)
@@ -210,53 +166,8 @@ const EmaSection = () => {
               const rest = prev.slice(3);
               return [...rest, ...moved];
             });
-            // ここに処理を書く
-            console.log('5個目の要素が画面の中心より左に来ました');
-            // 必要な処理をここに追加
           }
         });
-
-        // const fifthChild = container.children[4] as HTMLElement;
-        // const fifthChildLeft = fifthChild.getBoundingClientRect().left - 2;
-
-        // // console.log(fifthChildLeft, window.innerWidth / 2);
-        // if (fifthChildLeft < window.innerWidth / 2) {
-        //   scrollShiftRef.current = Array.from(container.children)
-        //     .slice(0, 3)
-        //     .reduce((acc, child) => {
-        //       const childElement = child as HTMLElement;
-        //       const width = childElement.offsetWidth;
-        //       const margin = parseFloat(getComputedStyle(childElement).marginRight);
-        //       return acc + width + margin;
-        //     }, 0);
-
-        //   setDisplayPosts((prev) => {
-        //     const moved = prev.slice(0, 3);
-        //     const rest = prev.slice(3);
-        //     return [...rest, ...moved];
-        //   });
-        //   // ここに処理を書く
-        //   console.log('5個目の要素が画面の中心より左に来ました');
-        //   // 必要な処理をここに追加
-        // }
-
-        // スクロール調整
-        // if (scrollLeft > middleX && scrollShiftRef.current === 0) {
-        //   scrollShiftRef.current = Array.from(container.children)
-        //     .slice(0, 3)
-        //     .reduce((acc, child) => {
-        //       const childElement = child as HTMLElement;
-        //       const width = childElement.offsetWidth;
-        //       const margin = parseFloat(getComputedStyle(childElement).marginRight);
-        //       return acc + width + margin;
-        //     }, 0);
-
-        //   setDisplayPosts((prev) => {
-        //     const moved = prev.slice(0, 3);
-        //     const rest = prev.slice(3);
-        //     return [...rest, ...moved];
-        //   });
-        // }
       }
     }, 60);
 
