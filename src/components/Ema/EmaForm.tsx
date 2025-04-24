@@ -8,16 +8,14 @@ import { emaList } from '@/config/ema';
 import { FontColorKey, FontKey } from '@/types/fonts';
 
 export interface EmaFormProps {
-  deityKey: EmaImageKey;
-  onChangeDeity: (key: EmaImageKey) => void;
+  initialDeityKey: EmaImageKey;
   initialTexts?: TextBlock[];
   onSubmit: (post: Post) => void;
   onClose: () => void;
 }
 
 export default function EmaForm({
-  deityKey,
-  onChangeDeity,
+  initialDeityKey,
   initialTexts,
   onSubmit,
   onClose,
@@ -65,6 +63,7 @@ export default function EmaForm({
   const previewTextRefs = useRef<(HTMLParagraphElement | null)[]>([]);
   const [textRectStyle, setTextRectStyle] = useState<TextRectSize | null>(null);
   const [isOverflowing, setIsOverflowing] = useState<boolean[]>([false, false]);
+  const [deityKey, setDeityKey] = useState<EmaImageKey>(initialDeityKey);
 
   // ドラッグ状態管理
   const draggingRef = useRef<number | false>(false);
@@ -125,7 +124,7 @@ export default function EmaForm({
       window.removeEventListener('touchmove', handleMove);
       window.removeEventListener('touchend', handleEnd);
     };
-  });
+  }, []);
 
   // オーバーフロー測定
   useEffect(() => {
@@ -179,139 +178,143 @@ export default function EmaForm({
   const nextKey = keys[(idx + 1) % keys.length];
 
   return (
-    <div className="relative flex flex-col items-center gap-4">
-      {/* 挿絵・説明 */}
-      <div className="relative flex items-center gap-2 bg-black/10 p-2 rounded border border-white h-[90px] w-full ">
-        <button
-          onClick={() => onChangeDeity(prevKey)}
-          className="w-[30px] h-[30px] bg-white/10 hover:bg-white/20 text-white text-sm rounded-full"
-        >
-          ←
-        </button>
-        <div className="flex items-center gap-3 flex-1 overflow-hidden">
-          <div className="w-[80px] h-[80px] rounded-md overflow-hidden">
-            <Image
-              src={`/images/illust/${emaList[deityKey].illustname}`}
-              alt={emaList[deityKey].label}
-              width={80}
-              height={80}
-              className="object-cover"
-            />
-          </div>
-          <div className="flex-1 overflow-hidden">
-            <div className="text-white">【{emaList[deityKey].label}】</div>
-            <div className="text-xs text-gray-300 ml-1 whitespace-pre-line text-center">
-              {emaList[deityKey].grace}
+    <div className="bg-black/80 rounded-lg p-2 max-w-[400px] min-w-[320px] w-full shadow-xl relative text-white">
+      <div className="relative flex flex-col items-center gap-4">
+        {/* 挿絵・説明 */}
+        <div className="relative flex items-center gap-2 bg-black/10 p-2 rounded border border-white h-[90px] w-full ">
+          <button
+            onClick={() => setDeityKey(prevKey)}
+            className="w-[30px] h-[30px] bg-white/10 hover:bg-white/20 text-white text-sm rounded-full"
+          >
+            ←
+          </button>
+          <div className="flex items-center gap-3 flex-1 overflow-hidden">
+            <div className="w-[80px] h-[80px] rounded-md overflow-hidden">
+              <Image
+                src={`/images/illust/${emaList[deityKey].illustname}`}
+                alt={emaList[deityKey].label}
+                width={80}
+                height={80}
+                className="object-cover"
+              />
+            </div>
+            <div className="flex-1 overflow-hidden">
+              <div className="text-white">【{emaList[deityKey].label}】</div>
+              <div className="text-xs text-gray-300 ml-1 whitespace-pre-line text-center">
+                {emaList[deityKey].grace}
+              </div>
             </div>
           </div>
+          <button
+            onClick={() => setDeityKey(nextKey)}
+            className="w-[30px] h-[30px] bg-white/10 hover:bg-white/20 text-white text-sm rounded-full"
+          >
+            →
+          </button>
         </div>
-        <button
-          onClick={() => onChangeDeity(nextKey)}
-          className="w-[30px] h-[30px] bg-white/10 hover:bg-white/20 text-white text-sm rounded-full"
-        >
-          →
-        </button>
-      </div>
 
-      <div className="relative w-full">
-        {/* 文字のカスタムボタン */}
-        <button
-          onClick={() => setIsSettingOpen(!isSettingOpen)}
-          className="relative left-0 top-0 px-3 py-1 bg-white/10 hover:bg-white/20 text-white text-sm rounded-full shadow-md z-50 flex items-center"
-        >
-          <Image
-            src="/images/icon/icon_hude.webp"
-            alt="icon"
-            width={24}
-            height={24}
-            className="mr-2"
-          />
-          {isSettingOpen ? '←' : '文字のカスタム'}
-        </button>
+        <div className="relative w-full">
+          {/* 文字のカスタムボタン */}
+          <button
+            onClick={() => setIsSettingOpen(!isSettingOpen)}
+            className="relative left-0 top-0 px-3 py-1 bg-white/10 hover:bg-white/20 text-white text-sm rounded-full shadow-md z-50 flex items-center"
+          >
+            <Image
+              src="/images/icon/icon_hude.webp"
+              alt="icon"
+              width={24}
+              height={24}
+              className="mr-2"
+            />
+            {isSettingOpen ? '←' : '文字のカスタム'}
+          </button>
 
-        {/* 編集対象テキストの選択 */}
-        <div className="absolute right-0 top-0 flex flex-col gap-2 z-20">
-          {[0, 1].map((index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentTextIndex(index as 0 | 1)}
-              className={`px-2 py-1 rounded-full border ${
-                currentTextIndex === index
-                  ? 'bg-white/20 text-white border-white'
-                  : 'bg-white/10 hover:bg-white/20 text-white/50 border-0'
-              }`}
-            >
-              {index === 0 ? '本文' : 'ニックネーム'}
-            </button>
-          ))}
-        </div>
-        <div className="flex gap-2">
-          {/* 設定パネル */}
-          <div
-            className={`
+          {/* 編集対象テキストの選択 */}
+          <div className="absolute right-0 top-0 flex flex-col gap-2 z-20">
+            {[0, 1].map((index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentTextIndex(index as 0 | 1)}
+                className={`px-2 py-1 rounded-full border ${
+                  currentTextIndex === index
+                    ? 'bg-white/20 text-white border-white'
+                    : 'bg-white/10 hover:bg-white/20 text-white/50 border-0'
+                }`}
+              >
+                {index === 0 ? '本文' : 'ニックネーム'}
+              </button>
+            ))}
+          </div>
+          <div className="flex gap-2">
+            {/* 設定パネル */}
+            <div
+              className={`
             top-0 left-0 z-50
             bg-black/90 text-white rounded-r-lg shadow-lg
             transition-all duration-300 ease-in-out
             ${isSettingOpen ? 'w-[100px] opacity-100' : 'w-[0px] opacity-60'}
         `}
-          >
-            <TextSettingsPanel
-              textBlock={texts[currentTextIndex]}
-              isOpen={isSettingOpen}
-              onChange={updateCurrentText}
-            />
-          </div>
-          <div
-            className="relative flex flex-col items-center gap-2 transition-all duration-300 ease-in-out"
-            style={{
-              margin: '0 auto',
-            }}
-          >
-            {/* プレビュー & テキスト入力 */}
-            <EmaPreview
-              texts={texts}
-              emaImageKey={deityKey}
-              currentTextIndex={currentTextIndex}
-              previewWrapperRef={previewWrapperRef}
-              previewContainerRef={previewContainerRef}
-              previewTextRefs={previewTextRefs}
-              onTextMouseDown={handleTextMouseDown}
-              onTextTouchStart={handleTextTouchStart}
-              textRectStyle={textRectStyle}
-              isOverflowing={isOverflowing[currentTextIndex]}
-              placeholder="ここに表示されます"
-              defaultTextRectSize={defaultTextRectSize}
-            />
-            <textarea
-              value={texts[currentTextIndex].text}
-              onChange={(e) => updateCurrentText({ text: e.target.value })}
-              maxLength={40}
-              rows={3}
-              className="w-[200px] p-2 border rounded"
-              placeholder="願い事を入力..."
-            />
+            >
+              <TextSettingsPanel
+                textBlock={texts[currentTextIndex]}
+                isOpen={isSettingOpen}
+                onChange={updateCurrentText}
+              />
+            </div>
+            <div
+              className="relative flex flex-col items-center gap-2 transition-all duration-300 ease-in-out"
+              style={{
+                margin: '0 auto',
+              }}
+            >
+              {/* プレビュー & テキスト入力 */}
+              <EmaPreview
+                texts={texts}
+                emaImageKey={deityKey}
+                currentTextIndex={currentTextIndex}
+                previewWrapperRef={previewWrapperRef}
+                previewContainerRef={previewContainerRef}
+                previewTextRefs={previewTextRefs}
+                onTextMouseDown={handleTextMouseDown}
+                onTextTouchStart={handleTextTouchStart}
+                textRectStyle={textRectStyle}
+                isOverflowing={isOverflowing[currentTextIndex]}
+                placeholder="ここに表示されます"
+                defaultTextRectSize={defaultTextRectSize}
+              />
+              <textarea
+                value={texts[currentTextIndex].text}
+                onChange={(e) => updateCurrentText({ text: e.target.value })}
+                maxLength={40}
+                rows={3}
+                className="w-[200px] p-2 border rounded"
+                placeholder="願い事を入力..."
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* アクション */}
-      <div className="flex space-x-2">
-        <button onClick={onClose} className="px-4 py-2 bg-blue-500 rounded">
-          閉じる
-        </button>
-        <button
-          onClick={handleSubmit}
-          className="px-4 py-2 bg-blue-500 disabled:bg-gray-400 text-white rounded"
-          disabled={isOverflowing.some((is) => is) || texts.every((text) => text.text.length === 0)}
-        >
-          投稿する
-        </button>
-        <button
-          onClick={() => updateCurrentText(defaultOffsetPos[currentTextIndex])}
-          className="px-4 py-2 bg-blue-500 rounded"
-        >
-          位置リセット
-        </button>
+        {/* アクション */}
+        <div className="flex space-x-2">
+          <button onClick={onClose} className="px-4 py-2 bg-blue-500 rounded">
+            閉じる
+          </button>
+          <button
+            onClick={handleSubmit}
+            className="px-4 py-2 bg-blue-500 disabled:bg-gray-400 text-white rounded"
+            disabled={
+              isOverflowing.some((is) => is) || texts.every((text) => text.text.length === 0)
+            }
+          >
+            投稿する
+          </button>
+          <button
+            onClick={() => updateCurrentText(defaultOffsetPos[currentTextIndex])}
+            className="px-4 py-2 bg-blue-500 rounded"
+          >
+            位置リセット
+          </button>
+        </div>
       </div>
     </div>
   );

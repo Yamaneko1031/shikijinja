@@ -7,10 +7,9 @@ import { getCssDuration } from '@/utils/getCssDuration';
 
 interface EmaItemProps {
   post: DisplayPost;
-  onTap: (key: string) => void;
 }
 
-export default function EmaItem({ post, onTap }: EmaItemProps) {
+export default function EmaItem({ post }: EmaItemProps) {
   const [popupVisible, setPopupVisible] = useState(false);
   const [bouncing, setBouncing] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -27,8 +26,6 @@ export default function EmaItem({ post, onTap }: EmaItemProps) {
     // バウンス
     setBouncing(true);
     setTimeout(() => setBouncing(false), bounceDuration);
-
-    onTap(post.drawKey);
   };
 
   return (

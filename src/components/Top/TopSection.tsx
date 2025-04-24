@@ -19,7 +19,7 @@ const TopSection = () => {
   const arrowOpacity = useTransform(scrollY, [0, 200], [1, 0]);
 
   return (
-    <div className="relative w-full h-screen overflow-hidden">
+    <div className="relative w-full h-[1200px] items-center justify-center p-4">
       {/* 白背景フェードオーバーレイ */}
       {/* <motion.div
         className="fixed inset-0 z-50 bg-white/30 backdrop-blur-sm pointer-events-none"

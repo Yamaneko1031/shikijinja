@@ -37,11 +37,6 @@ const EmaSection = () => {
   const [isPosting, setIsPosting] = useState(false);
   const [showPostedMessage, setShowPostedMessage] = useState(false);
 
-  // 絵馬タップ処理
-  const handleTap = (key: string) => {
-    console.log('絵馬がタップされました:', key);
-  };
-
   // 絵馬投稿セクションにスクロール
   const scrollToEmaSection = () => {
     if (!carouselRef.current) return;
@@ -83,6 +78,8 @@ const EmaSection = () => {
 
   // 絵馬投稿処理
   const handlePostWish = (post: Post) => {
+    scrollToEmaSection();
+
     const insertIndex = getInsertIndex();
     const newDisplayPost = {
       ...createDisplayPost(post),
@@ -187,26 +184,6 @@ const EmaSection = () => {
     }
   }, [displayPosts]);
 
-  // 投稿フォームが開かれた時の処理
-  useEffect(() => {
-    // 投稿を開いた時にスクロール
-    scrollToEmaSection();
-
-    if (isPosting) {
-      // スクロール抑制
-      document.body.style.overflow = 'hidden';
-    } else {
-      // スクロール抑制解除
-      document.body.style.overflow = '';
-    }
-
-    // クリーンアップ（万が一の保険）
-    return () => {
-      // スクロール抑制解除
-      document.body.style.overflow = '';
-    };
-  }, [isPosting]);
-
   return (
     <div className="relative w-full h-[1200px] items-center justify-center p-4">
       <div className="relative top-[400px] w-full max-w-3xl mx-auto p-4 bg-black/50 bg-opacity-80 rounded shadow-lg">
@@ -246,26 +223,25 @@ const EmaSection = () => {
               className="flex whitespace-nowrap overflow-x-auto overflow-y-hidden no-scrollbar"
             >
               {displayPosts.map((displayPost: DisplayPost) => {
-                return <EmaItem key={displayPost.drawKey} post={displayPost} onTap={handleTap} />;
+                return <EmaItem key={displayPost.drawKey} post={displayPost} />;
               })}
             </div>
           )}
         </div>
 
-        {!isPosting && (
-          <button
-            onClick={() => {
-              setSelectedDeity(null);
-              setIsPosting(true);
-            }}
-            className="bg-yellow-500 text-black px-4 py-2 rounded hover:bg-yellow-600 mb-4"
-          >
-            絵馬に願いを書く
-          </button>
-        )}
+        <button
+          onClick={() => {
+            setSelectedDeity(null);
+            scrollToEmaSection();
+            setIsPosting(true);
+          }}
+          className="bg-yellow-500 text-black px-4 py-2 rounded hover:bg-yellow-600 mb-4"
+        >
+          絵馬に願いを書く
+        </button>
 
         {isPosting && (
-          <div className="fixed inset-0 z-50 bg-black/20 flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center">
             {selectedDeity === null ? (
               // 神様選択フェーズ
               <DeitySelector
@@ -279,14 +255,12 @@ const EmaSection = () => {
                 }}
               />
             ) : (
-              <div className="bg-black/80 rounded-lg p-2 max-w-[400px] min-w-[320px] w-full shadow-xl relative text-white">
-                <EmaForm
-                  deityKey={selectedDeity}
-                  onChangeDeity={(key) => setSelectedDeity(key)}
-                  onSubmit={handlePostWish}
-                  onClose={() => setIsPosting(false)}
-                />
-              </div>
+              // 絵馬投稿フォーム
+              <EmaForm
+                initialDeityKey={selectedDeity}
+                onSubmit={handlePostWish}
+                onClose={() => setIsPosting(false)}
+              />
             )}
           </div>
         )}
