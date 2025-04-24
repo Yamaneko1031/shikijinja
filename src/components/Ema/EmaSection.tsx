@@ -153,7 +153,7 @@ const EmaSection = () => {
         }
 
         if (container.children.length < 10) return;
-        const fifthChild = container.children[container.children.length - 5] as HTMLElement;
+        const fifthChild = container.children[6] as HTMLElement;
         const fifthChildLeft = fifthChild.getBoundingClientRect().left;
 
         if (fifthChildLeft < window.innerWidth / 2) {
