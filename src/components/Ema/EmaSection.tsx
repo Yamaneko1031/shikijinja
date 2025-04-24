@@ -30,6 +30,7 @@ const EmaSection = () => {
     isLoading: isEmaLoading,
   } = useSWR('/api/get-ema', fetcher);
 
+  const isTouchingRef = useRef(false);
   const carouselRef = useRef<HTMLDivElement>(null);
   const scrollShiftRef = useRef<number>(0);
   const [displayPosts, setDisplayPosts] = useState<DisplayPost[]>([]);
@@ -137,37 +138,38 @@ const EmaSection = () => {
     const interval = setInterval(() => {
       const container = carouselRef.current;
       if (container) {
-        // 自動スクロール
-        // scrollByだとiOSで表示が再描画されないことがあるので、scrollToを使用
-        container.scrollTo({
-          left: container.scrollLeft + 2,
-          behavior: 'auto',
-        });
+        // タッチ中ならスクロールしない
+        if (!isTouchingRef.current) {
+          // 自動スクロール
+          // scrollByだとiOSで表示が再描画されないことがあるので、scrollToを使用
+          container.scrollTo({
+            left: container.scrollLeft + 2,
+            behavior: 'auto',
+          });
+        }
 
-        requestAnimationFrame(() => {
-          const container = carouselRef.current;
-          if (!container) return;
-          if (container.children.length < 10) return;
-          const fifthChild = container.children[container.children.length - 3] as HTMLElement;
-          const fifthChildLeft = fifthChild.getBoundingClientRect().left;
+        if (container.children.length < 10) return;
+        const fifthChild = container.children[container.children.length - 5] as HTMLElement;
+        const fifthChildLeft = fifthChild.getBoundingClientRect().left;
 
-          if (fifthChildLeft < window.innerWidth / 2) {
-            scrollShiftRef.current = Array.from(container.children)
-              .slice(0, 3)
-              .reduce((acc, child) => {
-                const childElement = child as HTMLElement;
-                const width = childElement.offsetWidth;
-                const margin = parseFloat(getComputedStyle(childElement).marginRight);
-                return acc + width + margin;
-              }, 0);
+        if (fifthChildLeft < window.innerWidth / 2) {
+          scrollShiftRef.current = Array.from(container.children)
+            .slice(0, 3)
+            .reduce((acc, child) => {
+              const childElement = child as HTMLElement;
+              const width = childElement.offsetWidth;
+              const margin = parseFloat(getComputedStyle(childElement).marginRight);
+              return acc + width + margin;
+            }, 0);
 
-            setDisplayPosts((prev) => {
-              const moved = prev.slice(0, 3);
-              const rest = prev.slice(3);
-              return [...rest, ...moved];
-            });
-          }
-        });
+          setDisplayPosts((prev) => {
+            const moved = prev.slice(0, 3);
+            const rest = prev.slice(3);
+            return [...rest, ...moved];
+          });
+        }
+        // requestAnimationFrame(() => {
+        // });
       }
     }, 60);
 
@@ -232,6 +234,15 @@ const EmaSection = () => {
           ) : (
             <div
               ref={carouselRef}
+              onPointerDown={() => {
+                isTouchingRef.current = true;
+              }}
+              onPointerUp={() => {
+                isTouchingRef.current = false;
+              }}
+              onPointerCancel={() => {
+                isTouchingRef.current = false;
+              }}
               className="flex whitespace-nowrap overflow-x-auto overflow-y-hidden no-scrollbar"
             >
               {displayPosts.map((displayPost: DisplayPost) => {
