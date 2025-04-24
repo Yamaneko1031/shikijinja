@@ -148,30 +148,31 @@ const EmaSection = () => {
               left: container.scrollLeft + 2,
               behavior: 'auto',
             });
+
+            if (container.children.length < 10) return;
+            const fifthChild = container.children[6] as HTMLElement;
+            const fifthChildLeft = fifthChild.getBoundingClientRect().left;
+
+            if (fifthChildLeft < window.innerWidth / 2) {
+              scrollShiftRef.current = Array.from(container.children)
+                .slice(0, 3)
+                .reduce((acc, child) => {
+                  const childElement = child as HTMLElement;
+                  const width = childElement.offsetWidth;
+                  const margin = parseFloat(getComputedStyle(childElement).marginRight);
+                  return acc + width + margin;
+                }, 0);
+
+              setDisplayPosts((prev) => {
+                const moved = prev.slice(0, 3);
+                const rest = prev.slice(3);
+                return [...rest, ...moved];
+              });
+            }
           }
           scrollLeftPrev.current = container.scrollLeft;
         }
 
-        if (container.children.length < 10) return;
-        const fifthChild = container.children[6] as HTMLElement;
-        const fifthChildLeft = fifthChild.getBoundingClientRect().left;
-
-        if (fifthChildLeft < window.innerWidth / 2) {
-          scrollShiftRef.current = Array.from(container.children)
-            .slice(0, 3)
-            .reduce((acc, child) => {
-              const childElement = child as HTMLElement;
-              const width = childElement.offsetWidth;
-              const margin = parseFloat(getComputedStyle(childElement).marginRight);
-              return acc + width + margin;
-            }, 0);
-
-          setDisplayPosts((prev) => {
-            const moved = prev.slice(0, 3);
-            const rest = prev.slice(3);
-            return [...rest, ...moved];
-          });
-        }
         // requestAnimationFrame(() => {
         // });
       }
