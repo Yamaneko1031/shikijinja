@@ -33,6 +33,7 @@ const EmaSection = () => {
   const isTouchingRef = useRef(false);
   const carouselRef = useRef<HTMLDivElement>(null);
   const scrollShiftRef = useRef<number>(0);
+  const scrollLeftPrev = useRef(0);
   const [displayPosts, setDisplayPosts] = useState<DisplayPost[]>([]);
   const [selectedDeity, setSelectedDeity] = useState<EmaImageKey | null>(null);
   const [emaImage, setEmaImage] = useState<EmaImageKey>('iroha');
@@ -140,12 +141,15 @@ const EmaSection = () => {
       if (container) {
         // タッチ中ならスクロールしない
         if (!isTouchingRef.current) {
-          // 自動スクロール
-          // scrollByだとiOSで表示が再描画されないことがあるので、scrollToを使用
-          container.scrollTo({
-            left: container.scrollLeft + 2,
-            behavior: 'auto',
-          });
+          if (container.scrollLeft == scrollLeftPrev.current) {
+            // 自動スクロール
+            // scrollByだとiOSで表示が再描画されないことがあるので、scrollToを使用
+            container.scrollTo({
+              left: container.scrollLeft + 2,
+              behavior: 'auto',
+            });
+          }
+          scrollLeftPrev.current = container.scrollLeft;
         }
 
         if (container.children.length < 10) return;
