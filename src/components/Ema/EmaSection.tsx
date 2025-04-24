@@ -2,16 +2,13 @@
 
 import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import useSWR from 'swr';
-import Image from 'next/image';
 import TextReveal from '@/components/shared/TextReveal';
 import { getCssDuration } from '@/utils/getCssDuration';
 import { Post, DisplayPost, EmaImageKey } from '@/types/ema';
 
-import { emaList } from '@/config/ema';
-
 import EmaItem from './EmaItem';
 import EmaForm from './EmaForm';
-
+import DeitySelector from './DeitySelector';
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 // 絵馬表示用データを生成
@@ -37,7 +34,6 @@ const EmaSection = () => {
   const scrollLeftLoopStopCount = useRef(0);
   const [displayPosts, setDisplayPosts] = useState<DisplayPost[]>([]);
   const [selectedDeity, setSelectedDeity] = useState<EmaImageKey | null>(null);
-  const [emaImage, setEmaImage] = useState<EmaImageKey>('iroha');
   const [isPosting, setIsPosting] = useState(false);
   const [showPostedMessage, setShowPostedMessage] = useState(false);
 
@@ -276,51 +272,21 @@ const EmaSection = () => {
           <div className="fixed inset-0 z-50 bg-black/20 flex items-center justify-center p-4">
             {selectedDeity === null ? (
               // 神様選択フェーズ
-              <div className="flex flex-col gap-4 items-center bg-black/80 rounded-lg p-2 max-w-[400px] min-w-[320px] w-full shadow-xl relative text-white">
-                <h2 className="text-xl font-bold mb-4">どの神様に願いを届けますか？</h2>
-                <div className="flex flex-col gap-4 w-full max-w-xs">
-                  {Object.entries(emaList).map(([key, data]) => (
-                    <button
-                      key={key}
-                      onClick={() => {
-                        setSelectedDeity(key as EmaImageKey);
-                        setEmaImage(key as EmaImageKey);
-                        setIsPosting(true);
-                      }}
-                      className="flex items-center gap-3 p-3 rounded-lg bg-white/10 hover:bg-white/20 text-left text-white"
-                    >
-                      <div className="w-[64px] h-[64px] rounded-md overflow-hidden shrink-0">
-                        <Image
-                          src={`/images/illust/${data.illustname}`}
-                          alt={data.label}
-                          width={64}
-                          height={64}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <div className="flex flex-col text-sm whitespace-pre-line">
-                        <div className="font-bold text-base">{data.label}</div>
-                        <div className="text-gray-300">{data.grace}</div>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-                {/* 閉じるボタン */}
-                <button
-                  onClick={() => {
-                    setSelectedDeity(null);
-                    setIsPosting(false);
-                  }}
-                  className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded"
-                >
-                  閉じる
-                </button>
-              </div>
+              <DeitySelector
+                onSelect={(key) => {
+                  setSelectedDeity(key);
+                  setIsPosting(true);
+                }}
+                onCancel={() => {
+                  setSelectedDeity(null);
+                  setIsPosting(false);
+                }}
+              />
             ) : (
               <div className="bg-black/80 rounded-lg p-2 max-w-[400px] min-w-[320px] w-full shadow-xl relative text-white">
                 <EmaForm
-                  deityKey={emaImage}
-                  onChangeDeity={(key) => setEmaImage(key)}
+                  deityKey={selectedDeity}
+                  onChangeDeity={(key) => setSelectedDeity(key)}
                   onSubmit={handlePostWish}
                   onClose={() => setIsPosting(false)}
                 />

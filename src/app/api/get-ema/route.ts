@@ -5,7 +5,7 @@ export async function GET() {
   try {
     const posts = await prisma.emaPost.findMany({
       orderBy: { createdAt: 'desc' },
-      take: 50, // 最新50件だけ取得（必要に応じて変更）
+      take: 10, // 最新50件だけ取得（必要に応じて変更）
     });
 
     return NextResponse.json({ success: true, posts });
