@@ -237,16 +237,12 @@ const EmaSection = () => {
           ) : (
             <div
               ref={carouselRef}
-              onPointerDown={() => {
+              onTouchStart={() => {
                 isTouchingRef.current = true;
                 scrollLeftLoopStopCount.current = 3;
               }}
-              onPointerUp={() => {
-                isTouchingRef.current = false;
-              }}
-              onPointerCancel={() => {
-                isTouchingRef.current = false;
-              }}
+              onTouchEnd={() => (isTouchingRef.current = false)}
+              onTouchCancel={() => (isTouchingRef.current = false)}
               className="flex whitespace-nowrap overflow-x-auto overflow-y-hidden no-scrollbar"
             >
               {displayPosts.map((displayPost: DisplayPost) => {
