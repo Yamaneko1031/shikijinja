@@ -34,6 +34,7 @@ const EmaSection = () => {
   const carouselRef = useRef<HTMLDivElement>(null);
   const scrollShiftRef = useRef<number>(0);
   const scrollLeftPrev = useRef(0);
+  const scrollLeftLoopStopCount = useRef(0);
   const [displayPosts, setDisplayPosts] = useState<DisplayPost[]>([]);
   const [selectedDeity, setSelectedDeity] = useState<EmaImageKey | null>(null);
   const [emaImage, setEmaImage] = useState<EmaImageKey>('iroha');
@@ -142,39 +143,40 @@ const EmaSection = () => {
         // タッチ中ならスクロールしない
         if (!isTouchingRef.current) {
           if (container.scrollLeft == scrollLeftPrev.current) {
-            // 自動スクロール
-            // scrollByだとiOSで表示が再描画されないことがあるので、scrollToを使用
-            container.scrollTo({
-              left: container.scrollLeft + 2,
-              behavior: 'auto',
-            });
-
-            if (container.children.length < 10) return;
-            const fifthChild = container.children[6] as HTMLElement;
-            const fifthChildLeft = fifthChild.getBoundingClientRect().left;
-
-            if (fifthChildLeft < window.innerWidth / 2) {
-              scrollShiftRef.current = Array.from(container.children)
-                .slice(0, 3)
-                .reduce((acc, child) => {
-                  const childElement = child as HTMLElement;
-                  const width = childElement.offsetWidth;
-                  const margin = parseFloat(getComputedStyle(childElement).marginRight);
-                  return acc + width + margin;
-                }, 0);
-
-              setDisplayPosts((prev) => {
-                const moved = prev.slice(0, 3);
-                const rest = prev.slice(3);
-                return [...rest, ...moved];
+            if (scrollLeftLoopStopCount.current > 0) {
+              scrollLeftLoopStopCount.current--;
+            } else {
+              // 自動スクロール
+              // scrollByだとiOSで表示が再描画されないことがあるので、scrollToを使用
+              container.scrollTo({
+                left: container.scrollLeft + 2,
+                behavior: 'auto',
               });
+
+              if (container.children.length < 10) return;
+              const fifthChild = container.children[6] as HTMLElement;
+              const fifthChildLeft = fifthChild.getBoundingClientRect().left;
+
+              if (fifthChildLeft < window.innerWidth / 2) {
+                scrollShiftRef.current = Array.from(container.children)
+                  .slice(0, 3)
+                  .reduce((acc, child) => {
+                    const childElement = child as HTMLElement;
+                    const width = childElement.offsetWidth;
+                    const margin = parseFloat(getComputedStyle(childElement).marginRight);
+                    return acc + width + margin;
+                  }, 0);
+
+                setDisplayPosts((prev) => {
+                  const moved = prev.slice(0, 3);
+                  const rest = prev.slice(3);
+                  return [...rest, ...moved];
+                });
+              }
             }
           }
           scrollLeftPrev.current = container.scrollLeft;
         }
-
-        // requestAnimationFrame(() => {
-        // });
       }
     }, 60);
 
@@ -241,6 +243,7 @@ const EmaSection = () => {
               ref={carouselRef}
               onPointerDown={() => {
                 isTouchingRef.current = true;
+                scrollLeftLoopStopCount.current = 3;
               }}
               onPointerUp={() => {
                 isTouchingRef.current = false;
