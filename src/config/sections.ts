@@ -11,8 +11,9 @@ export type Section = {
   id: string;
   bgUrl: string;
   name: string;
-  component: React.ComponentType;
+  component: React.ComponentType<{ isActive: boolean; isNeighbor: boolean }>;
   scrollEffect: { ratio: number; posX: number; posY: number; zoom: number }[];
+  sectionClass: string;
 };
 
 export const sections: Section[] = [
@@ -23,10 +24,11 @@ export const sections: Section[] = [
     component: TopSection,
     scrollEffect: [
       { ratio: 0.0, posX: 60, posY: 50, zoom: 1.0 },
-      { ratio: 0.5, posX: 60, posY: 50, zoom: 1.0 },
-      { ratio: 0.6, posX: 60, posY: 50, zoom: 1.1 },
+      { ratio: 0.5, posX: 60, posY: 50, zoom: 1.1 },
+      { ratio: 0.6, posX: 60, posY: 50, zoom: 1.2 },
       { ratio: 1.0, posX: 60, posY: 50, zoom: 1.3 },
     ],
+    sectionClass: 'relative w-full h-[1200px] items-center justify-center p-4',
   },
   {
     id: 'sando',
@@ -38,6 +40,7 @@ export const sections: Section[] = [
       { ratio: 0.5, posX: 60, posY: 50, zoom: 1.1 },
       { ratio: 1.0, posX: 70, posY: 50, zoom: 1.2 },
     ],
+    sectionClass: 'relative w-full h-[1200px] items-center justify-center p-4',
   },
   {
     id: 'ema',
@@ -50,6 +53,7 @@ export const sections: Section[] = [
       { ratio: 0.7, posX: 50, posY: 50, zoom: 1.1 },
       { ratio: 1.0, posX: 60, posY: 50, zoom: 1.0 },
     ],
+    sectionClass: 'relative w-full h-[1200px] items-center justify-center p-4',
   },
   {
     id: 'omamori',
@@ -62,6 +66,7 @@ export const sections: Section[] = [
       { ratio: 0.7, posX: 55, posY: 50, zoom: 1.1 },
       { ratio: 1.0, posX: 68, posY: 50, zoom: 1.0 },
     ],
+    sectionClass: 'relative w-full h-[1200px] items-center justify-center p-4',
   },
   {
     id: 'omikuji',
@@ -74,6 +79,7 @@ export const sections: Section[] = [
       { ratio: 0.7, posX: 55, posY: 50, zoom: 1.1 },
       { ratio: 1.0, posX: 60, posY: 50, zoom: 1.0 },
     ],
+    sectionClass: 'relative w-full h-[1200px] items-center justify-center p-4',
   },
   {
     id: 'nadeneko',
@@ -87,6 +93,7 @@ export const sections: Section[] = [
       { ratio: 0.7, posX: 55, posY: 50, zoom: 1.2 },
       { ratio: 1.0, posX: 60, posY: 50, zoom: 1.1 },
     ],
+    sectionClass: 'relative w-full h-[1200px] items-center justify-center p-4',
   },
   {
     id: 'shoukai',
@@ -99,6 +106,7 @@ export const sections: Section[] = [
       { ratio: 0.7, posX: 55, posY: 50, zoom: 1.0 },
       { ratio: 1.0, posX: 65, posY: 50, zoom: 1.0 },
     ],
+    sectionClass: 'relative w-full h-[1200px] items-center justify-center p-4',
   },
   {
     id: 'haiden',
@@ -111,5 +119,6 @@ export const sections: Section[] = [
       { ratio: 0.6, posX: 50, posY: 50, zoom: 1.3 },
       { ratio: 1.0, posX: 50, posY: 50, zoom: 1.3 },
     ],
+    sectionClass: 'relative w-full h-[1200px] items-center justify-center p-4',
   },
 ];

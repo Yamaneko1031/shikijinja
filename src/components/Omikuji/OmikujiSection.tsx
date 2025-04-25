@@ -1,9 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import TextReveal from '@/components/shared/TextReveal';
 
-const OmikujiSection = () => {
+type Props = {
+  isActive: boolean;
+  isNeighbor: boolean;
+};
+
+const OmikujiSection = ({ isActive, isNeighbor }: Props) => {
+  console.log('OmikujiSection', isActive, isNeighbor);
   const [loading, setLoading] = useState(false);
 
   const fetchOmikuji = async () => {
@@ -21,7 +27,7 @@ const OmikujiSection = () => {
   };
 
   return (
-    <div className="relative w-full h-[1200px] items-center justify-center p-4">
+    <>
       <div className="relative top-[600px] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] p-10 bg-black/50 rounded-lg">
         <TextReveal
           text="おみくじを引けるコンテンツ"
@@ -38,8 +44,8 @@ const OmikujiSection = () => {
           {loading ? '神様と交信中…' : 'おみくじを引く'}
         </button>
       </div>
-    </div>
+    </>
   );
 };
 
-export default OmikujiSection;
+export default React.memo(OmikujiSection);

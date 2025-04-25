@@ -1,14 +1,21 @@
 'use client';
 
+import React from 'react';
 import TextReveal from '@/components/shared/TextReveal';
 
-const SandoSection = () => {
+type Props = {
+  isActive: boolean;
+  isNeighbor: boolean;
+};
+
+const SandoSection = ({ isActive, isNeighbor }: Props) => {
+  console.log('SandoSection', isActive, isNeighbor);
   const handlePostWish = () => {
     alert(`参拝マナーを見ました`);
   };
 
   return (
-    <div className="relative w-full h-[1200px] items-center justify-center p-4">
+    <>
       <div className="relative top-[600px] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] p-10 bg-black/50 rounded-lg">
         <TextReveal
           text="ようこそ、式岐神社へ"
@@ -47,8 +54,8 @@ const SandoSection = () => {
           参拝マナーを見る
         </button>
       </div>
-    </div>
+    </>
   );
 };
 
-export default SandoSection;
+export default React.memo(SandoSection);

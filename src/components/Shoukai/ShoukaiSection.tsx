@@ -1,14 +1,21 @@
 'use client';
 
+import React from 'react';
 import TextReveal from '@/components/shared/TextReveal';
 
-const ShoukaiSection = () => {
+type Props = {
+  isActive: boolean;
+  isNeighbor: boolean;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const ShoukaiSection = ({ isActive, isNeighbor }: Props) => {
   const handlePostWish = () => {
     alert(`神様の紹介を見ました`);
   };
 
   return (
-    <div className="relative w-full h-[1200px] items-center justify-center p-4">
+    <>
       <div className="relative top-[600px] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] p-10 bg-black/50 rounded-lg">
         <TextReveal
           text="式岐神社に祭られている神様の紹介"
@@ -19,8 +26,8 @@ const ShoukaiSection = () => {
           神様の紹介を見る
         </button>
       </div>
-    </div>
+    </>
   );
 };
 
-export default ShoukaiSection;
+export default React.memo(ShoukaiSection);

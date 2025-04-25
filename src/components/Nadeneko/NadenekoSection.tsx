@@ -1,15 +1,22 @@
 'use client';
 
+import React from 'react';
 import TextReveal from '@/components/shared/TextReveal';
 
-const NadenekoSection = () => {
+type Props = {
+  isActive: boolean;
+  isNeighbor: boolean;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const NadenekoSection = ({ isActive, isNeighbor }: Props) => {
   const handlePostWish = () => {
     // 投稿ボタンの処理（例えば、APIに投稿する）
     alert(`撫でました`);
   };
 
   return (
-    <div className="relative w-full h-[1200px] items-center justify-center p-4">
+    <>
       <div className="relative top-[600px] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] p-10 bg-black/50 rounded-lg">
         <TextReveal
           text="猫を撫でるコンテンツ"
@@ -20,8 +27,8 @@ const NadenekoSection = () => {
           撫でる
         </button>
       </div>
-    </div>
+    </>
   );
 };
 
-export default NadenekoSection;
+export default React.memo(NadenekoSection);

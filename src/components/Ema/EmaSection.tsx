@@ -1,90 +1,69 @@
 'use client';
-
-import { useState, useEffect, useRef, useLayoutEffect } from 'react';
-import useSWR from 'swr';
-import TextReveal from '@/components/shared/TextReveal';
-import { getCssDuration } from '@/utils/getCssDuration';
+import React, { useRef, useState } from 'react';
 import { Post, DisplayPost, EmaImageKey } from '@/types/ema';
-
-import EmaItem from './EmaItem';
-import EmaForm from './EmaForm';
+import { getCssDuration } from '@/utils/getCssDuration';
+import TextReveal from '@/components/shared/TextReveal';
 import DeitySelector from './DeitySelector';
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+import EmaForm from './EmaForm';
+import EmaCarousel from './EmaCarousel';
+import { useEmaPosts, createDisplayPost } from '@/hooks/useEmaPosts';
+import { useAutoCarouselScroll } from '@/hooks/useAutoCarouselScroll';
 
-// 絵馬表示用データを生成
-const createDisplayPost = (post: Post): DisplayPost => ({
-  ...post,
-  drawKey: crypto.randomUUID(),
-  rotate: (Math.random() * 10 - 5).toFixed(2),
-  translateY: (Math.random() * 10 - 5).toFixed(2),
-  marginRight: `${-25 - Math.floor(Math.random() * 20)}px`,
-});
+type Props = {
+  isActive: boolean;
+  isNeighbor: boolean;
+};
 
-const EmaSection = () => {
+const EmaSection = ({ isActive, isNeighbor }: Props) => {
+  console.log('EmaSection', isActive, isNeighbor);
+  /* ----------------- data ----------------- */
   const {
-    data: emaData,
+    displayPosts,
+    setDisplayPosts,
     error: emaGetError,
     isLoading: isEmaLoading,
-  } = useSWR('/api/get-ema', fetcher);
+  } = useEmaPosts();
 
-  const isTouchingRef = useRef(false);
+  /* ----------------- refs ----------------- */
   const carouselRef = useRef<HTMLDivElement>(null);
-  const scrollShiftRef = useRef<number>(0);
-  const scrollLeftPrev = useRef(0);
-  const scrollLeftLoopStopCount = useRef(0);
-  const [displayPosts, setDisplayPosts] = useState<DisplayPost[]>([]);
+  const isTouchingRef = useRef(false);
+
+  /* ----------------- auto scroll hook ----- */
+  useAutoCarouselScroll(carouselRef, displayPosts, setDisplayPosts, isTouchingRef, isActive);
+
+  /* ----------------- local UI state ------- */
   const [selectedDeity, setSelectedDeity] = useState<EmaImageKey | null>(null);
   const [isPosting, setIsPosting] = useState(false);
   const [showPostedMessage, setShowPostedMessage] = useState(false);
 
-  // 絵馬投稿セクションにスクロール
+  /* ----------------- helpers -------------- */
   const scrollToEmaSection = () => {
     if (!carouselRef.current) return;
-
     const offsetTop =
       carouselRef.current.getBoundingClientRect().top +
       window.scrollY +
       carouselRef.current.offsetHeight / 2;
-    const targetY = offsetTop - window.innerHeight / 2;
-
-    window.scrollTo({
-      top: targetY,
-      behavior: 'smooth',
-    });
+    window.scrollTo({ top: offsetTop - window.innerHeight / 2, behavior: 'smooth' });
   };
 
-  // 絵馬投稿位置を取得
   const getInsertIndex = () => {
     if (!carouselRef.current) return displayPosts.length;
-
-    const container = carouselRef.current;
-    const scrollLeft = container.scrollLeft;
-    const containerWidth = container.offsetWidth;
-
-    // 中央位置
-    const center = scrollLeft + containerWidth / 2;
-
+    const { scrollLeft, offsetWidth, children } = carouselRef.current;
+    const center = scrollLeft + offsetWidth / 2;
     let total = 0;
-    for (let i = 0; i < container.children.length; i++) {
-      const child = container.children[i] as HTMLElement;
-      const width = child.offsetWidth;
-      const margin = parseFloat(getComputedStyle(child).marginRight);
-      total += width + margin;
+    for (let i = 0; i < children.length; i++) {
+      const child = children[i] as HTMLElement;
+      total += child.offsetWidth + parseFloat(getComputedStyle(child).marginRight);
       if (total > center) return i;
     }
-
     return displayPosts.length;
   };
 
-  // 絵馬投稿処理
+  /* ----------------- submit -------------- */
   const handlePostWish = (post: Post) => {
     scrollToEmaSection();
-
     const insertIndex = getInsertIndex();
-    const newDisplayPost = {
-      ...createDisplayPost(post),
-      highlighted: true,
-    };
+    const newDisplayPost: DisplayPost = { ...createDisplayPost(post), highlighted: true };
 
     setDisplayPosts((prev) => {
       const next = [...prev];
@@ -92,100 +71,29 @@ const EmaSection = () => {
       return next;
     });
 
-    const insertDuration = getCssDuration('--ema-insert-duration');
-    // 挿入アニメーションの付けはずし
     setTimeout(() => {
       setDisplayPosts((prev) =>
         prev.map((p) => (p.drawKey === newDisplayPost.drawKey ? { ...p, highlighted: false } : p))
       );
-    }, insertDuration);
+    }, getCssDuration('--ema-insert-duration'));
 
     setIsPosting(false);
-
-    // 投稿メッセージ表示
     setShowPostedMessage(true);
+    setTimeout(
+      () => setShowPostedMessage(false),
+      getCssDuration('--ema-animate-fade-in-out-duration')
+    );
 
-    const fadeInOutDuration = getCssDuration('--ema-animate-fade-in-out-duration');
-    setTimeout(() => setShowPostedMessage(false), fadeInOutDuration);
-
-    // 保存は非同期
     fetch('/api/post-ema', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(post),
-    }).catch((error) => {
-      console.error('保存に失敗しました:', error);
-    });
+    }).catch((e) => console.error('保存に失敗しました:', e));
   };
 
-  // データ取得後に displayPost に変換してセット
-  useEffect(() => {
-    if (emaData?.success && emaData.posts) {
-      const display = emaData.posts.map(createDisplayPost);
-      setDisplayPosts(display);
-    }
-  }, [emaData]);
-
-  // カルーセルの自動スクロール処理
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const container = carouselRef.current;
-      if (container) {
-        // タッチ中ならスクロールしない
-        if (!isTouchingRef.current) {
-          if (container.scrollLeft == scrollLeftPrev.current) {
-            if (scrollLeftLoopStopCount.current > 0) {
-              scrollLeftLoopStopCount.current--;
-            } else {
-              // 自動スクロール
-              // scrollByだとiOSで表示が再描画されないことがあるので、scrollToを使用
-              container.scrollTo({
-                left: container.scrollLeft + 2,
-                behavior: 'auto',
-              });
-
-              if (container.children.length < 10) return;
-              const fifthChild = container.children[6] as HTMLElement;
-              const fifthChildLeft = fifthChild.getBoundingClientRect().left;
-
-              if (fifthChildLeft < window.innerWidth / 2) {
-                scrollShiftRef.current = Array.from(container.children)
-                  .slice(0, 3)
-                  .reduce((acc, child) => {
-                    const childElement = child as HTMLElement;
-                    const width = childElement.offsetWidth;
-                    const margin = parseFloat(getComputedStyle(childElement).marginRight);
-                    return acc + width + margin;
-                  }, 0);
-
-                setDisplayPosts((prev) => {
-                  const moved = prev.slice(0, 3);
-                  const rest = prev.slice(3);
-                  return [...rest, ...moved];
-                });
-              }
-            }
-          }
-          scrollLeftPrev.current = container.scrollLeft;
-        }
-      }
-    }, 60);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  // displayPosts更新時にスクロール補正が必要なら補正
-  useLayoutEffect(() => {
-    if (scrollShiftRef.current && carouselRef.current) {
-      carouselRef.current.scrollLeft -= scrollShiftRef.current;
-      scrollShiftRef.current = 0;
-    }
-  }, [displayPosts]);
-
+  /* ----------------- render -------------- */
   return (
-    <div className="relative w-full h-[1200px] items-center justify-center p-4">
+    <>
       <div className="relative top-[400px] w-full max-w-3xl mx-auto p-4 bg-black/50 bg-opacity-80 rounded shadow-lg">
         <TextReveal
           text="絵馬投稿や他の人の投稿した絵馬をみるコンテンツ"
@@ -193,7 +101,6 @@ const EmaSection = () => {
           className="text-2xl font-bold"
         />
 
-        {/* 投稿メッセージ表示 */}
         {showPostedMessage && (
           <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
             <div className="bg-black/60 text-white text-lg px-6 py-3 rounded-lg shadow-lg animate-fade-in-out">
@@ -202,33 +109,22 @@ const EmaSection = () => {
           </div>
         )}
 
-        {/* 絵馬一覧カルーセル表示 */}
-        <div
-          className="overflow-hidden bg-cover bg-center rounded-lg border-4 border-[rgba(40,20,0,0.5)]"
-          style={{ backgroundImage: 'url(/images/ema/bg_ema_view.webp)' }}
-        >
-          {isEmaLoading ? (
-            <div>読み込み中...</div>
-          ) : emaGetError ? (
-            <div>データの取得に失敗しました</div>
-          ) : (
-            <div
-              ref={carouselRef}
-              onTouchStart={() => {
-                isTouchingRef.current = true;
-                scrollLeftLoopStopCount.current = 3;
-              }}
-              onTouchEnd={() => (isTouchingRef.current = false)}
-              onTouchCancel={() => (isTouchingRef.current = false)}
-              className="flex whitespace-nowrap overflow-x-auto overflow-y-hidden no-scrollbar"
-            >
-              {displayPosts.map((displayPost: DisplayPost) => {
-                return <EmaItem key={displayPost.drawKey} post={displayPost} />;
-              })}
-            </div>
-          )}
-        </div>
+        {/* ------------------ Carousel ------------------ */}
+        <EmaCarousel
+          ref={carouselRef}
+          posts={displayPosts}
+          isLoading={isEmaLoading}
+          error={emaGetError}
+          backgroundImageUrl="url(/images/ema/bg_ema_view.webp)"
+          onTouchStart={() => {
+            isTouchingRef.current = true;
+          }}
+          onTouchEnd={() => {
+            isTouchingRef.current = false;
+          }}
+        />
 
+        {/* ------------------ CTA ---------------------- */}
         <button
           onClick={() => {
             setSelectedDeity(null);
@@ -240,10 +136,10 @@ const EmaSection = () => {
           絵馬に願いを書く
         </button>
 
+        {/* ------------------ modal -------------------- */}
         {isPosting && (
           <div className="fixed inset-0 z-50 flex items-center justify-center">
             {selectedDeity === null ? (
-              // 神様選択フェーズ
               <DeitySelector
                 onSelect={(key) => {
                   setSelectedDeity(key);
@@ -255,7 +151,6 @@ const EmaSection = () => {
                 }}
               />
             ) : (
-              // 絵馬投稿フォーム
               <EmaForm
                 initialDeityKey={selectedDeity}
                 onSubmit={handlePostWish}
@@ -265,8 +160,8 @@ const EmaSection = () => {
           </div>
         )}
       </div>
-    </div>
+    </>
   );
 };
 
-export default EmaSection;
+export default React.memo(EmaSection);

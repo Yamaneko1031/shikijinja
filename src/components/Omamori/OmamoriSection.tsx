@@ -1,9 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import TextReveal from '@/components/shared/TextReveal';
 
-const OmamoriSection = () => {
+type Props = {
+  isActive: boolean;
+  isNeighbor: boolean;
+};
+
+const OmamoriSection = ({ isActive, isNeighbor }: Props) => {
+  console.log('OmamoriSection', isActive, isNeighbor);
   const [selectedOmamori, setSelectedOmamori] = useState('love');
 
   const handlePurchase = () => {
@@ -12,7 +18,7 @@ const OmamoriSection = () => {
   };
 
   return (
-    <div className="relative w-full h-[1200px] items-center justify-center p-4">
+    <>
       <div className="relative top-[600px] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] p-10 bg-black/50 rounded-lg">
         <TextReveal
           text="ご利益を得たい御守りを選択して受け取るコンテンツ"
@@ -32,8 +38,8 @@ const OmamoriSection = () => {
           受け取る
         </button>
       </div>
-    </div>
+    </>
   );
 };
 
-export default OmamoriSection;
+export default React.memo(OmamoriSection);

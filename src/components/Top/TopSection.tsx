@@ -1,43 +1,38 @@
 'use client';
 
-import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
+import React from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 
-const TopSection = () => {
+type Props = {
+  isActive: boolean;
+  isNeighbor: boolean;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const TopSection = ({ isActive, isNeighbor }: Props) => {
   const { scrollY } = useScroll();
 
-  // 慣性付きスクロール位置
-  const smoothScrollY = useSpring(scrollY, {
-    stiffness: 80, // 硬さ（小さいほど柔らかく）
-    damping: 30, // 減衰（大きいほどブレーキが効く）
-  });
-
-  const toriiScale = useTransform(smoothScrollY, [0, 400], [1, 3.5]);
-  const toriiOpacity = useTransform(smoothScrollY, [100, 500], [1, 0]);
+  const toriiScale = useTransform(scrollY, [0, 400], [1, 3.5]);
+  const toriiOpacity = useTransform(scrollY, [100, 500], [1, 0]);
   const titleOpacity = useTransform(scrollY, [50, 300], [1, 0]);
   // const whiteOverlayOpacity = useTransform(scrollY, [200, 650, 900], [0, 1, 0]);
   const arrowOpacity = useTransform(scrollY, [0, 200], [1, 0]);
 
   return (
-    <div className="relative w-full h-[1200px] items-center justify-center p-4">
-      {/* 白背景フェードオーバーレイ */}
-      {/* <motion.div
-        className="fixed inset-0 z-50 bg-white/30 backdrop-blur-sm pointer-events-none"
-        style={{ opacity: whiteOverlayOpacity }}
-      /> */}
-
+    <>
       {/* 鳥居 */}
       <motion.div
         className="fixed z-100 pointer-events-none -translate-x-1/2 -translate-y-1/2"
         style={{
-          top: 'calc(50lvh)', // ← 明示的に高さを使う
+          top: 'calc(50lvh)',
           left: '50%',
           scale: toriiScale,
           opacity: toriiOpacity,
           transform: 'translate(-50%, -50%)',
           width: '80vw',
           height: 'calc(80vw * 1)',
-          transformOrigin: '50% 70%', // ← 拡大の基準を中心にする
+          transformOrigin: '50% 70%',
         }}
       >
         <Image
@@ -80,8 +75,8 @@ const TopSection = () => {
           <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
         </svg>
       </motion.div>
-    </div>
+    </>
   );
 };
 
-export default TopSection;
+export default React.memo(TopSection);

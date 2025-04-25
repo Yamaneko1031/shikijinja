@@ -3,17 +3,17 @@
 import { useRef, useEffect, useState } from 'react';
 import { BackgroundManager, BackgroundManagerHandle } from '@/components/shared/BackgroundManager';
 import { Section, sections } from '@/config/sections';
-import { getCssDuration } from '@/utils/getCssDuration';
 import DebugLogDialog from '@/components/shared/DebugLogDialog';
+import SectionOverlayText from '@/components/shared/SctionOverlayText';
 
 export default function App() {
+  console.log('App');
+  const [state, setState] = useState({ activeId: sections[0].id });
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
   const bgManagerRef = useRef<BackgroundManagerHandle>(null);
-  const overlayTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const allUrls = sections.map(({ bgUrl }) => bgUrl);
-  const [isOverlayActive, setIsOverlayActive] = useState(false);
-  const [overlayText, setOverlayText] = useState<string | null>(null);
   const currentSectionRef = useRef<Section>(sections[0]);
+  const allUrls = sections.map(({ bgUrl }) => bgUrl);
+  const activeIndex = sections.findIndex((s) => s.id === state.activeId);
 
   useEffect(() => {
     const checkScroll = () => {
@@ -31,33 +31,9 @@ export default function App() {
           currentSectionRef.current.id != nextSection.id &&
           bgManagerRef.current.isReadyForTransition()
         ) {
-          const currentSctionIndex = sections.findIndex(
-            (s) => s.id === currentSectionRef.current.id
-          );
-          const nextSctionIndex = sections.findIndex((s) => s.id === nextSection.id);
-
-          if (nextSctionIndex > currentSctionIndex && nextSection.name !== '') {
-            if (overlayTimerRef.current) {
-              clearTimeout(overlayTimerRef.current);
-              setOverlayText(null);
-              setIsOverlayActive(false);
-            }
-
-            requestAnimationFrame(() => {
-              setOverlayText(currentSectionRef.current.name);
-              setIsOverlayActive(true);
-              const sectionOverlayFadeDuration = getCssDuration('--section-overlay-fade-duration');
-              overlayTimerRef.current = setTimeout(() => {
-                setOverlayText(null);
-                overlayTimerRef.current = null;
-              }, sectionOverlayFadeDuration);
-            });
-          } else {
-            setOverlayText(null);
-            setIsOverlayActive(false);
-          }
           bgManagerRef.current.setUrl(nextSection.bgUrl, nextSection.scrollEffect);
           currentSectionRef.current = nextSection;
+          setState({ activeId: nextSection.id });
         }
 
         const el = sectionRefs.current[currentSectionRef.current.id];
@@ -86,27 +62,26 @@ export default function App() {
         scrollEffect={sections[0].scrollEffect}
       />
 
-      {sections.map(({ id, component: SectionComponent }) => (
-        <section
-          key={id}
-          ref={(el) => {
-            sectionRefs.current[id] = el;
-          }}
-        >
-          {SectionComponent && <SectionComponent />}
-        </section>
-      ))}
+      {sections.map(({ id, component: SectionComponent }, idx) => {
+        const isActive = id === state.activeId;
+        const isNeighbor = Math.abs(idx - activeIndex) === 1;
+        return (
+          <section
+            key={id}
+            ref={(el) => {
+              sectionRefs.current[id] = el;
+            }}
+            className={`${sections[idx].sectionClass}`}
+          >
+            {(isActive || isNeighbor) && SectionComponent && (
+              <SectionComponent isActive={isActive} isNeighbor={isNeighbor} />
+            )}
+          </section>
+        );
+      })}
 
-      {overlayText && (
-        <div
-          className={`fixed inset-0 z-50 flex justify-center bg-white/10 pointer-events-none ${
-            isOverlayActive ? 'animate-section-overlay-fade' : ''
-          }`}
-          style={{ transform: 'translateZ(0.01px)', height: '100lvh' }}
-        >
-          <h2 className="absolute top-2/5 text-white text-4xl font-bold">{overlayText}</h2>
-        </div>
-      )}
+      <SectionOverlayText text={currentSectionRef.current.name} />
+
       <DebugLogDialog />
     </main>
   );
