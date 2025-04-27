@@ -8,6 +8,7 @@ import EmaForm from './EmaForm';
 import EmaCarousel from './EmaCarousel';
 import { useEmaPosts, createDisplayPost } from '@/hooks/useEmaPosts';
 import { useAutoCarouselScroll } from '@/hooks/useAutoCarouselScroll';
+import { Button } from '../shared/Button';
 
 type Props = {
   isActive: boolean;
@@ -95,11 +96,7 @@ const EmaSection = ({ isActive, isNeighbor }: Props) => {
   return (
     <>
       <div className="relative top-[400px] w-full max-w-3xl mx-auto p-4 bg-black/50 bg-opacity-80 rounded shadow-lg">
-        <TextReveal
-          text="絵馬投稿や他の人の投稿した絵馬をみるコンテンツ"
-          delayPerChar={0.1}
-          className="text-2xl font-bold"
-        />
+        <TextReveal text="みんなの願い事" delayPerChar={0.1} className="text-2xl font-bold" />
 
         {showPostedMessage && (
           <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
@@ -125,7 +122,8 @@ const EmaSection = ({ isActive, isNeighbor }: Props) => {
         />
 
         {/* ------------------ CTA ---------------------- */}
-        <button
+        <Button
+          variant="positive"
           onClick={() => {
             setSelectedDeity(null);
             scrollToEmaSection();
@@ -134,7 +132,7 @@ const EmaSection = ({ isActive, isNeighbor }: Props) => {
           className="bg-yellow-500 text-black px-4 py-2 rounded hover:bg-yellow-600 mb-4"
         >
           絵馬に願いを書く
-        </button>
+        </Button>
 
         {/* ------------------ modal -------------------- */}
         {isPosting && (

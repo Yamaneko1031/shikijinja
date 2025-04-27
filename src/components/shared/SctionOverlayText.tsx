@@ -32,7 +32,7 @@ const SectionOverlayText = ({ text }: Props) => {
       }`}
       style={{ transform: 'translateZ(0.01px)', height: '100lvh' }}
     >
-      <h2 className="absolute top-2/5 text-white text-4xl font-bold">{overlayText}</h2>
+      <h2 className="absolute top-1/7 right-1/7 vertical text-section-overlay">{overlayText}</h2>
     </div>
   );
 };

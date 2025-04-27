@@ -6,6 +6,7 @@ import EmaPreview from './EmaPreview';
 import TextSettingsPanel from './TextSettingsPanel';
 import { emaList } from '@/config/ema';
 import { FontColorKey, FontKey } from '@/types/fonts';
+import { Button } from '../shared/Button';
 
 export interface EmaFormProps {
   initialDeityKey: EmaImageKey;
@@ -32,6 +33,7 @@ export default function EmaForm({
     initialTexts ?? [
       {
         text: '',
+        isVertical: false,
         font: initFont,
         fontSize: 24,
         fontColor: initFontColor,
@@ -40,9 +42,11 @@ export default function EmaForm({
         offsetX: 0,
         offsetY: 0,
         textWidth: defaultTextRectSize.width,
+        textHeight: defaultTextRectSize.height,
       },
       {
         text: '',
+        isVertical: false,
         font: initFont,
         fontSize: 16,
         fontColor: initFontColor,
@@ -51,11 +55,12 @@ export default function EmaForm({
         offsetX: 0,
         offsetY: 35,
         textWidth: defaultTextRectSize.width,
+        textHeight: defaultTextRectSize.height,
       },
     ]
   );
   const [currentTextIndex, setCurrentTextIndex] = useState<0 | 1>(0);
-  const [isSettingOpen, setIsSettingOpen] = useState(false);
+  // const [isSettingOpen, setIsSettingOpen] = useState(false);
 
   // プレビュー用 refs & state
   const previewWrapperRef = useRef<HTMLDivElement>(null);
@@ -215,10 +220,7 @@ export default function EmaForm({
 
         <div className="relative w-full">
           {/* 文字のカスタムボタン */}
-          <button
-            onClick={() => setIsSettingOpen(!isSettingOpen)}
-            className="relative left-0 top-0 px-3 py-1 bg-white/10 hover:bg-white/20 text-white text-sm rounded-full shadow-md z-50 flex items-center"
-          >
+          {/* <Button onClick={() => setIsSettingOpen(!isSettingOpen)} className="relative" size="sm">
             <Image
               src="/images/icon/icon_hude.webp"
               alt="icon"
@@ -227,44 +229,53 @@ export default function EmaForm({
               className="mr-2"
             />
             {isSettingOpen ? '←' : '文字のカスタム'}
-          </button>
+          </Button> */}
 
           {/* 編集対象テキストの選択 */}
           <div className="absolute right-0 top-0 flex flex-col gap-2 z-20">
             {[0, 1].map((index) => (
-              <button
+              <Button
                 key={index}
+                variant={currentTextIndex === index ? 'subSelected' : 'subUnselected'}
                 onClick={() => setCurrentTextIndex(index as 0 | 1)}
-                className={`px-2 py-1 rounded-full border ${
-                  currentTextIndex === index
-                    ? 'bg-white/20 text-white border-white'
-                    : 'bg-white/10 hover:bg-white/20 text-white/50 border-0'
-                }`}
+                size="sm"
               >
                 {index === 0 ? '本文' : 'ニックネーム'}
-              </button>
+              </Button>
             ))}
           </div>
           <div className="flex gap-2">
             {/* 設定パネル */}
-            <div
+            {/* <div
               className={`
-            top-0 left-0 z-50
-            bg-black/90 text-white rounded-r-lg shadow-lg
-            transition-all duration-300 ease-in-out
-            ${isSettingOpen ? 'w-[100px] opacity-100' : 'w-[0px] opacity-60'}
-        `}
+                top-0 left-0 z-50
+              text-white rounded-r-lg shadow-lg
+                transition-all duration-300 ease-in-out
+                ${isSettingOpen ? 'w-[100px] opacity-100' : 'w-[0px] opacity-60'}
+            `}
             >
               <TextSettingsPanel
                 textBlock={texts[currentTextIndex]}
                 isOpen={isSettingOpen}
                 onChange={updateCurrentText}
               />
+            </div> */}
+            <div
+              className="top-0 left-0 z-50
+              text-white rounded-r-lg shadow-lg
+                transition-all duration-300 ease-in-out
+                w-[120px] opacity-100"
+            >
+              <TextSettingsPanel
+                textBlock={texts[currentTextIndex]}
+                isOpen={true}
+                onChange={updateCurrentText}
+              />
             </div>
             <div
               className="relative flex flex-col items-center gap-2 transition-all duration-300 ease-in-out"
               style={{
-                margin: '0 auto',
+                margin: '50px auto 0',
               }}
             >
               {/* プレビュー & テキスト入力 */}
@@ -286,7 +297,7 @@ export default function EmaForm({
                 value={texts[currentTextIndex].text}
                 onChange={(e) => updateCurrentText({ text: e.target.value })}
                 maxLength={40}
-                rows={3}
+                rows={4}
                 className="w-[200px] p-2 border rounded"
                 placeholder="願い事を入力..."
               />
@@ -296,24 +307,26 @@ export default function EmaForm({
 
         {/* アクション */}
         <div className="flex space-x-2">
-          <button onClick={onClose} className="px-4 py-2 bg-blue-500 rounded">
+          <Button onClick={onClose} variant="negative" size="md">
             閉じる
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={handleSubmit}
-            className="px-4 py-2 bg-blue-500 disabled:bg-gray-400 text-white rounded"
+            variant="positive"
+            size="md"
             disabled={
               isOverflowing.some((is) => is) || texts.every((text) => text.text.length === 0)
             }
           >
             投稿する
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => updateCurrentText(defaultOffsetPos[currentTextIndex])}
-            className="px-4 py-2 bg-blue-500 rounded"
+            variant="subNatural"
+            size="sm"
           >
             位置リセット
-          </button>
+          </Button>
         </div>
       </div>
     </div>

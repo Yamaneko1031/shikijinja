@@ -5,6 +5,7 @@ export type EmaImageKey = 'shikineko' | 'iroha' | 'tenten' | 'nadeneko';
 // テキストブロックの定義
 export type TextBlock = {
   text: string;
+  isVertical: boolean;
   font: FontKey;
   fontSize: number;
   fontColor: FontColorKey;
@@ -13,6 +14,7 @@ export type TextBlock = {
   offsetX: number;
   offsetY: number;
   textWidth: number;
+  textHeight: number;
 };
 
 // 投稿データの定義

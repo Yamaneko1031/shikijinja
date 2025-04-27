@@ -16,3 +16,102 @@ body {
 .text-shadow {
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
+
+/* セクションオーバーレイテキスト */
+.text-section-overlay {
+  color: #fff;
+  font-size: 3.5rem;
+  font-weight: bold;
+  text-shadow:
+    0 0 6px #000,
+    0 0 2px #000,
+    2px 2px 8px #333;
+}
+
+/* 画面上下のグラデーション */
+.overlay-gradient {
+  @apply fixed inset-0 pointer-events-none z-100;
+  background: linear-gradient(
+    to bottom,
+    black 0%,
+    rgba(0, 0, 0, 0) 15%,
+    rgba(0, 0, 0, 0) 85%,
+    black 100%
+  );
+}
+
+/* 縦書き */
+.vertical {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+}
+
+.btn-positive {
+  @apply rounded;
+  background-color: #915107;
+  color: #ffffff;
+}
+
+.btn-positive:hover {
+  background-color: #a95f09;
+}
+
+.btn-positive:disabled {
+  background-color: #362317;
+  color: #d3d3d3;
+  cursor: not-allowed;
+}
+
+.btn-negative {
+  @apply rounded;
+  background-color: #681604;
+  color: #ffffff;
+}
+
+.btn-negative:hover {
+  background-color: #761904;
+}
+
+.btn-negative:disabled {
+  background-color: #430f03;
+  color: #d3d3d3;
+  cursor: not-allowed;
+}
+
+.btn-sub-natural {
+  @apply rounded-full;
+  background-color: #047857;
+  color: #ffffff;
+}
+
+.btn-sub-natural:hover {
+  background-color: #047857;
+}
+
+.btn-sub-selected {
+  @apply rounded-full;
+  background-color: #23583b;
+  color: #ffffff;
+  border: 2px solid #ffffff;
+}
+
+.btn-sub-selected:hover {
+  background-color: #23583b;
+  color: #ffffff;
+}
+
+.btn-sub-unselected {
+  @apply rounded-full;
+  background-color: #0b1c13;
+  color: #d1d5db;
+}
+
+.btn-sub-unselected:hover {
+  background-color: #23583b;
+  color: #ffffff;
+}
+
+input[type='range'],
+input[type='checkbox'] {
+  accent-color: #23583b;
+}

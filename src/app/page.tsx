@@ -83,6 +83,8 @@ export default function App() {
       <SectionOverlayText text={currentSectionRef.current.name} />
 
       <DebugLogDialog />
+
+      <div className="overlay-gradient" />
     </main>
   );
 }

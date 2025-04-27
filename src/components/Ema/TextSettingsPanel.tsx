@@ -13,7 +13,7 @@ export default function TextSettingsPanel({ textBlock, isOpen, onChange }: TextS
   if (!isOpen) return null;
 
   return (
-    <div className="px-2 py-2 bg-black/90 text-white rounded-lg shadow-lg w-[140px] space-y-2">
+    <div className="px-2 py-2 text-white rounded-lg shadow-lg w-[140px] space-y-2">
       {/* フォント選択 */}
       <div>
         <label className="block text-sm mb-1">フォント</label>
@@ -46,6 +46,17 @@ export default function TextSettingsPanel({ textBlock, isOpen, onChange }: TextS
             />
           ))}
         </div>
+      </div>
+
+      {/* 縦書き */}
+      <div>
+        <label className="block text-sm mb-1">縦書き</label>
+        <input
+          type="checkbox"
+          checked={textBlock.isVertical}
+          onChange={(e) => onChange({ isVertical: e.target.checked })}
+          className="w-6 h-6"
+        />
       </div>
 
       {/* サイズ */}
@@ -92,14 +103,20 @@ export default function TextSettingsPanel({ textBlock, isOpen, onChange }: TextS
 
       {/* 最大幅 */}
       <div>
-        <label className="block text-sm mb-1">最大幅</label>
+        <label className="block text-sm mb-1">{textBlock.isVertical ? '最大高さ' : '最大幅'}</label>
         <input
           type="range"
-          min={80}
-          max={defaultTextRectSize.width}
+          min={textBlock.isVertical ? 50 : 60}
+          max={textBlock.isVertical ? defaultTextRectSize.height : defaultTextRectSize.width}
           step={5}
-          value={textBlock.textWidth}
-          onChange={(e) => onChange({ textWidth: Number(e.target.value) })}
+          value={textBlock.isVertical ? textBlock.textHeight : textBlock.textWidth}
+          onChange={(e) =>
+            onChange(
+              textBlock.isVertical
+                ? { textHeight: Number(e.target.value) }
+                : { textWidth: Number(e.target.value) }
+            )
+          }
           className="w-full"
         />
       </div>

@@ -63,9 +63,12 @@ export default function EmaPreview({
               onTouchStart={(e) => onTextTouchStart(index, e)}
               className={`absolute ${
                 fontList.find((f) => f.key === block.font)?.className
-              } text-center whitespace-pre-wrap text-shadow select-none`}
+              } text-center whitespace-pre-wrap text-shadow select-none ${
+                block.isVertical ? 'vertical' : ''
+              }`}
               style={{
-                maxWidth: `${block.textWidth}px`,
+                maxWidth: block.isVertical ? undefined : `${block.textWidth}px`,
+                maxHeight: block.isVertical ? `${block.textHeight}px` : undefined,
                 color: fontColorList.find((c) => c.key === block.fontColor)?.value,
                 transform: `translate(${block.offsetX}px, ${block.offsetY}px) rotate(${block.textRotate}deg)`,
                 lineHeight: block.lineHeight,
