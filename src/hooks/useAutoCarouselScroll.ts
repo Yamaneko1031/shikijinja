@@ -7,12 +7,35 @@ export const useAutoCarouselScroll = (
   carouselRef: RefObject<HTMLDivElement | null>,
   displayPosts: DisplayPost[],
   setDisplayPosts: React.Dispatch<React.SetStateAction<DisplayPost[]>>,
-  isTouchingRef: RefObject<boolean>,
   isActive: boolean
 ) => {
   const scrollShiftRef = useRef<number>(0);
   const scrollLeftPrev = useRef(0);
   const scrollLeftLoopStopCount = useRef(0);
+  const isTouchingRef = useRef(false);
+  // タッチ／ポインターイベントの自動登録
+  useEffect(() => {
+    if (!isActive) return;
+    const el = carouselRef.current;
+    if (!el) return;
+
+    const onStart = () => {
+      isTouchingRef.current = true;
+      scrollLeftLoopStopCount.current = 2;
+    };
+    const onEnd = () => {
+      isTouchingRef.current = false;
+    };
+
+    // タッチ対応
+    el.addEventListener('touchstart', onStart, { passive: true });
+    el.addEventListener('touchend', onEnd);
+
+    return () => {
+      el.removeEventListener('touchstart', onStart);
+      el.removeEventListener('touchend', onEnd);
+    };
+  }, [displayPosts.length, isActive, carouselRef, isTouchingRef]);
 
   // 自動スクロールループ
   useEffect(() => {
@@ -21,9 +44,7 @@ export const useAutoCarouselScroll = (
       const container = carouselRef.current;
       if (!container) return;
 
-      if (isTouchingRef.current) {
-        scrollLeftLoopStopCount.current = 3;
-      } else {
+      if (!isTouchingRef.current) {
         if (container.scrollLeft === scrollLeftPrev.current) {
           if (scrollLeftLoopStopCount.current > 0) {
             scrollLeftLoopStopCount.current -= 1;

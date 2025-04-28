@@ -27,10 +27,9 @@ const EmaSection = ({ isActive, isNeighbor }: Props) => {
 
   /* ----------------- refs ----------------- */
   const carouselRef = useRef<HTMLDivElement>(null);
-  const isTouchingRef = useRef(false);
 
   /* ----------------- auto scroll hook ----- */
-  useAutoCarouselScroll(carouselRef, displayPosts, setDisplayPosts, isTouchingRef, isActive);
+  useAutoCarouselScroll(carouselRef, displayPosts, setDisplayPosts, isActive);
 
   /* ----------------- local UI state ------- */
   const [selectedDeity, setSelectedDeity] = useState<EmaImageKey | null>(null);
@@ -113,12 +112,6 @@ const EmaSection = ({ isActive, isNeighbor }: Props) => {
           isLoading={isEmaLoading}
           error={emaGetError}
           backgroundImageUrl="url(/images/ema/bg_ema_view.webp)"
-          onTouchStart={() => {
-            isTouchingRef.current = true;
-          }}
-          onTouchEnd={() => {
-            isTouchingRef.current = false;
-          }}
         />
 
         {/* ------------------ CTA ---------------------- */}
