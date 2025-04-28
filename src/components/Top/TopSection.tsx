@@ -14,7 +14,7 @@ type Props = {
 const TopSection = ({ isActive, isNeighbor }: Props) => {
   const { scrollY } = useScroll();
 
-  const toriiScale = useTransform(scrollY, [0, 400], [1, 3.5]);
+  const toriiScale = useTransform(scrollY, [0, 400], [1.2, 3.5]);
   const toriiOpacity = useTransform(scrollY, [100, 500], [1, 0]);
   const titleOpacity = useTransform(scrollY, [150, 400], [1, 0]);
   // const whiteOverlayOpacity = useTransform(scrollY, [200, 650, 900], [0, 1, 0]);
@@ -33,6 +33,7 @@ const TopSection = ({ isActive, isNeighbor }: Props) => {
           transform: 'translate(-50%, -50%)',
           width: '80vw',
           height: 'calc(80vw * 1)',
+          maxHeight: '80vh',
           transformOrigin: '50% 70%',
         }}
       >
@@ -49,19 +50,18 @@ const TopSection = ({ isActive, isNeighbor }: Props) => {
         style={{ opacity: useTransform(scrollY, [0, 300], [1, 0]) }}
       />
       <motion.h1
-        className="absolute left-1/2 translate-x-20 translate-y-0 vertical text-shadow-3 z-30 pointer-events-none"
+        className="absolute left-1/2 translate-x-20 -translate-y-20 vertical text-shadow-3 z-30 pointer-events-none"
         style={{ top: '30lvh', opacity: titleOpacity }}
       >
         式岐神社
       </motion.h1>
       <motion.div
-        className="absolute left-1/2 -translate-x-25 -translate-y-15 vertical z-30 pointer-events-none"
+        className="absolute left-1/2 -translate-x-25 -translate-y-35 vertical text-shadow-2 z-30 pointer-events-none"
         style={{ top: '50lvh', opacity: titleOpacity }}
       >
         <TextReveal
           text={`IT業界に関わる\n全ての人に\nご利益をもたらすと\n言い伝えられている`}
           delayPerChar={0.1}
-          className="text-shadow-2"
         />
       </motion.div>
       {/* <motion.h1
