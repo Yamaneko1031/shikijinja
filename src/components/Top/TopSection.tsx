@@ -49,13 +49,13 @@ const TopSection = ({ isActive, isNeighbor }: Props) => {
         style={{ opacity: useTransform(scrollY, [0, 300], [1, 0]) }}
       />
       <motion.h1
-        className="absolute left-1/2 translate-x-30 translate-y-10 vertical text-shadow-3 z-30 pointer-events-none"
+        className="absolute left-1/2 translate-x-20 translate-y-0 vertical text-shadow-3 z-30 pointer-events-none"
         style={{ top: '30lvh', opacity: titleOpacity }}
       >
         式岐神社
       </motion.h1>
       <motion.div
-        className="absolute left-1/2 -translate-x-1/2 -translate-y-15 vertical z-30 pointer-events-none"
+        className="absolute left-1/2 -translate-x-25 -translate-y-15 vertical z-30 pointer-events-none"
         style={{ top: '50lvh', opacity: titleOpacity }}
       >
         <TextReveal
