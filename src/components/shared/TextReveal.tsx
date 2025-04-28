@@ -11,7 +11,7 @@ type Props = {
 };
 
 export default function TextReveal({ text, delayPerChar = 0.05, className = '' }: Props) {
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true });
   const controls = useAnimation();
 
@@ -33,27 +33,33 @@ export default function TextReveal({ text, delayPerChar = 0.05, className = '' }
     }),
   };
 
-  // 改行で分割（\n か 複数行文字列にも対応）
-  const lines = text.split(/\r?\n/);
+  // 文字単位で split しつつ、改行は <br /> に置き換え
+  const chars = text.split('').map((char, idx) =>
+    char === '\n' ? (
+      // 改行文字は <br/>
+      <br key={`br-${idx}`} />
+    ) : (
+      <motion.span
+        key={idx}
+        custom={idx}
+        initial="hidden"
+        animate={controls}
+        variants={variants}
+        className="inline-block"
+      >
+        {/* 半角スペースは &nbsp; に */}
+        {char === ' ' ? '\u00A0' : char}
+      </motion.span>
+    )
+  );
 
   return (
-    <div ref={ref} className={className}>
-      {lines.map((line, lineIndex) => (
-        <div key={lineIndex} className="block">
-          {line.split('').map((char, i) => (
-            <motion.span
-              key={i}
-              className="inline-block"
-              custom={i + lineIndex * 100}
-              initial="hidden"
-              animate={controls}
-              variants={variants}
-            >
-              {char === ' ' ? '\u00A0' : char}
-            </motion.span>
-          ))}
-        </div>
-      ))}
+    <div
+      ref={ref}
+      className={className}
+      style={{ whiteSpace: 'pre-wrap' }} // 改行とスペースを反映
+    >
+      {chars}
     </div>
   );
 }

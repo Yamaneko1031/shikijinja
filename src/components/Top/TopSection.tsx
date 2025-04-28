@@ -3,6 +3,7 @@
 import React from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
+import TextReveal from '../shared/TextReveal';
 
 type Props = {
   isActive: boolean;
@@ -15,7 +16,7 @@ const TopSection = ({ isActive, isNeighbor }: Props) => {
 
   const toriiScale = useTransform(scrollY, [0, 400], [1, 3.5]);
   const toriiOpacity = useTransform(scrollY, [100, 500], [1, 0]);
-  const titleOpacity = useTransform(scrollY, [50, 300], [1, 0]);
+  const titleOpacity = useTransform(scrollY, [150, 400], [1, 0]);
   // const whiteOverlayOpacity = useTransform(scrollY, [200, 650, 900], [0, 1, 0]);
   const arrowOpacity = useTransform(scrollY, [0, 200], [1, 0]);
 
@@ -43,7 +44,27 @@ const TopSection = ({ isActive, isNeighbor }: Props) => {
           priority
         />
       </motion.div>
+      <motion.div
+        className="absolute inset-0 bg-black/70 z-20"
+        style={{ opacity: useTransform(scrollY, [0, 300], [1, 0]) }}
+      />
       <motion.h1
+        className="absolute left-1/2 translate-x-30 translate-y-10 vertical text-shadow-3 z-30 pointer-events-none"
+        style={{ top: '30lvh', opacity: titleOpacity }}
+      >
+        式岐神社
+      </motion.h1>
+      <motion.div
+        className="absolute left-1/2 -translate-x-1/2 -translate-y-15 vertical z-30 pointer-events-none"
+        style={{ top: '50lvh', opacity: titleOpacity }}
+      >
+        <TextReveal
+          text={`IT業界に関わる\n全ての人に\nご利益をもたらすと\n言い伝えられている`}
+          delayPerChar={0.1}
+          className="text-shadow-2"
+        />
+      </motion.div>
+      {/* <motion.h1
         style={{ opacity: titleOpacity }}
         className="absolute top-[40%] left-1/2 -translate-x-1/2 text-white text-4xl sm:text-6xl font-bold drop-shadow-[0_0_5px_rgba(0,0,0,1)] z-30 pointer-events-none"
       >
@@ -57,7 +78,7 @@ const TopSection = ({ isActive, isNeighbor }: Props) => {
         IT業界で働く人、IT業界を志す人に
         <br />
         ご利益をもたらすと言い伝えられている神社
-      </motion.p>
+      </motion.p> */}
       <motion.div
         className="fixed z-1000 left-1/2 bottom-[8vh] -translate-x-1/2 pointer-events-none text-white"
         style={{ opacity: arrowOpacity }}
