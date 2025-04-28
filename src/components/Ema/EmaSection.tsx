@@ -99,7 +99,7 @@ const EmaSection = ({ isActive, isNeighbor }: Props) => {
         <TextReveal text="みんなの願い事" delayPerChar={0.1} className="text-2xl font-bold" />
 
         {showPostedMessage && (
-          <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
+          <div className="fixed inset-0 flex items-center justify-center z-100 pointer-events-none">
             <div className="bg-black/60 text-white text-lg px-6 py-3 rounded-lg shadow-lg animate-fade-in-out">
               絵馬を投稿しました！
             </div>
@@ -136,7 +136,7 @@ const EmaSection = ({ isActive, isNeighbor }: Props) => {
 
         {/* ------------------ modal -------------------- */}
         {isPosting && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="fixed inset-0 z-100 flex items-center justify-center">
             {selectedDeity === null ? (
               <DeitySelector
                 onSelect={(key) => {

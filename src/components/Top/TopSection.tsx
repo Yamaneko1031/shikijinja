@@ -23,7 +23,7 @@ const TopSection = ({ isActive, isNeighbor }: Props) => {
     <>
       {/* 鳥居 */}
       <motion.div
-        className="fixed z-100 pointer-events-none -translate-x-1/2 -translate-y-1/2"
+        className="fixed z-30 pointer-events-none -translate-x-1/2 -translate-y-1/2"
         style={{
           top: 'calc(50lvh)',
           left: '50%',
@@ -45,14 +45,14 @@ const TopSection = ({ isActive, isNeighbor }: Props) => {
       </motion.div>
       <motion.h1
         style={{ opacity: titleOpacity }}
-        className="absolute top-[40%] left-1/2 -translate-x-1/2 text-white text-4xl sm:text-6xl font-bold drop-shadow-[0_0_5px_rgba(0,0,0,1)] z-1000 pointer-events-none"
+        className="absolute top-[40%] left-1/2 -translate-x-1/2 text-white text-4xl sm:text-6xl font-bold drop-shadow-[0_0_5px_rgba(0,0,0,1)] z-30 pointer-events-none"
       >
         式岐神社
       </motion.h1>
 
       <motion.p
         style={{ opacity: titleOpacity }}
-        className="absolute top-[48%] left-1/2 -translate-x-1/2 z-1000 text-white text-center text-lg drop-shadow"
+        className="absolute top-[48%] left-1/2 -translate-x-1/2 z-30 text-white text-center text-lg drop-shadow"
       >
         IT業界で働く人、IT業界を志す人に
         <br />

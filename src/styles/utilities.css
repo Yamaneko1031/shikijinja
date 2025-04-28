@@ -30,7 +30,8 @@ body {
 
 /* 画面上下のグラデーション */
 .overlay-gradient {
-  @apply fixed inset-0 pointer-events-none z-100;
+  @apply fixed inset-0 pointer-events-none z-50;
+  height: 100lvh;
   background: linear-gradient(
     to bottom,
     black 0%,
