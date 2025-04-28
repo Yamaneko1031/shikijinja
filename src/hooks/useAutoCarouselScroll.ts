@@ -21,7 +21,9 @@ export const useAutoCarouselScroll = (
       const container = carouselRef.current;
       if (!container) return;
 
-      if (!isTouchingRef.current) {
+      if (isTouchingRef.current) {
+        scrollLeftLoopStopCount.current = 3;
+      } else {
         if (container.scrollLeft === scrollLeftPrev.current) {
           if (scrollLeftLoopStopCount.current > 0) {
             scrollLeftLoopStopCount.current -= 1;
@@ -41,8 +43,8 @@ export const useAutoCarouselScroll = (
             }
           }
         }
-        scrollLeftPrev.current = container.scrollLeft;
       }
+      scrollLeftPrev.current = container.scrollLeft;
     }, 60);
     return () => clearInterval(interval);
   }, [isActive, carouselRef, isTouchingRef, setDisplayPosts]);
