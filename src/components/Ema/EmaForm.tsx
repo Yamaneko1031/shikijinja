@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { TextBlock, Post, EmaImageKey, TextRectSize } from '@/types/ema';
-import { defaultOffsetPos, defaultTextRectSize } from '@/config/ema';
+import { defaultTextRectSize } from '@/config/ema';
 import EmaPreview from './EmaPreview';
 import TextSettingsPanel from './TextSettingsPanel';
 import { emaList } from '@/config/ema';
@@ -104,8 +104,31 @@ export default function EmaForm({
       //   const i = draggingRef.current;
       const clientX = 'touches' in e ? e.touches[0].clientX : (e as MouseEvent).clientX;
       const clientY = 'touches' in e ? e.touches[0].clientY : (e as MouseEvent).clientY;
-      const dx = clientX - startPosRef.current.x;
-      const dy = clientY - startPosRef.current.y;
+      let dx = clientX - startPosRef.current.x;
+      let dy = clientY - startPosRef.current.y;
+
+      // ドラッグ領域の外に出ないようにする
+      const el = previewTextRefs.current[currentTextIndex];
+      const cont = previewContainerRef.current;
+      if (el && cont) {
+        const t = el.getBoundingClientRect();
+        const c = cont.getBoundingClientRect();
+        const dragAreaMarginHeight = el.clientHeight / 2;
+        const dragAreaMarginWidth = el.clientWidth / 2;
+        if (t.left + dx < c.left - dragAreaMarginWidth) {
+          dx = c.left - dragAreaMarginWidth - t.left;
+        }
+        if (t.top + dy < c.top - dragAreaMarginHeight) {
+          dy = c.top - dragAreaMarginHeight - t.top;
+        }
+        if (t.right + dx > c.right + dragAreaMarginWidth) {
+          dx = c.right + dragAreaMarginWidth - t.right;
+        }
+        if (t.bottom + dy > c.bottom + dragAreaMarginHeight) {
+          dy = c.bottom + dragAreaMarginHeight - t.bottom;
+        }
+      }
+
       setTexts((prev) => {
         const copy = [...prev];
         const cur = { ...copy[draggingRef.current as number] };
@@ -319,13 +342,6 @@ export default function EmaForm({
             }
           >
             投稿する
-          </Button>
-          <Button
-            onClick={() => updateCurrentText(defaultOffsetPos[currentTextIndex])}
-            variant="subNatural"
-            size="sm"
-          >
-            位置リセット
           </Button>
         </div>
       </div>
