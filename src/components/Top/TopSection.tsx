@@ -75,6 +75,21 @@ const TopSection = ({ isActive, isNeighbor }: Props) => {
           <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
         </svg>
       </motion.div>
+      {isActive && (
+        <div className="leaf">
+          <ul>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+          </ul>
+        </div>
+      )}
     </>
   );
 };

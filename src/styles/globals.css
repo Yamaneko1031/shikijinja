@@ -4,6 +4,7 @@
 @import './fonts.css';
 @import './animations.css';
 @import './utilities.css';
+@import './leaf.css';
 
 /* デバッグ用 */
 section {
