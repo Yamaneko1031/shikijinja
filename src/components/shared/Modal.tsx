@@ -18,12 +18,14 @@ const Modal: React.FC<ModalProps> = ({ children }) => {
   // }, []);
   useLayoutEffect(() => {
     const scrollY = window.scrollY;
+    document.documentElement.style.overscrollBehaviorY = 'none';
     document.body.style.position = 'fixed';
     document.body.style.top = `-${scrollY}px`;
     document.body.style.left = '0';
     document.body.style.right = '0';
 
     return () => {
+      document.documentElement.style.overscrollBehaviorY = '';
       document.body.style.position = '';
       document.body.style.top = '';
       document.body.style.left = '';
