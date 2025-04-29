@@ -75,6 +75,18 @@ export default function EmaForm({
   const draggingRef = useRef<number | false>(false);
   const startPosRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
 
+  // スクロール禁止
+  useEffect(() => {
+    const body = document.querySelector('body');
+    if (!body) return;
+    if (document.scrollingElement) {
+      body.classList.add('overflow-y-hidden');
+    }
+    return () => {
+      body.classList.remove('overflow-y-hidden');
+    };
+  }, []);
+
   // テキスト更新 helper
   const updateCurrentText = (patch: Partial<TextBlock> | ((prev: TextBlock) => TextBlock)) => {
     setTexts((prev) => {
