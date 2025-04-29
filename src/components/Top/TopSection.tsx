@@ -44,7 +44,7 @@ const TopSection = ({ isActive, isNeighbor }: Props) => {
         />
       </motion.div>
       <motion.div
-        className="absolute inset-0 bg-black/70 z-20"
+        className="fixed inset-0 bg-black/70 z-20"
         style={{ opacity: useTransform(scrollY, [0, 300], [1, 0]) }}
       />
       <motion.h1
