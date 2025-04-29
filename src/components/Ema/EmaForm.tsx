@@ -80,10 +80,10 @@ export default function EmaForm({
     const body = document.querySelector('body');
     if (!body) return;
     if (document.scrollingElement) {
-      body.classList.add('overflow-y-hidden');
+      body.classList.add('overflow-hidden');
     }
     return () => {
-      body.classList.remove('overflow-y-hidden');
+      body.classList.remove('overflow-hidden');
     };
   }, []);
 
