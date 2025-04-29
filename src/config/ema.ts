@@ -1,4 +1,4 @@
-import { EmaList } from '@/types/ema';
+import { EmaList, TextBlock } from '@/types/ema';
 
 // 絵馬背景テーブル
 export const emaList: EmaList = {
@@ -39,10 +39,34 @@ export const defaultTextRectSize = {
   height: 105,
 } as const;
 
-export const defaultOffsetPos = [
-  { offsetX: 0, offsetY: -5 },
-  { offsetX: 0, offsetY: 38 },
-] as const;
+export const initialTexts: TextBlock[] = [
+  {
+    text: '',
+    isVertical: false,
+    font: 'ackaisyo',
+    fontSize: 24,
+    fontColor: 'black',
+    textRotate: '0',
+    lineHeight: '1.2',
+    offsetX: 0,
+    offsetY: -10,
+    textWidth: defaultTextRectSize.width,
+    textHeight: defaultTextRectSize.height,
+  },
+  {
+    text: '',
+    isVertical: false,
+    font: 'ackaisyo',
+    fontSize: 16,
+    fontColor: 'black',
+    textRotate: '0',
+    lineHeight: '1.2',
+    offsetX: 30,
+    offsetY: 38,
+    textWidth: defaultTextRectSize.width,
+    textHeight: defaultTextRectSize.height,
+  },
+];
 
 export const fontSizePxRange = {
   min: 14,

@@ -9,17 +9,14 @@ import {
   textWidthRange,
   textHeightRange,
 } from '@/config/ema';
-import { Button } from '../shared/Button';
+import { Button } from '../../shared/Button';
 
 export interface TextSettingsPanelProps {
   textBlock: TextBlock;
-  isOpen: boolean;
   onChange: (patch: Partial<TextBlock>) => void;
 }
 
-export default function TextSettingsPanel({ textBlock, isOpen, onChange }: TextSettingsPanelProps) {
-  if (!isOpen) return null;
-
+export default function TextSettingsPanel({ textBlock, onChange }: TextSettingsPanelProps) {
   const adjustField = (field: keyof TextBlock, delta: number) => {
     const current = parseFloat(String(textBlock[field])) || 0;
     let next = current + delta;
@@ -47,7 +44,7 @@ export default function TextSettingsPanel({ textBlock, isOpen, onChange }: TextS
   };
 
   return (
-    <div className="px-2 py-2 text-white rounded-sm shadow-lg w-[140px] space-y-4">
+    <div className="px-2 py-2 text-white rounded-sm shadow-lg w-[140px] space-y-4 select-none">
       {/* フォント選択 */}
       <div>
         <label className="block text-[12px] mb-1">フォント</label>

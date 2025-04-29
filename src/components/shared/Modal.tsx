@@ -31,7 +31,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
     };
   }, [isOpen]);
   return isOpen ? (
-    <div className="fixed top-[50lvh] left-1/2 translate-x-[-50%] translate-y-[-50%] z-100 bg-black/80 rounded-lg p-4 text-white">
+    <div className="fixed top-[45lvh] left-1/2 translate-x-[-50%] translate-y-[-50%] z-100 bg-black/80 rounded-lg p-2 text-white">
       {children}
     </div>
   ) : undefined;

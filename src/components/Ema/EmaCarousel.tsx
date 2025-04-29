@@ -1,5 +1,5 @@
 'use client';
-import { forwardRef } from 'react';
+import { forwardRef, memo } from 'react';
 import { DisplayPost } from '@/types/ema';
 import EmaItem from './EmaItem';
 
@@ -34,4 +34,5 @@ const EmaCarousel = forwardRef<HTMLDivElement, Props>((props, ref) => {
   );
 });
 EmaCarousel.displayName = 'EmaCarousel';
-export default EmaCarousel;
+
+export default memo(EmaCarousel);

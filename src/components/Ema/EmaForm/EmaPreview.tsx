@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextBlock, EmaImageKey, TextRectSize } from '@/types/ema';
 import { fontList, fontColorList } from '@/config/fonts';
-import { emaList } from '@/config/ema';
+import { defaultTextRectSize, emaList } from '@/config/ema';
 
 export interface EmaPreviewProps {
   texts: TextBlock[];
@@ -13,9 +13,8 @@ export interface EmaPreviewProps {
   previewTextRefs: React.RefObject<(HTMLParagraphElement | null)[]>;
   onTextMouseDown: (index: number, e: React.MouseEvent) => void;
   onTextTouchStart: (index: number, e: React.TouchEvent) => void;
-  defaultTextRectSize: TextRectSize;
   textRectStyle: TextRectSize | null;
-  isOverflowing?: boolean;
+  isOverflowing: boolean;
 }
 
 export default function EmaPreview({
@@ -28,15 +27,14 @@ export default function EmaPreview({
   previewTextRefs,
   onTextMouseDown,
   onTextTouchStart,
-  defaultTextRectSize,
   textRectStyle,
-  isOverflowing = false,
+  isOverflowing,
 }: EmaPreviewProps) {
   const allTextsEmpty = texts.every((block) => block.text === '');
   return (
     <div
       ref={previewWrapperRef}
-      className="relative w-[240px] h-[240px] bg-cover bg-center"
+      className="relative w-[240px] h-[240px] bg-cover bg-center select-none"
       style={{ backgroundImage: `url(/images/ema/${emaList[emaImageKey].filename})` }}
     >
       {/* テキスト表示領域 */}
@@ -64,9 +62,7 @@ export default function EmaPreview({
               onTouchStart={(e) => onTextTouchStart(index, e)}
               className={`absolute ${
                 fontList.find((f) => f.key === block.font)?.className
-              } text-center whitespace-pre-wrap text-shadow select-none ${
-                block.isVertical ? 'vertical' : ''
-              }`}
+              } text-center whitespace-pre-wrap text-shadow ${block.isVertical ? 'vertical' : ''}`}
               style={{
                 maxWidth: block.isVertical ? undefined : `${block.textWidth}px`,
                 maxHeight: block.isVertical ? `${block.textHeight}px` : undefined,
@@ -76,7 +72,7 @@ export default function EmaPreview({
                 fontSize: `${block.fontSize}px`,
               }}
             >
-              {isEmpty ? placeholders[index] : block.text}
+              {isEmpty ? placeholders[index] + ' (例' : block.text}
             </p>
           );
         })}
