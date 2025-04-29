@@ -2,13 +2,7 @@ import React from 'react';
 
 // ボタンのバリアントとサイズ定義
 
-type ButtonVariant =
-  | 'positive'
-  | 'negative'
-  | 'subNatural'
-  | 'subSelected'
-  | 'subUnselected'
-  | 'custom';
+type ButtonVariant = 'positive' | 'negative' | 'subNatural' | 'custom';
 type ButtonSize = 'sm' | 'md' | 'lg';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -19,15 +13,13 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   /** 追加のクラス */
   className?: string;
   /** 中身 */
-  children: React.ReactNode;
+  children?: React.ReactNode; // childrenをオプショナルに変更
 }
 
 const variantStyles: Record<ButtonVariant, string> = {
   positive: 'btn-positive inline-flex items-center justify-center',
   negative: 'btn-negative inline-flex items-center justify-center',
   subNatural: 'btn-sub-natural inline-flex items-center justify-center',
-  subSelected: 'btn-sub-selected inline-flex items-center justify-center',
-  subUnselected: 'btn-sub-unselected inline-flex items-center justify-center',
   custom: '',
 };
 
@@ -47,13 +39,14 @@ export const Button: React.FC<ButtonProps> = ({
   variant = 'primary',
   size = 'md',
   className = '',
-  children,
+  children = null,
   ...props
 }) => {
   const baseStyles = 'focus:outline-none';
   return (
     <button
       className={`${baseStyles} ${variantStyles[variant as ButtonVariant]} ${sizeStyles[size as ButtonSize]} ${className}`}
+      style={{ minWidth: '32px', minHeight: '32px' }} // 最小サイズを指定
       {...props}
     >
       {children}

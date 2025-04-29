@@ -40,7 +40,7 @@ export default function DeitySelector({ onSelect, onCancel }: DeitySelectorProps
         ))}
       </div>
       <Button variant="negative" size="md" onClick={onCancel}>
-        閉じる
+        やめる
       </Button>
     </div>
   );

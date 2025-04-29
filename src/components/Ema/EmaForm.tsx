@@ -1,12 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { TextBlock, Post, EmaImageKey, TextRectSize } from '@/types/ema';
-import { defaultTextRectSize } from '@/config/ema';
+import { defaultOffsetPos, defaultTextRectSize } from '@/config/ema';
 import EmaPreview from './EmaPreview';
 import TextSettingsPanel from './TextSettingsPanel';
 import { emaList } from '@/config/ema';
 import { FontColorKey, FontKey } from '@/types/fonts';
 import { Button } from '../shared/Button';
+import TextReveal from '../shared/TextReveal';
 
 export interface EmaFormProps {
   initialDeityKey: EmaImageKey;
@@ -39,8 +40,8 @@ export default function EmaForm({
         fontColor: initFontColor,
         textRotate: '0',
         lineHeight: [1.0, 1.1, 1.2, 1.3, 1.4][Math.floor(Math.random() * 5)].toFixed(1),
-        offsetX: 0,
-        offsetY: 0,
+        offsetX: defaultOffsetPos[0].offsetX,
+        offsetY: defaultOffsetPos[0].offsetY,
         textWidth: defaultTextRectSize.width,
         textHeight: defaultTextRectSize.height,
       },
@@ -52,8 +53,8 @@ export default function EmaForm({
         fontColor: initFontColor,
         textRotate: '0',
         lineHeight: '1.4',
-        offsetX: 0,
-        offsetY: 35,
+        offsetX: defaultOffsetPos[1].offsetX,
+        offsetY: defaultOffsetPos[1].offsetY,
         textWidth: defaultTextRectSize.width,
         textHeight: defaultTextRectSize.height,
       },
@@ -152,7 +153,7 @@ export default function EmaForm({
       window.removeEventListener('touchmove', handleMove);
       window.removeEventListener('touchend', handleEnd);
     };
-  }, []);
+  }, [currentTextIndex]);
 
   // オーバーフロー測定
   useEffect(() => {
@@ -181,7 +182,7 @@ export default function EmaForm({
         return updated;
       });
     }
-  }, [texts, currentTextIndex]);
+  }, [texts, currentTextIndex, deityKey]);
 
   // Submit
   const handleSubmit = () => {
@@ -208,14 +209,16 @@ export default function EmaForm({
   return (
     <div className="bg-black/80 rounded-lg p-2 max-w-[400px] min-w-[320px] w-full shadow-xl relative text-white">
       <div className="relative flex flex-col items-center gap-4">
-        {/* 挿絵・説明 */}
-        <div className="relative flex items-center gap-2 bg-black/10 p-2 rounded border border-white h-[90px] w-full ">
-          <button
+        {/* 神様の説明 */}
+        <div className="relative flex items-center gap-2 bg-white/20 rounded-sm p-2 h-[90px] w-full">
+          <Button
+            variant="subNatural"
+            size="sm"
             onClick={() => setDeityKey(prevKey)}
             className="w-[30px] h-[30px] bg-white/10 hover:bg-white/20 text-white text-sm rounded-full"
           >
             ←
-          </button>
+          </Button>
           <div className="flex items-center gap-3 flex-1 overflow-hidden">
             <div className="w-[80px] h-[80px] rounded-md overflow-hidden">
               <Image
@@ -233,96 +236,80 @@ export default function EmaForm({
               </div>
             </div>
           </div>
-          <button
+          <Button
+            variant="subNatural"
+            size="sm"
             onClick={() => setDeityKey(nextKey)}
             className="w-[30px] h-[30px] bg-white/10 hover:bg-white/20 text-white text-sm rounded-full"
           >
             →
-          </button>
+          </Button>
         </div>
-
+        {/* 説明文 */}
+        <div className="relative w-full ml-4">
+          <TextReveal
+            text={`自由に願い事を書いて投稿しよう。\nお祈りした神様から一言もらえるかもしません。`}
+            delayPerChar={0.1}
+            className="text-[14px]"
+          />
+        </div>
+        {/* プレビューエリア */}
         <div className="relative w-full">
-          {/* 文字のカスタムボタン */}
-          {/* <Button onClick={() => setIsSettingOpen(!isSettingOpen)} className="relative" size="sm">
-            <Image
-              src="/images/icon/icon_hude.webp"
-              alt="icon"
-              width={24}
-              height={24}
-              className="mr-2"
-            />
-            {isSettingOpen ? '←' : '文字のカスタム'}
-          </Button> */}
-
-          {/* 編集対象テキストの選択 */}
-          <div className="absolute right-0 top-0 flex flex-col gap-2 z-20">
-            {[0, 1].map((index) => (
-              <Button
-                key={index}
-                variant={currentTextIndex === index ? 'subSelected' : 'subUnselected'}
-                onClick={() => setCurrentTextIndex(index as 0 | 1)}
-                size="sm"
-              >
-                {index === 0 ? '本文' : 'ニックネーム'}
-              </Button>
-            ))}
-          </div>
           <div className="flex gap-2">
-            {/* 設定パネル */}
-            {/* <div
-              className={`
-                top-0 left-0 z-50
-              text-white rounded-r-lg shadow-lg
-                transition-all duration-300 ease-in-out
-                ${isSettingOpen ? 'w-[100px] opacity-100' : 'w-[0px] opacity-60'}
-            `}
-            >
-              <TextSettingsPanel
-                textBlock={texts[currentTextIndex]}
-                isOpen={isSettingOpen}
-                onChange={updateCurrentText}
-              />
-            </div> */}
-            <div
-              className="top-0 left-0 z-50
-              text-white rounded-r-lg shadow-lg
-                transition-all duration-300 ease-in-out
-                w-[120px] opacity-100"
-            >
+            <div className="relative border border-white rounded-sm flex flex-col items-center overflow-hidden">
+              <div className="-mt-16">
+                {/* プレビュー & テキスト入力 */}
+                <EmaPreview
+                  texts={texts}
+                  emaImageKey={deityKey}
+                  currentTextIndex={currentTextIndex}
+                  previewWrapperRef={previewWrapperRef}
+                  previewContainerRef={previewContainerRef}
+                  previewTextRefs={previewTextRefs}
+                  onTextMouseDown={handleTextMouseDown}
+                  onTextTouchStart={handleTextTouchStart}
+                  textRectStyle={textRectStyle}
+                  isOverflowing={isOverflowing[currentTextIndex]}
+                  placeholders={[emaList[deityKey].sampleText, emaList[deityKey].label]}
+                  defaultTextRectSize={defaultTextRectSize}
+                />
+              </div>
+              <div>
+                <nav className="flex">
+                  {['本文', 'ニックネーム'].map((label, idx) => {
+                    const selected = currentTextIndex === idx;
+                    return (
+                      <button
+                        key={idx}
+                        onClick={() => setCurrentTextIndex(idx as 0 | 1)}
+                        className={`flex-1 px-4 py-2 mb-2 font-medium text-sm text-center whitespace-nowrap ${
+                          selected
+                            ? 'border-b border-white text-white'
+                            : 'border-b border-white/50 text-gray-400 hover:text-gray-200'
+                        }`}
+                      >
+                        {label}
+                      </button>
+                    );
+                  })}
+                </nav>
+
+                {/* ② 下に textarea をそのまま */}
+                <textarea
+                  value={texts[currentTextIndex].text}
+                  onChange={(e) => updateCurrentText({ text: e.target.value })}
+                  maxLength={40}
+                  rows={3}
+                  className="w-[200px] p-2 bg-black/70 rounded-sm text-sm text-white resize-none"
+                  placeholder={currentTextIndex === 0 ? '願い事を入力...' : 'ニックネームを入力...'}
+                />
+              </div>
+            </div>
+            <div>
               <TextSettingsPanel
                 textBlock={texts[currentTextIndex]}
                 isOpen={true}
                 onChange={updateCurrentText}
-              />
-            </div>
-            <div
-              className="relative flex flex-col items-center gap-2 transition-all duration-300 ease-in-out"
-              style={{
-                margin: '50px auto 0',
-              }}
-            >
-              {/* プレビュー & テキスト入力 */}
-              <EmaPreview
-                texts={texts}
-                emaImageKey={deityKey}
-                currentTextIndex={currentTextIndex}
-                previewWrapperRef={previewWrapperRef}
-                previewContainerRef={previewContainerRef}
-                previewTextRefs={previewTextRefs}
-                onTextMouseDown={handleTextMouseDown}
-                onTextTouchStart={handleTextTouchStart}
-                textRectStyle={textRectStyle}
-                isOverflowing={isOverflowing[currentTextIndex]}
-                placeholder="ここに表示されます"
-                defaultTextRectSize={defaultTextRectSize}
-              />
-              <textarea
-                value={texts[currentTextIndex].text}
-                onChange={(e) => updateCurrentText({ text: e.target.value })}
-                maxLength={40}
-                rows={4}
-                className="w-[200px] p-2 border rounded"
-                placeholder="願い事を入力..."
               />
             </div>
           </div>
@@ -331,7 +318,7 @@ export default function EmaForm({
         {/* アクション */}
         <div className="flex space-x-2">
           <Button onClick={onClose} variant="negative" size="md">
-            閉じる
+            やめる
           </Button>
           <Button
             onClick={handleSubmit}

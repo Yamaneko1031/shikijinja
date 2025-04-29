@@ -38,6 +38,7 @@ export type EmaListItem = {
   filename: string;
   illustname: string;
   grace: string;
+  sampleText: string;
 };
 
 export type EmaList = {

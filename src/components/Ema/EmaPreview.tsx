@@ -5,7 +5,7 @@ import { emaList } from '@/config/ema';
 
 export interface EmaPreviewProps {
   texts: TextBlock[];
-  placeholder: string;
+  placeholders: string[];
   emaImageKey: EmaImageKey;
   currentTextIndex: number;
   previewWrapperRef: React.Ref<HTMLDivElement>;
@@ -20,7 +20,7 @@ export interface EmaPreviewProps {
 
 export default function EmaPreview({
   texts,
-  placeholder,
+  placeholders,
   emaImageKey,
   currentTextIndex,
   previewWrapperRef,
@@ -32,6 +32,7 @@ export default function EmaPreview({
   textRectStyle,
   isOverflowing = false,
 }: EmaPreviewProps) {
+  const allTextsEmpty = texts.every((block) => block.text === '');
   return (
     <div
       ref={previewWrapperRef}
@@ -52,7 +53,7 @@ export default function EmaPreview({
         {texts.map((block, index) => {
           const isCurrent = currentTextIndex === index;
           const isEmpty = block.text === '';
-          if (isEmpty && !isCurrent) return null;
+          if (!allTextsEmpty && isEmpty && !isCurrent) return null;
           return (
             <p
               key={index}
@@ -75,7 +76,7 @@ export default function EmaPreview({
                 fontSize: `${block.fontSize}px`,
               }}
             >
-              {isEmpty ? placeholder : block.text}
+              {isEmpty ? placeholders[index] : block.text}
             </p>
           );
         })}

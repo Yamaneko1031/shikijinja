@@ -22,9 +22,10 @@ body {
   font-size: 1.8rem;
   font-weight: bold;
   text-shadow:
-    0 0 6px #000,
+    0 0 1px #000,
     0 0 2px #000,
-    2px 2px 8px #333;
+    0 0 6px #000,
+    2px 2px 6px #333;
 }
 
 .text-shadow-3 {
@@ -32,6 +33,7 @@ body {
   font-size: 3.5rem;
   font-weight: bold;
   text-shadow:
+    0 0 1px #000,
     0 0 6px #000,
     0 0 2px #000,
     2px 2px 8px #333;
@@ -75,12 +77,14 @@ body {
 }
 
 .btn-positive:hover {
-  background-color: #a95f09;
+  @media (hover: hover) {
+    background-color: #a95f09;
+  }
 }
 
 .btn-positive:disabled {
   background-color: #362317;
-  color: #d3d3d3;
+  color: #5c5c5c;
   cursor: not-allowed;
 }
 
@@ -91,7 +95,9 @@ body {
 }
 
 .btn-negative:hover {
-  background-color: #761904;
+  @media (hover: hover) {
+    background-color: #761904;
+  }
 }
 
 .btn-negative:disabled {
@@ -102,38 +108,17 @@ body {
 
 .btn-sub-natural {
   @apply rounded-full;
-  background-color: #047857;
+  background-color: #1a1a1a;
   color: #ffffff;
 }
 
 .btn-sub-natural:hover {
-  background-color: #047857;
-}
-
-.btn-sub-selected {
-  @apply rounded-full;
-  background-color: #23583b;
-  color: #ffffff;
-  border: 2px solid #ffffff;
-}
-
-.btn-sub-selected:hover {
-  background-color: #23583b;
-  color: #ffffff;
-}
-
-.btn-sub-unselected {
-  @apply rounded-full;
-  background-color: #0b1c13;
-  color: #d1d5db;
-}
-
-.btn-sub-unselected:hover {
-  background-color: #23583b;
-  color: #ffffff;
+  @media (hover: hover) {
+    background-color: #323232;
+  }
 }
 
 input[type='range'],
 input[type='checkbox'] {
-  accent-color: #23583b;
+  accent-color: #363636;
 }
