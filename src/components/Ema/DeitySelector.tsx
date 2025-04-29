@@ -13,9 +13,9 @@ interface DeitySelectorProps {
 
 export default function DeitySelector({ onSelect, onCancel }: DeitySelectorProps) {
   return (
-    <div className="flex flex-col gap-4 items-center bg-black/80 rounded-lg p-2 max-w-[400px] min-w-[320px] w-full shadow-xl relative text-white">
-      <h2 className="text-xl font-bold mb-4">どの神様に願いを届けますか？</h2>
-      <div className="flex flex-col gap-4 w-full max-w-xs">
+    <div className="flex flex-col gap-4 items-center min-w-[320px]">
+      <h2 className="text-xl font-bold">どの神様に願いを届けますか？</h2>
+      <div className="flex flex-col gap-4">
         {Object.entries(emaList).map(([key, data]) => (
           <Button
             variant="custom"

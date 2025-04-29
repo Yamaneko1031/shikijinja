@@ -207,7 +207,7 @@ export default function EmaForm({
   const nextKey = keys[(idx + 1) % keys.length];
 
   return (
-    <div className="bg-black/80 rounded-lg p-2 max-w-[400px] min-w-[320px] w-full shadow-xl relative text-white">
+    <div>
       <div className="relative flex flex-col items-center gap-4">
         {/* 神様の説明 */}
         <div className="relative flex items-center gap-2 bg-white/20 rounded-sm p-2 h-[90px] w-full">

@@ -62,28 +62,32 @@ const EmaSection = ({ isActive, isNeighbor }: Props) => {
 
   /* ----------------- submit -------------- */
   const handlePostWish = (post: Post) => {
-    scrollToEmaSection();
-    const insertIndex = getInsertIndex();
-    const newDisplayPost: DisplayPost = { ...createDisplayPost(post), highlighted: true };
-
-    setDisplayPosts((prev) => {
-      const next = [...prev];
-      next.splice(insertIndex, 0, newDisplayPost);
-      return next;
-    });
-
-    setTimeout(() => {
-      setDisplayPosts((prev) =>
-        prev.map((p) => (p.drawKey === newDisplayPost.drawKey ? { ...p, highlighted: false } : p))
-      );
-    }, getCssDuration('--ema-insert-duration'));
-
     setIsPosting(false);
-    setShowPostedMessage(true);
-    setTimeout(
-      () => setShowPostedMessage(false),
-      getCssDuration('--ema-animate-fade-in-out-duration')
-    );
+
+    // scrollToEmaSection()がモーダルを閉じてからでないとスクロールしないため
+    requestAnimationFrame(() => {
+      scrollToEmaSection();
+      const insertIndex = getInsertIndex();
+      const newDisplayPost: DisplayPost = { ...createDisplayPost(post), highlighted: true };
+
+      setDisplayPosts((prev) => {
+        const next = [...prev];
+        next.splice(insertIndex, 0, newDisplayPost);
+        return next;
+      });
+
+      setTimeout(() => {
+        setDisplayPosts((prev) =>
+          prev.map((p) => (p.drawKey === newDisplayPost.drawKey ? { ...p, highlighted: false } : p))
+        );
+      }, getCssDuration('--ema-insert-duration'));
+
+      setShowPostedMessage(true);
+      setTimeout(
+        () => setShowPostedMessage(false),
+        getCssDuration('--ema-animate-fade-in-out-duration')
+      );
+    });
 
     fetch('/api/post-ema', {
       method: 'POST',
@@ -120,7 +124,6 @@ const EmaSection = ({ isActive, isNeighbor }: Props) => {
           variant="positive"
           onClick={() => {
             setSelectedDeity(null);
-            scrollToEmaSection();
             setIsPosting(true);
           }}
           className="bg-yellow-500 text-black px-4 py-2 rounded hover:bg-yellow-600 mb-4"
@@ -129,32 +132,26 @@ const EmaSection = ({ isActive, isNeighbor }: Props) => {
         </Button>
 
         {/* ------------------ modal -------------------- */}
-        {isPosting && (
-          <div className="fixed top-[50lvh] left-1/2 translate-x-[-50%] translate-y-[-50%] z-100 flex items-center justify-center">
-            {selectedDeity === null ? (
-              <Modal>
-                <DeitySelector
-                  onSelect={(key) => {
-                    setSelectedDeity(key);
-                    setIsPosting(true);
-                  }}
-                  onCancel={() => {
-                    setSelectedDeity(null);
-                    setIsPosting(false);
-                  }}
-                />
-              </Modal>
-            ) : (
-              <Modal>
-                <EmaForm
-                  initialDeityKey={selectedDeity}
-                  onSubmit={handlePostWish}
-                  onClose={() => setIsPosting(false)}
-                />
-              </Modal>
-            )}
-          </div>
-        )}
+        <Modal isOpen={isPosting}>
+          {selectedDeity === null ? (
+            <DeitySelector
+              onSelect={(key) => {
+                setSelectedDeity(key);
+                setIsPosting(true);
+              }}
+              onCancel={() => {
+                setSelectedDeity(null);
+                setIsPosting(false);
+              }}
+            />
+          ) : (
+            <EmaForm
+              initialDeityKey={selectedDeity}
+              onSubmit={handlePostWish}
+              onClose={() => setIsPosting(false)}
+            />
+          )}
+        </Modal>
       </div>
     </>
   );
