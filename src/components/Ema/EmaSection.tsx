@@ -9,6 +9,7 @@ import EmaCarousel from './EmaCarousel';
 import { useEmaPosts, createDisplayPost } from '@/hooks/useEmaPosts';
 import { useAutoCarouselScroll } from '@/hooks/useAutoCarouselScroll';
 import { Button } from '../shared/Button';
+import Modal from '../shared/Modal';
 
 type Props = {
   isActive: boolean;
@@ -131,22 +132,26 @@ const EmaSection = ({ isActive, isNeighbor }: Props) => {
         {isPosting && (
           <div className="fixed top-[50lvh] left-1/2 translate-x-[-50%] translate-y-[-50%] z-100 flex items-center justify-center">
             {selectedDeity === null ? (
-              <DeitySelector
-                onSelect={(key) => {
-                  setSelectedDeity(key);
-                  setIsPosting(true);
-                }}
-                onCancel={() => {
-                  setSelectedDeity(null);
-                  setIsPosting(false);
-                }}
-              />
+              <Modal>
+                <DeitySelector
+                  onSelect={(key) => {
+                    setSelectedDeity(key);
+                    setIsPosting(true);
+                  }}
+                  onCancel={() => {
+                    setSelectedDeity(null);
+                    setIsPosting(false);
+                  }}
+                />
+              </Modal>
             ) : (
-              <EmaForm
-                initialDeityKey={selectedDeity}
-                onSubmit={handlePostWish}
-                onClose={() => setIsPosting(false)}
-              />
+              <Modal>
+                <EmaForm
+                  initialDeityKey={selectedDeity}
+                  onSubmit={handlePostWish}
+                  onClose={() => setIsPosting(false)}
+                />
+              </Modal>
             )}
           </div>
         )}
