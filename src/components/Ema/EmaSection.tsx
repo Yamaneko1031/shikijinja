@@ -129,7 +129,7 @@ const EmaSection = ({ isActive, isNeighbor }: Props) => {
 
         {/* ------------------ modal -------------------- */}
         {isPosting && (
-          <div className="fixed inset-0 z-100 flex items-center justify-center">
+          <div className="fixed top-[50lvh] left-1/2 translate-x-[-50%] translate-y-[-50%] z-100 flex items-center justify-center">
             {selectedDeity === null ? (
               <DeitySelector
                 onSelect={(key) => {
