@@ -300,7 +300,7 @@ export default function EmaForm({
                   onChange={(e) => updateCurrentText({ text: e.target.value })}
                   maxLength={40}
                   rows={3}
-                  className="w-[200px] p-2 bg-black/70 rounded-sm text-sm text-white resize-none"
+                  className="w-[200px] p-2 bg-black/70 rounded-sm text-[16px] text-white resize-none"
                   placeholder={currentTextIndex === 0 ? '願い事を入力...' : 'ニックネームを入力...'}
                 />
               </div>
