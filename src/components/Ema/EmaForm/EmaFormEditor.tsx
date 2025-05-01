@@ -178,7 +178,7 @@ const EmaFormEditor: React.FC<EmaFormEditorProps> = ({
       <div className="relative w-full">
         <div className="flex gap-2">
           <div className="relative border border-white rounded-sm flex flex-col items-center overflow-hidden">
-            <div className="-mt-16">
+            <div className="-mt-10">
               {/* プレビュー & テキスト入力 */}
               <EmaPreview
                 texts={texts}

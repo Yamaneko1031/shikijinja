@@ -86,7 +86,7 @@ export default function TextSettingsPanel({ textBlock, onChange }: TextSettingsP
           type="checkbox"
           checked={textBlock.isVertical}
           onChange={(e) => onChange({ isVertical: e.target.checked })}
-          className="w-6 h-6 text-black rounded ml-3"
+          className="w-5 h-5 text-black rounded ml-3"
         />
       </div>
 
@@ -196,10 +196,10 @@ export default function TextSettingsPanel({ textBlock, onChange }: TextSettingsP
       </div>
 
       {/* 最大幅／最大高さ (縦横切替) */}
-      {/* <div>
-        <label className="block text-[12px] mb-1">
+      <div className="flex justify-between">
+        <span className="underline underline-offset-2 text-[10px]">
           {textBlock.isVertical ? '最大高さ' : '最大幅'}
-        </label>
+        </span>
         <input
           type="range"
           min={textBlock.isVertical ? textHeightRange.min : textWidthRange.min}
@@ -213,9 +213,9 @@ export default function TextSettingsPanel({ textBlock, onChange }: TextSettingsP
                 : { textWidth: Number(e.target.value) }
             )
           }
-          className="w-full"
+          className="w-[80px]"
         />
-      </div> */}
+      </div>
     </div>
   );
 }
