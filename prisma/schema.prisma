@@ -20,6 +20,8 @@ model EmaPost {
   texts     Json        // TextBlock[] をそのまま保存
   reply     String
   emaImage  String
+  decision  String      @default("ALLOW")
+  reasons   Json        @default("[]")
   createdAt DateTime    @default(now())
 }
 

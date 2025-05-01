@@ -29,7 +29,7 @@ export default function EmaForm({ initialDeityKey, onSubmit, onClose }: EmaFormP
       alert('文字が絵馬からはみ出しています。位置や角度、行間を調整してください。');
       return;
     }
-    onSubmit({ texts, reply: '返信待ち', emaImage: deityKey });
+    onSubmit({ texts, reply: '返信待ち', emaImage: deityKey, decision: 'UNCHECKED', reasons: [] });
     onClose();
   };
 

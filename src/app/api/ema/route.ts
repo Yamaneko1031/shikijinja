@@ -1,16 +1,17 @@
-import OpenAI from 'openai';
 import { prisma } from '@/server/prisma';
 import { EmaPost } from '@/types/ema';
 import { json } from '@/server/response';
+import { openaiTemplateRequest } from '@/server/openaiTemplateRequest';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    // クエリーパラメータでdecisionを取得
+    const url = new URL(request.url);
+    const decisionParam = url.searchParams.get('decision') || 'ALLOW';
+
     // 絵馬一覧（返信つき）
     const posts = await prisma.emaPost.findMany({
+      where: { decision: decisionParam },
       orderBy: { createdAt: 'desc' },
       take: 30,
     });
@@ -45,35 +46,30 @@ export async function POST(request: Request) {
         templateLabel = 'ema_rep_shikineko';
     }
 
-    // プロンプトテンプレートを取得
-    const tpl = await prisma.promptTemplate.findFirst({
-      where: { label: templateLabel },
-    });
-    if (!tpl) {
-      return json({ error: '返信用テンプレートが見つかりません' }, { status: 404 });
+    const checkText = texts[0]?.text + texts[1]?.text;
+    const checkResult = await openaiTemplateRequest('ema_check', checkText);
+
+    if (!checkResult) {
+      return json({ error: 'チェック用テンプレートの実行に失敗しました' }, { status: 500 });
     }
 
-    // system/user プロンプトを組み立て
-    const wish = texts[0]?.text ?? '';
-    const system = tpl.systemPrompt;
-    const user = tpl.userPrompt + wish;
+    const checkResultJson = JSON.parse(checkResult);
+    const decision = checkResultJson.decision;
+    const reasons = checkResultJson.reasons;
 
-    // OpenAI で返信を生成
-    const resp = await openai.chat.completions.create({
-      model: tpl.model,
-      messages: [
-        { role: 'system', content: system },
-        { role: 'user', content: user },
-      ],
-      temperature: tpl.temperature,
-    });
-    const newReply = resp.choices?.[0]?.message?.content?.trim() ?? '';
+    const newReply = await openaiTemplateRequest(templateLabel, texts[0]?.text ?? '');
+
+    if (!newReply) {
+      return json({ error: 'チェック用テンプレートの実行に失敗しました' }, { status: 500 });
+    }
 
     // EmaPost テーブルに texts, reply, emaImage をまとめて保存
     const post = await prisma.emaPost.create({
       data: {
         texts: texts, // Prisma の Json フィールドに自動シリアライズ
         reply: newReply,
+        decision: decision,
+        reasons: reasons,
         emaImage: emaImage,
       },
     });

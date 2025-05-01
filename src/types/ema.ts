@@ -21,6 +21,8 @@ export type TextBlock = {
 export interface EmaPost {
   texts: TextBlock[];
   reply: string;
+  decision: string;
+  reasons: string[];
   emaImage: EmaImageKey;
 }
 
@@ -29,8 +31,15 @@ export interface EmaPostResponse {
   id: string;
   texts: TextBlock[];
   reply: string;
+  decision: string;
+  reasons: string[];
   emaImage: EmaImageKey;
   createdAt: string;
+}
+
+export interface PatchEmaBody {
+  decision?: 'ALLOW' | 'BLOCK' | 'UNCHECKED';
+  reasons?: string[];
 }
 
 // カルーセルや表示用に拡張した型

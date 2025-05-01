@@ -10,6 +10,8 @@ export const createDisplayPost = (post: EmaPostResponse): DisplayPost => {
   const displayPost: DisplayPost = {
     texts: post.texts,
     reply: post.reply,
+    decision: post.decision,
+    reasons: post.reasons,
     emaImage: post.emaImage,
     drawKey: crypto.randomUUID(),
     rotate: (Math.random() * 10 - 5).toFixed(2),
