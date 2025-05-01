@@ -1,25 +1,30 @@
 'use client';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
-import { Post, DisplayPost } from '@/types/ema';
+import { apiFetch } from '@/lib/api';
+import { DisplayPost, EmaPostResponse } from '@/types/ema';
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+const fetcher = (url: string) => apiFetch<EmaPostResponse[]>(url);
 
-export const createDisplayPost = (post: Post): DisplayPost => ({
-  ...post,
-  drawKey: crypto.randomUUID(),
-  rotate: (Math.random() * 10 - 5).toFixed(2),
-  translateY: (Math.random() * 10 - 5).toFixed(2),
-  marginRight: `${-25 - Math.floor(Math.random() * 20)}px`,
-});
+export const createDisplayPost = (post: EmaPostResponse): DisplayPost => {
+  const displayPost: DisplayPost = {
+    texts: post.texts,
+    reply: post.reply,
+    emaImage: post.emaImage,
+    drawKey: crypto.randomUUID(),
+    rotate: (Math.random() * 10 - 5).toFixed(2),
+    translateY: (Math.random() * 10 - 5).toFixed(2),
+    marginRight: `${-25 - Math.floor(Math.random() * 20)}px`,
+  };
+  return displayPost;
+};
 
 export const useEmaPosts = () => {
-  const { data, error, isLoading } = useSWR('/api/get-ema', fetcher);
+  const { data, error, isLoading } = useSWR<EmaPostResponse[]>('/api/ema', fetcher);
   const [displayPosts, setDisplayPosts] = useState<DisplayPost[]>([]);
-
   useEffect(() => {
-    if (data?.success && data.posts) {
-      setDisplayPosts(data.posts.map(createDisplayPost));
+    if (data) {
+      setDisplayPosts(data.map(createDisplayPost));
     }
   }, [data]);
 

@@ -1,19 +1,13 @@
 import React, { useState, useRef } from 'react';
-// import Image from 'next/image';
-import { TextBlock, Post, EmaImageKey } from '@/types/ema';
-// import { defaultOffsetPos, defaultTextRectSize } from '@/config/ema';
-// import EmaPreview from './EmaPreview';
-// import TextSettingsPanel from './TextSettingsPanel';
+import { TextBlock, EmaPost, EmaImageKey } from '@/types/ema';
 import { emaList } from '@/config/ema';
-// import { FontColorKey, FontKey } from '@/types/fonts';
 import { Button } from '../../shared/Button';
-// import TextReveal from '../../shared/TextReveal';
 import EmaFormHeader from './EmaFormHeader';
 import EmaFormEditor from './EmaFormEditor';
 
 export interface EmaFormProps {
   initialDeityKey: EmaImageKey;
-  onSubmit: (post: Post) => void;
+  onSubmit: (post: EmaPost) => void;
   onClose: () => void;
 }
 

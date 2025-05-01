@@ -47,7 +47,7 @@ export default function TextSettingsPanel({ textBlock, onChange }: TextSettingsP
     <div className="px-2 py-2 text-white rounded-sm shadow-lg w-[140px] space-y-4 select-none">
       {/* フォント選択 */}
       <div>
-        <label className="block text-[12px] mb-1">フォント</label>
+        <label className="block underline underline-offset-2 text-[10px] mb-1">フォント</label>
         <select
           value={textBlock.font}
           onChange={(e) => onChange({ font: e.target.value as TextBlock['font'] })}
@@ -63,7 +63,7 @@ export default function TextSettingsPanel({ textBlock, onChange }: TextSettingsP
 
       {/* 文字色 */}
       <div>
-        <label className="block text-[12px] mb-1">文字色</label>
+        <label className="block underline underline-offset-2 text-[10px] mb-1">文字色</label>
         <div className="flex gap-2">
           {fontColorList.map(({ key, value }) => (
             <button
@@ -80,19 +80,19 @@ export default function TextSettingsPanel({ textBlock, onChange }: TextSettingsP
       </div>
 
       {/* 縦書き切替 */}
-      <div className="flex items-center">
-        <span className="text-[12px] text-left">縦書き</span>
+      <div className="flex">
+        <span className="underline underline-offset-2 text-[10px] text-left">縦書き</span>
         <input
           type="checkbox"
           checked={textBlock.isVertical}
           onChange={(e) => onChange({ isVertical: e.target.checked })}
-          className="w-5 h-5 text-black rounded ml-3"
+          className="w-6 h-6 text-black rounded ml-3"
         />
       </div>
 
       {/* サイズ調整 */}
-      <div className="flex items-center justify-between">
-        <span className="text-[12px]">サイズ</span>
+      <div className="flex justify-between">
+        <span className="underline underline-offset-2 text-[10px]">サイズ</span>
         <div className="flex items-center gap-2">
           <Button
             variant="subNatural"
@@ -126,8 +126,8 @@ export default function TextSettingsPanel({ textBlock, onChange }: TextSettingsP
       </div>
 
       {/* 角度調整 */}
-      <div className="flex items-center justify-between">
-        <span className="text-[12px]">角度</span>
+      <div className="flex justify-between">
+        <span className="underline underline-offset-2 text-[10px]">角度</span>
         <div className="flex items-center gap-2">
           <Button
             variant="subNatural"
@@ -161,8 +161,8 @@ export default function TextSettingsPanel({ textBlock, onChange }: TextSettingsP
       </div>
 
       {/* 行間調整 */}
-      <div className="flex items-center justify-between">
-        <span className="text-[12px]">行間</span>
+      <div className="flex justify-between">
+        <span className="underline underline-offset-2 text-[10px]">行間</span>
         <div className="flex items-center gap-2">
           <Button
             variant="subNatural"

@@ -18,14 +18,23 @@ export type TextBlock = {
 };
 
 // 投稿データの定義
-export interface Post {
+export interface EmaPost {
   texts: TextBlock[];
   reply: string;
   emaImage: EmaImageKey;
 }
 
+// 投稿時のレスポンス
+export interface EmaPostResponse {
+  id: string;
+  texts: TextBlock[];
+  reply: string;
+  emaImage: EmaImageKey;
+  createdAt: string;
+}
+
 // カルーセルや表示用に拡張した型
-export type DisplayPost = Post & {
+export type DisplayPost = EmaPost & {
   drawKey: string;
   rotate: string;
   translateY: string;

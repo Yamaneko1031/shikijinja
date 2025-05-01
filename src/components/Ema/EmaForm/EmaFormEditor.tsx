@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { emaList, initialTexts } from '@/config/ema';
-import { EmaImageKey, TextBlock, TextRectSize } from '@/types/ema';
+import { EmaImageKey, TextBlock } from '@/types/ema';
 import { FontKey, FontColorKey } from '@/types/fonts';
 import EmaPreview from './EmaPreview';
 import TextSettingsPanel from './TextSettingsPanel';
@@ -36,7 +36,6 @@ const EmaFormEditor: React.FC<EmaFormEditorProps> = ({
   );
   const [currentTextIndex, setCurrentTextIndex] = useState<0 | 1>(0);
   const [isOverflowing, setIsOverflowing] = useState<boolean[]>([false, false]);
-  const [textRectStyle, setTextRectStyle] = useState<TextRectSize | null>(null);
 
   // オーバーフロー判定に必要なプレビュー内のref
   const previewWrapperRef = useRef<HTMLDivElement>(null);
@@ -134,14 +133,7 @@ const EmaFormEditor: React.FC<EmaFormEditorProps> = ({
     const cont = previewContainerRef.current;
     if (el && wrap && cont) {
       const t = el.getBoundingClientRect();
-      const w = wrap.getBoundingClientRect();
       const c = cont.getBoundingClientRect();
-      setTextRectStyle({
-        top: t.top - w.top,
-        left: t.left - w.left,
-        width: t.width,
-        height: t.height,
-      });
       const m = 5;
 
       setIsOverflowing((prev) => {
@@ -197,7 +189,6 @@ const EmaFormEditor: React.FC<EmaFormEditorProps> = ({
                 previewTextRefs={previewTextRefs}
                 onTextMouseDown={handleTextMouseDown}
                 onTextTouchStart={handleTextTouchStart}
-                textRectStyle={textRectStyle}
                 isOverflowing={isOverflowing[currentTextIndex]}
                 placeholders={[emaList[deityKey].sampleText, emaList[deityKey].label]}
               />

@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { DisplayPost, TextBlock } from '@/types/ema';
 import { defaultTextRectSize } from '@/config/ema';
 import { fontList, fontColorList } from '@/config/fonts';
@@ -13,19 +13,32 @@ export default function EmaItem({ post }: EmaItemProps) {
   const [popupVisible, setPopupVisible] = useState(false);
   const [bouncing, setBouncing] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const bounceTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  useEffect(() => {
+    if (post.highlighted) {
+      handleClick();
+    }
+  }, [post.highlighted]);
 
   const handleClick = () => {
     const popupDuration = getCssDuration('--ema-popup-duration');
     const bounceDuration = getCssDuration('--ema-bounce-duration');
 
-    // ポップアップ表示
-    setPopupVisible(true);
+    setPopupVisible(false);
     clearTimeout(timerRef.current!);
-    timerRef.current = setTimeout(() => setPopupVisible(false), popupDuration);
+    setBouncing(false);
+    clearTimeout(bounceTimerRef.current!);
 
-    // バウンス
-    setBouncing(true);
-    setTimeout(() => setBouncing(false), bounceDuration);
+    requestAnimationFrame(() => {
+      // ポップアップ表示
+      setPopupVisible(true);
+      timerRef.current = setTimeout(() => setPopupVisible(false), popupDuration);
+
+      // バウンス
+      setBouncing(true);
+      bounceTimerRef.current = setTimeout(() => setBouncing(false), bounceDuration);
+    });
   };
 
   return (
@@ -35,9 +48,25 @@ export default function EmaItem({ post }: EmaItemProps) {
       onClick={handleClick}
     >
       {popupVisible && (
-        <div className="absolute top-10 left-1/2 z-50 animate-ema-popup">
-          <div className="w-[200px] bg-black/70 backdrop-blur-sm text-sm text-w-800 px-3 py-2 rounded shadow-lg text-center whitespace-pre-wrap select-none">
+        <div
+          className={`absolute bottom-17 left-1/2 z-50 ${popupVisible ? 'animate-ema-popup' : ''}`}
+        >
+          <div className="relative max-h-[170px] w-[200px] bg-black/70 backdrop-blur-sm text-[12px] text-white px-3 py-2 rounded-lg shadow-lg text-center whitespace-pre-wrap select-none">
             {post.reply}
+
+            {/* 吹き出しの出てる部分 */}
+            <div
+              className="
+                absolute
+                bottom-[-5px]
+                left-8
+                transform -translate-x-1/2
+                w-0 h-0
+                border-l-[6px] border-l-transparent
+                border-r-[6px] border-r-transparent
+                border-t-[6px] border-t-black/70
+              "
+            />
           </div>
         </div>
       )}

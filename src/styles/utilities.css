@@ -74,6 +74,7 @@ body {
   @apply rounded;
   background-color: #915107;
   color: #ffffff;
+  box-shadow: 0 0 1px white;
 }
 
 .btn-positive:hover {
@@ -92,6 +93,7 @@ body {
   @apply rounded;
   background-color: #681604;
   color: #ffffff;
+  box-shadow: 0 0 1px white;
 }
 
 .btn-negative:hover {
@@ -110,6 +112,7 @@ body {
   @apply rounded-full;
   background-color: #1a1a1a;
   color: #ffffff;
+  box-shadow: 0 0 1px white;
 }
 
 .btn-sub-natural:hover {
@@ -118,7 +121,10 @@ body {
   }
 }
 
-input[type='range'],
+input[type='range'] {
+  accent-color: #323232;
+}
+
 input[type='checkbox'] {
-  accent-color: #363636;
+  accent-color: #323232;
 }

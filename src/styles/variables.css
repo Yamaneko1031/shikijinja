@@ -5,7 +5,7 @@
   --ema-animate-fade-in-out-duration: 2000ms;
   --ema-insert-duration: 700ms;
   --ema-bounce-duration: 500ms;
-  --ema-popup-duration: 2000ms;
+  --ema-popup-duration: 6000ms;
 }
 
 @media (prefers-color-scheme: dark) {

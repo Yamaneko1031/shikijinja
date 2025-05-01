@@ -11,8 +11,10 @@
   },
   "dependencies": {
     "@prisma/client": "^6.6.0",
+    "babel-plugin-react-compiler": "^19.1.0-rc.1",
     "framer-motion": "^12.6.3",
     "next": "15.2.4",
+    "openai": "^4.96.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "swr": "^2.3.3"

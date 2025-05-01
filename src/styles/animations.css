@@ -38,8 +38,8 @@
     opacity: 0;
     transform: translate(-50%, 10px);
   }
-  20%,
-  80% {
+  10%,
+  90% {
     opacity: 1;
     transform: translate(-50%, 0);
   }

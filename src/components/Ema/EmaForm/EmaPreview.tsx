@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextBlock, EmaImageKey, TextRectSize } from '@/types/ema';
+import { TextBlock, EmaImageKey } from '@/types/ema';
 import { fontList, fontColorList } from '@/config/fonts';
 import { defaultTextRectSize, emaList } from '@/config/ema';
 
@@ -13,7 +13,6 @@ export interface EmaPreviewProps {
   previewTextRefs: React.RefObject<(HTMLParagraphElement | null)[]>;
   onTextMouseDown: (index: number, e: React.MouseEvent) => void;
   onTextTouchStart: (index: number, e: React.TouchEvent) => void;
-  textRectStyle: TextRectSize | null;
   isOverflowing: boolean;
 }
 
@@ -27,7 +26,6 @@ export default function EmaPreview({
   previewTextRefs,
   onTextMouseDown,
   onTextTouchStart,
-  textRectStyle,
   isOverflowing,
 }: EmaPreviewProps) {
   const allTextsEmpty = texts.every((block) => block.text === '');
@@ -70,6 +68,8 @@ export default function EmaPreview({
                 transform: `translate(${block.offsetX}px, ${block.offsetY}px) rotate(${block.textRotate}deg)`,
                 lineHeight: block.lineHeight,
                 fontSize: `${block.fontSize}px`,
+                border: `${isCurrent ? `2px dashed ${isOverflowing ? 'red' : 'lime'}` : 'none'}`,
+                borderRadius: '4px',
               }}
             >
               {isEmpty ? placeholders[index] + ' (例' : block.text}
@@ -80,7 +80,7 @@ export default function EmaPreview({
 
       {/* バリデーション用の境界線 */}
       <div
-        className="absolute border border-yellow-400 rounded pointer-events-none"
+        className="absolute border-2 border-yellow-300 rounded pointer-events-none"
         style={{
           top: `${defaultTextRectSize.top}px`,
           left: `${defaultTextRectSize.left}px`,
@@ -88,21 +88,6 @@ export default function EmaPreview({
           height: `${defaultTextRectSize.height}px`,
         }}
       />
-
-      {/* ガイド枠（はみ出しチェック用） */}
-      {textRectStyle && (
-        <div
-          className="absolute pointer-events-none z-50"
-          style={{
-            top: `${textRectStyle.top}px`,
-            left: `${textRectStyle.left}px`,
-            width: `${textRectStyle.width}px`,
-            height: `${textRectStyle.height}px`,
-            border: `2px dashed ${isOverflowing ? 'red' : 'lime'}`,
-            borderRadius: '4px',
-          }}
-        />
-      )}
     </div>
   );
 }

@@ -8,8 +8,8 @@ export default function AdminTopPage() {
 
       <ul className="mt-6 space-y-2">
         <li>
-          <a href="/admin/deity" className="text-blue-500 hover:underline">
-            🐾 神様の管理ページへ
+          <a href="/admin/prompt" className="text-blue-500 hover:underline">
+            🐾 プロンプトの管理ページへ
           </a>
         </li>
         <li>
