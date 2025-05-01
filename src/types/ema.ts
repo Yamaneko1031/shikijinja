@@ -38,7 +38,7 @@ export interface EmaPostResponse {
 }
 
 export interface PatchEmaBody {
-  decision?: 'ALLOW' | 'BLOCK' | 'UNCHECKED';
+  decision?: string;
   reasons?: string[];
 }
 
