@@ -7,7 +7,7 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
-  const [, setDialogCount] = useContext(DialogCountContext);
+  const setDialogCount = useContext(DialogCountContext);
   const dialogRef = React.useRef<HTMLDialogElement>(null);
 
   useLayoutEffect(() => {
@@ -17,7 +17,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
     const scrollTop = window.scrollY;
     if (isOpen) {
       dialog.showModal();
-      setDialogCount((prev) => prev + 1);
+      setDialogCount.current = setDialogCount.current + 1;
 
       // スクロール値の判定ロジックが誤作動しないように少し待つ
       setTimeout(() => {
@@ -35,7 +35,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
         window.scrollTo(0, scrollTop);
 
         dialog.close();
-        setDialogCount((prev) => prev - 1);
+        setDialogCount.current = setDialogCount.current - 1;
       }
     };
   }, [isOpen, setDialogCount]);
@@ -43,7 +43,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
   return isOpen ? (
     <dialog
       ref={dialogRef}
-      className="fixed top-[45lvh] left-1/2 translate-x-[-50%] translate-y-[-50%] z-100 bg-black/80 rounded-lg p-2 text-white"
+      className="fixed top-[45lvh] left-1/2 translate-x-[-50%] translate-y-[-50%] bg-black/80 rounded-lg p-2 text-white"
     >
       {children}
     </dialog>

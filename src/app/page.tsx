@@ -10,22 +10,16 @@ import { DialogCountContext } from '@/contexts/DialogCountContext';
 export default function App() {
   console.log('App');
   const [state, setState] = useState({ activeId: sections[0].id });
-  const dialogState = useState<number>(0);
-  const [dialogCount] = dialogState;
+  const dialogRef = useRef<number>(0);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
   const bgManagerRef = useRef<BackgroundManagerHandle>(null);
   const currentSectionRef = useRef<Section>(sections[0]);
   const allUrls = sections.map(({ bgUrl }) => bgUrl);
   const activeIndex = sections.findIndex((s) => s.id === state.activeId);
-  const dialogCountRef = useRef(dialogCount);
-
-  useEffect(() => {
-    dialogCountRef.current = dialogCount;
-  }, [dialogCount]);
 
   useEffect(() => {
     const checkScroll = () => {
-      if (dialogCountRef.current > 0) {
+      if (dialogRef.current > 0) {
         requestAnimationFrame(checkScroll);
         return;
       }
@@ -66,7 +60,7 @@ export default function App() {
   }, []);
 
   return (
-    <DialogCountContext.Provider value={dialogState}>
+    <DialogCountContext.Provider value={dialogRef}>
       <main className="relative z-10 overflow-x-hidden">
         <BackgroundManager
           ref={bgManagerRef}
