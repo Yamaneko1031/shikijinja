@@ -20,11 +20,11 @@ const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
       setDialogCount.current = setDialogCount.current + 1;
 
       // スクロール値の判定ロジックが誤作動しないように少し待つ
-      // setTimeout(() => {
-      //   // スクロール禁止
-      //   document.body.style.top = scrollTop * -1 + 'px';
-      //   document.body.classList.add('no_scroll');
-      // }, 60);
+      setTimeout(() => {
+        // スクロール禁止
+        document.body.style.top = scrollTop * -1 + 'px';
+        document.body.classList.add('no_scroll');
+      }, 100);
     }
 
     return () => {
@@ -35,7 +35,9 @@ const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
         window.scrollTo(0, scrollTop);
 
         dialog.close();
-        setDialogCount.current = setDialogCount.current - 1;
+        setTimeout(() => {
+          setDialogCount.current = setDialogCount.current - 1;
+        }, 100);
       }
     };
   }, [isOpen, setDialogCount]);
