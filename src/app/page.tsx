@@ -24,34 +24,34 @@ export default function App() {
         return;
       }
 
-      const centerY = window.innerHeight / 2;
-      const nextSection = sections.find(({ id }) => {
-        const el = sectionRefs.current[id];
-        if (!el) return false;
-        const rect = el.getBoundingClientRect();
-        return rect.top <= centerY && rect.bottom >= centerY;
-      });
+      // const centerY = window.innerHeight / 2;
+      // const nextSection = sections.find(({ id }) => {
+      //   const el = sectionRefs.current[id];
+      //   if (!el) return false;
+      //   const rect = el.getBoundingClientRect();
+      //   return rect.top <= centerY && rect.bottom >= centerY;
+      // });
 
-      if (nextSection && bgManagerRef.current) {
-        if (
-          currentSectionRef.current.id != nextSection.id &&
-          bgManagerRef.current.isReadyForTransition()
-        ) {
-          bgManagerRef.current.setUrl(nextSection.bgUrl, nextSection.scrollEffect);
-          currentSectionRef.current = nextSection;
-          setState({ activeId: nextSection.id });
-        }
+      // if (nextSection && bgManagerRef.current) {
+      //   if (
+      //     currentSectionRef.current.id != nextSection.id &&
+      //     bgManagerRef.current.isReadyForTransition()
+      //   ) {
+      //     bgManagerRef.current.setUrl(nextSection.bgUrl, nextSection.scrollEffect);
+      //     currentSectionRef.current = nextSection;
+      //     setState({ activeId: nextSection.id });
+      //   }
 
-        const el = sectionRefs.current[currentSectionRef.current.id];
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          const scrollRatio = Math.min(
-            Math.max((window.innerHeight / 2 - rect.top) / rect.height, 0),
-            1
-          );
-          bgManagerRef.current.setScrollRatio(scrollRatio);
-        }
-      }
+      //   const el = sectionRefs.current[currentSectionRef.current.id];
+      //   if (el) {
+      //     const rect = el.getBoundingClientRect();
+      //     const scrollRatio = Math.min(
+      //       Math.max((window.innerHeight / 2 - rect.top) / rect.height, 0),
+      //       1
+      //     );
+      //     bgManagerRef.current.setScrollRatio(scrollRatio);
+      //   }
+      // }
 
       requestAnimationFrame(checkScroll);
     };
@@ -80,9 +80,10 @@ export default function App() {
               }}
               className={`${sections[idx].sectionClass}`}
             >
-              {(isActive || isNeighbor) && SectionComponent && (
+              <SectionComponent isActive={isActive} isNeighbor={isNeighbor} />
+              {/* {(isActive || isNeighbor) && SectionComponent && (
                 <SectionComponent isActive={isActive} isNeighbor={isNeighbor} />
-              )}
+              )} */}
             </section>
           );
         })}

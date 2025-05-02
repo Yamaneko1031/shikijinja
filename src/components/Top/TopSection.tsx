@@ -43,10 +43,10 @@ const TopSection = ({ isActive, isNeighbor }: Props) => {
           priority
         />
       </motion.div>
-      <motion.div
+      {/* <motion.div
         className="fixed inset-0 bg-black/70 z-20"
         style={{ opacity: useTransform(scrollY, [0, 300], [1, 0]) }}
-      />
+      /> */}
       <motion.h1
         className="absolute left-1/2 translate-x-20 -translate-y-20 vertical text-shadow-3 z-30 pointer-events-none"
         style={{ top: '30lvh', opacity: titleOpacity }}

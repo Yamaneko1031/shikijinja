@@ -24,7 +24,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
         // スクロール禁止
         document.body.style.top = scrollTop * -1 + 'px';
         document.body.classList.add('no_scroll');
-      }, 100);
+      }, 1000);
     }
 
     return () => {
@@ -37,7 +37,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
         dialog.close();
         setTimeout(() => {
           setDialogCount.current = setDialogCount.current - 1;
-        }, 100);
+        }, 1000);
       }
     };
   }, [isOpen, setDialogCount]);
@@ -52,4 +52,4 @@ const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
   ) : null;
 };
 
-export default Modal;
+export default React.memo(Modal);
