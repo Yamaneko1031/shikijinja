@@ -128,3 +128,10 @@ input[type='range'] {
 input[type='checkbox'] {
   accent-color: #323232;
 }
+
+.no_scroll {
+  position: fixed;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+}

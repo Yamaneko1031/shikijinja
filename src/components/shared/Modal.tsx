@@ -1,3 +1,4 @@
+// import { body } from 'framer-motion/client';
 import React, { useLayoutEffect } from 'react';
 import { createPortal } from 'react-dom';
 
@@ -9,27 +10,39 @@ interface ModalProps {
 const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
   const dialogRef = React.useRef<HTMLDialogElement>(null);
 
-  const wheelStop = (e: WheelEvent) => {
-    e.preventDefault();
-  };
-  const touchStop = (e: TouchEvent) => {
-    e.preventDefault();
-  };
+  // const mainElement = document.querySelector('main');
 
   useLayoutEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
 
+    // ダイアログ外側のスクロールだけ止める
+    // const stopScroll: EventListener = (e) => {
+    //   // イベント経路に dialog が含まれるなら内部スクロールなので何もしない
+    //   // const path = e.composedPath?.() ?? [];
+    //   // if (path.includes(dialog)) return;
+    //   // e.preventDefault();
+    //   console.log(e);
+    // };
+
+    const scrollTop = window.scrollY;
     if (isOpen) {
-      document.body.addEventListener('wheel', wheelStop, { passive: false });
-      document.body.addEventListener('touchmove', touchStop, { passive: false });
+      // document.body.addEventListener('wheel', stopScroll, { passive: false });
+      // document.body.addEventListener('touchmove', stopScroll, { passive: false });
+      // スクロール禁止
+      document.body.style.top = scrollTop * -1 + 'px';
+      document.body.classList.add('no_scroll');
       dialog.showModal();
     }
 
     return () => {
       if (dialog) {
-        document.body.removeEventListener('wheel', wheelStop);
-        document.body.removeEventListener('touchmove', touchStop);
+        // スクロール開放
+        document.body.style.top = '';
+        document.body.classList.remove('no_scroll');
+        window.scrollTo(0, scrollTop);
+        // document.body.removeEventListener('wheel', stopScroll);
+        // document.body.removeEventListener('touchmove', stopScroll);
         dialog.close();
       }
     };
