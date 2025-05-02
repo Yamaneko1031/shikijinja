@@ -1,4 +1,5 @@
 import React, { useLayoutEffect } from 'react';
+import { createPortal } from 'react-dom';
 
 interface ModalProps {
   isOpen: boolean;
@@ -6,69 +7,46 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
+  const dialogRef = React.useRef<HTMLDialogElement>(null);
+
+  const wheelStop = (e: WheelEvent) => {
+    e.preventDefault();
+  };
+  const touchStop = (e: TouchEvent) => {
+    e.preventDefault();
+  };
+
   useLayoutEffect(() => {
-    if (!isOpen) return;
-    // const scrollY = window.scrollY;
-    // document.documentElement.style.overscrollBehaviorY = 'none';
-    // document.body.style.position = 'fixed';
-    // document.body.style.top = `-${scrollY}px`;
-    // document.body.style.left = '0';
-    // document.body.style.right = '0';
+    const dialog = dialogRef.current;
+    if (!dialog) return;
 
-    // return () => {
-    //   document.documentElement.style.overscrollBehaviorY = '';
-    //   document.body.style.position = '';
-    //   document.body.style.top = '';
-    //   document.body.style.left = '';
-    //   document.body.style.right = '';
-    //   window.scrollTo(0, scrollY);
-    // };
-    const mainElement = document.querySelector('main');
-
-    const wheelStop = (e: WheelEvent) => {
-      e.preventDefault();
-    };
-    const touchStop = (e: TouchEvent) => {
-      e.preventDefault();
-    };
-
-    const dialog = document.querySelector('dialog');
-    if (dialog) {
-      mainElement?.addEventListener('wheel', wheelStop, { passive: false });
-      mainElement?.addEventListener('touchmove', touchStop, { passive: false });
-      // document.body.inert = true;
-      // if (mainElement) {
-      //   mainElement.inert = true;
-      // }
-      // 仮処理 iosでは上手くいかない
-      // document.body.style.overflow = 'hidden';
-      // document.documentElement.style.overscrollBehavior = 'none';
-      // document.body.style.overscrollBehavior = 'none';
+    if (isOpen) {
+      document.body.addEventListener('wheel', wheelStop, { passive: false });
+      document.body.addEventListener('touchmove', touchStop, { passive: false });
       dialog.showModal();
     }
 
-    // 仮処理 iosでは上手くいかない
-    // document.body.style.overflow = 'hidden';
     return () => {
       if (dialog) {
-        mainElement?.removeEventListener('wheel', wheelStop);
-        mainElement?.removeEventListener('touchmove', touchStop);
-        // document.body.style.overflow = '';
-        // document.documentElement.style.overscrollBehavior = '';
-        // document.body.style.overscrollBehavior = '';
-        // document.body.inert = false;
-        // if (mainElement) {
-        //   mainElement.inert = false;
-        // }
+        document.body.removeEventListener('wheel', wheelStop);
+        document.body.removeEventListener('touchmove', touchStop);
         dialog.close();
       }
     };
   }, [isOpen]);
-  return isOpen ? (
-    <dialog className="fixed top-[45lvh] left-1/2 translate-x-[-50%] translate-y-[-50%] z-100 bg-black/80 rounded-lg p-2 text-white">
-      {children}
-    </dialog>
-  ) : undefined;
+
+  // Portal で body 直下にレンダー
+  return isOpen
+    ? createPortal(
+        <dialog
+          ref={dialogRef}
+          className="fixed top-[45lvh] left-1/2 translate-x-[-50%] translate-y-[-50%] z-100 bg-black/80 rounded-lg p-2 text-white"
+        >
+          {children}
+        </dialog>,
+        document.body
+      )
+    : null;
 };
 
 export default Modal;
