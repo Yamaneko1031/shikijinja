@@ -25,14 +25,21 @@ const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
     // };
     // const mainElement = document.querySelector('main');
 
+    const wheelStop = (e: WheelEvent) => {
+      e.preventDefault();
+    };
+
     const dialog = document.querySelector('dialog');
     if (dialog) {
+      document.addEventListener('wheel', wheelStop, { passive: false });
       // document.body.inert = true;
       // if (mainElement) {
       //   mainElement.inert = true;
       // }
       // 仮処理 iosでは上手くいかない
-      document.body.style.overflow = 'hidden';
+      // document.body.style.overflow = 'hidden';
+      // document.documentElement.style.overscrollBehavior = 'none';
+      // document.body.style.overscrollBehavior = 'none';
       dialog.showModal();
     }
 
@@ -40,7 +47,10 @@ const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
     // document.body.style.overflow = 'hidden';
     return () => {
       if (dialog) {
-        document.body.style.overflow = '';
+        document.removeEventListener('wheel', wheelStop);
+        // document.body.style.overflow = '';
+        // document.documentElement.style.overscrollBehavior = '';
+        // document.body.style.overscrollBehavior = '';
         // document.body.inert = false;
         // if (mainElement) {
         //   mainElement.inert = false;
