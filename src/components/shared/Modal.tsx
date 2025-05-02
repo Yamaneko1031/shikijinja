@@ -1,5 +1,5 @@
 import React, { useContext, useLayoutEffect } from 'react';
-import { DialogCountContext } from '@/components/shared/DialogCountContext';
+import { DialogCountContext } from '@/contexts/DialogCountContext';
 
 interface ModalProps {
   isOpen: boolean;
@@ -19,11 +19,12 @@ const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
       dialog.showModal();
       setDialogCount((prev) => prev + 1);
 
+      // スクロール値の判定ロジックが誤作動しないように少し待つ
       setTimeout(() => {
         // スクロール禁止
         document.body.style.top = scrollTop * -1 + 'px';
         document.body.classList.add('no_scroll');
-      }, 1000);
+      }, 60);
     }
 
     return () => {
