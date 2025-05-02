@@ -25,7 +25,6 @@ type PromptTemplatesResponse = {
 const fetcher = async (url: string) => {
   const res = await fetch(url);
   const bodyText = await res.text();
-  console.log('[models] status=', res.status, 'body=', bodyText);
   if (!res.ok) throw new Error(`Failed to fetch: ${res.status}`);
   return JSON.parse(bodyText);
 };
@@ -107,6 +106,10 @@ export default function AdminDeityPage() {
                         (instructions as HTMLTextAreaElement).value = template.instructions;
                         (model as HTMLInputElement).value = template.model;
                         (temperature as HTMLInputElement).value = template.temperature.toString();
+                        // const testSystemPrompt = form.querySelector(
+                        //   '#test textarea[name="systemPrompt"]'
+                        // ) as HTMLTextAreaElement;
+                        systemPrompt.dispatchEvent(new Event('input', { bubbles: true }));
                       }
                     }
                   }}
@@ -119,7 +122,7 @@ export default function AdminDeityPage() {
         )}
       </section>
 
-      <section className="mt-8">
+      <section id="test" className="mt-8">
         <h2 className="text-xl font-semibold mb-2">プロンプトのテスト</h2>
         <form
           onSubmit={async (e) => {
@@ -142,6 +145,7 @@ export default function AdminDeityPage() {
             const json = await res.json();
             if (res.ok && json.reply) {
               alert(json.reply);
+              console.log(json);
             } else {
               alert(`エラー: ${json.error || 'お告げが届きませんでした'}`);
             }
@@ -163,7 +167,18 @@ export default function AdminDeityPage() {
               name="systemPrompt"
               required
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              onInput={(e) => {
+                const target = e.target as HTMLTextAreaElement;
+                const charCount = target.value.length;
+                const charCountDisplay = document.getElementById('systemPromptCharCount');
+                if (charCountDisplay) {
+                  charCountDisplay.textContent = `文字数: ${charCount}`;
+                }
+              }}
             />
+            <div id="systemPromptCharCount" className="text-sm text-gray-500 mt-1">
+              文字数: 0
+            </div>
           </div>
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-300">userPrompt</label>
@@ -210,6 +225,7 @@ export default function AdminDeityPage() {
                 userPrompt: formData.get('userPrompt'),
                 model: formData.get('model'),
                 instructions: formData.get('instructions'),
+                temperature: parseFloat(formData.get('temperature') as string),
               };
 
               const response = await fetch('/api/ai/prompt-templates', {
