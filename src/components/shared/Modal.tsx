@@ -23,15 +23,19 @@ const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
     //   document.body.style.right = '';
     //   window.scrollTo(0, scrollY);
     // };
-    // const mainElement = document.querySelector('main');
+    const mainElement = document.querySelector('main');
 
     const wheelStop = (e: WheelEvent) => {
+      e.preventDefault();
+    };
+    const touchStop = (e: TouchEvent) => {
       e.preventDefault();
     };
 
     const dialog = document.querySelector('dialog');
     if (dialog) {
-      document.addEventListener('wheel', wheelStop, { passive: false });
+      mainElement?.addEventListener('wheel', wheelStop, { passive: false });
+      mainElement?.addEventListener('touchmove', touchStop, { passive: false });
       // document.body.inert = true;
       // if (mainElement) {
       //   mainElement.inert = true;
@@ -47,7 +51,8 @@ const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
     // document.body.style.overflow = 'hidden';
     return () => {
       if (dialog) {
-        document.removeEventListener('wheel', wheelStop);
+        mainElement?.removeEventListener('wheel', wheelStop);
+        mainElement?.removeEventListener('touchmove', touchStop);
         // document.body.style.overflow = '';
         // document.documentElement.style.overscrollBehavior = '';
         // document.body.style.overscrollBehavior = '';
