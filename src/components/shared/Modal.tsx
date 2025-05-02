@@ -19,11 +19,11 @@ const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
       dialog.showModal();
       setDialogCount((prev) => prev + 1);
 
-      requestAnimationFrame(() => {
+      setTimeout(() => {
         // スクロール禁止
         document.body.style.top = scrollTop * -1 + 'px';
         document.body.classList.add('no_scroll');
-      });
+      }, 1000);
     }
 
     return () => {
