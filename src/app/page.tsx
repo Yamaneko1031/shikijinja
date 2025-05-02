@@ -9,7 +9,7 @@ import { DialogCountContext } from '@/contexts/DialogCountContext';
 
 export default function App() {
   console.log('App');
-  const [state, setState] = useState({ activeId: sections[0].id });
+  const [state] = useState({ activeId: sections[0].id });
   const dialogRef = useRef<number>(0);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
   const bgManagerRef = useRef<BackgroundManagerHandle>(null);
