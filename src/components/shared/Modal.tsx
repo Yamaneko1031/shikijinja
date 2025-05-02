@@ -23,17 +23,36 @@ const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
     //   document.body.style.right = '';
     //   window.scrollTo(0, scrollY);
     // };
+    // const mainElement = document.querySelector('main');
+
+    const dialog = document.querySelector('dialog');
+    if (dialog) {
+      // document.body.inert = true;
+      // if (mainElement) {
+      //   mainElement.inert = true;
+      // }
+      // 仮処理 iosでは上手くいかない
+      document.body.style.overflow = 'hidden';
+      dialog.showModal();
+    }
 
     // 仮処理 iosでは上手くいかない
-    document.body.style.overflow = 'hidden';
+    // document.body.style.overflow = 'hidden';
     return () => {
-      document.body.style.overflow = '';
+      if (dialog) {
+        document.body.style.overflow = '';
+        // document.body.inert = false;
+        // if (mainElement) {
+        //   mainElement.inert = false;
+        // }
+        dialog.close();
+      }
     };
   }, [isOpen]);
   return isOpen ? (
-    <div className="fixed top-[45lvh] left-1/2 translate-x-[-50%] translate-y-[-50%] z-100 bg-black/80 rounded-lg p-2 text-white">
+    <dialog className="fixed top-[45lvh] left-1/2 translate-x-[-50%] translate-y-[-50%] z-100 bg-black/80 rounded-lg p-2 text-white">
       {children}
-    </div>
+    </dialog>
   ) : undefined;
 };
 
