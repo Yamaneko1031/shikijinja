@@ -16,12 +16,14 @@ const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
 
     const scrollTop = window.scrollY;
     if (isOpen) {
-      // スクロール禁止
-      document.body.style.top = scrollTop * -1 + 'px';
-      document.body.classList.add('no_scroll');
-
       dialog.showModal();
       setDialogCount((prev) => prev + 1);
+
+      requestAnimationFrame(() => {
+        // スクロール禁止
+        document.body.style.top = scrollTop * -1 + 'px';
+        document.body.classList.add('no_scroll');
+      });
     }
 
     return () => {
