@@ -1,5 +1,5 @@
 import React, { useContext, useLayoutEffect } from 'react';
-import { DialogCountContext } from '@/app/page';
+import { DialogCountContext } from '@/components/shared/DialogCountContext';
 
 interface ModalProps {
   isOpen: boolean;
