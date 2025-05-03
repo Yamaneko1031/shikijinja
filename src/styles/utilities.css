@@ -4,14 +4,6 @@ body {
   /* font-family: Arial, Helvetica, sans-serif; */
 }
 
-/* 背景スクロール禁止用 */
-.no_scroll {
-  position: fixed;
-  left: 0;
-  right: 0;
-  overflow: hidden;
-}
-
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }

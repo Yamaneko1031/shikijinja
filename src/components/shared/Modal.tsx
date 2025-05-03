@@ -1,5 +1,4 @@
-import React, { useContext, useLayoutEffect } from 'react';
-import { DialogCountContext } from '@/contexts/DialogCountContext';
+import React, { useLayoutEffect } from 'react';
 
 interface ModalProps {
   isOpen: boolean;
@@ -7,40 +6,30 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
-  const setDialogCount = useContext(DialogCountContext);
   const dialogRef = React.useRef<HTMLDialogElement>(null);
 
   useLayoutEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
 
-    const scrollTop = window.scrollY;
-    if (isOpen) {
-      dialog.showModal();
-      setDialogCount.current = setDialogCount.current + 1;
+    const no_scroll = (e: Event) => {
+      e.preventDefault();
+    };
 
-      // スクロール値の判定ロジックが誤作動しないように少し待つ
-      setTimeout(() => {
-        // スクロール禁止
-        document.body.style.top = scrollTop * -1 + 'px';
-        document.body.classList.add('no_scroll');
-      }, 1000);
+    if (isOpen) {
+      document.body.addEventListener('wheel', no_scroll, { passive: false });
+      document.body.addEventListener('touchmove', no_scroll, { passive: false });
+      dialog.showModal();
     }
 
     return () => {
       if (dialog) {
-        // スクロール許可
-        document.body.style.top = '';
-        document.body.classList.remove('no_scroll');
-        window.scrollTo(0, scrollTop);
-
+        document.body.removeEventListener('wheel', no_scroll);
+        document.body.removeEventListener('touchmove', no_scroll);
         dialog.close();
-        setTimeout(() => {
-          setDialogCount.current = setDialogCount.current - 1;
-        }, 1000);
       }
     };
-  }, [isOpen, setDialogCount]);
+  }, [isOpen]);
 
   return isOpen ? (
     <dialog

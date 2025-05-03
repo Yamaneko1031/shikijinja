@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import TextReveal from '@/components/shared/TextReveal';
-
+import Image from 'next/image';
 type Props = {
   isActive: boolean;
   isNeighbor: boolean;
@@ -43,6 +43,9 @@ const OmikujiSection = ({ isActive, isNeighbor }: Props) => {
         >
           {loading ? '神様と交信中…' : 'おみくじを引く'}
         </button>
+      </div>
+      <div className="fixed top-[45lvh] left-1/2 translate-x-[-50%] translate-y-[-50%] bg-black/80 rounded-lg p-2 text-white">
+        <Image src="/images/omikuji/omikuji.png" alt="おみくじ" width={400} height={800} />
       </div>
     </>
   );

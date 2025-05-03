@@ -47,11 +47,11 @@ export default function TextSettingsPanel({ textBlock, onChange }: TextSettingsP
     <div className="px-2 py-2 text-white rounded-sm shadow-lg w-[140px] space-y-4 select-none">
       {/* フォント選択 */}
       <div>
-        <label className="block underline underline-offset-2 text-[10px] mb-1">フォント</label>
+        {/* <label className="block underline underline-offset-2 text-[10px] mb-1">フォント</label> */}
         <select
           value={textBlock.font}
           onChange={(e) => onChange({ font: e.target.value as TextBlock['font'] })}
-          className="w-full bg-black border border-white rounded px-1 py-1 text-[12px]"
+          className="w-full h-6 bg-black border border-white rounded px-1 py-1 text-[14px]"
         >
           {fontList.map((f) => (
             <option key={f.key} value={f.key}>
@@ -200,6 +200,50 @@ export default function TextSettingsPanel({ textBlock, onChange }: TextSettingsP
         <span className="underline underline-offset-2 text-[10px]">
           {textBlock.isVertical ? '最大高さ' : '最大幅'}
         </span>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="subNatural"
+            size="sm"
+            onClick={
+              textBlock.isVertical
+                ? () => adjustField('textHeight', -5)
+                : () => adjustField('textWidth', -5)
+            }
+            className="px-2 py-1 bg-black rounded"
+          >
+            <Image
+              src="/images/icon/icon_down.svg"
+              alt="Decrease"
+              width={16}
+              height={16}
+              className="absolute"
+            />
+          </Button>
+          <Button
+            variant="subNatural"
+            size="sm"
+            onClick={
+              textBlock.isVertical
+                ? () => adjustField('textHeight', 5)
+                : () => adjustField('textWidth', 5)
+            }
+            className="px-2 py-1 bg-black rounded"
+          >
+            <Image
+              src="/images/icon/icon_up.svg"
+              alt="Increase"
+              width={16}
+              height={16}
+              className="absolute"
+            />
+          </Button>
+        </div>
+      </div>
+      {/* 
+      <div className="flex justify-between">
+        <span className="underline underline-offset-2 text-[10px]">
+          {textBlock.isVertical ? '最大高さ' : '最大幅'}
+        </span>
         <input
           type="range"
           min={textBlock.isVertical ? textHeightRange.min : textWidthRange.min}
@@ -215,7 +259,7 @@ export default function TextSettingsPanel({ textBlock, onChange }: TextSettingsP
           }
           className="w-[80px]"
         />
-      </div>
+      </div> */}
     </div>
   );
 }
