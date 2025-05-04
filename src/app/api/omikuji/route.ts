@@ -1,23 +1,22 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { json } from '@/server/response';
+import { openaiTemplateRequest } from '@/server/openaiTemplateRequest';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function POST(_: NextRequest) {
-  const prompt = 'あなたは神社の神様です。今日の運勢を一言で教えてください。';
+export async function POST(request: Request) {
+  try {
+    const { templateKey, period } = (await request.json()) as {
+      templateKey: string;
+      period: string;
+    };
 
-  const res = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-    },
-    body: JSON.stringify({
-      model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: prompt }],
-    }),
-  });
+    const result = await openaiTemplateRequest(templateKey, period);
 
-  const data = await res.json();
-  const message = data.choices?.[0]?.message?.content ?? 'お告げが届きませんでした';
-
-  return NextResponse.json({ result: message });
+    if (!result) {
+      return json({ error: 'テンプレートの実行に失敗しました' }, { status: 500 });
+    }
+    return json(JSON.parse(result), { status: 200 });
+  } catch (err) {
+    console.error('POST /api/omikuji error', err);
+    return json({ error: 'おみくじ生成に失敗しました' }, { status: 500 });
+  }
 }

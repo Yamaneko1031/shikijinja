@@ -17,15 +17,15 @@ const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
     };
 
     if (isOpen) {
-      document.body.addEventListener('wheel', no_scroll, { passive: false });
-      document.body.addEventListener('touchmove', no_scroll, { passive: false });
+      // document.body.addEventListener('wheel', no_scroll, { passive: false });
+      // document.body.addEventListener('touchmove', no_scroll, { passive: false });
       dialog.showModal();
     }
 
     return () => {
       if (dialog) {
-        document.body.removeEventListener('wheel', no_scroll);
-        document.body.removeEventListener('touchmove', no_scroll);
+        // document.body.removeEventListener('wheel', no_scroll);
+        // document.body.removeEventListener('touchmove', no_scroll);
         dialog.close();
       }
     };
