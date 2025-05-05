@@ -1,7 +1,6 @@
 import { json } from '@/server/response';
 import { openaiTemplateRequest } from '@/server/openaiTemplateRequest';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function POST(request: Request) {
   try {
     const { templateKey, period } = (await request.json()) as {

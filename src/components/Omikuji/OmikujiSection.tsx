@@ -2,7 +2,6 @@
 
 import React, { useRef, useState } from 'react';
 import TextReveal from '@/components/shared/TextReveal';
-import Image from 'next/image';
 import { OmikujiResult } from '@/types/omikuji';
 import Modal from '../shared/Modal';
 import OmikujiModal from './OmikujiModal';

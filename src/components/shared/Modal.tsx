@@ -12,9 +12,9 @@ const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
     const dialog = dialogRef.current;
     if (!dialog) return;
 
-    const no_scroll = (e: Event) => {
-      e.preventDefault();
-    };
+    // const no_scroll = (e: Event) => {
+    //   e.preventDefault();
+    // };
 
     if (isOpen) {
       // document.body.addEventListener('wheel', no_scroll, { passive: false });
