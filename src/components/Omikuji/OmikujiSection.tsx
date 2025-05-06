@@ -80,7 +80,7 @@ const OmikujiSection = ({ isActive, isNeighbor }: Props) => {
       {resultRef.current && (
         <Modal
           isOpen={isOpen}
-          className="fixed min-h-[100lvh] min-w-[100vw] bg-transparent overscroll-contain"
+          className="absolute top-0 left-0 min-h-[100lvh] min-w-[100vw] bg-transparent overscroll-contain"
         >
           <OmikujiModal
             omikujiResult={resultRef.current}

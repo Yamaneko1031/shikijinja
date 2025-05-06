@@ -13,7 +13,7 @@ type Props = {
 export default function OmikujiModal({ omikujiResult, onClose }: Props) {
   return (
     // 半透明のオーバーレイ
-    <div className="relative w-[420px] m-auto min-w-[420px] min-h-[900px] flex justify-center">
+    <div className="relative w-[420px] m-auto min-w-[420px] min-h-[800px] flex justify-center">
       {/* 閉じるボタン */}
       <Button
         variant="negative"

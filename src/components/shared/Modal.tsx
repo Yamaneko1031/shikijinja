@@ -42,15 +42,20 @@ const Modal: React.FC<ModalProps> = ({ isOpen, children, className }) => {
   }, [isOpen]);
 
   return isOpen ? (
-    <dialog
-      ref={dialogRef}
-      className={
-        className ||
-        'fixed top-[45lvh] left-1/2 translate-x-[-50%] translate-y-[-50%] bg-black/80 rounded-lg p-2 text-white overscroll-contain'
-      }
-    >
-      {children}
-    </dialog>
+    <div className="fixed inset-0 bg-black/50 overflow-scroll overscroll-contain z-100">
+      {/* 強制でスクロールバー背景にするためのダミー要素 */}
+      <div className="h-[calc(100%+1px)]"></div>
+      {/* <div className="absolute top-0 left-[200px] h-[101lvh] w-[100px] bg-white"></div> */}
+      <div
+        // ref={dialogRef}
+        className={
+          className ||
+          'absolute top-[45lvh] left-1/2 translate-x-[-50%] translate-y-[-50%] bg-black/80 rounded-lg p-2 text-white overscroll-contain'
+        }
+      >
+        {children}
+      </div>
+    </div>
   ) : null;
 };
 
