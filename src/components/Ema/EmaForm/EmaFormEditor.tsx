@@ -56,6 +56,10 @@ const EmaFormEditor: React.FC<EmaFormEditorProps> = ({
     });
   };
 
+  const eventStop = (e: WheelEvent | TouchEvent) => {
+    e.preventDefault();
+  };
+
   // ドラッグ開始イベント
   const handleTextMouseDown = (index: number, e: React.MouseEvent) => {
     setCurrentTextIndex(index as 0 | 1);
@@ -118,11 +122,17 @@ const EmaFormEditor: React.FC<EmaFormEditorProps> = ({
     window.addEventListener('mouseup', handleEnd);
     window.addEventListener('touchmove', handleMove, { passive: false });
     window.addEventListener('touchend', handleEnd);
+
+    window.addEventListener('wheel', eventStop, { passive: false });
+    window.addEventListener('touchmove', eventStop, { passive: false });
     return () => {
       window.removeEventListener('mousemove', handleMove);
       window.removeEventListener('mouseup', handleEnd);
       window.removeEventListener('touchmove', handleMove);
       window.removeEventListener('touchend', handleEnd);
+
+      window.removeEventListener('wheel', eventStop);
+      window.removeEventListener('touchmove', eventStop);
     };
   }, [currentTextIndex]);
 
