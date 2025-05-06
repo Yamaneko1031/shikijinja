@@ -20,18 +20,34 @@ const OmikujiSection = ({ isActive, isNeighbor }: Props) => {
   const fetchOmikuji = async () => {
     setLoading(true);
     try {
-      const body = {
-        templateKey: 'omikuji_shikineko',
-        period: '今年',
+      //   const body = {
+      //     templateKey: 'omikuji_shikineko',
+      //     period: '今年',
+      //   };
+      //   const res = await fetch('/api/omikuji', {
+      //     method: 'POST',
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //     },
+      //     body: JSON.stringify(body),
+      //   });
+      // モックデータを使用
+      const data: OmikujiResult = {
+        fortune: '大吉',
+        msg: '今年はとても良い年になりそうです。新しいことに挑戦するのに適した時期です。',
+        details: [
+          { type: '仕事運', rank: 5, element: '新しいプロジェクトで成功が見込めます' },
+          { type: '金運', rank: 4, element: '堅実な投資が実を結びそうです' },
+          { type: '恋愛運', rank: 3, element: '穏やかな関係が続きそうです' },
+          { type: '健康運', rank: 4, element: '規則正しい生活で体調は良好です' },
+          { type: 'コードレビュー', rank: 5, element: '新しい知識を得るのに最適な時期です' },
+          { type: '旅行運', rank: 3, element: '短距離の旅行が吉です' },
+          { type: '芸術運', rank: 4, element: '創造性が高まる時期です' },
+          { type: '家族運', rank: 5, element: '家族との絆が深まります' },
+          { type: '友情運', rank: 4, element: '新しい出会いがありそうです' },
+          { type: '趣味運', rank: 3, element: '新しい趣味を始めるのに良い時期です' },
+        ],
       };
-      const res = await fetch('/api/omikuji', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body),
-      });
-      const data = (await res.json()) as OmikujiResult;
       console.log('data', data);
       console.log('data.details', data.details);
       resultRef.current = data;
@@ -62,29 +78,14 @@ const OmikujiSection = ({ isActive, isNeighbor }: Props) => {
         </button>
       </div>
       {resultRef.current && (
-        <Modal isOpen={isOpen}>
-          <OmikujiModal omikujiResult={resultRef.current} onClose={() => setIsOpen(false)}>
-            {/* <Image src="/images/omikuji/omikuji.png" alt="おみくじ" width={400} height={800} /> */}
-            {/* {resultRef.current && (
-              <div className="relative flex flex-col items-center">
-                <h2 className="text-2xl font-bold mb-4">おみくじ結果</h2>
-                <div className="space-y-4">
-                  <p className="text-xl">{resultRef.current.fortune}</p>
-                  <p>{resultRef.current.msg}</p>
-                  <div>
-                    <h3 className="font-bold mb-2">運勢の詳細:</h3>
-                    <ul className="list-disc list-inside space-y-2">
-                      {resultRef.current.details?.map((detail, index) => (
-                        <li key={index}>
-                          {detail.type} {detail.rank} {detail.element}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            )} */}
-          </OmikujiModal>
+        <Modal
+          isOpen={isOpen}
+          className="fixed min-h-[100lvh] min-w-[100vw] bg-transparent overscroll-contain"
+        >
+          <OmikujiModal
+            omikujiResult={resultRef.current}
+            onClose={() => setIsOpen(false)}
+          ></OmikujiModal>
         </Modal>
       )}
     </>
