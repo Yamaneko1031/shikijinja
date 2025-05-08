@@ -36,3 +36,13 @@ model PromptTemplate {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
+
+model OmikujiResult {
+  id        String      @id @default(cuid())
+  type      String
+  period    String
+  fortune   String
+  msg       String
+  details   Json        @default("[]")
+  createdAt DateTime    @default(now())
+}

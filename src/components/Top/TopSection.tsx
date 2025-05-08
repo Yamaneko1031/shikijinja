@@ -4,6 +4,7 @@ import React from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import TextReveal from '../shared/TextReveal';
+import ReafParticles from '../shared/ReafParticles';
 
 type Props = {
   isActive: boolean;
@@ -14,47 +15,44 @@ type Props = {
 const TopSection = ({ isActive, isNeighbor }: Props) => {
   const { scrollY } = useScroll();
 
-  const toriiScale = useTransform(scrollY, [0, 400], [1.2, 3.5]);
+  const toriiScale = useTransform(scrollY, [0, 400], [1, 3.5]);
   const toriiOpacity = useTransform(scrollY, [100, 500], [1, 0]);
   const titleOpacity = useTransform(scrollY, [150, 400], [1, 0]);
 
   return (
-    <>
+    <div className="pointer-events-none">
       {/* 鳥居 */}
-      <motion.div
-        className="fixed z-30 pointer-events-none -translate-x-1/2 -translate-y-1/2"
-        style={{
-          top: 'calc(50lvh)',
-          left: '50%',
-          scale: toriiScale,
-          opacity: toriiOpacity,
-          transform: 'translate(-50%, -50%)',
-          width: '80vw',
-          height: 'calc(80vw * 1)',
-          maxHeight: '80vh',
-          transformOrigin: '50% 70%',
-        }}
-      >
-        <Image
-          src="/images/bg_hude/torii.webp"
-          alt="式岐神社の鳥居"
-          fill
-          className="object-contain"
-          priority
-        />
-      </motion.div>
-      {/* <motion.div
-        className="fixed inset-0 bg-black/70 z-20"
-        style={{ opacity: useTransform(scrollY, [0, 300], [1, 0]) }}
-      /> */}
+      {isActive && (
+        <motion.div
+          className="fixed z-30 pointer-events-none -translate-x-1/2 -translate-y-1/2 gpu-layer"
+          style={{
+            top: 'calc(50lvh)',
+            left: '50%',
+            scale: toriiScale,
+            opacity: toriiOpacity,
+            width: '80vw',
+            height: 'calc(80vw * 1)',
+            maxHeight: '80vh',
+            transformOrigin: '50% 70%',
+          }}
+        >
+          <Image
+            src="/images/bg_hude/torii.webp"
+            alt="式岐神社の鳥居"
+            fill
+            className="object-contain"
+            priority
+          />
+        </motion.div>
+      )}
       <motion.h1
-        className="absolute left-1/2 translate-x-20 -translate-y-20 vertical text-shadow-3 z-30 pointer-events-none"
+        className="absolute left-1/2 translate-x-20 -translate-y-20 vertical text-shadow-3 z-30"
         style={{ top: '30lvh', opacity: titleOpacity }}
       >
         式岐神社
       </motion.h1>
       <motion.div
-        className="absolute left-1/2 -translate-x-25 -translate-y-35 vertical text-shadow-2 z-30 pointer-events-none"
+        className="absolute left-1/2 -translate-x-25 -translate-y-35 vertical text-shadow-2 z-30"
         style={{ top: '50lvh', opacity: titleOpacity }}
       >
         <TextReveal
@@ -64,16 +62,8 @@ const TopSection = ({ isActive, isNeighbor }: Props) => {
       </motion.div>
 
       {/* 落ち葉 */}
-      {isActive && (
-        <div className="leaf">
-          <ul>
-            {Array.from({ length: 9 }).map((_, index) => (
-              <li key={index}></li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </>
+      {isActive && <ReafParticles />}
+    </div>
   );
 };
 

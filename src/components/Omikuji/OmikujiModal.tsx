@@ -2,18 +2,18 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { OmikujiResult } from '@/types/omikuji';
+import { OmikujiResponse } from '@/types/omikuji';
 import { Button } from '../shared/Button';
 
 type Props = {
-  omikujiResult: OmikujiResult;
+  omikujiResponse: OmikujiResponse;
   onClose: () => void;
 };
 
-export default function OmikujiModal({ omikujiResult, onClose }: Props) {
+export default function OmikujiModal({ omikujiResponse, onClose }: Props) {
   return (
     // 半透明のオーバーレイ
-    <div className="relative w-[420px] m-auto min-w-[420px] min-h-[800px] flex justify-center">
+    <div className="relative w-[420px] m-auto min-w-[420px] min-h-[900px] flex justify-center">
       {/* 閉じるボタン */}
       <Button
         variant="negative"
@@ -27,21 +27,31 @@ export default function OmikujiModal({ omikujiResult, onClose }: Props) {
       {/* 紙テクスチャのウィンドウ */}
       <Image
         className="absolute h-auto w-full pl-[10px] pr-[10px] pt-[30px]"
-        src="/images/omikuji/omikuji.png"
+        src="/images/omikuji/omikuji.webp"
         alt="おみくじ"
-        width={512}
-        height={885}
+        width={400}
+        height={800}
       />
-      <div className="relative p-14 text-black">
+      <div className="relative w-[400px] mt-8 pt-6 pl-12 pr-12 text-black flex flex-col">
         {/* ヘッダー */}
-        <h2 className="w-full h-10 text-center text-2xl font-bold">{omikujiResult.fortune}</h2>
+        <h2 className="w-full h-10 text-center text-3xl font-bold">
+          おみくじ【{omikujiResponse.type}】
+        </h2>
+        {/* ヘッダー */}
+        <h2
+          className="w-full h-14 text-center text-5xl font-bold mt-4"
+          style={{ color: '#D44439' }}
+        >
+          {omikujiResponse.fortune}
+        </h2>
         {/* 本文 */}
-        <p className="w-full h-16 vertical text-sm mb-4">{omikujiResult.msg}</p>
+        <p className="w-full h-42 vertical text-left text-[16px] flex justify-center items-center mt-5">
+          {omikujiResponse.msg}
+        </p>
         {/* 詳細リスト（スクロール可能領域） */}
-
-        <div dir="rtl" className="grid grid-cols-5 gap-x-2 gap-y-4 text-xs">
-          {omikujiResult.details.map((d) => (
-            <div key={d.type} className="flex items-start h-54 w-12 text-left">
+        <div dir="rtl" className="grid grid-cols-5 gap-x-3 gap-y-9 text-sm mt-7">
+          {omikujiResponse.details.map((d) => (
+            <div key={d.type} className="flex items-start h-45 w-12 text-left">
               <div className="vertical font-semibold">
                 {d.type}【{d.rank}】
               </div>

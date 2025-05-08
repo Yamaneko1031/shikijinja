@@ -4,8 +4,12 @@ export type OmikujiDetail = {
   element: string;
 };
 
-export type OmikujiResult = {
+export type OmikujiResponse = {
+  id: string;
+  type: string;
+  period: string;
   fortune: string;
   msg: string;
   details: OmikujiDetail[];
+  createdAt: string;
 };

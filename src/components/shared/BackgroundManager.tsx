@@ -42,7 +42,7 @@ export const BackgroundManager = forwardRef<BackgroundManagerHandle, Props>((pro
   const fadeDuration = 1.2 * 1000;
 
   useEffect(() => {
-    const timer = setTimeout(() => setDelayedLoad(true), 300);
+    const timer = setTimeout(() => setDelayedLoad(true), 200);
     return () => clearTimeout(timer);
   }, []);
 
