@@ -114,17 +114,6 @@ const EmaSection = ({ isActive, isNeighbor }: Props) => {
               className="text-xl md:text-2xl font-bold"
             />
           </div>
-          <div className="">
-            <Button
-              variant="positive"
-              onClick={() => {
-                setSelectedDeity(null);
-                setIsPosting(true);
-              }}
-            >
-              絵馬に願いを書く
-            </Button>
-          </div>
           <div className="absolute bottom-0 right-0 w-[200px]">
             <Image src="/images/ema/neko_ema.webp" alt="neko_ema" width={400} height={300} />
           </div>
@@ -149,6 +138,18 @@ const EmaSection = ({ isActive, isNeighbor }: Props) => {
             </div>
           )}
         </div>
+
+        <Button
+          variant="positive"
+          size="lg"
+          onClick={() => {
+            setSelectedDeity(null);
+            setIsPosting(true);
+          }}
+          className="w-full max-w-md"
+        >
+          絵馬に願いを書く
+        </Button>
       </div>
       {/* ------------------ modal -------------------- */}
       <Modal isOpen={isPosting}>

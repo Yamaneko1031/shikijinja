@@ -72,14 +72,14 @@ body {
 
 .btn-positive {
   @apply rounded;
-  background-color: #915107;
+  background-color: #358019;
   color: #ffffff;
-  box-shadow: 0 0 1px white;
+  border: 2px solid #275a15;
 }
 
 .btn-positive:hover {
   @media (hover: hover) {
-    background-color: #a95f09;
+    background-color: #37861b;
   }
 }
 
@@ -91,14 +91,13 @@ body {
 
 .btn-negative {
   @apply rounded;
-  background-color: #681604;
+  background-color: #8e2c16;
   color: #ffffff;
-  box-shadow: 0 0 1px white;
 }
 
 .btn-negative:hover {
   @media (hover: hover) {
-    background-color: #761904;
+    background-color: #a53319;
   }
 }
 
