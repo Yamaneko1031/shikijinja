@@ -2,12 +2,14 @@
 
 import React, { useRef, useState } from 'react';
 import TextReveal from '@/components/shared/TextReveal';
-import { OmikujiResponse } from '@/types/omikuji';
+import { OmikujiKey, OmikujiResponse } from '@/types/omikuji';
 import Modal from '../shared/Modal';
 import OmikujiModal from './OmikujiModal';
 import { apiFetch } from '@/lib/api';
 import OmikujiLoding from './OmikujiLoding';
 import { Button } from '../shared/Button';
+import Image from 'next/image';
+import OmikujiSelector from './OmikujiSelector';
 
 type Props = {
   isActive: boolean;
@@ -20,11 +22,11 @@ const OmikujiSection = ({ isActive, isNeighbor }: Props) => {
   const resultRef = useRef<OmikujiResponse | null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
-  const fetchOmikuji = async () => {
+  const fetchOmikuji = async (key: OmikujiKey) => {
     setLoading(true);
     try {
       const body = {
-        type: 'shikineko',
+        type: key,
         period: '今年',
       };
       const data = await apiFetch<OmikujiResponse>('/api/omikuji', {
@@ -56,8 +58,6 @@ const OmikujiSection = ({ isActive, isNeighbor }: Props) => {
       //   ],
       //   createdAt: '2025-05-07 12:00:00',
       // };
-      console.log('data', data);
-      console.log('data.details', data.details);
       resultRef.current = data;
       setIsOpen(true);
     } catch (err) {
@@ -69,15 +69,27 @@ const OmikujiSection = ({ isActive, isNeighbor }: Props) => {
 
   return (
     <>
-      <div className="relative top-[600px] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] p-10 bg-black/50 rounded-lg">
-        <TextReveal
-          text="おみくじを引けるコンテンツ"
-          delayPerChar={0.1}
-          className="text-2xl font-bold mb-4"
-        />
-        <Button variant="positive" onClick={fetchOmikuji}>
-          おみくじを引く
-        </Button>
+      <div className="relative max-w-2xl min-w-[320px] top-[600px] left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/50 rounded-lg flex flex-col gap-2 pt-4 pl-4 pb-4 pr-[180px]">
+        <div className="">
+          <TextReveal
+            text="おみくじを引いていくかにゃ？"
+            delayPerChar={0.1}
+            className="text-xl md:text-2xl font-bold"
+          />
+        </div>
+        <div className="">
+          <Button variant="positive" onClick={() => setIsOpen(true)}>
+            おみくじを引く
+          </Button>
+        </div>
+        <div className="absolute bottom-0 right-0 w-[200px]">
+          <Image
+            src="/images/omikuji/neko_omikuji.webp"
+            alt="neko_omikuji"
+            width={400}
+            height={300}
+          />
+        </div>
       </div>
 
       {/* おみくじ抽選中画面 */}
@@ -88,7 +100,20 @@ const OmikujiSection = ({ isActive, isNeighbor }: Props) => {
         <OmikujiLoding />
       </Modal>
 
-      {resultRef.current && (
+      {/* おみくじ選択画面 or おみくじ結果画面 */}
+      {resultRef.current === null ? (
+        <Modal isOpen={isOpen}>
+          <OmikujiSelector
+            onSelect={(key) => {
+              fetchOmikuji(key);
+              setIsOpen(false);
+            }}
+            onCancel={() => {
+              setIsOpen(false);
+            }}
+          />
+        </Modal>
+      ) : (
         <Modal
           isOpen={isOpen}
           className="absolute top-0 left-0 min-h-[100lvh] min-w-[100vw] bg-transparent overscroll-contain"

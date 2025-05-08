@@ -75,8 +75,8 @@ export const sections: Section[] = [
     component: OmikujiSection,
     scrollEffect: [
       { ratio: 0.0, posX: 40, posY: 50, zoom: 1.0 },
-      { ratio: 0.5, posX: 55, posY: 50, zoom: 1.1 },
-      { ratio: 0.7, posX: 55, posY: 50, zoom: 1.1 },
+      { ratio: 0.4, posX: 52, posY: 50, zoom: 1.2 },
+      { ratio: 0.6, posX: 52, posY: 50, zoom: 1.2 },
       { ratio: 1.0, posX: 60, posY: 50, zoom: 1.0 },
     ],
     sectionClass: 'relative w-full h-[1200px] items-center justify-center p-4',

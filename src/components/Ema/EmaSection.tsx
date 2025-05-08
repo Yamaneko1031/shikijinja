@@ -7,10 +7,10 @@ import DeitySelector from './EmaForm/DeitySelector';
 import EmaForm from './EmaForm/EmaForm';
 import EmaCarousel from './EmaCarousel';
 import { useEmaPosts, createDisplayPost } from '@/hooks/useEmaPosts';
-import { useAutoCarouselScroll } from '@/hooks/useAutoCarouselScroll';
 import { Button } from '../shared/Button';
 import Modal from '../shared/Modal';
 import { apiFetch } from '@/lib/api';
+import Image from 'next/image';
 
 type Props = {
   isActive: boolean;
@@ -30,14 +30,10 @@ const EmaSection = ({ isActive, isNeighbor }: Props) => {
   /* ----------------- refs ----------------- */
   const carouselRef = useRef<HTMLDivElement>(null);
 
-  /* ----------------- auto scroll hook ----- */
-  useAutoCarouselScroll(carouselRef, displayPosts, setDisplayPosts, isActive);
-
   /* ----------------- local UI state ------- */
   const [selectedDeity, setSelectedDeity] = useState<EmaImageKey | null>(null);
   const [isPosting, setIsPosting] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  // const [showPostedMessage, setShowPostedMessage] = useState(false);
 
   /* ----------------- helpers -------------- */
   const scrollToEmaSection = () => {
@@ -97,13 +93,6 @@ const EmaSection = ({ isActive, isNeighbor }: Props) => {
           prev.map((p) => (p.drawKey === newDisplayPost.drawKey ? { ...p, highlighted: false } : p))
         );
       }, getCssDuration('--ema-insert-duration'));
-
-      // 投稿完了メッセージ
-      // setShowPostedMessage(true);
-      // setTimeout(
-      //   () => setShowPostedMessage(false),
-      //   getCssDuration('--ema-animate-fade-in-out-duration')
-      // );
     } catch (err) {
       console.error('保存に失敗しました:', err);
       alert('投稿に失敗しました。再度お試しください。');
@@ -116,67 +105,72 @@ const EmaSection = ({ isActive, isNeighbor }: Props) => {
   /* ----------------- render -------------- */
   return (
     <>
-      <div className="relative top-[400px] w-full max-w-3xl mx-auto p-4 bg-black/50 bg-opacity-80 rounded shadow-lg">
-        <TextReveal text="みんなの願い事" delayPerChar={0.1} className="text-2xl font-bold" />
-
-        {/* {showPostedMessage && (
-          <div className="fixed inset-0 flex items-center justify-center z-100 pointer-events-none">
-            <div className="bg-black/60 text-white text-lg px-6 py-3 rounded-lg shadow-lg animate-fade-in-out">
-              絵馬を投稿しました！
-            </div>
+      <div className="relative top-[600px] max-w-2xl min-w-[320px] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center items-center gap-2">
+        <div className="relative w-full bg-black/50 rounded-lg flex flex-col gap-2 pt-4 pl-4 pb-4 pr-[200px]">
+          <div className="">
+            <TextReveal
+              text="願い事を書いていくにゃ！"
+              delayPerChar={0.1}
+              className="text-xl md:text-2xl font-bold"
+            />
           </div>
-        )} */}
-
-        {/* ------------------ Carousel ------------------ */}
-        <EmaCarousel
-          ref={carouselRef}
-          posts={displayPosts}
-          isLoading={isEmaLoading}
-          error={emaGetError}
-          backgroundImageUrl="url(/images/ema/bg_ema_view.webp)"
-        />
-
-        {/* ------------------ CTA ---------------------- */}
-        <Button
-          variant="positive"
-          onClick={() => {
-            setSelectedDeity(null);
-            setIsPosting(true);
-          }}
-          className="bg-yellow-500 text-black px-4 py-2 rounded hover:bg-yellow-600 mb-4"
-        >
-          絵馬に願いを書く
-        </Button>
-
-        {/* 画面全体にスピナーオーバーレイ */}
-        {isSaving && (
-          <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
-            <div className="loader text-shadow-2">絵馬を投稿中...</div>
-          </div>
-        )}
-
-        {/* ------------------ modal -------------------- */}
-        <Modal isOpen={isPosting}>
-          {selectedDeity === null ? (
-            <DeitySelector
-              onSelect={(key) => {
-                setSelectedDeity(key);
+          <div className="">
+            <Button
+              variant="positive"
+              onClick={() => {
+                setSelectedDeity(null);
                 setIsPosting(true);
               }}
-              onCancel={() => {
-                setSelectedDeity(null);
-                setIsPosting(false);
-              }}
-            />
-          ) : (
-            <EmaForm
-              initialDeityKey={selectedDeity}
-              onSubmit={handlePostWish}
-              onClose={() => setIsPosting(false)}
-            />
+            >
+              絵馬に願いを書く
+            </Button>
+          </div>
+          <div className="absolute bottom-0 right-0 w-[200px]">
+            <Image src="/images/ema/neko_ema.webp" alt="neko_ema" width={400} height={300} />
+          </div>
+        </div>
+
+        <div className="relative w-full">
+          {/* ------------------ Carousel ------------------ */}
+          <EmaCarousel
+            ref={carouselRef}
+            displayPosts={displayPosts}
+            isLoading={isEmaLoading}
+            error={emaGetError}
+            backgroundImageUrl="url(/images/ema/bg_ema_view.webp)"
+            setDisplayPosts={setDisplayPosts}
+            isActive={isActive}
+          />
+
+          {/* 画面全体にスピナーオーバーレイ */}
+          {isSaving && (
+            <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
+              <div className="loader text-shadow-2">絵馬を投稿中...</div>
+            </div>
           )}
-        </Modal>
+        </div>
       </div>
+      {/* ------------------ modal -------------------- */}
+      <Modal isOpen={isPosting}>
+        {selectedDeity === null ? (
+          <DeitySelector
+            onSelect={(key) => {
+              setSelectedDeity(key);
+              setIsPosting(true);
+            }}
+            onCancel={() => {
+              setSelectedDeity(null);
+              setIsPosting(false);
+            }}
+          />
+        ) : (
+          <EmaForm
+            initialDeityKey={selectedDeity}
+            onSubmit={handlePostWish}
+            onClose={() => setIsPosting(false)}
+          />
+        )}
+      </Modal>
     </>
   );
 };

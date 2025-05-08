@@ -7,7 +7,8 @@ export const useAutoCarouselScroll = (
   carouselRef: RefObject<HTMLDivElement | null>,
   displayPosts: DisplayPost[],
   setDisplayPosts: React.Dispatch<React.SetStateAction<DisplayPost[]>>,
-  isActive: boolean
+  isActive: boolean,
+  isAutoScrollStop: boolean
 ) => {
   const scrollShiftRef = useRef<number>(0);
   const scrollLeftPrev = useRef(0);
@@ -40,6 +41,7 @@ export const useAutoCarouselScroll = (
   // 自動スクロールループ
   useEffect(() => {
     if (!isActive) return;
+    if (isAutoScrollStop) return;
     const interval = setInterval(() => {
       const container = carouselRef.current;
       if (!container) return;
@@ -68,7 +70,7 @@ export const useAutoCarouselScroll = (
       scrollLeftPrev.current = container.scrollLeft;
     }, 60);
     return () => clearInterval(interval);
-  }, [isActive, carouselRef, isTouchingRef, setDisplayPosts]);
+  }, [isActive, isAutoScrollStop, carouselRef, isTouchingRef, setDisplayPosts]);
 
   // displayPosts 更新時のスクロール補正
   useLayoutEffect(() => {

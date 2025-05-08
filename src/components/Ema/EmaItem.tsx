@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { DisplayPost, TextBlock } from '@/types/ema';
 import { defaultTextRectSize } from '@/config/ema';
 import { fontList, fontColorList } from '@/config/fonts';
@@ -7,21 +7,16 @@ import { getCssDuration } from '@/utils/getCssDuration';
 
 interface EmaItemProps {
   post: DisplayPost;
+  setIsAutoScrollStop: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function EmaItem({ post }: EmaItemProps) {
+export default function EmaItem({ post, setIsAutoScrollStop }: EmaItemProps) {
   const [popupVisible, setPopupVisible] = useState(false);
   const [bouncing, setBouncing] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const bounceTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
-  useEffect(() => {
-    if (post.highlighted) {
-      handleClick();
-    }
-  }, [post.highlighted]);
-
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     const popupDuration = getCssDuration('--ema-popup-duration');
     const bounceDuration = getCssDuration('--ema-bounce-duration');
 
@@ -33,13 +28,23 @@ export default function EmaItem({ post }: EmaItemProps) {
     requestAnimationFrame(() => {
       // ポップアップ表示
       setPopupVisible(true);
-      timerRef.current = setTimeout(() => setPopupVisible(false), popupDuration);
+      setIsAutoScrollStop(true);
+      timerRef.current = setTimeout(() => {
+        setPopupVisible(false);
+        setIsAutoScrollStop(false);
+      }, popupDuration);
 
       // バウンス
       setBouncing(true);
       bounceTimerRef.current = setTimeout(() => setBouncing(false), bounceDuration);
     });
-  };
+  }, [setIsAutoScrollStop]);
+
+  useEffect(() => {
+    if (post.highlighted) {
+      handleClick();
+    }
+  }, [post.highlighted, handleClick]);
 
   return (
     <div
@@ -51,7 +56,7 @@ export default function EmaItem({ post }: EmaItemProps) {
         <div
           className={`absolute bottom-17 left-1/2 z-50 ${popupVisible ? 'animate-ema-popup' : ''}`}
         >
-          <div className="relative max-h-[170px] w-[200px] bg-black/70 backdrop-blur-sm text-[12px] text-white px-3 py-2 rounded-lg shadow-lg text-center whitespace-pre-wrap select-none">
+          <div className="relative max-h-[200px] w-[200px] bg-black/70 backdrop-blur-sm text-[14px] text-white px-3 py-2 rounded-lg shadow-lg text-center whitespace-pre-wrap select-none">
             {post.reply}
 
             {/* 吹き出しの出てる部分 */}

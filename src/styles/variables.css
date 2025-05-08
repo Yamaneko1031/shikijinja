@@ -1,7 +1,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --section-overlay-fade-duration: 1200ms;
+  --section-overlay-fade-duration: 2000ms;
   --ema-animate-fade-in-out-duration: 2000ms;
   --ema-insert-duration: 700ms;
   --ema-bounce-duration: 500ms;
