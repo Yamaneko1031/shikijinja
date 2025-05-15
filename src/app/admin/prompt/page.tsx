@@ -144,7 +144,13 @@ export default function AdminDeityPage() {
 
             const json = await res.json();
             if (res.ok && json.reply) {
-              alert(json.reply);
+              const resultTextArea = document.getElementById(
+                'resultTextArea'
+              ) as HTMLTextAreaElement;
+              if (resultTextArea) {
+                resultTextArea.value = json.reply;
+                resultTextArea.style.display = 'block';
+              }
               console.log(json);
             } else {
               alert(`エラー: ${json.error || 'お告げが届きませんでした'}`);
@@ -254,6 +260,13 @@ export default function AdminDeityPage() {
             テスト実行
           </button>
         </form>
+        <div id="result" className="mt-4 p-4 bg-gray-800 rounded-md">
+          <div className="text-sm font-medium text-gray-300 mb-2">結果</div>
+          <textarea
+            id="resultTextArea"
+            className="w-full h-32 p-2 bg-gray-700 text-white border border-gray-600 rounded-md"
+          />
+        </div>
       </section>
 
       <section>
