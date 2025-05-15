@@ -87,14 +87,59 @@ const OmikujiSection = ({ isActive, isNeighbor }: Props) => {
             />
           </div>
         </div>
-        <Button
-          variant="positive"
-          size="lg"
-          onClick={() => setIsOpen(true)}
-          className="w-full max-w-md"
-        >
-          おみくじを引く
-        </Button>
+        <div className="relative h-full w-full bg-black/50 rounded-lg flex flex-row gap-2 p-4">
+          <div className="w-full max-w-md">
+            <div className="text-md text-center font-bold">明日の運勢</div>
+            <Image
+              src="/images/omikuji/omikuji_box_nekobiyori.webp"
+              alt="omikuji_box_nekobiyori"
+              width={256}
+              height={256}
+            />
+            <Button
+              variant="positive"
+              size="lg"
+              onClick={() => setIsOpen(true)}
+              className="w-full max-w-md"
+            >
+              引く
+            </Button>
+          </div>
+          <div className="w-full max-w-md">
+            <div className="text-md text-center font-bold">今月の運勢</div>
+            <Image
+              src="/images/omikuji/omikuji_box_hitohira.webp"
+              alt="omikuji_box_hitohira"
+              width={256}
+              height={256}
+            />
+            <Button
+              variant="positive"
+              size="lg"
+              onClick={() => setIsOpen(true)}
+              className="w-full max-w-md"
+            >
+              引く
+            </Button>
+          </div>
+          <div className="w-full max-w-md">
+            <div className="text-md text-center font-bold">今年の運勢</div>
+            <Image
+              src="/images/omikuji/omikuji_box_simple.webp"
+              alt="omikuji_box_simple"
+              width={256}
+              height={256}
+            />
+            <Button
+              variant="positive"
+              size="lg"
+              onClick={() => setIsOpen(true)}
+              className="w-full max-w-md"
+            >
+              引く
+            </Button>
+          </div>
+        </div>
       </div>
 
       {/* おみくじ抽選中画面 */}
