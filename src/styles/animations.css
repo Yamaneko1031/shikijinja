@@ -144,3 +144,42 @@
 .animate-omikuji-shuffle {
   animation: omikuji-shuffle 3s infinite;
 }
+
+@keyframes inori-slide {
+  to {
+    background-position-x: -512px;
+  }
+}
+
+.omikuji-inori {
+  width: 256px;
+  height: 256px;
+  background: url('/images/omikuji/neko_inori.webp') 0 0 / auto 100%;
+  animation: inori-slide 1.5s steps(2) infinite;
+  will-change: background-position;
+}
+
+@keyframes dots {
+  0% {
+    content: '';
+  }
+  25% {
+    content: '．';
+  }
+  50% {
+    content: '．．';
+  }
+  75% {
+    content: '．．．';
+  }
+  100% {
+    content: '';
+  }
+}
+
+.omikuji-lot::after {
+  content: '';
+  display: inline-block;
+  animation: dots 2s steps(4) infinite;
+  white-space: pre;
+}

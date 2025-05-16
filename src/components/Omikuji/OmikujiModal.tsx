@@ -2,16 +2,18 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { OmikujiResponse } from '@/types/omikuji';
+import { OmikujiResponse, OmikujiType } from '@/types/omikuji';
 import { Button } from '../_shared/Button';
-import { omikujiList } from '@/config/omikuji';
+import { omikujiNameList } from '@/config/omikuji';
 
 type Props = {
   omikujiResponse: OmikujiResponse;
+  omikujiType: OmikujiType;
   onClose: () => void;
 };
 
-export default function OmikujiModal({ omikujiResponse, onClose }: Props) {
+export default function OmikujiModal({ omikujiResponse, omikujiType, onClose }: Props) {
+  const omikujiName = omikujiNameList[omikujiType];
   return (
     // 半透明のオーバーレイ
     <div className="relative w-[420px] m-auto min-w-[420px] min-h-[900px] flex justify-center">
@@ -34,14 +36,32 @@ export default function OmikujiModal({ omikujiResponse, onClose }: Props) {
         height={800}
       />
       <div className="relative w-[400px] mt-8 pt-6 pl-12 pr-12 text-black flex flex-col">
-        {/* ヘッダー */}
-        <h2 className="w-full h-10 text-center text-2xl font-bold">
-          おみくじ【{omikujiList[omikujiResponse.type as keyof typeof omikujiList].label}】
-        </h2>
-        {/* ヘッダー */}
+        {/* おみくじ名 */}
+        <h2 className="w-full h-10 text-center text-2xl font-bold">【{omikujiName}】</h2>
+        {/* 運勢表示 */}
         <div className="w-full h-14 mt-4 flex" style={{ color: '#D44439' }}>
           <div className="w-1/2 h-full text-2xl font-bold flex items-center justify-center">
-            {new Date(omikujiResponse.createdAt).getFullYear()}年 運勢
+            {(() => {
+              switch (omikujiType) {
+                case '今年':
+                  return `${new Date(omikujiResponse.createdAt).getFullYear()}年 運勢`;
+                case '今月':
+                  return `${new Date(omikujiResponse.createdAt).getMonth() + 1}月 運勢`;
+                case '明日':
+                  return (
+                    <div className="w-20">
+                      <Image
+                        src={`/images/omikuji/neko_stamp${omikujiResponse.fortuneNumber}.webp`}
+                        alt="neko_stamp"
+                        width={256}
+                        height={160}
+                      />
+                    </div>
+                  );
+                default:
+                  return '';
+              }
+            })()}
           </div>
           <div className="w-1/2 h-full text-5xl font-bold flex items-center justify-center">
             {omikujiResponse.fortune}
@@ -51,16 +71,25 @@ export default function OmikujiModal({ omikujiResponse, onClose }: Props) {
         <p className="w-full h-42 vertical font-otsutome text-left text-[16px] flex justify-center items-center mt-5">
           {omikujiResponse.msg}
         </p>
-        {/* 詳細リスト（スクロール可能領域） */}
-        <div dir="rtl" className="grid grid-cols-5 gap-x-3 gap-y-9 text-sm mt-7">
-          {omikujiResponse.details.map((d) => (
-            <div key={d.type} className="flex items-start h-45 w-12 text-left">
-              <div className="font-otsutome vertical align-top">
-                {d.type}【{d.rank}】
+        {/* 詳細リスト */}
+        <div className="grid grid-cols-5 gap-x-1 gap-y-9 text-sm mt-7">
+          {/* grid内を右上から配置したいので、配列をソートしてから表示 */}
+          {[...omikujiResponse.details]
+            .sort((a, b) => {
+              const order = [4, 3, 2, 1, 0, 9, 8, 7, 6, 5];
+              return (
+                order.indexOf(omikujiResponse.details.indexOf(a)) -
+                order.indexOf(omikujiResponse.details.indexOf(b))
+              );
+            })
+            .map((d) => (
+              <div key={d.type} className="flex justify-start items-start h-45 text-left">
+                <div className="font-otsutome w-[40px] mt-4 vertical align-top">{d.element}</div>
+                <div className="font-otsutome vertical align-top">
+                  {d.type}★{d.rank}
+                </div>
               </div>
-              <div className="font-otsutome mt-4 vertical align-top">{d.element}</div>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
     </div>

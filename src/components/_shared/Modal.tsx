@@ -50,7 +50,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, children, className }) => {
         // ref={dialogRef}
         className={
           className ||
-          'absolute top-[45lvh] left-1/2 translate-x-[-50%] translate-y-[-50%] bg-black/80 rounded-lg p-2 text-white overscroll-contain'
+          'absolute top-[45lvh] left-1/2 translate-x-[-50%] translate-y-[-50%] bg-black rounded-lg p-2 text-white overscroll-contain'
         }
       >
         {children}

@@ -38,11 +38,12 @@ model PromptTemplate {
 }
 
 model OmikujiResult {
-  id        String      @id @default(cuid())
-  type      String
-  period    String
-  fortune   String
-  msg       String
-  details   Json        @default("[]")
-  createdAt DateTime    @default(now())
+  id              String      @id @default(cuid())
+  job             String
+  period          String
+  fortuneNumber   Int
+  fortune         String
+  msg             String
+  details         Json        @default("[]")
+  createdAt       DateTime    @default(now())
 }

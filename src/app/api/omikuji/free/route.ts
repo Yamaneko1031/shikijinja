@@ -22,8 +22,9 @@ export async function POST(request: Request) {
     // OmikujiResult テーブルに texts, reply, emaImage をまとめて保存
     const omikujiResult = await prisma.omikujiResult.create({
       data: {
-        type: job,
+        job: job,
         period: period,
+        fortuneNumber: fortuneNumber,
         fortune: resultJson.fortune,
         msg: resultJson.msg,
         details: resultJson.details,

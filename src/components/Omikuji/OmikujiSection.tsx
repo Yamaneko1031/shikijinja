@@ -2,14 +2,19 @@
 
 import React, { useRef, useState } from 'react';
 import TextReveal from '@/components/_shared/TextReveal';
-import { OmikujiKey, OmikujiResponse } from '@/types/omikuji';
+import {
+  OmikujiResponse,
+  OmikujiType,
+  OmikujiRequest,
+  OmikujiFortuneResponse,
+} from '@/types/omikuji';
 import Modal from '../_shared/Modal';
 import OmikujiModal from './OmikujiModal';
 import { apiFetch } from '@/lib/api';
 import OmikujiLoding from './OmikujiLoding';
-import { Button } from '../_shared/Button';
 import Image from 'next/image';
 import OmikujiSelector from './OmikujiSelector';
+import OmikujiButton from './OmikujiButton';
 
 type Props = {
   isActive: boolean;
@@ -19,49 +24,70 @@ type Props = {
 const OmikujiSection = ({ isActive, isNeighbor }: Props) => {
   console.log('OmikujiSection', isActive, isNeighbor);
   const [loading, setLoading] = useState(false);
-  const resultRef = useRef<OmikujiResponse | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [isSelector, setIsSelector] = useState(false);
+  const resultRef = useRef<OmikujiResponse | null>(null);
+  const omikujiTypeRef = useRef<OmikujiType>('今年');
 
-  const fetchOmikuji = async (key: OmikujiKey) => {
-    setLoading(true);
+  const onClickOmikuji = (omikujiType: OmikujiType) => {
+    switch (omikujiType) {
+      case '今年':
+        setIsSelector(true);
+        break;
+      case '今月':
+        setIsSelector(true);
+        break;
+      case '明日':
+        fetchOmikujiJob(omikujiType, '');
+        break;
+    }
+    omikujiTypeRef.current = omikujiType;
+  };
+
+  const fetchOmikujiJob = async (omikujiType: OmikujiType, job: string) => {
     try {
-      const body = {
-        type: key,
-        period: '今年',
+      const bodyFortune = {
+        omikujiType: omikujiType,
       };
-      const data = await apiFetch<OmikujiResponse>('/api/omikuji', {
+      const dataFortune = await apiFetch<OmikujiFortuneResponse>('/api/omikuji/fortune', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(bodyFortune),
+      });
+
+      setIsSelector(false);
+      setLoading(true);
+
+      let apiUri = '';
+      switch (omikujiType) {
+        case '今年':
+        case '今月':
+          apiUri = '/api/omikuji/free';
+          break;
+        case '明日':
+          apiUri = '/api/omikuji/neko';
+          break;
+      }
+      const body: OmikujiRequest = {
+        job: job,
+        fortuneNumber: dataFortune.fortune,
+        period: omikujiType,
+      };
+      const dataFree = await apiFetch<OmikujiResponse>(apiUri, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(body),
       });
-      // await new Promise((resolve) => setTimeout(resolve, 5000));
-      // // モックデータを使用
-      // const data: OmikujiResponse = {
-      //   id: '1',
-      //   type: 'shikineko',
-      //   period: '今年',
-      //   fortune: '大吉',
-      //   msg: '今年はとても良い年になりそうです。新しいことに挑戦するのに適した時期です。',
-      //   details: [
-      //     { type: '仕事運', rank: 5, element: '新しいプロジェクトで成功が見込めます' },
-      //     { type: '金運', rank: 4, element: '堅実な投資が実を結びそうです' },
-      //     { type: '恋愛運', rank: 3, element: '穏やかな関係が続きそうです' },
-      //     { type: '健康運', rank: 4, element: '規則正しい生活で体調は良好です' },
-      //     { type: 'コードレビュー', rank: 5, element: '新しい知識を得るのに最適な時期です' },
-      //     { type: '旅行運', rank: 3, element: '短距離の旅行が吉です' },
-      //     { type: '芸術運', rank: 4, element: '創造性が高まる時期です' },
-      //     { type: '家族運', rank: 5, element: '家族との絆が深まります' },
-      //     { type: '友情運', rank: 4, element: '新しい出会いがありそうです' },
-      //     { type: '趣味運', rank: 3, element: '新しい趣味を始めるのに良い時期です' },
-      //   ],
-      //   createdAt: '2025-05-07 12:00:00',
-      // };
-      resultRef.current = data;
+      resultRef.current = dataFree;
+
       setIsOpen(true);
     } catch (err) {
       console.error(err);
+      alert('おみくじが出てきませんでした。再度お試しください。');
     } finally {
       setLoading(false);
     }
@@ -88,57 +114,27 @@ const OmikujiSection = ({ isActive, isNeighbor }: Props) => {
           </div>
         </div>
         <div className="relative h-full w-full bg-black/50 rounded-lg flex flex-row gap-2 p-4">
-          <div className="w-full max-w-md">
-            <div className="text-md text-center font-bold">明日の運勢</div>
-            <Image
-              src="/images/omikuji/omikuji_box_nekobiyori.webp"
-              alt="omikuji_box_nekobiyori"
-              width={256}
-              height={256}
-            />
-            <Button
-              variant="positive"
-              size="lg"
-              onClick={() => setIsOpen(true)}
-              className="w-full max-w-md"
-            >
-              引く
-            </Button>
-          </div>
-          <div className="w-full max-w-md">
-            <div className="text-md text-center font-bold">今月の運勢</div>
-            <Image
-              src="/images/omikuji/omikuji_box_hitohira.webp"
-              alt="omikuji_box_hitohira"
-              width={256}
-              height={256}
-            />
-            <Button
-              variant="positive"
-              size="lg"
-              onClick={() => setIsOpen(true)}
-              className="w-full max-w-md"
-            >
-              引く
-            </Button>
-          </div>
-          <div className="w-full max-w-md">
-            <div className="text-md text-center font-bold">今年の運勢</div>
-            <Image
-              src="/images/omikuji/omikuji_box_simple.webp"
-              alt="omikuji_box_simple"
-              width={256}
-              height={256}
-            />
-            <Button
-              variant="positive"
-              size="lg"
-              onClick={() => setIsOpen(true)}
-              className="w-full max-w-md"
-            >
-              引く
-            </Button>
-          </div>
+          <OmikujiButton
+            title="明日"
+            imagePath="/images/omikuji/omikuji_box_nekobiyori.webp"
+            imageAlt="omikuji_box_nekobiyori"
+            onClick={() => onClickOmikuji('明日')}
+            type="明日"
+          />
+          <OmikujiButton
+            title="今月"
+            imagePath="/images/omikuji/omikuji_box_hitohira.webp"
+            imageAlt="omikuji_box_hitohira"
+            onClick={() => onClickOmikuji('今月')}
+            type="今月"
+          />
+          <OmikujiButton
+            title="今年"
+            imagePath="/images/omikuji/omikuji_box_simple.webp"
+            imageAlt="omikuji_box_simple"
+            onClick={() => onClickOmikuji('今年')}
+            type="今年"
+          />
         </div>
       </div>
 
@@ -150,27 +146,32 @@ const OmikujiSection = ({ isActive, isNeighbor }: Props) => {
         <OmikujiLoding />
       </Modal>
 
-      {/* おみくじ選択画面 or おみくじ結果画面 */}
-      {resultRef.current === null ? (
-        <Modal isOpen={isOpen}>
-          <OmikujiSelector
-            onSelect={(key) => {
-              fetchOmikuji(key);
-              setIsOpen(false);
-            }}
-            onCancel={() => {
-              setIsOpen(false);
-            }}
-          />
-        </Modal>
-      ) : (
+      {/* 職業選択画面 */}
+      <Modal isOpen={isSelector}>
+        <OmikujiSelector
+          onSelect={(job) => {
+            fetchOmikujiJob(omikujiTypeRef.current, job);
+            // setIsSelector(false)はfetchOmikujiJob内で行っている
+          }}
+          onCancel={() => {
+            setIsSelector(false);
+          }}
+        />
+      </Modal>
+
+      {/* おみくじ結果画面 */}
+      {resultRef.current !== null && (
         <Modal
           isOpen={isOpen}
           className="absolute top-0 left-0 min-h-[100lvh] min-w-[100vw] bg-transparent overscroll-contain"
         >
           <OmikujiModal
             omikujiResponse={resultRef.current}
-            onClose={() => setIsOpen(false)}
+            omikujiType={omikujiTypeRef.current}
+            onClose={() => {
+              setIsOpen(false);
+              resultRef.current = null;
+            }}
           ></OmikujiModal>
         </Modal>
       )}
