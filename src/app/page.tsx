@@ -53,37 +53,40 @@ export default function App() {
   }, []);
 
   return (
-    <main className="relative z-10 overflow-x-hidden">
-      <BackgroundManager
-        ref={bgManagerRef}
-        initialUrl={sections[0].bgUrl}
-        allUrls={allUrls}
-        scrollEffect={sections[0].scrollEffect}
-      />
+    // 最背面をスクロール指定しておく
+    <div className="fixed inset-0 overflow-scroll">
+      <main className="relative z-10 overflow-x-hidden">
+        <BackgroundManager
+          ref={bgManagerRef}
+          initialUrl={sections[0].bgUrl}
+          allUrls={allUrls}
+          scrollEffect={sections[0].scrollEffect}
+        />
 
-      {sections.map(({ id, component: SectionComponent }, idx) => {
-        const isActive = id === state.activeId;
-        const isNeighbor = Math.abs(idx - activeIndex) === 1;
-        return (
-          <section
-            key={id}
-            ref={(el) => {
-              sectionRefs.current[id] = el;
-            }}
-            className={`${sections[idx].sectionClass}`}
-          >
-            {(isActive || isNeighbor) && SectionComponent && (
-              <SectionComponent isActive={isActive} isNeighbor={isNeighbor} />
-            )}
-          </section>
-        );
-      })}
+        {sections.map(({ id, component: SectionComponent }, idx) => {
+          const isActive = id === state.activeId;
+          const isNeighbor = Math.abs(idx - activeIndex) === 1;
+          return (
+            <section
+              key={id}
+              ref={(el) => {
+                sectionRefs.current[id] = el;
+              }}
+              className={`${sections[idx].sectionClass}`}
+            >
+              {(isActive || isNeighbor) && SectionComponent && (
+                <SectionComponent isActive={isActive} isNeighbor={isNeighbor} />
+              )}
+            </section>
+          );
+        })}
 
-      <SectionOverlayText text={currentSectionRef.current.name} />
+        <SectionOverlayText text={currentSectionRef.current.name} />
 
-      <DebugLogDialog />
+        <DebugLogDialog />
 
-      <div className="overlay-gradient" />
-    </main>
+        <div className="overlay-gradient" />
+      </main>
+    </div>
   );
 }
