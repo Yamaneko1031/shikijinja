@@ -55,38 +55,43 @@ export default function App() {
   return (
     // 最背面をスクロール指定しておく
     <div className="fixed inset-0 overflow-scroll">
-      <main className="relative z-10 overflow-x-hidden">
-        <BackgroundManager
-          ref={bgManagerRef}
-          initialUrl={sections[0].bgUrl}
-          allUrls={allUrls}
-          scrollEffect={sections[0].scrollEffect}
-        />
+      {/* 強制でスクロールバー背景にするためのダミー要素 */}
+      <div className="h-[101lvh]"></div>
 
-        {sections.map(({ id, component: SectionComponent }, idx) => {
-          const isActive = id === state.activeId;
-          const isNeighbor = Math.abs(idx - activeIndex) === 1;
-          return (
-            <section
-              key={id}
-              ref={(el) => {
-                sectionRefs.current[id] = el;
-              }}
-              className={`${sections[idx].sectionClass}`}
-            >
-              {(isActive || isNeighbor) && SectionComponent && (
-                <SectionComponent isActive={isActive} isNeighbor={isNeighbor} />
-              )}
-            </section>
-          );
-        })}
+      <div className="fixed inset-0 overflow-x-hidden">
+        <main className="relative z-10">
+          <BackgroundManager
+            ref={bgManagerRef}
+            initialUrl={sections[0].bgUrl}
+            allUrls={allUrls}
+            scrollEffect={sections[0].scrollEffect}
+          />
 
-        <SectionOverlayText text={currentSectionRef.current.name} />
+          {sections.map(({ id, component: SectionComponent }, idx) => {
+            const isActive = id === state.activeId;
+            const isNeighbor = Math.abs(idx - activeIndex) === 1;
+            return (
+              <section
+                key={id}
+                ref={(el) => {
+                  sectionRefs.current[id] = el;
+                }}
+                className={`${sections[idx].sectionClass}`}
+              >
+                {(isActive || isNeighbor) && SectionComponent && (
+                  <SectionComponent isActive={isActive} isNeighbor={isNeighbor} />
+                )}
+              </section>
+            );
+          })}
 
-        <DebugLogDialog />
+          <SectionOverlayText text={currentSectionRef.current.name} />
 
-        <div className="overlay-gradient" />
-      </main>
+          <DebugLogDialog />
+
+          <div className="overlay-gradient" />
+        </main>
+      </div>
     </div>
   );
 }
