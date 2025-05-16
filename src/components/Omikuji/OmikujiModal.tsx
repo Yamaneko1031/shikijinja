@@ -3,7 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { OmikujiResponse } from '@/types/omikuji';
-import { Button } from '../shared/Button';
+import { Button } from '../_shared/Button';
 import { omikujiList } from '@/config/omikuji';
 
 type Props = {

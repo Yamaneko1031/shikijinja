@@ -2,13 +2,13 @@
 import React, { useRef, useState } from 'react';
 import { EmaPost, DisplayPost, EmaImageKey, EmaPostResponse } from '@/types/ema';
 import { getCssDuration } from '@/utils/getCssDuration';
-import TextReveal from '@/components/shared/TextReveal';
+import TextReveal from '@/components/_shared/TextReveal';
 import DeitySelector from './EmaForm/DeitySelector';
 import EmaForm from './EmaForm/EmaForm';
 import EmaCarousel from './EmaCarousel';
 import { useEmaPosts, createDisplayPost } from '@/hooks/useEmaPosts';
-import { Button } from '../shared/Button';
-import Modal from '../shared/Modal';
+import { Button } from '../_shared/Button';
+import Modal from '../_shared/Modal';
 import { apiFetch } from '@/lib/api';
 import Image from 'next/image';
 

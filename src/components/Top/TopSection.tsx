@@ -3,8 +3,8 @@
 import React from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
-import TextReveal from '../shared/TextReveal';
-import ReafParticles from '../shared/ReafParticles';
+import TextReveal from '../_shared/TextReveal';
+import ReafParticles from '../_shared/ReafParticles';
 
 type Props = {
   isActive: boolean;

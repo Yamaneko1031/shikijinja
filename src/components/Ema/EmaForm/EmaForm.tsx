@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { TextBlock, EmaPost, EmaImageKey } from '@/types/ema';
 import { emaList } from '@/config/ema';
-import { Button } from '../../shared/Button';
+import { Button } from '../../_shared/Button';
 import EmaFormHeader from './EmaFormHeader';
 import EmaFormEditor from './EmaFormEditor';
 

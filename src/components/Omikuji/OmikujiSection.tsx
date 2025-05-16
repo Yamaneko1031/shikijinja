@@ -1,13 +1,13 @@
 'use client';
 
 import React, { useRef, useState } from 'react';
-import TextReveal from '@/components/shared/TextReveal';
+import TextReveal from '@/components/_shared/TextReveal';
 import { OmikujiKey, OmikujiResponse } from '@/types/omikuji';
-import Modal from '../shared/Modal';
+import Modal from '../_shared/Modal';
 import OmikujiModal from './OmikujiModal';
 import { apiFetch } from '@/lib/api';
 import OmikujiLoding from './OmikujiLoding';
-import { Button } from '../shared/Button';
+import { Button } from '../_shared/Button';
 import Image from 'next/image';
 import OmikujiSelector from './OmikujiSelector';
 

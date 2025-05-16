@@ -3,7 +3,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { Button } from '@/components/shared/Button';
+import { Button } from '@/components/_shared/Button';
 import { OmikujiKey } from '@/types/omikuji';
 import { omikujiList } from '@/config/omikuji';
 

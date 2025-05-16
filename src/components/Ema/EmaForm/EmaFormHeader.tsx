@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
-import { Button } from '@/components/shared/Button';
-import TextReveal from '@/components/shared/TextReveal';
+import { Button } from '@/components/_shared/Button';
+import TextReveal from '@/components/_shared/TextReveal';
 import { emaList } from '@/config/ema';
 import { EmaImageKey } from '@/types/ema';
 

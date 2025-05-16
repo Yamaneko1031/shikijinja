@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import TextReveal from '@/components/shared/TextReveal';
+import TextReveal from '@/components/_shared/TextReveal';
 
 type Props = {
   isActive: boolean;

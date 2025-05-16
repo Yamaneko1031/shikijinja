@@ -1,10 +1,10 @@
 'use client';
 
 import { useRef, useEffect, useState } from 'react';
-import { BackgroundManager, BackgroundManagerHandle } from '@/components/shared/BackgroundManager';
+import { BackgroundManager, BackgroundManagerHandle } from '@/components/_shared/BackgroundManager';
 import { Section, sections } from '@/config/sections';
-import DebugLogDialog from '@/components/shared/DebugLogDialog';
-import SectionOverlayText from '@/components/shared/SctionOverlayText';
+import DebugLogDialog from '@/components/_shared/DebugLogDialog';
+import SectionOverlayText from '@/components/_shared/SctionOverlayText';
 
 export default function App() {
   console.log('App');

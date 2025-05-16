@@ -5,7 +5,7 @@ import React from 'react';
 import Image from 'next/image';
 import { EmaImageKey } from '@/types/ema';
 import { emaList } from '@/config/ema';
-import { Button } from '@/components/shared/Button';
+import { Button } from '@/components/_shared/Button';
 interface DeitySelectorProps {
   onSelect: (key: EmaImageKey) => void;
   onCancel: () => void;

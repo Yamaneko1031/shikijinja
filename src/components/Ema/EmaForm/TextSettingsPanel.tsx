@@ -9,7 +9,7 @@ import {
   textWidthRange,
   textHeightRange,
 } from '@/config/ema';
-import { Button } from '../../shared/Button';
+import { Button } from '../../_shared/Button';
 
 export interface TextSettingsPanelProps {
   textBlock: TextBlock;
