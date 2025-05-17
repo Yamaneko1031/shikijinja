@@ -87,14 +87,25 @@ const OmikujiSection = ({ isActive, isNeighbor }: Props) => {
       const decoder = new TextDecoder();
       let text = '';
 
-      // ① Stream API が使えるブラウザ
       if (res.body) {
-        for await (const chunk of res.body) {
-          text += decoder.decode(chunk, { stream: true });
-          console.log('text', text);
+        // ネイティブ async-iterable 対応ブラウザ
+        if (res.body[Symbol.asyncIterator]) {
+          for await (const chunk of res.body) {
+            text += decoder.decode(chunk, { stream: true });
+          }
+        }
+        // asyncIterator 未対応ブラウザ
+        else if (res.body.getReader) {
+          const reader = res.body.getReader();
+          while (true) {
+            const { value, done } = await reader.read();
+            if (done) break;
+            text += decoder.decode(value);
+          }
         }
       } else {
-        text = await res.text(); // 一括受信
+        // そもそもストリーム非対応（古い iOS など）
+        text = await res.text();
       }
 
       const omikujiResponse = {
