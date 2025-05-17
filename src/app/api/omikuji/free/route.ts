@@ -59,6 +59,6 @@ export async function POST(request: Request) {
     });
   } catch (err) {
     console.error('POST /api/omikuji error', err);
-    return json({ error: 'おみくじ生成に失敗しました' }, { status: 500 });
+    return json({ error: 'おみくじ生成に失敗しました' + err }, { status: 500 });
   }
 }

@@ -110,7 +110,7 @@ const OmikujiSection = ({ isActive, isNeighbor }: Props) => {
       setIsOpen(true);
     } catch (err) {
       console.error(err);
-      alert('おみくじが出てきませんでした。再度お試しください。');
+      alert('おみくじが出てきませんでした。再度お試しください。' + err);
     } finally {
       setLoading(false);
     }
