@@ -5,7 +5,6 @@ export type OmikujiDetail = {
 };
 
 export type OmikujiResponse = {
-  id: string;
   job: string;
   period: string;
   fortuneNumber: number;

@@ -1,17 +1,39 @@
 export interface ErrorResponse {
   error: string;
 }
-
-// 汎用型付きフェッチヘルパー
+// ① JSON をパースして返す
 export async function apiFetch<T extends object>(
   input: RequestInfo,
-  init?: RequestInit
-): Promise<T> {
+  init?: RequestInit & { raw?: false }
+): Promise<T>;
+
+// ② Response をそのまま返す（ストリーム用）
+export async function apiFetch(
+  input: RequestInfo,
+  init: RequestInit & { raw: true }
+): Promise<Response>;
+
+// 汎用型付きフェッチヘルパー
+export async function apiFetch(
+  input: RequestInfo,
+  init: RequestInit & { raw?: boolean } = {}
+): Promise<unknown> {
   const res = await fetch(input, {
     headers: { 'Content-Type': 'application/json' },
     ...init,
   });
-  const json = (await res.json()) as T | ErrorResponse;
+
+  // raw=true なら Response そのまま返す
+  if (init.raw) {
+    if (!res.ok) {
+      // Body をテキストで読んでエラーメッセージに使う
+      const msg = await res.text();
+      throw new Error(msg || res.statusText);
+    }
+    return res;
+  }
+
+  const json = (await res.json()) as ErrorResponse | object;
 
   if (!res.ok) {
     // JSON に error プロパティがあればそれを使い、
@@ -23,5 +45,5 @@ export async function apiFetch<T extends object>(
     throw new Error(msg);
   }
 
-  return json as T;
+  return json;
 }

@@ -75,14 +75,37 @@ const OmikujiSection = ({ isActive, isNeighbor }: Props) => {
         fortuneNumber: dataFortune.fortune,
         period: omikujiType,
       };
-      const dataFree = await apiFetch<OmikujiResponse>(apiUri, {
+
+      const res: Response = await apiFetch(apiUri, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(body),
+        raw: true,
       });
-      resultRef.current = dataFree;
+      const decoder = new TextDecoder();
+      let text = '';
+
+      // ① Stream API が使えるブラウザ
+      if (res.body) {
+        for await (const chunk of res.body) {
+          text += decoder.decode(chunk, { stream: true });
+          console.log('text', text);
+        }
+      } else {
+        text = await res.text(); // 一括受信
+      }
+
+      const omikujiResponse = {
+        ...JSON.parse(text),
+        job: job,
+        period: omikujiType,
+        fortuneNumber: dataFortune.fortune,
+        createdAt: new Date().toISOString(),
+      } as OmikujiResponse;
+
+      resultRef.current = omikujiResponse;
 
       setIsOpen(true);
     } catch (err) {

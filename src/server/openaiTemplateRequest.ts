@@ -29,3 +29,24 @@ export async function openaiTemplateRequest(label: string, user: string): Promis
   });
   return resp.choices?.[0]?.message?.content?.trim() ?? '';
 }
+
+export async function openaiTemplateRequestStream(label: string, user: string) {
+  // プロンプトテンプレートを取得
+  const tpl = await prisma.promptTemplate.findFirst({ where: { label } });
+  if (!tpl) throw new Error('template not found');
+
+  const fullSystem = tpl.instructions
+    ? `${tpl.systemPrompt}\n\n【追加指示】\n${tpl.instructions}`
+    : tpl.systemPrompt;
+
+  // ★ stream: true
+  return openai.chat.completions.create({
+    model: tpl.model,
+    stream: true,
+    temperature: tpl.temperature,
+    messages: [
+      { role: 'system', content: fullSystem },
+      { role: 'user', content: tpl.userPrompt + user },
+    ],
+  });
+}
