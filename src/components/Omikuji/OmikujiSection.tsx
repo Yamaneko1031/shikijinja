@@ -88,24 +88,22 @@ const OmikujiSection = ({ isActive, isNeighbor }: Props) => {
       let text = '';
 
       if (res.body) {
-        // ネイティブ async-iterable 対応ブラウザ
         if (res.body[Symbol.asyncIterator]) {
           for await (const chunk of res.body) {
-            text += decoder.decode(chunk, { stream: true });
+            text += decoder.decode(chunk, { stream: true }); // 部分デコード
           }
-        }
-        // asyncIterator 未対応ブラウザ
-        else if (res.body.getReader) {
+        } else if (res.body.getReader) {
           const reader = res.body.getReader();
           while (true) {
             const { value, done } = await reader.read();
             if (done) break;
-            text += decoder.decode(value);
+            text += decoder.decode(value, { stream: true });
           }
         }
+        /* ★ ここで “残り” を flush */
+        text += decoder.decode(); // stream:false が既定 → 残バッファを全て取り出す
       } else {
-        // そもそもストリーム非対応（古い iOS など）
-        text = await res.text();
+        text = await res.text(); // フォールバック
       }
 
       const omikujiResponse = {
