@@ -1,4 +1,5 @@
-import React, { useLayoutEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 
 interface ModalProps {
   isOpen: boolean;
@@ -7,56 +8,40 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, children, className }) => {
-  const dialogRef = React.useRef<HTMLDialogElement>(null);
+  // body 直下に挿入するコンテナ
+  const portalRoot = useRef<HTMLDivElement | null>(null);
 
-  useLayoutEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
+  if (!portalRoot.current && typeof document !== 'undefined') {
+    portalRoot.current = document.createElement('div');
+  }
 
-    // const no_scroll = (e: Event) => {
-    //   e.preventDefault();
-    // };
-
-    if (isOpen) {
-      // document.body.addEventListener('wheel', no_scroll, { passive: false });
-      // document.body.addEventListener('touchmove', no_scroll, { passive: false });
-      dialog.showModal();
-      // 次フレームでスクロール位置を中央に
-      requestAnimationFrame(() => {
-        // dialog 自身をスクロールコンテナにしている場合
-        const scrollContainer = dialog;
-        // const centerH = (scrollContainer.scrollHeight - scrollContainer.clientHeight) / 2;
-        // scrollContainer.scrollTop = centerH;
-        const centerW = (scrollContainer.scrollWidth - scrollContainer.clientWidth) / 2;
-        scrollContainer.scrollLeft = centerW;
-      });
-    }
-
+  // mount / unmount で body に追加・削除
+  useEffect(() => {
+    const el = portalRoot.current!;
+    document.body.appendChild(el);
     return () => {
-      if (dialog) {
-        // document.body.removeEventListener('wheel', no_scroll);
-        // document.body.removeEventListener('touchmove', no_scroll);
-        dialog.close();
-      }
+      document.body.removeChild(el);
     };
-  }, [isOpen]);
+  }, []);
 
-  return isOpen ? (
-    <div className="fixed inset-0 bg-black/50 overflow-scroll overscroll-contain z-50">
-      {/* 強制でスクロールバー背景にするためのダミー要素 */}
-      <div className="h-[calc(100%+1px)]"></div>
-      {/* <div className="absolute top-0 left-[200px] h-[101lvh] w-[100px] bg-white"></div> */}
+  // モーダルの中身（本来描画したい要素）
+  const modalContent = isOpen ? (
+    <div className="fixed inset-0 z-2 bg-black/50 overflow-scroll overscroll-contain">
+      <div className="h-[calc(100%+1px)]" />
       <div
-        // ref={dialogRef}
         className={
-          className ||
-          'absolute top-[45lvh] left-1/2 translate-x-[-50%] translate-y-[-50%] bg-black/90 rounded-lg p-2 text-white overscroll-contain'
+          className ??
+          'absolute top-[45lvh] left-1/2 -translate-x-1/2 -translate-y-1/2 ' +
+            'bg-black/90 rounded-lg p-2 text-white overscroll-contain'
         }
       >
         {children}
       </div>
     </div>
   ) : null;
+
+  // createPortal で body 直下の div に描画
+  return portalRoot.current ? createPortal(modalContent, portalRoot.current) : null;
 };
 
 export default React.memo(Modal);

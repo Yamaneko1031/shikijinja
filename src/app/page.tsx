@@ -53,7 +53,7 @@ export default function App() {
   }, []);
 
   return (
-    <main className="relative z-10 overflow-x-hidden">
+    <main className="relative overflow-x-hidden z-0">
       <BackgroundManager
         ref={bgManagerRef}
         initialUrl={sections[0].bgUrl}
