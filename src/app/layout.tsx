@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { DebugLogProvider } from '@/hooks/useDebugLog';
 import '../styles/globals.css';
+import Header from '@/components/_shared/Header';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -15,6 +16,7 @@ export default function RootLayout({
   return (
     <html lang="ja" suppressHydrationWarning>
       <body className="font-default antialiased">
+        <Header />
         <DebugLogProvider>{children}</DebugLogProvider>
       </body>
     </html>
