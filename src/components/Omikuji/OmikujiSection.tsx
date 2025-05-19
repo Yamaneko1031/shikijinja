@@ -171,10 +171,7 @@ const OmikujiSection = ({ isActive, isNeighbor }: Props) => {
       </div>
 
       {/* おみくじ抽選中画面 */}
-      <Modal
-        isOpen={loading}
-        className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black/50"
-      >
+      <Modal isOpen={loading} className="relative min-w-[340px] w-[500px] mx-2 overscroll-contain">
         <OmikujiLoding />
       </Modal>
 
