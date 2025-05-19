@@ -11,7 +11,7 @@ export async function POST(request: Request) {
 
     const user = `\n運勢：${fortuneNumber}\n対象期間：${period}`;
     // 1) OpenAI から AsyncIterable ストリーム取得
-    const aiStream = await openaiTemplateRequestStream('omikuji_free', user);
+    const aiStream = await openaiTemplateRequestStream('omikuji_neko', user);
 
     // 2) 文字列を貯めながらブラウザへ送る
     let full = '';
