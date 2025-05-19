@@ -21,7 +21,7 @@ const EmaFormHeader: React.FC<EmaFormHeaderProps> = ({
   return (
     <div className="relative flex flex-col items-center w-full">
       {/* 神様の説明 */}
-      <div className="relative flex items-center gap-2 bg-white/20 rounded-sm p-2 h-[90px] w-full">
+      <div className="relative flex items-center gap-2 bg-white/20 rounded-sm p-2 h-[74px] w-full">
         <Button
           variant="subNatural"
           size="sm"
@@ -30,15 +30,17 @@ const EmaFormHeader: React.FC<EmaFormHeaderProps> = ({
         >
           ←
         </Button>
-        <div className="flex items-center gap-3 flex-1 overflow-hidden">
-          <div className="w-[80px] h-[80px] rounded-md overflow-hidden">
-            <Image
-              src={`/images/illust/${emaList[deityKey].illustname}`}
-              alt={emaList[deityKey].label}
-              width={80}
-              height={80}
-              className="object-cover"
-            />
+        <div className="flex items-center gap-4 flex-1 overflow-hidden">
+          <div className="w-1/4 min-w-[64px] flex justify-center">
+            <div className="w-[64px] h-[64px] rounded-md overflow-hidden">
+              <Image
+                src={`/images/illust/${emaList[deityKey].illustname}`}
+                alt={emaList[deityKey].label}
+                width={80}
+                height={80}
+                className="object-cover"
+              />
+            </div>
           </div>
           <div className="flex-1 overflow-hidden">
             <div className="text-white">【{emaList[deityKey].label}】</div>

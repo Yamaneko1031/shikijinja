@@ -68,7 +68,11 @@ export default function OmikujiModal({ omikujiResponse, omikujiType, onClose }: 
           </div>
         </div>
         {/* 本文 */}
-        <p className="w-full h-42 vertical font-otsutome text-left text-[16px] flex justify-center items-center mt-5">
+        <p
+          className={`w-full h-42 vertical font-otsutome text-left flex justify-center items-center mt-5 ${
+            omikujiResponse.msg.length > 130 ? 'text-[14px]' : 'text-[16px]'
+          }`}
+        >
           {omikujiResponse.msg}
         </p>
         {/* 詳細リスト */}

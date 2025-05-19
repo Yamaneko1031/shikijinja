@@ -41,45 +41,43 @@ export default function EmaForm({ initialDeityKey, onSubmit, onClose }: EmaFormP
 
   return (
     <div>
-      <div className="relative flex flex-col items-center">
-        {/* 神様選択、説明 */}
-        <EmaFormHeader
-          deityKey={deityKey}
-          setDeityKey={setDeityKey}
-          prevKey={prevKey}
-          nextKey={nextKey}
-        />
+      {/* 神様選択、説明 */}
+      <EmaFormHeader
+        deityKey={deityKey}
+        setDeityKey={setDeityKey}
+        prevKey={prevKey}
+        nextKey={nextKey}
+      />
 
-        {/* テキスト編集関係 */}
-        <EmaFormEditor
-          deityKey={deityKey}
-          textsRef={textsRef}
-          setIsOverFlowError={setIsOverFlowError}
-          setIsMainTextEmptyError={setIsMainTextEmptyError}
-        />
+      {/* テキスト編集関係 */}
+      <EmaFormEditor
+        deityKey={deityKey}
+        textsRef={textsRef}
+        setIsOverFlowError={setIsOverFlowError}
+        setIsMainTextEmptyError={setIsMainTextEmptyError}
+      />
 
-        {/* ダイアログ下部のボタン */}
-        <div className="flex w-full flex-col items-center">
-          <div className="min-h-6 text-sm text-red-500 flex items-center">
-            {isMainTextEmptyError
-              ? '本文が入力されていません。'
-              : isOverFlowError
-                ? '文字が絵馬からはみ出しています。'
-                : ''}
-          </div>
-          <div className="flex gap-2">
-            <Button onClick={onClose} variant="negative" size="md">
-              やめる
-            </Button>
-            <Button
-              onClick={() => handleSubmit(textsRef.current)}
-              variant="positive"
-              size="md"
-              disabled={isOverFlowError || isMainTextEmptyError}
-            >
-              投稿する
-            </Button>
-          </div>
+      {/* ダイアログ下部のボタン */}
+      <div className="flex w-full flex-col items-center">
+        <div className="min-h-6 text-sm text-red-500 flex items-center">
+          {isMainTextEmptyError
+            ? '本文が入力されていません。'
+            : isOverFlowError
+              ? '文字が絵馬からはみ出しています。'
+              : ''}
+        </div>
+        <div className="flex gap-2">
+          <Button onClick={onClose} variant="negative" size="md">
+            やめる
+          </Button>
+          <Button
+            onClick={() => handleSubmit(textsRef.current)}
+            variant="positive"
+            size="md"
+            disabled={isOverFlowError || isMainTextEmptyError}
+          >
+            投稿する
+          </Button>
         </div>
       </div>
     </div>

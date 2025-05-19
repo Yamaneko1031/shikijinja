@@ -46,7 +46,7 @@ export const Button: React.FC<ButtonProps> = ({
   return (
     <button
       className={`${baseStyles} ${variantStyles[variant as ButtonVariant]} ${sizeStyles[size as ButtonSize]} ${className}`}
-      style={{ minWidth: '36px', minHeight: '36px' }} // 最小サイズを指定
+      style={{ minWidth: '32px', minHeight: '32px' }} // 最小サイズを指定
       {...props}
     >
       {children}

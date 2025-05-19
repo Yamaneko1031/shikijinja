@@ -4,6 +4,7 @@ import { EmaImageKey, TextBlock } from '@/types/ema';
 import { FontKey, FontColorKey } from '@/types/fonts';
 import EmaPreview from './EmaPreview';
 import TextSettingsPanel from './TextSettingsPanel';
+import { fontList } from '@/config/fonts';
 
 interface EmaFormEditorProps {
   deityKey: EmaImageKey;
@@ -186,8 +187,33 @@ const EmaFormEditor: React.FC<EmaFormEditorProps> = ({
     <div>
       {/* プレビューエリア */}
       <div className="relative w-full">
-        <div className="flex">
-          <div className="relative border border-white rounded-sm flex flex-col items-center overflow-hidden">
+        <div className="flex gap-4">
+          <div className="relative w-full min-w-[220px] border border-white rounded-sm flex flex-col items-center overflow-hidden">
+            {/* フォント選択 */}
+            <div className="absolute top-2 left-2 z-1 flex justify-between gap-2 w-full">
+              <select
+                value={texts[currentTextIndex].font}
+                onChange={(e) => updateCurrentText({ font: e.target.value as TextBlock['font'] })}
+                className="max-w-[170px] w-full h-8 bg-black border border-white rounded px-1 py-1 text-[14px]"
+              >
+                {fontList.map((f) => (
+                  <option key={f.key} value={f.key}>
+                    {f.label}
+                  </option>
+                ))}
+              </select>
+              {/* 縦書き切替 */}
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={texts[currentTextIndex].isVertical}
+                  onChange={(e) => updateCurrentText({ isVertical: e.target.checked })}
+                  className="w-5 h-5 text-black rounded"
+                />
+                <span className="text-sm text-left w-[60px]">縦書き</span>
+              </div>
+            </div>
+
             <div className="-mt-10">
               {/* プレビュー & テキスト入力 */}
               <EmaPreview
@@ -203,7 +229,10 @@ const EmaFormEditor: React.FC<EmaFormEditorProps> = ({
                 placeholders={[emaList[deityKey].sampleText, emaList[deityKey].label]}
               />
             </div>
-            <div>
+            {/* <span className="text-[10px] mt-[-6px] text-gray-300">
+              文字の位置は自由に動かせるよ
+            </span> */}
+            <div className="w-full p-2 mt-[-10px]">
               {/* 対象テキスト選択 */}
               <nav className="flex">
                 {['本文', 'ニックネーム'].map((label, idx) => {
@@ -229,14 +258,13 @@ const EmaFormEditor: React.FC<EmaFormEditorProps> = ({
                 onChange={(e) => updateCurrentText({ text: e.target.value })}
                 maxLength={40}
                 rows={3}
-                className="w-[200px] p-2 bg-black/70 rounded-sm text-[16px] text-white resize-none"
+                autoFocus
+                className="relative w-full p-2 bg-black/90 rounded-sm text-[16px] text-white resize-none"
                 placeholder={currentTextIndex === 0 ? '願い事を入力...' : 'ニックネームを入力...'}
               />
             </div>
           </div>
-          <div>
-            <TextSettingsPanel textBlock={texts[currentTextIndex]} onChange={updateCurrentText} />
-          </div>
+          <TextSettingsPanel textBlock={texts[currentTextIndex]} onChange={updateCurrentText} />
         </div>
       </div>
     </div>

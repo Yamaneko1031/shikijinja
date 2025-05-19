@@ -14,8 +14,8 @@ export default function OmikujiSelector({ onSelect, onCancel }: OmikujiSelectorP
   const [customJobInput, setCustomJobInput] = useState('');
 
   return (
-    <div className="flex flex-col gap-4 items-center w-[340px] p-2">
-      <h2 className="text-xl font-bold">職業を選択してください</h2>
+    <div className="flex flex-col items-center gap-4">
+      <h2 className="text-xl font-bold">職業を教えてください</h2>
       <div className="w-full flex flex-col gap-4">
         {omikujiDefaultJob.map((job) => (
           <Button
