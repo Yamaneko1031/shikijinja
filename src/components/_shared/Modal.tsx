@@ -31,7 +31,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, children, className }) => {
       <div
         className={
           className ??
-          'relative top-[-5lvh] min-w-[340px] w-[500px] bg-black/90 rounded-lg p-4 mx-2 text-white overscroll-contain'
+          'relative min-w-[340px] w-[500px] bg-black/90 rounded-lg p-4 mx-2 text-white overscroll-contain'
         }
       >
         {children}
