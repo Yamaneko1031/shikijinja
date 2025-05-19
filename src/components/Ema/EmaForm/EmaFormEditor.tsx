@@ -47,6 +47,8 @@ const EmaFormEditor: React.FC<EmaFormEditorProps> = ({
   const draggingRef = useRef<number | false>(false);
   const startPosRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
 
+  const scrollY = document.documentElement.scrollTop;
+
   // テキスト更新 helper
   const updateCurrentText = (patch: Partial<TextBlock> | ((prev: TextBlock) => TextBlock)) => {
     setTexts((prev) => {
@@ -256,6 +258,9 @@ const EmaFormEditor: React.FC<EmaFormEditorProps> = ({
               <textarea
                 value={texts[currentTextIndex].text}
                 onChange={(e) => updateCurrentText({ text: e.target.value })}
+                onBlur={() => {
+                  document.documentElement.scrollTop = scrollY;
+                }}
                 maxLength={40}
                 rows={3}
                 autoFocus
