@@ -19,10 +19,16 @@ const Modal: React.FC<ModalProps> = ({ isOpen, children, className }) => {
   useEffect(() => {
     const el = portalRoot.current!;
     document.body.appendChild(el);
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
     return () => {
       document.body.removeChild(el);
+      document.body.style.overflow = 'auto';
     };
-  }, []);
+  }, [isOpen]);
 
   // モーダルの中身（本来描画したい要素）
   const modalContent = isOpen ? (
