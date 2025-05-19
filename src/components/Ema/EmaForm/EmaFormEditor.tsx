@@ -259,6 +259,7 @@ const EmaFormEditor: React.FC<EmaFormEditorProps> = ({
                 value={texts[currentTextIndex].text}
                 onChange={(e) => updateCurrentText({ text: e.target.value })}
                 onBlur={() => {
+                  alert(document.documentElement.scrollTop + ':' + scrollY);
                   document.documentElement.scrollTop = scrollY;
                 }}
                 maxLength={40}
