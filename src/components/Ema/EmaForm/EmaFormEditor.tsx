@@ -190,11 +190,11 @@ const EmaFormEditor: React.FC<EmaFormEditorProps> = ({
         <div className="flex gap-4">
           <div className="relative w-full min-w-[220px] border border-white rounded-sm flex flex-col items-center overflow-hidden">
             {/* フォント選択 */}
-            <div className="absolute top-2 left-2 z-1 flex justify-between gap-2 w-full">
+            <div className="absolute top-2 left-2 z-1 flex justify-between gap-2 w-full select-none">
               <select
                 value={texts[currentTextIndex].font}
                 onChange={(e) => updateCurrentText({ font: e.target.value as TextBlock['font'] })}
-                className="max-w-[170px] w-full h-8 bg-black border border-white rounded px-1 py-1 text-[14px]"
+                className="max-w-[170px] w-full h-8 bg-black border border-white rounded px-1 py-1 text-[14px] cursor-pointer"
               >
                 {fontList.map((f) => (
                   <option key={f.key} value={f.key}>
@@ -203,7 +203,7 @@ const EmaFormEditor: React.FC<EmaFormEditorProps> = ({
                 ))}
               </select>
               {/* 縦書き切替 */}
-              <div className="flex items-center gap-2">
+              <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={texts[currentTextIndex].isVertical}
@@ -211,7 +211,7 @@ const EmaFormEditor: React.FC<EmaFormEditorProps> = ({
                   className="w-5 h-5 text-black rounded"
                 />
                 <span className="text-sm text-left w-[60px]">縦書き</span>
-              </div>
+              </label>
             </div>
 
             <div className="-mt-10">
@@ -241,7 +241,7 @@ const EmaFormEditor: React.FC<EmaFormEditorProps> = ({
                     <button
                       key={idx}
                       onClick={() => setCurrentTextIndex(idx as 0 | 1)}
-                      className={`flex-1 px-4 py-2 mb-2 font-medium text-sm text-center whitespace-nowrap ${
+                      className={`flex-1 px-4 py-2 mb-2 font-medium text-sm text-center whitespace-nowrap cursor-pointer ${
                         selected
                           ? 'border-b border-white text-white'
                           : 'border-b border-white/50 text-gray-400 hover:text-gray-200'

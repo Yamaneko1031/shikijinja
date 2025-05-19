@@ -48,7 +48,7 @@ export default function EmaItem({ post, setIsAutoScrollStop }: EmaItemProps) {
 
   return (
     <div
-      className="min-w-[240px] h-[240px] relative text-center"
+      className="min-w-[240px] h-[240px] relative text-center cursor-pointer"
       style={{ marginRight: post.marginRight }}
       onClick={handleClick}
     >

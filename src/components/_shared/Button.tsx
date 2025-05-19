@@ -45,7 +45,7 @@ export const Button: React.FC<ButtonProps> = ({
   const baseStyles = 'focus:outline-none';
   return (
     <button
-      className={`${baseStyles} ${variantStyles[variant as ButtonVariant]} ${sizeStyles[size as ButtonSize]} ${className}`}
+      className={`${baseStyles} ${variantStyles[variant as ButtonVariant]} ${sizeStyles[size as ButtonSize]} ${className} cursor-pointer`}
       style={{ minWidth: '32px', minHeight: '32px' }} // 最小サイズを指定
       {...props}
     >

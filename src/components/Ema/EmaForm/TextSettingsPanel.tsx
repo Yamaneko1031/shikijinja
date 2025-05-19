@@ -52,7 +52,7 @@ export default function TextSettingsPanel({ textBlock, onChange }: TextSettingsP
             <button
               key={key}
               onClick={() => onChange({ fontColor: key })}
-              className={`w-[30px] h-[30px] rounded-full border-2 shadow-white ${
+              className={`w-[30px] h-[30px] rounded-full border-2 shadow-white cursor-pointer ${
                 textBlock.fontColor === key ? 'border-white' : 'border-transparent'
               }`}
               style={{ backgroundColor: value, boxShadow: '0 0 1px white' }}

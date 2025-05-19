@@ -4,7 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import { OmikujiResponse, OmikujiType } from '@/types/omikuji';
 import { Button } from '../_shared/Button';
-import { omikujiNameList } from '@/config/omikuji';
+import { omikujiNameList, omikujiMonthList } from '@/config/omikuji';
 
 type Props = {
   omikujiResponse: OmikujiResponse;
@@ -46,7 +46,7 @@ export default function OmikujiModal({ omikujiResponse, omikujiType, onClose }: 
                 case '今年':
                   return `${new Date(omikujiResponse.createdAt).getFullYear()}年 運勢`;
                 case '今月':
-                  return `${new Date(omikujiResponse.createdAt).getMonth() + 1}月 運勢`;
+                  return `${omikujiMonthList[new Date(omikujiResponse.createdAt).getMonth()]}`;
                 case '明日':
                   return (
                     <div className="w-20">
