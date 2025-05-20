@@ -5,14 +5,20 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import TextReveal from '../_shared/TextReveal';
 import ReafParticles from '../_shared/ReafParticles';
+import { User } from '@/types/user';
+import { TokuId } from '@/types/toku';
 
 type Props = {
   isActive: boolean;
   isNeighbor: boolean;
+  user: User;
+  handleAddCoin: (coin: number) => void;
+  handleIsLimitOver: (tokuId: TokuId) => boolean;
+  handleTokuCountUp: (tokuId: TokuId) => void;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const TopSection = ({ isActive, isNeighbor }: Props) => {
+const TopSection = (props: Props) => {
+  console.log('TopSection', props.isActive, props.isNeighbor);
   const { scrollY } = useScroll();
 
   const toriiScale = useTransform(scrollY, [0, 400], [1, 3.5]);
@@ -22,7 +28,7 @@ const TopSection = ({ isActive, isNeighbor }: Props) => {
   return (
     <div className="pointer-events-none">
       {/* 鳥居 */}
-      {isActive && (
+      {props.isActive && (
         <motion.div
           className="fixed z-30 pointer-events-none -translate-x-1/2 -translate-y-1/2 gpu-layer"
           style={{
@@ -62,7 +68,7 @@ const TopSection = ({ isActive, isNeighbor }: Props) => {
       </motion.div>
 
       {/* 落ち葉 */}
-      {isActive && <ReafParticles />}
+      {props.isActive && <ReafParticles />}
     </div>
   );
 };

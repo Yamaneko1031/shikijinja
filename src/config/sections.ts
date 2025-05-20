@@ -6,12 +6,20 @@ import ShoukaiSection from '@/components/Shoukai/ShoukaiSection';
 import HaidenSection from '@/components/Haiden/HaidenSection';
 import NadenekoSection from '@/components/Nadeneko/NadenekoSection';
 import SandoSection from '@/components/Sando/SandoSection';
-
+import { User } from '@/types/user';
+import { TokuId } from '@/types/toku';
 export type Section = {
   id: string;
   bgUrl: string;
   name: string;
-  component: React.ComponentType<{ isActive: boolean; isNeighbor: boolean }>;
+  component: React.ComponentType<{
+    isActive: boolean;
+    isNeighbor: boolean;
+    user: User;
+    handleAddCoin: (coin: number) => void;
+    handleIsLimitOver: (tokuId: TokuId) => boolean;
+    handleTokuCountUp: (tokuId: TokuId) => void;
+  }>;
   scrollEffect: { ratio: number; posX: number; posY: number; zoom: number }[];
   sectionClass: string;
 };

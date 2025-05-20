@@ -2,14 +2,20 @@
 
 import React, { useState } from 'react';
 import TextReveal from '@/components/_shared/TextReveal';
+import { User } from '@/types/user';
+import { TokuId } from '@/types/toku';
 
 type Props = {
   isActive: boolean;
   isNeighbor: boolean;
+  user: User;
+  handleAddCoin: (coin: number) => void;
+  handleIsLimitOver: (tokuId: TokuId) => boolean;
+  handleTokuCountUp: (tokuId: TokuId) => void;
 };
 
-const OmamoriSection = ({ isActive, isNeighbor }: Props) => {
-  console.log('OmamoriSection', isActive, isNeighbor);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const OmamoriSection = (props: Props) => {
   const [selectedOmamori, setSelectedOmamori] = useState('love');
 
   const handlePurchase = () => {

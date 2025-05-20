@@ -2,14 +2,19 @@
 
 import React from 'react';
 import TextReveal from '@/components/_shared/TextReveal';
-
+import { User } from '@/types/user';
+import { TokuId } from '@/types/toku';
 type Props = {
   isActive: boolean;
   isNeighbor: boolean;
+  user: User;
+  handleAddCoin: (coin: number) => void;
+  handleIsLimitOver: (tokuId: TokuId) => boolean;
+  handleTokuCountUp: (tokuId: TokuId) => void;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const NadenekoSection = ({ isActive, isNeighbor }: Props) => {
+const NadenekoSection = (props: Props) => {
   const handlePostWish = () => {
     // 投稿ボタンの処理（例えば、APIに投稿する）
     alert(`撫でました`);

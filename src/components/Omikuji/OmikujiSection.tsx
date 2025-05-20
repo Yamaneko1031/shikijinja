@@ -15,14 +15,20 @@ import OmikujiLoding from './OmikujiLoding';
 import Image from 'next/image';
 import OmikujiSelector from './OmikujiSelector';
 import OmikujiButton from './OmikujiButton';
+import { User } from '@/types/user';
+import { TokuId } from '@/types/toku';
 
 type Props = {
   isActive: boolean;
   isNeighbor: boolean;
+  user: User;
+  handleAddCoin: (coin: number) => void;
+  handleIsLimitOver: (tokuId: TokuId) => boolean;
+  handleTokuCountUp: (tokuId: TokuId) => void;
 };
 
-const OmikujiSection = ({ isActive, isNeighbor }: Props) => {
-  console.log('OmikujiSection', isActive, isNeighbor);
+const OmikujiSection = (props: Props) => {
+  console.log('OmikujiSection', props.isActive, props.isNeighbor);
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isSelector, setIsSelector] = useState(false);
@@ -100,7 +106,7 @@ const OmikujiSection = ({ isActive, isNeighbor }: Props) => {
             text += decoder.decode(value, { stream: true });
           }
         }
-        /* ★ ここで “残り” を flush */
+        /* ★ ここで "残り" を flush */
         text += decoder.decode(); // stream:false が既定 → 残バッファを全て取り出す
       } else {
         text = await res.text(); // フォールバック

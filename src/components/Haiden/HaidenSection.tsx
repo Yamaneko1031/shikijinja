@@ -2,14 +2,19 @@
 
 import React from 'react';
 import TextReveal from '@/components/_shared/TextReveal';
-
+import { User } from '@/types/user';
+import { TokuId } from '@/types/toku';
 type Props = {
   isActive: boolean;
   isNeighbor: boolean;
+  user: User;
+  handleAddCoin: (coin: number) => void;
+  handleIsLimitOver: (tokuId: TokuId) => boolean;
+  handleTokuCountUp: (tokuId: TokuId) => void;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const HaidenSection = ({ isActive, isNeighbor }: Props) => {
+const HaidenSection = (props: Props) => {
   const handlePostWish = () => {
     alert(`賽銭を投げました`);
   };

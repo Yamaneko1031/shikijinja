@@ -2,14 +2,20 @@
 
 import React from 'react';
 import TextReveal from '@/components/_shared/TextReveal';
+import { User } from '@/types/user';
+import { TokuId } from '@/types/toku';
 
 type Props = {
   isActive: boolean;
   isNeighbor: boolean;
+  user: User;
+  handleAddCoin: (coin: number) => void;
+  handleIsLimitOver: (tokuId: TokuId) => boolean;
+  handleTokuCountUp: (tokuId: TokuId) => void;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const ShoukaiSection = ({ isActive, isNeighbor }: Props) => {
+const ShoukaiSection = (props: Props) => {
+  console.log('ShoukaiSection', props.isActive, props.isNeighbor);
   const handlePostWish = () => {
     alert(`神様の紹介を見ました`);
   };

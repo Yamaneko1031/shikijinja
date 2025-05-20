@@ -11,14 +11,20 @@ import { Button } from '../_shared/Button';
 import Modal from '../_shared/Modal';
 import { apiFetch } from '@/lib/api';
 import Image from 'next/image';
+import { User } from '@/types/user';
+import { TokuId } from '@/types/toku';
 
 type Props = {
   isActive: boolean;
   isNeighbor: boolean;
+  user: User;
+  handleAddCoin: (coin: number) => void;
+  handleIsLimitOver: (tokuId: TokuId) => boolean;
+  handleTokuCountUp: (tokuId: TokuId) => void;
 };
 
-const EmaSection = ({ isActive, isNeighbor }: Props) => {
-  console.log('EmaSection', isActive, isNeighbor);
+const EmaSection = (props: Props) => {
+  console.log('EmaSection', props.isActive, props.isNeighbor);
   /* ----------------- data ----------------- */
   const {
     displayPosts,
@@ -99,6 +105,10 @@ const EmaSection = ({ isActive, isNeighbor }: Props) => {
     } finally {
       // いずれにせよローディングをオフ
       setIsSaving(false);
+
+      if (props.handleIsLimitOver('ema') === false) {
+        props.handleTokuCountUp('ema');
+      }
     }
   };
 
@@ -128,7 +138,7 @@ const EmaSection = ({ isActive, isNeighbor }: Props) => {
             error={emaGetError}
             backgroundImageUrl="url(/images/ema/bg_ema_view.webp)"
             setDisplayPosts={setDisplayPosts}
-            isActive={isActive}
+            isActive={props.isActive}
           />
 
           {/* 画面全体にスピナーオーバーレイ */}
