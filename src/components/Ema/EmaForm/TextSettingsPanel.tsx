@@ -74,8 +74,8 @@ export default function TextSettingsPanel({ textBlock, onChange }: TextSettingsP
       {/* 角度調整 */}
       <TextAdjustmentButton
         label="角度"
-        onDecrease={() => adjustField('textRotate', -1)}
-        onIncrease={() => adjustField('textRotate', 1)}
+        onDecrease={() => adjustField('textRotate', 1)}
+        onIncrease={() => adjustField('textRotate', -1)}
         decreaseIconPath="/images/icon/icon_rotate_l.svg"
         increaseIconPath="/images/icon/icon_rotate_r.svg"
       />
@@ -90,13 +90,23 @@ export default function TextSettingsPanel({ textBlock, onChange }: TextSettingsP
       />
 
       {/* 最大幅／最大高さ (縦横切替) */}
-      <TextAdjustmentButton
-        label={textBlock.isVertical ? '最大高さ' : '最大幅'}
-        onDecrease={() => adjustField('textWidth', -5)}
-        onIncrease={() => adjustField('textWidth', 5)}
-        decreaseIconPath="/images/icon/icon_down.svg"
-        increaseIconPath="/images/icon/icon_up.svg"
-      />
+      {textBlock.isVertical ? (
+        <TextAdjustmentButton
+          label="最大高さ"
+          onDecrease={() => adjustField('textHeight', -5)}
+          onIncrease={() => adjustField('textHeight', 5)}
+          decreaseIconPath="/images/icon/icon_down.svg"
+          increaseIconPath="/images/icon/icon_up.svg"
+        />
+      ) : (
+        <TextAdjustmentButton
+          label="最大幅"
+          onDecrease={() => adjustField('textWidth', -5)}
+          onIncrease={() => adjustField('textWidth', 5)}
+          decreaseIconPath="/images/icon/icon_down.svg"
+          increaseIconPath="/images/icon/icon_up.svg"
+        />
+      )}
     </div>
   );
 }
