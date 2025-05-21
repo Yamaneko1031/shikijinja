@@ -9,9 +9,10 @@ type Props = {
   imageAlt: string;
   onClick: (type: OmikujiType) => void;
   type: OmikujiType;
+  coin: number;
 };
 
-export default function OmikujiButton({ title, imagePath, imageAlt, onClick, type }: Props) {
+export default function OmikujiButton({ title, imagePath, imageAlt, onClick, type, coin }: Props) {
   return (
     <div className="w-full max-w-md">
       <div className="flex flex-row justify-center items-end">
@@ -25,6 +26,8 @@ export default function OmikujiButton({ title, imagePath, imageAlt, onClick, typ
         onClick={() => onClick(type)}
         className="w-full max-w-md"
       >
+        <Image src="/images/icon/icon_coin.webp" alt="omikuji_button" width={32} height={32} />
+        <div className="text-sm font-bold">{coin}</div>
         引く
       </Button>
     </div>

@@ -4,13 +4,15 @@ import { defaultTextRectSize } from '@/config/ema';
 import { fontList, fontColorList } from '@/config/fonts';
 import { emaList } from '@/config/ema';
 import { getCssDuration } from '@/utils/getCssDuration';
+import { TokuId } from '@/types/toku';
 
 interface EmaItemProps {
   post: DisplayPost;
   setIsAutoScrollStop: React.Dispatch<React.SetStateAction<boolean>>;
+  handleTokuGet: (tokuId: TokuId) => void;
 }
 
-export default function EmaItem({ post, setIsAutoScrollStop }: EmaItemProps) {
+export default function EmaItem({ post, setIsAutoScrollStop, handleTokuGet }: EmaItemProps) {
   const [popupVisible, setPopupVisible] = useState(false);
   const [bouncing, setBouncing] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -37,8 +39,10 @@ export default function EmaItem({ post, setIsAutoScrollStop }: EmaItemProps) {
       // バウンス
       setBouncing(true);
       bounceTimerRef.current = setTimeout(() => setBouncing(false), bounceDuration);
+
+      handleTokuGet('ema_tap');
     });
-  }, [setIsAutoScrollStop]);
+  }, [setIsAutoScrollStop, handleTokuGet]);
 
   useEffect(() => {
     if (post.highlighted) {

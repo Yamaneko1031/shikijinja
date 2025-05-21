@@ -18,7 +18,9 @@ export type Section = {
     user: User;
     handleAddCoin: (coin: number) => void;
     handleIsLimitOver: (tokuId: TokuId) => boolean;
-    handleTokuCountUp: (tokuId: TokuId) => void;
+    handleTokuGet: (tokuId: TokuId) => void;
+    handleTokuUsed: (tokuId: TokuId) => void;
+    handleIsEnoughCoin: (tokuId: TokuId) => boolean;
   }>;
   scrollEffect: { ratio: number; posX: number; posY: number; zoom: number }[];
   sectionClass: string;

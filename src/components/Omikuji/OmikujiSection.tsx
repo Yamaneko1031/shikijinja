@@ -17,6 +17,7 @@ import OmikujiSelector from './OmikujiSelector';
 import OmikujiButton from './OmikujiButton';
 import { User } from '@/types/user';
 import { TokuId } from '@/types/toku';
+import { getTokuCoin, getTokuLimit } from '@/utils/toku';
 
 type Props = {
   isActive: boolean;
@@ -24,7 +25,9 @@ type Props = {
   user: User;
   handleAddCoin: (coin: number) => void;
   handleIsLimitOver: (tokuId: TokuId) => boolean;
-  handleTokuCountUp: (tokuId: TokuId) => void;
+  handleTokuGet: (tokuId: TokuId) => void;
+  handleTokuUsed: (tokuId: TokuId) => void;
+  handleIsEnoughCoin: (tokuId: TokuId) => boolean;
 };
 
 const OmikujiSection = (props: Props) => {
@@ -38,12 +41,40 @@ const OmikujiSection = (props: Props) => {
   const onClickOmikuji = (omikujiType: OmikujiType) => {
     switch (omikujiType) {
       case '今年':
+        if (props.handleIsLimitOver('omikuji_omikuji')) {
+          alert(`今日はもう引けません。\nおみくじは1日${getTokuLimit('omikuji_omikuji')}回まで。`);
+          return;
+        }
+        if (!props.handleIsEnoughCoin('omikuji_omikuji')) {
+          alert(`徳が足りません。\nおみくじは1回${getTokuCoin('omikuji_omikuji')}徳です。`);
+          return;
+        }
         setIsSelector(true);
         break;
       case '今月':
+        if (props.handleIsLimitOver('omikuji_hitohira')) {
+          alert(
+            `今日はもう引けません。\nひとひらくじは1日${getTokuLimit('omikuji_hitohira')}回まで。`
+          );
+          return;
+        }
+        if (!props.handleIsEnoughCoin('omikuji_hitohira')) {
+          alert(`徳が足りません。\nひとひらくじは1回${getTokuCoin('omikuji_hitohira')}徳です。`);
+          return;
+        }
         setIsSelector(true);
         break;
       case '明日':
+        if (props.handleIsLimitOver('omikuji_nekobiyori')) {
+          alert(
+            `今日はもう引けません。\nねこ日和は1日${getTokuLimit('omikuji_nekobiyori')}回まで。`
+          );
+          return;
+        }
+        if (!props.handleIsEnoughCoin('omikuji_nekobiyori')) {
+          alert(`徳が足りません。\nねこ日和は1回${getTokuCoin('omikuji_nekobiyori')}徳です。`);
+          return;
+        }
         fetchOmikujiJob(omikujiType, '');
         break;
     }
@@ -106,7 +137,7 @@ const OmikujiSection = (props: Props) => {
             text += decoder.decode(value, { stream: true });
           }
         }
-        /* ★ ここで "残り" を flush */
+        /* ★ ここで “残り” を flush */
         text += decoder.decode(); // stream:false が既定 → 残バッファを全て取り出す
       } else {
         text = await res.text(); // フォールバック
@@ -123,6 +154,18 @@ const OmikujiSection = (props: Props) => {
       resultRef.current = omikujiResponse;
 
       setIsOpen(true);
+
+      switch (omikujiType) {
+        case '今年':
+          props.handleTokuUsed('omikuji_omikuji');
+          break;
+        case '今月':
+          props.handleTokuUsed('omikuji_hitohira');
+          break;
+        case '明日':
+          props.handleTokuUsed('omikuji_nekobiyori');
+          break;
+      }
     } catch (err) {
       console.error(err);
       alert('おみくじが出てきませんでした。再度お試しください。' + err);
@@ -158,6 +201,7 @@ const OmikujiSection = (props: Props) => {
             imageAlt="omikuji_box_nekobiyori"
             onClick={() => onClickOmikuji('明日')}
             type="明日"
+            coin={getTokuCoin('omikuji_nekobiyori')}
           />
           <OmikujiButton
             title="今月"
@@ -165,6 +209,7 @@ const OmikujiSection = (props: Props) => {
             imageAlt="omikuji_box_hitohira"
             onClick={() => onClickOmikuji('今月')}
             type="今月"
+            coin={getTokuCoin('omikuji_hitohira')}
           />
           <OmikujiButton
             title="今年"
@@ -172,6 +217,7 @@ const OmikujiSection = (props: Props) => {
             imageAlt="omikuji_box_simple"
             onClick={() => onClickOmikuji('今年')}
             type="今年"
+            coin={getTokuCoin('omikuji_omikuji')}
           />
         </div>
       </div>

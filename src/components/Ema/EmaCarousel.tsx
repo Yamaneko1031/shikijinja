@@ -3,6 +3,7 @@ import { forwardRef, memo, useState, useRef, useImperativeHandle } from 'react';
 import { DisplayPost } from '@/types/ema';
 import EmaItem from './EmaItem';
 import { useAutoCarouselScroll } from '@/hooks/useAutoCarouselScroll';
+import { TokuId } from '@/types/toku';
 
 type Props = {
   displayPosts: DisplayPost[];
@@ -11,6 +12,7 @@ type Props = {
   backgroundImageUrl: string;
   setDisplayPosts: React.Dispatch<React.SetStateAction<DisplayPost[]>>;
   isActive: boolean;
+  handleTokuGet: (tokuId: TokuId) => void;
 };
 
 const EmaCarousel = forwardRef<HTMLDivElement, Props>((props, ref) => {
@@ -42,7 +44,12 @@ const EmaCarousel = forwardRef<HTMLDivElement, Props>((props, ref) => {
           className="flex h-full items-end whitespace-nowrap overflow-x-auto overflow-y-hidden no-scrollbar"
         >
           {props.displayPosts.map((p) => (
-            <EmaItem key={p.drawKey} post={p} setIsAutoScrollStop={setIsAutoScrollStop} />
+            <EmaItem
+              key={p.drawKey}
+              post={p}
+              setIsAutoScrollStop={setIsAutoScrollStop}
+              handleTokuGet={props.handleTokuGet}
+            />
           ))}
         </div>
       )}

@@ -11,7 +11,9 @@ type Props = {
   user: User;
   handleAddCoin: (coin: number) => void;
   handleIsLimitOver: (tokuId: TokuId) => boolean;
-  handleTokuCountUp: (tokuId: TokuId) => void;
+  handleTokuGet: (tokuId: TokuId) => void;
+  handleTokuUsed: (tokuId: TokuId) => void;
+  handleIsEnoughCoin: (tokuId: TokuId) => boolean;
 };
 
 const ShoukaiSection = (props: Props) => {

@@ -20,7 +20,9 @@ type Props = {
   user: User;
   handleAddCoin: (coin: number) => void;
   handleIsLimitOver: (tokuId: TokuId) => boolean;
-  handleTokuCountUp: (tokuId: TokuId) => void;
+  handleTokuGet: (tokuId: TokuId) => void;
+  handleTokuUsed: (tokuId: TokuId) => void;
+  handleIsEnoughCoin: (tokuId: TokuId) => boolean;
 };
 
 const EmaSection = (props: Props) => {
@@ -106,9 +108,7 @@ const EmaSection = (props: Props) => {
       // いずれにせよローディングをオフ
       setIsSaving(false);
 
-      if (props.handleIsLimitOver('ema') === false) {
-        props.handleTokuCountUp('ema');
-      }
+      props.handleTokuGet('ema_post');
     }
   };
 
@@ -139,6 +139,7 @@ const EmaSection = (props: Props) => {
             backgroundImageUrl="url(/images/ema/bg_ema_view.webp)"
             setDisplayPosts={setDisplayPosts}
             isActive={props.isActive}
+            handleTokuGet={props.handleTokuGet}
           />
 
           {/* 画面全体にスピナーオーバーレイ */}

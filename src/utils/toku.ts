@@ -8,18 +8,18 @@ export function getTokuMaster(tokuId: TokuId): TokuMasterData | undefined {
 }
 
 /** idからポイントを取得 */
-export function getTokuPoint(tokuId: TokuId): number | undefined {
-  return getTokuMaster(tokuId)?.point;
+export function getTokuCoin(tokuId: TokuId): number {
+  return getTokuMaster(tokuId)?.coin || 0;
 }
 
 /** idからlimitを取得 */
-export function getTokuLimit(tokuId: TokuId): number | undefined {
-  return getTokuMaster(tokuId)?.limit;
+export function getTokuLimit(tokuId: TokuId): number {
+  return getTokuMaster(tokuId)?.limit || 0;
 }
 
 /** idからラベルを取得 */
-export function getTokuLabel(tokuId: TokuId): string | undefined {
-  return getTokuMaster(tokuId)?.label;
+export function getTokuLabel(tokuId: TokuId): string {
+  return getTokuMaster(tokuId)?.label || '';
 }
 
 // /** 徳のlimitを超えているか */

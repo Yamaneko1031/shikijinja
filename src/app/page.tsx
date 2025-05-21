@@ -6,79 +6,12 @@ import { Section, sections } from '@/config/sections';
 import DebugLogDialog from '@/components/_shared/DebugLogDialog';
 import SectionOverlayText from '@/components/_shared/SctionOverlayText';
 import Header from '@/components/Header/Header';
-import { User } from '@/types/user';
-import { useTelop } from '@/hooks/useTelop';
-import { TokuId } from '@/types/toku';
-import { getTokuLimit, getTokuMaster } from '@/utils/toku';
-
-const useUser = () => {
-  const [user, setUser] = useState<User>({
-    id: '1',
-    isGuest: true,
-    name: 'ゲスト',
-    coin: 150,
-    tokuUpdatedAt: new Date().toISOString(),
-    tokuCounts: {},
-  });
-  const telop = useTelop();
-
-  // const handleTelop = (telopText: string) => {
-  //   telop.showPop(telopText);
-  // };
-
-  const resetTokuCounts = () => {
-    setUser({ ...user, tokuUpdatedAt: new Date().toISOString(), tokuCounts: {} });
-  };
-
-  const checkDate = (date: string) => {
-    const lastUpdate = new Date(date);
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    return lastUpdate.toDateString() === yesterday.toDateString();
-  };
-
-  const handleAddCoin = (coin: number) => {
-    console.log('AddCoin', user.coin + coin);
-    setUser({ ...user, coin: user.coin + coin });
-  };
-
-  const handleIsLimitOver = (tokuId: TokuId): boolean => {
-    const limit = getTokuLimit(tokuId);
-    if (checkDate(user.tokuUpdatedAt)) {
-      resetTokuCounts();
-    }
-    const currentTokuCount = user.tokuCounts[tokuId]?.count;
-    return limit !== undefined && currentTokuCount !== undefined && currentTokuCount >= limit;
-  };
-
-  const handleTokuCountUp = (tokuId: TokuId) => {
-    if (checkDate(user.tokuUpdatedAt)) {
-      resetTokuCounts();
-    }
-    const setUserData = { ...user };
-    const currentCount = (setUserData.tokuCounts[tokuId]?.count || 0) + 1;
-    setUserData.tokuCounts[tokuId] = {
-      count: currentCount,
-    };
-    setUserData.tokuUpdatedAt = new Date().toISOString();
-
-    const tokuMaster = getTokuMaster(tokuId);
-    if (tokuMaster) {
-      setUserData.coin += tokuMaster.point;
-      const text = `${tokuMaster.label} [${currentCount}/${tokuMaster.limit}]`;
-      telop.showPop(text);
-    }
-    setUser(setUserData);
-  };
-
-  return { user, telop, handleAddCoin, handleIsLimitOver, handleTokuCountUp };
-};
+import { useUser } from '@/hooks/useUser';
 
 export default function App() {
   console.log('App');
 
   const user = useUser();
-
   const [state, setState] = useState({ activeId: sections[0].id });
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
   const bgManagerRef = useRef<BackgroundManagerHandle>(null);
@@ -101,6 +34,10 @@ export default function App() {
           currentSectionRef.current.id != nextSection.id &&
           bgManagerRef.current.isReadyForTransition()
         ) {
+          if (currentSectionRef.current.id === 'top' && nextSection.id !== 'top') {
+            user.handleTokuGet('torii');
+          }
+
           bgManagerRef.current.setUrl(nextSection.bgUrl, nextSection.scrollEffect);
           currentSectionRef.current = nextSection;
           setState({ activeId: nextSection.id });
@@ -162,7 +99,9 @@ export default function App() {
                   user={user.user}
                   handleAddCoin={user.handleAddCoin}
                   handleIsLimitOver={user.handleIsLimitOver}
-                  handleTokuCountUp={user.handleTokuCountUp}
+                  handleTokuGet={user.handleTokuGet}
+                  handleTokuUsed={user.handleTokuUsed}
+                  handleIsEnoughCoin={user.handleIsEnoughCoin}
                 />
               )}
             </section>

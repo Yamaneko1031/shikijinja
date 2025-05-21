@@ -1,11 +1,10 @@
 export const tokuIds = [
-  'visit',
   'torii',
-  'ema',
+  'ema_post',
   'ema_tap',
-  'nekobiyori',
-  'hitohira',
-  'omikuji',
+  'omikuji_nekobiyori',
+  'omikuji_hitohira',
+  'omikuji_omikuji',
 ] as const;
 
 export type TokuId = (typeof tokuIds)[number];
@@ -14,7 +13,7 @@ export type TokuMasterData = {
   tokuId: TokuId;
   label: string;
   limit: number;
-  point: number;
+  coin: number;
 };
 
 export type TokuCounts = {
