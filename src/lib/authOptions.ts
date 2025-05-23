@@ -1,10 +1,27 @@
-import { User, Account } from 'next-auth';
+import { User, Account, DefaultSession, AuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 // import TwitterProvider from 'next-auth/providers/twitter';
 import GithubProvider from 'next-auth/providers/github';
 import { prisma } from '@/server/prisma';
 import { cookies } from 'next/headers';
-import { AuthOptions } from 'next-auth';
+
+declare module 'next-auth' {
+  interface Session {
+    user?: {
+      sub?: string;
+    } & DefaultSession['user'];
+  }
+
+  interface User {
+    sub?: string;
+  }
+}
+
+declare module 'next-auth/jwt' {
+  interface JWT {
+    providerAccountId?: string;
+  }
+}
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -23,6 +40,18 @@ export const authOptions: AuthOptions = {
     // 他プロバイダーもここに追加可能
   ],
   callbacks: {
+    async jwt({ token, account }) {
+      if (account) {
+        token.sub = account.providerAccountId;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user && token.sub) {
+        session.user.sub = token.sub;
+      }
+      return session;
+    },
     async signIn({ user, account }: { user: User; account: Account | null }) {
       if (!account) return false;
 

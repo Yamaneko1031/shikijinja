@@ -19,6 +19,7 @@ export default async function Page() {
   // 1. OAuthユーザーならセッションのIDを優先
   let userId: string | undefined;
   if (session?.user) {
+    console.log(session.user);
     const providerAccountId = (session.user as UserWithSub).sub;
     const account = await prisma.account.findFirst({
       where: {
@@ -26,7 +27,7 @@ export default async function Page() {
       },
     });
     userId = account?.userId;
-    memo += `user account: ${userId}`;
+    memo += `user account: providerAccountId ${providerAccountId} userId ${userId}`;
     console.log('user account', userId);
   } else {
     // 2. ゲストはクッキーのuserId
