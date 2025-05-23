@@ -9,11 +9,18 @@ import { useUser } from '@/hooks/useUser';
 import { User } from '@/types/user';
 import Header from '../Header/Header';
 import { apiFetch } from '@/lib/api';
+import { useDebugLog } from '@/hooks/useDebugLog';
 
-export default function App({ initialUser }: { initialUser: User }) {
+interface Props {
+  initialUser: User;
+  memo: string;
+}
+
+const App = (props: Props) => {
   console.log('App');
+  const { addLog } = useDebugLog();
 
-  const user = useUser(initialUser);
+  const user = useUser(props.initialUser);
   const [state, setState] = useState({ activeId: sections[0].id });
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
   const bgManagerRef = useRef<BackgroundManagerHandle>(null);
@@ -23,14 +30,15 @@ export default function App({ initialUser }: { initialUser: User }) {
 
   // 初回のユーザーとクッキーに保存されたユーザーのidが違うケースがあるので必ず更新する
   useEffect(() => {
-    if (!initialUser.id) return;
+    addLog(`user init: ${props.memo}`);
+    if (!props.initialUser.id) return;
     apiFetch('/api/user/init', {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId: initialUser.id }),
+      body: JSON.stringify({ userId: props.initialUser.id }),
     });
-  }, [initialUser.id]);
+  }, [props.initialUser.id, props.memo, addLog]);
 
   useEffect(() => {
     const checkScroll = () => {
@@ -129,4 +137,6 @@ export default function App({ initialUser }: { initialUser: User }) {
       </main>
     </>
   );
-}
+};
+
+export default App;

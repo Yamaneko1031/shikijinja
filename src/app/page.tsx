@@ -10,6 +10,7 @@ import { TokuCounts } from '@/types/toku';
 
 export default async function Page() {
   let userData: User | null = null;
+  let memo = '';
   const session = await getServerSession(authOptions);
 
   // session.user に sub プロパティが含まれるように型を拡張
@@ -25,11 +26,13 @@ export default async function Page() {
       },
     });
     userId = account?.userId;
+    memo += `user account: ${userId}`;
     console.log('user account', userId);
   } else {
     // 2. ゲストはクッキーのuserId
     const cookieStore = await cookies();
     userId = cookieStore.get('userId')?.value;
+    memo += `user guest: ${userId}`;
     console.log('user guest', userId);
   }
 
@@ -44,6 +47,7 @@ export default async function Page() {
     user = await prisma.user.create({
       data: { isGuest: true },
     });
+    memo += `user create: ${user.id}`;
     console.log('user create', user.id);
   }
 
@@ -82,7 +86,7 @@ export default async function Page() {
 
   return (
     <SessionWrapper session={session}>
-      <App initialUser={userData} />
+      <App initialUser={userData} memo={memo} />
     </SessionWrapper>
   );
 }

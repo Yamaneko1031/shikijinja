@@ -11,7 +11,7 @@ export default function DebugLogDialog() {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-4 right-4 z-50 bg-black text-white px-3 py-1 rounded shadow"
+        className="fixed bottom-4 right-4 bg-black text-white px-3 py-1 rounded shadow z-60"
       >
         🔧 Logs
       </button>
