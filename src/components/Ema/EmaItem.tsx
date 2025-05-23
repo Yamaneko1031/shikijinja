@@ -19,6 +19,7 @@ export default function EmaItem({ post, setIsAutoScrollStop, handleTokuGet }: Em
   const bounceTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const handleClick = useCallback(() => {
+    console.log('ema handleClick');
     const popupDuration = getCssDuration('--ema-popup-duration');
     const bounceDuration = getCssDuration('--ema-bounce-duration');
 
@@ -39,10 +40,8 @@ export default function EmaItem({ post, setIsAutoScrollStop, handleTokuGet }: Em
       // バウンス
       setBouncing(true);
       bounceTimerRef.current = setTimeout(() => setBouncing(false), bounceDuration);
-
-      handleTokuGet('ema_tap');
     });
-  }, [setIsAutoScrollStop, handleTokuGet]);
+  }, [setIsAutoScrollStop]);
 
   useEffect(() => {
     if (post.highlighted) {
@@ -54,7 +53,10 @@ export default function EmaItem({ post, setIsAutoScrollStop, handleTokuGet }: Em
     <div
       className="min-w-[240px] h-[240px] relative text-center cursor-pointer"
       style={{ marginRight: post.marginRight }}
-      onClick={handleClick}
+      onClick={() => {
+        handleClick();
+        handleTokuGet('ema_tap');
+      }}
     >
       {popupVisible && (
         <div

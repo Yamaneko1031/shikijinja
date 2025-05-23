@@ -1,9 +1,13 @@
 import { json } from '@/server/response';
 import { openaiTemplateRequestStream } from '@/server/openaiTemplateRequest';
 import { prisma } from '@/server/prisma';
+import { cookies } from 'next/headers';
 
 export async function POST(request: Request) {
   try {
+    const cookieStore = await cookies();
+    const userId = cookieStore.get('userId')?.value ?? '';
+
     const { job, fortuneNumber, period } = (await request.json()) as {
       job: string;
       fortuneNumber: number;
@@ -36,6 +40,7 @@ export async function POST(request: Request) {
             const { fortune, msg, details } = JSON.parse(full);
             await prisma.omikujiResult.create({
               data: {
+                userId: userId,
                 job,
                 period,
                 fortuneNumber,

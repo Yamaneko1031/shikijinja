@@ -1,119 +1,88 @@
-'use client';
+import App from '@/components/_shared/App';
+import { cookies } from 'next/headers';
+import { User } from '@/types/user';
+import SessionWrapper from '@/components/_shared/SessionWrapper';
+import { authOptions } from './api/auth/[...nextauth]/route';
+import { getServerSession, User as NextAuthUser } from 'next-auth';
+import { prisma } from '@/server/prisma';
+import { getJapanTodayMidnight } from '@/server/date';
+import { TokuCounts } from '@/types/toku';
 
-import { useRef, useEffect, useState } from 'react';
-import { BackgroundManager, BackgroundManagerHandle } from '@/components/_shared/BackgroundManager';
-import { Section, sections } from '@/config/sections';
-import DebugLogDialog from '@/components/_shared/DebugLogDialog';
-import SectionOverlayText from '@/components/_shared/SctionOverlayText';
-import Header from '@/components/Header/Header';
-import { useUser } from '@/hooks/useUser';
+export default async function Page() {
+  let userData: User | null = null;
+  const session = await getServerSession(authOptions);
 
-export default function App() {
-  console.log('App');
+  // session.user に sub プロパティが含まれるように型を拡張
+  type UserWithSub = NextAuthUser & { sub?: string };
 
-  const user = useUser();
-  const [state, setState] = useState({ activeId: sections[0].id });
-  const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
-  const bgManagerRef = useRef<BackgroundManagerHandle>(null);
-  const currentSectionRef = useRef<Section>(sections[0]);
-  const allUrls = sections.map(({ bgUrl }) => bgUrl);
-  const activeIndex = sections.findIndex((s) => s.id === state.activeId);
+  // 1. OAuthユーザーならセッションのIDを優先
+  let userId: string | undefined;
+  if (session?.user) {
+    const providerAccountId = (session.user as UserWithSub).sub;
+    const account = await prisma.account.findFirst({
+      where: {
+        providerUserId: providerAccountId,
+      },
+    });
+    userId = account?.userId;
+    console.log('user account', userId);
+  } else {
+    // 2. ゲストはクッキーのuserId
+    const cookieStore = await cookies();
+    userId = cookieStore.get('userId')?.value;
+    console.log('user guest', userId);
+  }
 
-  useEffect(() => {
-    const checkScroll = () => {
-      const centerY = window.innerHeight / 2;
-      const nextSection = sections.find(({ id }) => {
-        const el = sectionRefs.current[id];
-        if (!el) return false;
-        const rect = el.getBoundingClientRect();
-        return rect.top <= centerY && rect.bottom >= centerY;
-      });
+  let user = null;
+  // DBのユーザー情報を取得
+  if (userId) {
+    user = await prisma.user.findUnique({ where: { id: userId } });
+  }
 
-      if (nextSection && bgManagerRef.current) {
-        if (
-          currentSectionRef.current.id != nextSection.id &&
-          bgManagerRef.current.isReadyForTransition()
-        ) {
-          if (currentSectionRef.current.id === 'top' && nextSection.id !== 'top') {
-            user.handleTokuGet('torii');
-          }
+  // DB上のユーザー情報が取れなかった場合は新規作成
+  if (!user) {
+    user = await prisma.user.create({
+      data: { isGuest: true },
+    });
+    console.log('user create', user.id);
+  }
 
-          bgManagerRef.current.setUrl(nextSection.bgUrl, nextSection.scrollEffect);
-          currentSectionRef.current = nextSection;
-          setState({ activeId: nextSection.id });
-        }
+  // 今日の徳カウント情報を取得
+  const today = getJapanTodayMidnight();
+  let tokuCounts = null;
+  tokuCounts = await prisma.tokuCount.findFirst({
+    where: {
+      userId: user.id,
+      date: {
+        gte: today,
+        lt: new Date(today.getTime() + 24 * 60 * 60 * 1000),
+      },
+    },
+  });
 
-        const el = sectionRefs.current[currentSectionRef.current.id];
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          const scrollRatio = Math.min(
-            Math.max((window.innerHeight / 2 - rect.top) / rect.height, 0),
-            1
-          );
-          bgManagerRef.current.setScrollRatio(scrollRatio);
-        }
-      }
+  // 今日の徳カウント情報が無い場合は新規作成
+  if (!tokuCounts) {
+    tokuCounts = await prisma.tokuCount.create({
+      data: { userId: user.id, date: today, counts: {} },
+    });
+  }
 
-      requestAnimationFrame(checkScroll);
-    };
+  // クライアントで使用するユーザー情報を返す
+  userData = {
+    id: user.id,
+    isGuest: user.isGuest,
+    email: user.email ?? '',
+    name: user.name ?? '',
+    coin: user.coin,
+    tokuUpdatedAt: tokuCounts.date.toISOString(),
+    tokuCounts: tokuCounts.counts as TokuCounts,
+  };
 
-    requestAnimationFrame(checkScroll);
-  }, []);
+  console.log('userData', userData);
 
   return (
-    <>
-      <Header {...user} />
-      <main className="relative overflow-x-hidden z-0">
-        <BackgroundManager
-          ref={bgManagerRef}
-          initialUrl={sections[0].bgUrl}
-          allUrls={allUrls}
-          scrollEffect={sections[0].scrollEffect}
-        />
-
-        {/* テロップ表示 */}
-        {user.telop.currentText && (
-          <div
-            key={user.telop.currentId.current}
-            className="fixed right-6 top-16 bg-black backdrop-blur-sm rounded-sm p-2 text-xl font-bold animate-telop-slide-in-out z-60"
-          >
-            {user.telop.currentText}
-          </div>
-        )}
-
-        {sections.map(({ id, component: SectionComponent }, idx) => {
-          const isActive = id === state.activeId;
-          const isNeighbor = Math.abs(idx - activeIndex) === 1;
-          return (
-            <section
-              key={id}
-              ref={(el) => {
-                sectionRefs.current[id] = el;
-              }}
-              className={`${sections[idx].sectionClass}`}
-            >
-              {(isActive || isNeighbor) && SectionComponent && (
-                <SectionComponent
-                  isActive={isActive}
-                  isNeighbor={isNeighbor}
-                  user={user.user}
-                  handleAddCoin={user.handleAddCoin}
-                  handleIsLimitOver={user.handleIsLimitOver}
-                  handleTokuGet={user.handleTokuGet}
-                  handleTokuUsed={user.handleTokuUsed}
-                  handleIsEnoughCoin={user.handleIsEnoughCoin}
-                />
-              )}
-            </section>
-          );
-        })}
-
-        <SectionOverlayText text={currentSectionRef.current.name} />
-
-        <DebugLogDialog />
-
-        <div className="overlay-gradient" />
-      </main>
-    </>
+    <SessionWrapper session={session}>
+      <App initialUser={userData} />
+    </SessionWrapper>
   );
 }

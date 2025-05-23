@@ -36,6 +36,10 @@ export async function apiFetch(
   const json = (await res.json()) as ErrorResponse | object;
 
   if (!res.ok) {
+    if (res.status === 401) {
+      window.location.href = '/';
+      throw new Error('未認証');
+    }
     // JSON に error プロパティがあればそれを使い、
     // なければステータス文言を投げる
     const msg =

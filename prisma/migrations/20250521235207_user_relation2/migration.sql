@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "EmaPost" ALTER COLUMN "userId" DROP NOT NULL;

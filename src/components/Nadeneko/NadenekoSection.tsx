@@ -4,6 +4,10 @@ import React from 'react';
 import TextReveal from '@/components/_shared/TextReveal';
 import { User } from '@/types/user';
 import { TokuId } from '@/types/toku';
+import { getTokuCoin } from '@/utils/toku';
+import { Button } from '../_shared/Button';
+import Image from 'next/image';
+
 type Props = {
   isActive: boolean;
   isNeighbor: boolean;
@@ -15,11 +19,9 @@ type Props = {
   handleIsEnoughCoin: (tokuId: TokuId) => boolean;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const NadenekoSection = (props: Props) => {
   const handlePostWish = () => {
-    // 投稿ボタンの処理（例えば、APIに投稿する）
-    alert(`撫でました`);
+    props.handleTokuGet('nadeneko');
   };
 
   return (
@@ -30,9 +32,20 @@ const NadenekoSection = (props: Props) => {
           delayPerChar={0.1}
           className="text-2xl font-bold mb-4"
         />
-        <button className="bg-indigo-600 px-4 py-2 rounded" onClick={handlePostWish}>
-          撫でる
-        </button>
+        <Button
+          variant="positive"
+          size="lg"
+          onClick={() => {
+            handlePostWish();
+          }}
+          className="w-full max-w-md flex flex-col pt-2 pb-2"
+        >
+          <div className="text-xl font-bold">なでる</div>
+          <div className="flex flex-row items-center">
+            <Image src="/images/icon/icon_coin.webp" alt="omikuji_button" width={24} height={24} />
+            <div className="text-sm font-bold">{getTokuCoin('nadeneko')}獲得（1日1回）</div>
+          </div>
+        </Button>
       </div>
     </>
   );

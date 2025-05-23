@@ -24,11 +24,13 @@ export default function OmikujiButton({ title, imagePath, imageAlt, onClick, typ
         variant="positive"
         size="lg"
         onClick={() => onClick(type)}
-        className="w-full max-w-md"
+        className="w-full max-w-md flex flex-col pt-2 pb-2"
       >
-        <Image src="/images/icon/icon_coin.webp" alt="omikuji_button" width={32} height={32} />
-        <div className="text-sm font-bold">{coin}</div>
-        引く
+        <div className="text-xl font-bold">引く</div>
+        <div className="flex flex-row items-center">
+          <Image src="/images/icon/icon_coin.webp" alt="omikuji_button" width={24} height={24} />
+          <div className="text-sm text-yellow-400 font-bold">{coin}消費</div>
+        </div>
       </Button>
     </div>
   );

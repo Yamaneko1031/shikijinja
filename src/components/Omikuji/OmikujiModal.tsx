@@ -89,7 +89,11 @@ export default function OmikujiModal({ omikujiResponse, omikujiType, onClose }: 
             .map((d) => (
               <div key={d.type} className="flex justify-start items-start h-45 text-left">
                 <div className="font-otsutome w-[40px] mt-4 vertical align-top">{d.element}</div>
-                <div className="font-otsutome vertical align-top">
+                <div
+                  className={`font-otsutome vertical align-top ${
+                    d.type.length > 10 ? 'text-[12px]' : ''
+                  }`}
+                >
                   {d.type}★{d.rank}
                 </div>
               </div>

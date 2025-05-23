@@ -47,7 +47,7 @@ const HeaderCoinCounter: React.FC<HeaderCoinCounterProps> = (props) => {
   }, [popup]);
 
   return (
-    <div className="h-[50px] w-[100px] flex items-center gap-1">
+    <div className="h-[50px] w-[80px] flex items-center gap-1">
       <Image src="/images/icon/icon_coin.webp" alt="徳コイン" width={32} height={32} />
       <span className="text-xl text-gray-600">{viewCoin}</span>
       {/* ポップアップ */}

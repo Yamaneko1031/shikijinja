@@ -13,6 +13,7 @@ import { apiFetch } from '@/lib/api';
 import Image from 'next/image';
 import { User } from '@/types/user';
 import { TokuId } from '@/types/toku';
+import { getTokuCoin } from '@/utils/toku';
 
 type Props = {
   isActive: boolean;
@@ -95,6 +96,8 @@ const EmaSection = (props: Props) => {
         return next;
       });
 
+      props.handleTokuGet('ema_post');
+
       // ハイライト解除のタイマー
       setTimeout(() => {
         setDisplayPosts((prev) =>
@@ -107,8 +110,6 @@ const EmaSection = (props: Props) => {
     } finally {
       // いずれにせよローディングをオフ
       setIsSaving(false);
-
-      props.handleTokuGet('ema_post');
     }
   };
 
@@ -157,9 +158,13 @@ const EmaSection = (props: Props) => {
             setSelectedDeity(null);
             setIsPosting(true);
           }}
-          className="w-full max-w-md"
+          className="w-full max-w-md flex flex-col pt-2 pb-2"
         >
-          絵馬に願いを書く
+          <div className="text-xl font-bold">絵馬に願いを書く</div>
+          <div className="flex flex-row items-center">
+            <Image src="/images/icon/icon_coin.webp" alt="omikuji_button" width={24} height={24} />
+            <div className="text-sm font-bold">{getTokuCoin('ema_post')}獲得（1日1回）</div>
+          </div>
         </Button>
       </div>
       {/* ------------------ modal -------------------- */}

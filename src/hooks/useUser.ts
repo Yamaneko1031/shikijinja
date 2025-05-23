@@ -1,19 +1,27 @@
-import { User } from '@/types/user';
+import { User, UserUpdateInput } from '@/types/user';
 import { TokuId } from '@/types/toku';
 import { getTokuLimit, getTokuMaster } from '@/utils/toku';
 import { useState } from 'react';
 import { useTelop } from './useTelop';
+import { apiFetch } from '@/lib/api';
 
-export const useUser = () => {
-  const [user, setUser] = useState<User>({
-    id: '1',
-    isGuest: true,
-    name: 'ゲスト',
-    coin: 150,
-    tokuUpdatedAt: new Date().toISOString(),
-    tokuCounts: {},
-  });
+export const useUser = (initialUser: User) => {
+  const [user, setUser] = useState<User>(initialUser);
   const telop = useTelop();
+
+  const updateUser = async (input: UserUpdateInput) => {
+    try {
+      const res = await apiFetch('/api/user', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(input),
+      });
+      // 更新後のユーザー情報を返す
+      return await res;
+    } catch (err) {
+      console.error('更新に失敗しました:', err);
+    }
+  };
 
   const resetTokuCounts = () => {
     setUser({ ...user, tokuUpdatedAt: new Date().toISOString(), tokuCounts: {} });
@@ -27,8 +35,8 @@ export const useUser = () => {
   };
 
   const handleAddCoin = (coin: number) => {
-    console.log('AddCoin', user.coin + coin);
     setUser({ ...user, coin: user.coin + coin });
+    updateUser({ coin: user.coin + coin });
   };
 
   const handleIsLimitOver = (tokuId: TokuId): boolean => {
@@ -40,26 +48,28 @@ export const useUser = () => {
     return limit !== undefined && currentTokuCount !== undefined && currentTokuCount >= limit;
   };
 
-  const handleTokuGet = (tokuId: TokuId): boolean => {
+  const handleTokuGet = async (tokuId: TokuId): Promise<boolean> => {
+    console.log('handleTokuGet', tokuId);
     if (handleIsLimitOver(tokuId)) {
       return false;
     }
-    const setUserData = { ...user };
-    const currentCount = (setUserData.tokuCounts[tokuId]?.count || 0) + 1;
-    setUserData.tokuCounts[tokuId] = {
-      count: currentCount,
-    };
-    setUserData.tokuUpdatedAt = new Date().toISOString();
-
-    const tokuMaster = getTokuMaster(tokuId);
-    if (tokuMaster) {
-      setUserData.coin += tokuMaster.coin;
-      const text = `${tokuMaster.label} [${currentCount}/${tokuMaster.limit}]`;
-      if (tokuMaster.coin > 0) {
+    try {
+      const res = await apiFetch<User>('/api/toku/get', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tokuId }),
+      });
+      setUser(res);
+      // テロップ表示
+      const tokuMaster = getTokuMaster(tokuId);
+      if (tokuMaster) {
+        const text = `${tokuMaster.label} [${res.tokuCounts[tokuId]?.count}/${tokuMaster.limit}]`;
         telop.showPop(text);
       }
+    } catch (err) {
+      console.error('徳カウント更新失敗', err);
+      return false;
     }
-    setUser(setUserData);
     return true;
   };
 
@@ -71,22 +81,24 @@ export const useUser = () => {
     return false;
   };
 
-  const handleTokuUsed = (tokuId: TokuId): boolean => {
+  const handleTokuUsed = async (tokuId: TokuId): Promise<boolean> => {
     if (handleIsLimitOver(tokuId)) {
       return false;
     }
-    const setUserData = { ...user };
-    const currentCount = (setUserData.tokuCounts[tokuId]?.count || 0) + 1;
-    setUserData.tokuCounts[tokuId] = {
-      count: currentCount,
-    };
-    setUserData.tokuUpdatedAt = new Date().toISOString();
-
-    const tokuMaster = getTokuMaster(tokuId);
-    if (tokuMaster) {
-      setUserData.coin -= tokuMaster.coin;
+    if (!handleIsEnoughCoin(tokuId)) {
+      return false;
     }
-    setUser(setUserData);
+    try {
+      const res = await apiFetch<User>('/api/toku/used', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tokuId }),
+      });
+      setUser(res);
+    } catch (err) {
+      console.error('徳カウント更新失敗', err);
+      return false;
+    }
     return true;
   };
 

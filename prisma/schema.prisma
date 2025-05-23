@@ -17,12 +17,14 @@ datasource db {
 
 model EmaPost {
   id        String      @id @default(cuid())
+  userId    String?
   texts     Json        // TextBlock[] をそのまま保存
   reply     String
   emaImage  String
   decision  String      @default("ALLOW")
   reasons   Json        @default("[]")
   createdAt DateTime    @default(now())
+  user      User?       @relation("UserEmaPosts", fields: [userId], references: [id], onDelete: SetNull)
 }
 
 model PromptTemplate {
@@ -39,6 +41,7 @@ model PromptTemplate {
 
 model OmikujiResult {
   id              String      @id @default(cuid())
+  userId          String?
   job             String
   period          String
   fortuneNumber   Int
@@ -46,4 +49,44 @@ model OmikujiResult {
   msg             String
   details         Json        @default("[]")
   createdAt       DateTime    @default(now())
+  user            User?       @relation("UserOmikujiResults", fields: [userId], references: [id], onDelete: SetNull)
+}
+
+model TokuCount {
+  id              String      @id @default(cuid())
+  userId          String
+  date            DateTime
+  counts          Json        @default("{}")
+
+  @@unique([userId, date])
+}
+
+model User {
+  id              String           @id @default(cuid())
+  isGuest         Boolean          @default(true)
+  email           String?          @unique
+  passwordHash    String?
+  name            String?
+  coin            Int              @default(0)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  lastAccessAt    DateTime         @default(now())
+
+  accounts        Account[]        @relation("UserAccounts")
+  emaPosts        EmaPost[]        @relation("UserEmaPosts")
+  omikujiResults  OmikujiResult[]  @relation("UserOmikujiResults")
+
+  @@index([isGuest, lastAccessAt])
+}
+
+model Account {
+  id              String      @id @default(cuid())
+  userId          String
+  user            User        @relation("UserAccounts", fields: [userId], references: [id], onDelete: Cascade)
+  provider        String      // 'google', 'twitter', 'x' など
+  providerUserId  String      // GoogleやXのユーザーID
+  accessToken     String?
+  refreshToken    String?
+
+  @@unique([provider, providerUserId])
 }
