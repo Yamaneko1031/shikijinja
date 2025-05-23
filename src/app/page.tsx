@@ -2,7 +2,7 @@ import App from '@/components/_shared/App';
 import { cookies } from 'next/headers';
 import { User } from '@/types/user';
 import SessionWrapper from '@/components/_shared/SessionWrapper';
-import { authOptions } from './api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/authOptions';
 import { getServerSession, User as NextAuthUser } from 'next-auth';
 import { prisma } from '@/server/prisma';
 import { getJapanTodayMidnight } from '@/server/date';
