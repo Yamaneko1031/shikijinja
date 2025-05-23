@@ -50,22 +50,36 @@ export const useUser = (initialUser: User) => {
 
   const handleTokuGet = async (tokuId: TokuId): Promise<boolean> => {
     console.log('handleTokuGet', tokuId);
-    if (handleIsLimitOver(tokuId)) {
-      return false;
-    }
     try {
+      // 先に回数上限だけチェック
+      const checkRes = await apiFetch<{ result: boolean; count: number }>('/api/toku/check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tokuId }),
+      });
+
+      if (checkRes.result === false) {
+        return false;
+      }
+
+      // 上限を超えてなければローカルは更新
+      const tokuMaster = getTokuMaster(tokuId);
+      if (tokuMaster) {
+        // 先にテロップ表示
+        const text = `${tokuMaster.label} [${checkRes.count + 1}/${tokuMaster.limit}]`;
+        telop.showPop(text);
+        // ローカル上のコイン加算
+        setUser({ ...user, coin: user.coin + tokuMaster.coin });
+      }
+
+      // DBの更新はテロップ出してから
       const res = await apiFetch<User>('/api/toku/get', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ tokuId }),
       });
+      // ここでサーバーのユーザーデータと同期
       setUser(res);
-      // テロップ表示
-      const tokuMaster = getTokuMaster(tokuId);
-      if (tokuMaster) {
-        const text = `${tokuMaster.label} [${res.tokuCounts[tokuId]?.count}/${tokuMaster.limit}]`;
-        telop.showPop(text);
-      }
     } catch (err) {
       console.error('徳カウント更新失敗', err);
       return false;
@@ -82,13 +96,29 @@ export const useUser = (initialUser: User) => {
   };
 
   const handleTokuUsed = async (tokuId: TokuId): Promise<boolean> => {
-    if (handleIsLimitOver(tokuId)) {
-      return false;
-    }
     if (!handleIsEnoughCoin(tokuId)) {
       return false;
     }
+
     try {
+      // 先に回数上限だけチェック
+      const checkRes = await apiFetch<{ result: boolean; count: number }>('/api/toku/check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tokuId }),
+      });
+
+      if (checkRes.result === false) {
+        return false;
+      }
+
+      // 上限を超えてなければローカルは更新
+      const tokuMaster = getTokuMaster(tokuId);
+      if (tokuMaster) {
+        // ローカル上のコイン加算
+        setUser({ ...user, coin: user.coin - tokuMaster.coin });
+      }
+
       const res = await apiFetch<User>('/api/toku/used', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
