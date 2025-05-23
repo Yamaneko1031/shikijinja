@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 // import Image from 'next/image';
 import { User } from '@/types/user';
 
@@ -15,6 +15,12 @@ interface HeaderProps {
 
 const HeaderMenu: React.FC<HeaderProps> = (props) => {
   const { data: session } = useSession();
+  const [cookieUserId, setCookieUserId] = useState<string>('');
+
+  const handleClickCookie = async () => {
+    const res = await apiFetch<{ userId: string }>('/api/debug/cookie');
+    setCookieUserId(res.userId);
+  };
 
   const handleSignOut = async () => {
     // クッキーを削除してからサインアウト
@@ -29,10 +35,13 @@ const HeaderMenu: React.FC<HeaderProps> = (props) => {
 
   return (
     <div className="flex flex-col gap-2 items-center">
+      <Button variant="subNatural" onClick={handleClickCookie}>
+        cookieのUserIdを取得:{cookieUserId}
+      </Button>
       {session ? (
         <div className="flex flex-col gap-2">
           <p>ログイン中：{session.user?.name}</p>
-          <Button variant="subNatural" onClick={() => handleSignOut()}>
+          <Button variant="subNatural" onClick={handleSignOut}>
             ログアウト
           </Button>
         </div>
