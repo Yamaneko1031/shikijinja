@@ -83,14 +83,10 @@ const OmikujiSection = (props: Props) => {
 
   const fetchOmikujiJob = async (omikujiType: OmikujiType, job: string) => {
     try {
-      const bodyFortune = {
-        omikujiType: omikujiType,
-      };
+      const bodyFortune = { omikujiType };
       const dataFortune = await apiFetch<OmikujiFortuneResponse>('/api/omikuji/fortune', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(bodyFortune),
       });
 
@@ -107,52 +103,61 @@ const OmikujiSection = (props: Props) => {
           apiUri = '/api/omikuji/neko';
           break;
       }
+
       const body: OmikujiRequest = {
-        job: job,
+        job,
         fortuneNumber: dataFortune.fortune,
         period: omikujiType,
       };
 
       const res: Response = await apiFetch(apiUri, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
         raw: true,
       });
-      const decoder = new TextDecoder();
+
+      // Uint8Array[]にバッファしてからdecode
       let text = '';
+      const decoder = new TextDecoder();
+      const chunks: Uint8Array[] = [];
 
       if (res.body) {
         if (res.body[Symbol.asyncIterator]) {
           for await (const chunk of res.body) {
-            text += decoder.decode(chunk, { stream: true }); // 部分デコード
+            chunks.push(chunk);
           }
         } else if (res.body.getReader) {
           const reader = res.body.getReader();
           while (true) {
             const { value, done } = await reader.read();
             if (done) break;
-            text += decoder.decode(value, { stream: true });
+            if (value) chunks.push(value);
           }
         }
-        /* ★ ここで “残り” を flush */
-        text += decoder.decode(); // stream:false が既定 → 残バッファを全て取り出す
+
+        const totalLength = chunks.reduce((acc, val) => acc + val.length, 0);
+        const full = new Uint8Array(totalLength);
+        let offset = 0;
+        for (const chunk of chunks) {
+          full.set(chunk, offset);
+          offset += chunk.length;
+        }
+
+        text = decoder.decode(full);
       } else {
         text = await res.text(); // フォールバック
       }
 
-      const omikujiResponse = {
+      const omikujiResponse: OmikujiResponse = {
         ...JSON.parse(text),
-        job: job,
+        job,
         period: omikujiType,
         fortuneNumber: dataFortune.fortune,
         createdAt: new Date().toISOString(),
-      } as OmikujiResponse;
+      };
 
       resultRef.current = omikujiResponse;
-
       setIsOpen(true);
 
       switch (omikujiType) {
@@ -168,7 +173,7 @@ const OmikujiSection = (props: Props) => {
       }
     } catch (err) {
       console.error(err);
-      alert('おみくじが出てきませんでした。再度お試しください。' + err);
+      alert('おみくじが出てきませんでした。再度お試しください。\n' + err);
     } finally {
       setLoading(false);
     }
