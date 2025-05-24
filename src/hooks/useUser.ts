@@ -107,7 +107,7 @@ export const useUser = (initialUser: User) => {
       if (tokuMaster) {
         setUser((prevUser) => ({
           ...prevUser,
-          coin: prevUser.coin + tokuMaster.coin,
+          coin: prevUser.coin - tokuMaster.coin,
           tokuCounts: {
             ...prevUser.tokuCounts,
             [tokuId]: {
