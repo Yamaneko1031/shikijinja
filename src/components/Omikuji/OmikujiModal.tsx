@@ -31,9 +31,10 @@ export default function OmikujiModal({ omikujiResponse, omikujiType, onClose }: 
       <Image
         className="absolute h-auto w-full pl-[10px] pr-[10px] pt-[30px]"
         src="/images/omikuji/omikuji.webp"
-        alt="おみくじ"
+        alt="omikuji_bg"
         width={400}
         height={800}
+        priority
       />
       <div className="relative w-[400px] mt-8 pt-6 pl-12 pr-12 text-black flex flex-col">
         {/* おみくじ名 */}
