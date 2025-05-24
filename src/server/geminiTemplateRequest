@@ -1,0 +1,26 @@
+import { gemini } from './gemini';
+import { prisma } from './prisma';
+
+export async function geminiTemplateRequest(label: string, user: string): Promise<string | null> {
+  // プロンプトテンプレートを取得
+  const tpl = await prisma.promptTemplate.findFirst({
+    where: { label: label },
+  });
+  if (!tpl) {
+    return null;
+  }
+
+  const message = tpl.instructions
+    ? `${tpl.systemPrompt}\n\n【追加指示】\n${tpl.instructions}`
+    : tpl.systemPrompt;
+
+  const fullMessage = message + tpl.userPrompt + user;
+
+  // OpenAI で返信を生成
+  const response = await gemini.models.generateContent({
+    model: tpl.model,
+    contents: fullMessage,
+  });
+
+  return response.text?.trim() ?? '';
+}
