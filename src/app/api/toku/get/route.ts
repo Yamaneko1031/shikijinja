@@ -7,10 +7,11 @@ import { TokuCounts, TokuId } from '@/types/toku';
 import { User } from '@/types/user';
 
 export async function POST(req: Request) {
-  const { tokuId }: { tokuId: TokuId } = await req.json();
+  const { tokuId, count }: { tokuId: TokuId; count: number } = await req.json();
   const cookieStore = await cookies();
   const userId = cookieStore.get('userId')?.value;
   const tokuMaster = getTokuMaster(tokuId);
+  let addCount = count;
 
   try {
     if (!userId) return json({ error: '未認証' }, { status: 401 });
@@ -41,18 +42,22 @@ export async function POST(req: Request) {
       tokuCountsUpdateData.counts = {} as TokuCounts;
     }
 
-    const count =
+    const prevCount =
       tokuCountsUpdateData.counts[tokuId] === undefined
         ? 0
         : tokuCountsUpdateData.counts[tokuId]!.count;
 
-    if (count >= tokuMaster.limit) {
+    if (prevCount + count > tokuMaster.limit) {
+      addCount = tokuMaster.limit - prevCount;
+    }
+
+    if (addCount <= 0) {
       return json({ error: '回数制限に達しています' }, { status: 400 });
     }
 
     // ユーザーデータ更新
     const userUpdateData: Record<string, string | number> = {};
-    userUpdateData.coin = user.coin + tokuMaster.coin;
+    userUpdateData.coin = user.coin + tokuMaster.coin * addCount;
     user = await prisma.user.update({
       where: { id: userId },
       data: userUpdateData,
@@ -60,7 +65,7 @@ export async function POST(req: Request) {
 
     // 徳カウントデータ更新
     tokuCountsUpdateData.counts[tokuId] = {
-      count: count + 1,
+      count: prevCount + addCount,
     };
     // 今日のデータがなければ作る、あれば更新
     tokuCounts = await prisma.tokuCount.upsert({

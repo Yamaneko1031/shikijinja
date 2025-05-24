@@ -3,12 +3,13 @@ import { TokuId } from '@/types/toku';
 import { getTokuLimit, getTokuMaster } from '@/utils/toku';
 import { useState } from 'react';
 import { useTelop } from './useTelop';
-import { apiFetch } from '@/lib/api';
 import { getAppTime } from '@/lib/appTime';
+import { useRequestQueue } from './useReqestQueue';
 
 export const useUser = (initialUser: User) => {
   const [user, setUser] = useState<User>(initialUser);
   const telop = useTelop();
+  const { pushRequest } = useRequestQueue();
 
   // const updateUser = async (input: UserUpdateInput) => {
   //   try {
@@ -72,11 +73,7 @@ export const useUser = (initialUser: User) => {
         }));
       }
       // DBの更新は非同期で行う
-      apiFetch<User>('/api/toku/get', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tokuId }),
-      });
+      pushRequest({ uri: '/api/toku/get', tokuId, count: 1 });
     } catch (err) {
       console.error('徳カウント更新失敗', err);
       return false;
@@ -117,11 +114,7 @@ export const useUser = (initialUser: User) => {
         }));
       }
       // DBの更新は非同期で行う
-      apiFetch<User>('/api/toku/used', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tokuId }),
-      });
+      pushRequest({ uri: '/api/toku/used', tokuId, count: 1 });
     } catch (err) {
       console.error('徳カウント更新失敗', err);
       return false;
