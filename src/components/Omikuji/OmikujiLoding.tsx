@@ -18,13 +18,6 @@ const OmikujiLoding: React.FC = () => {
         className="absolute bottom-30 right-5 object-contain animate-omikuji-shuffle"
         aria-hidden="true"
       />
-      <Image
-        src="/images/omikuji/omikuji.webp"
-        alt="omikuji_bg"
-        width={400}
-        height={800}
-        style={{ display: 'none' }} // ユーザーに見せない
-      />
     </div>
   );
 };

@@ -261,6 +261,14 @@ const OmikujiSection = (props: Props) => {
           ></OmikujiModal>
         </Modal>
       )}
+
+      <Image
+        src="/images/omikuji/omikuji.webp"
+        alt="omikuji_bg"
+        width={400}
+        height={800}
+        style={{ display: 'none' }} // ユーザーに見せない
+      />
     </>
   );
 };
