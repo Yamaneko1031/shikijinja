@@ -14,7 +14,6 @@ const OmikujiLoding: React.FC = () => {
         alt="omikuji_box"
         width={128}
         height={128}
-        priority
         className="absolute bottom-30 right-5 object-contain animate-omikuji-shuffle"
         aria-hidden="true"
       />

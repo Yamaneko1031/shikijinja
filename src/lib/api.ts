@@ -1,3 +1,5 @@
+import { postSlackError } from './slack';
+
 export interface ErrorResponse {
   error: string;
 }
@@ -46,6 +48,7 @@ export async function apiFetch(
       'error' in json && typeof (json as ErrorResponse).error === 'string'
         ? (json as ErrorResponse).error
         : res.statusText;
+    postSlackError(msg);
     throw new Error(msg);
   }
 

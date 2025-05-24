@@ -5,6 +5,8 @@ import { apiFetch } from '@/lib/api';
 import { getAppTime } from '@/lib/appTime';
 import { useState } from 'react';
 import { TokuId } from '@/types/toku';
+import { postSlackError } from '@/lib/slack';
+
 interface Props {
   handleTokuGet: (tokuId: TokuId) => void;
   handleTokuUsed: (tokuId: TokuId) => void;
@@ -84,6 +86,12 @@ export default function DebugLogDialog({ handleTokuGet, handleTokuUsed }: Props)
               className="text-sm text-yellow-300 mb-4 hover:text-yellow-400"
             >
               🔄 Coin Used
+            </button>
+            <button
+              onClick={() => postSlackError(logs.join('\n'))}
+              className="text-sm text-yellow-300 mb-4 hover:text-yellow-400"
+            >
+              🔄 Send Slack Logs
             </button>
 
             {appTime && (

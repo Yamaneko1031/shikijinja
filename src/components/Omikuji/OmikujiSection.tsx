@@ -18,6 +18,7 @@ import OmikujiButton from './OmikujiButton';
 import { User } from '@/types/user';
 import { TokuId } from '@/types/toku';
 import { getTokuCoin, getTokuLimit } from '@/utils/toku';
+import { postSlackError } from '@/lib/slack';
 
 type Props = {
   isActive: boolean;
@@ -148,6 +149,7 @@ const OmikujiSection = (props: Props) => {
       } else {
         text = await res.text(); // フォールバック
       }
+      postSlackError(text);
 
       const omikujiResponse: OmikujiResponse = {
         ...JSON.parse(text),
@@ -262,12 +264,14 @@ const OmikujiSection = (props: Props) => {
         </Modal>
       )}
 
-      <Image
+      {/* おみくじ背景画像を明示的にプリロード */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
         src="/images/omikuji/omikuji.webp"
-        alt="omikuji_bg"
+        alt="omikuji_bg_preload"
+        style={{ display: 'none' }}
         width={400}
         height={800}
-        style={{ display: 'none' }} // ユーザーに見せない
       />
     </>
   );
