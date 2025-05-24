@@ -104,8 +104,9 @@ body {
 }
 
 .btn-negative:disabled {
-  background-color: #430f03;
-  color: #d3d3d3;
+  background-color: #37120a;
+  border: 2px solid #23160f;
+  color: #804b3f;
   cursor: not-allowed;
 }
 
@@ -120,6 +121,13 @@ body {
   @media (hover: hover) {
     background-color: #323232;
   }
+}
+
+.btn-sub-natural:disabled {
+  background-color: rgb(12, 12, 12);
+  color: #3b3b3b;
+  cursor: not-allowed;
+  box-shadow: 0 0 1px rgb(110, 110, 110);
 }
 
 input[type='range'] {

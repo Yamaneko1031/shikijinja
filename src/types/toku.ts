@@ -6,6 +6,9 @@ export const tokuIds = [
   'omikuji_hitohira',
   'omikuji_omikuji',
   'nadeneko',
+
+  'debug_add',
+  'debug_sub',
 ] as const;
 
 export type TokuId = (typeof tokuIds)[number];

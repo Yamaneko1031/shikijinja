@@ -155,7 +155,7 @@ const App = (props: Props) => {
 
         <SectionOverlayText text={currentSectionRef.current.name} />
 
-        <DebugLogDialog />
+        <DebugLogDialog handleTokuGet={user.handleTokuGet} handleTokuUsed={user.handleTokuUsed} />
 
         <div className="overlay-gradient" />
       </main>

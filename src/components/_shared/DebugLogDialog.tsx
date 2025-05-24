@@ -1,13 +1,36 @@
 'use client';
 
 import { useDebugLog } from '@/hooks/useDebugLog';
+import { apiFetch } from '@/lib/api';
 import { getAppTime } from '@/lib/appTime';
 import { useState } from 'react';
+import { TokuId } from '@/types/toku';
+interface Props {
+  handleTokuGet: (tokuId: TokuId) => void;
+  handleTokuUsed: (tokuId: TokuId) => void;
+}
 
-export default function DebugLogDialog() {
+export default function DebugLogDialog({ handleTokuGet, handleTokuUsed }: Props) {
   const { logs, clearLogs } = useDebugLog();
   const [isOpen, setIsOpen] = useState(false);
   const [appTime, setAppTime] = useState<Date | null>(null);
+  const [cookieUserId, setCookieUserId] = useState<string>('');
+
+  const cookieInit = async () => {
+    apiFetch('/api/init', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({}),
+    });
+    setCookieUserId('');
+  };
+
+  const cookieUserIdGet = async () => {
+    const res = await apiFetch<{ userId: string }>('/api/debug/cookie');
+    setCookieUserId(res.userId);
+  };
+
   return (
     <>
       <button
@@ -38,8 +61,36 @@ export default function DebugLogDialog() {
             >
               🔄 Get App Time
             </button>
+            <button
+              onClick={cookieUserIdGet}
+              className="text-sm text-yellow-300 mb-4 hover:text-yellow-400"
+            >
+              🔄 UserId
+            </button>
+            <button
+              onClick={cookieInit}
+              className="text-sm text-yellow-300 mb-4 hover:text-yellow-400"
+            >
+              🔄 Cookie Init
+            </button>
+            <button
+              onClick={() => handleTokuGet('debug_add')}
+              className="text-sm text-yellow-300 mb-4 hover:text-yellow-400"
+            >
+              🔄 Coin Get
+            </button>
+            <button
+              onClick={() => handleTokuUsed('debug_sub')}
+              className="text-sm text-yellow-300 mb-4 hover:text-yellow-400"
+            >
+              🔄 Coin Used
+            </button>
+
             {appTime && (
               <p className="text-sm text-gray-400 mb-4">App Time: {appTime.toLocaleString()}</p>
+            )}
+            {cookieUserId && (
+              <p className="text-sm text-gray-400 mb-4">Cookie UserId: {cookieUserId}</p>
             )}
 
             <h2 className="text-xl mb-2 font-bold">Debug Logs</h2>

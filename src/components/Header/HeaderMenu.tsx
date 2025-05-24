@@ -15,50 +15,49 @@ interface HeaderProps {
 
 const HeaderMenu: React.FC<HeaderProps> = (props) => {
   const { data: session } = useSession();
-  const [cookieUserId, setCookieUserId] = useState<string>('');
+  const [loading, setLoading] = useState(false);
 
-  const handleClickCookie = async () => {
-    const res = await apiFetch<{ userId: string }>('/api/debug/cookie');
-    setCookieUserId(res.userId);
+  const handleSignIn = async (provider: 'google' | 'github') => {
+    // リダイレクトされるので戻さない
+    setLoading(true);
+    await signIn(provider);
   };
 
   const handleSignOut = async () => {
-    // クッキーを削除してからサインアウト
+    // リダイレクトされるので戻さない
+    setLoading(true);
     await apiFetch('/api/init', {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({}),
     });
-    signOut();
+    await signOut();
   };
 
   return (
     <div className="flex flex-col gap-2 items-center">
-      <Button variant="subNatural" onClick={handleClickCookie}>
-        cookieのUserIdを取得:{cookieUserId}
-      </Button>
       {session ? (
         <div className="flex flex-col gap-2">
           <p>ログイン中：{session.user?.name}</p>
-          <Button variant="subNatural" onClick={handleSignOut}>
+          <Button variant="subNatural" onClick={handleSignOut} disabled={loading}>
             ログアウト
           </Button>
         </div>
       ) : (
         <div className="flex flex-col gap-2">
-          <Button variant="subNatural" onClick={() => signIn('google')}>
+          <Button variant="subNatural" onClick={() => handleSignIn('google')} disabled={loading}>
             Googleでログイン
           </Button>
           {/* <Button variant="subNatural" onClick={() => signIn('twitter')}>
             Xでログイン
           </Button> */}
-          <Button variant="subNatural" onClick={() => signIn('github')}>
+          <Button variant="subNatural" onClick={() => handleSignIn('github')} disabled={loading}>
             GitHubでログイン
           </Button>
         </div>
       )}
-      <Button variant="negative" onClick={props.handleCloseMenu}>
+      <Button variant="negative" onClick={props.handleCloseMenu} disabled={loading}>
         閉じる
       </Button>
     </div>
