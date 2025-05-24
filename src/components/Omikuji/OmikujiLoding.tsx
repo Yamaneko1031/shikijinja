@@ -14,8 +14,16 @@ const OmikujiLoding: React.FC = () => {
         alt="omikuji_box"
         width={128}
         height={128}
+        priority
         className="absolute bottom-30 right-5 object-contain animate-omikuji-shuffle"
         aria-hidden="true"
+      />
+      <Image
+        src="/images/omikuji/omikuji.webp"
+        alt="omikuji_bg"
+        width={400}
+        height={800}
+        style={{ display: 'none' }} // ユーザーに見せない
       />
     </div>
   );
