@@ -24,7 +24,7 @@ const HeaderMenu: React.FC<HeaderProps> = (props) => {
 
   const handleSignOut = async () => {
     // クッキーを削除してからサインアウト
-    await apiFetch('/api/user/init', {
+    await apiFetch('/api/init', {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },

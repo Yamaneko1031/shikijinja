@@ -12,5 +12,5 @@ export async function POST(request: Request) {
   }
   console.log('cookieStore.set userId', userId);
 
-  return json({ msg: 'cookie更新' }, { status: 200 });
+  return json({ serverTime: new Date().toISOString() }, { status: 200 });
 }

@@ -1,19 +1,20 @@
 'use client';
 
 import { useDebugLog } from '@/hooks/useDebugLog';
+import { getAppTime } from '@/lib/appTime';
 import { useState } from 'react';
 
 export default function DebugLogDialog() {
   const { logs, clearLogs } = useDebugLog();
   const [isOpen, setIsOpen] = useState(false);
-
+  const [appTime, setAppTime] = useState<Date | null>(null);
   return (
     <>
       <button
         onClick={() => setIsOpen(true)}
         className="fixed bottom-4 right-4 bg-black text-white px-3 py-1 rounded shadow z-60"
       >
-        🔧 Logs
+        Debug
       </button>
 
       {isOpen && (
@@ -25,13 +26,23 @@ export default function DebugLogDialog() {
             >
               x
             </button>
-            <h2 className="text-xl mb-2 font-bold">Debug Logs</h2>
             <button
               onClick={clearLogs}
               className="text-sm text-yellow-300 mb-4 hover:text-yellow-400"
             >
               🔄 Clear Logs
             </button>
+            <button
+              onClick={() => setAppTime(getAppTime())}
+              className="text-sm text-yellow-300 mb-4 hover:text-yellow-400"
+            >
+              🔄 Get App Time
+            </button>
+            {appTime && (
+              <p className="text-sm text-gray-400 mb-4">App Time: {appTime.toLocaleString()}</p>
+            )}
+
+            <h2 className="text-xl mb-2 font-bold">Debug Logs</h2>
             <ul className="text-sm whitespace-pre-wrap space-y-1 max-w-full break-words">
               {logs.length > 0 ? (
                 logs.map((log, index) => <li key={index}>{log}</li>)
