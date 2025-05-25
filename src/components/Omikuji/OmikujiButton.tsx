@@ -24,7 +24,7 @@ export default function OmikujiButton({ title, imagePath, imageAlt, onClick, typ
         variant="positive"
         size="lg"
         onClick={() => onClick(type)}
-        className="w-full max-w-md flex flex-col pt-2 pb-2"
+        className="w-full max-w-md flex flex-col pt-2 pb-2 pl-0 pr-0"
       >
         <div className="text-xl font-bold">引く</div>
         <div className="flex flex-row items-center">
