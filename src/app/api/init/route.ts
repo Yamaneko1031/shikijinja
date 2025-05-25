@@ -2,15 +2,17 @@ import { cookies } from 'next/headers';
 import { json } from '@/server/response';
 
 export async function POST(request: Request) {
-  const { userId } = await request.json();
+  const { guestSessionId } = await request.json();
   const cookieStore = await cookies();
   // クッキーに保存
-  if (!userId) {
-    cookieStore.set('userId', '', { path: '/', httpOnly: true, maxAge: 0 });
+  if (guestSessionId === '') {
+    cookieStore.set('guestSessionId', '', { path: '/', httpOnly: true, maxAge: 0 });
   } else {
-    cookieStore.set('userId', userId, { path: '/', httpOnly: true, maxAge: 60 * 60 * 24 * 30 });
+    cookieStore.set('guestSessionId', guestSessionId, {
+      path: '/',
+      httpOnly: true,
+      maxAge: 60 * 60 * 24 * 30,
+    });
   }
-  console.log('cookieStore.set userId', userId);
-
-  return json({ serverTime: new Date().toISOString() }, { status: 200 });
+  return json({ result: true }, { status: 200 });
 }

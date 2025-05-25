@@ -2,7 +2,7 @@ import { prisma } from '@/server/prisma';
 import { EmaPost } from '@/types/ema';
 import { json } from '@/server/response';
 import { openaiTemplateRequest } from '@/server/openaiTemplateRequest';
-import { cookies } from 'next/headers';
+import { getSessionUser } from '@/server/userSession';
 
 export async function GET(request: Request) {
   try {
@@ -25,13 +25,8 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const cookieStore = await cookies();
-    const userId = cookieStore.get('userId')?.value ?? '';
-
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      return json({ error: '指定されたuserIdは存在しません' }, { status: 404 });
-    }
+    const { user } = await getSessionUser();
+    if (!user) return json({ error: 'ユーザー情報が見つかりません' }, { status: 404 });
 
     // クライアントから texts と絵馬画像キーを受け取る
     const { texts, emaImage } = (await request.json()) as EmaPost;
@@ -75,8 +70,8 @@ export async function POST(request: Request) {
     // EmaPost テーブルに texts, reply, emaImage をまとめて保存
     const post = await prisma.emaPost.create({
       data: {
-        userId: userId,
-        texts: texts, // Prisma の Json フィールドに自動シリアライズ
+        userId: user.id,
+        texts: texts,
         reply: newReply,
         decision: decision,
         reasons: reasons,

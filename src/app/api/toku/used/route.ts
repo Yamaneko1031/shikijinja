@@ -1,26 +1,20 @@
-import { cookies } from 'next/headers';
 import { prisma } from '@/server/prisma';
 import { getTokuMaster } from '@/utils/toku';
 import { json } from '@/server/response';
 import { getJapanTodayMidnight } from '@/server/date';
 import { TokuCounts, TokuId } from '@/types/toku';
 import { User } from '@/types/user';
+import { getSessionUser } from '@/server/userSession';
 
 export async function POST(req: Request) {
   const { tokuId, count }: { tokuId: TokuId; count: number } = await req.json();
-  const cookieStore = await cookies();
-  const userId = cookieStore.get('userId')?.value;
   const tokuMaster = getTokuMaster(tokuId);
+  let { user } = await getSessionUser();
   let addCount = count;
 
   try {
-    if (!userId) return json({ error: '未認証' }, { status: 401 });
-    if (!tokuMaster) return json({ error: 'マスタが見つかりません' }, { status: 404 });
-
-    let user = await prisma.user.findUnique({
-      where: { id: userId },
-    });
     if (!user) return json({ error: 'ユーザー情報が見つかりません' }, { status: 404 });
+    if (!tokuMaster) return json({ error: 'マスタが見つかりません' }, { status: 404 });
 
     if (user.coin < tokuMaster.coin) {
       return json({ error: 'コインが不足しています' }, { status: 400 });
@@ -63,7 +57,7 @@ export async function POST(req: Request) {
     const userUpdateData: Record<string, string | number> = {};
     userUpdateData.coin = user.coin - tokuMaster.coin * addCount;
     user = await prisma.user.update({
-      where: { id: userId },
+      where: { id: user.id },
       data: userUpdateData,
     });
 
@@ -73,10 +67,10 @@ export async function POST(req: Request) {
     };
     // 今日のデータがなければ作る、あれば更新
     tokuCounts = await prisma.tokuCount.upsert({
-      where: { userId_date: { userId, date: today } },
+      where: { userId_date: { userId: user.id, date: today } },
       update: { counts: tokuCountsUpdateData.counts },
       create: {
-        userId,
+        userId: user.id,
         date: today,
         counts: tokuCountsUpdateData.counts,
       },

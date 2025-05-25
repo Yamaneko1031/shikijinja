@@ -13,6 +13,8 @@ import { useDebugLog } from '@/hooks/useDebugLog';
 
 interface Props {
   initialUser: User;
+  guestSessionId: string;
+  serverTime: string;
   memo: string;
 }
 
@@ -42,28 +44,27 @@ const App = (props: Props) => {
     }
   }, []);
 
-  // 初回のユーザーとクッキーに保存されたユーザーのidが違うケースがあるので必ず更新する
+  // 初期処理
   useEffect(() => {
     addLog(`user init: ${props.memo}`);
-    if (!props.initialUser.id) return;
-    const init = async () => {
-      const res = await apiFetch<{ serverTime: string }>('/api/init', {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: props.initialUser.id }),
-      });
-      localStorage.setItem(
-        'serverTimeInfo',
-        JSON.stringify({
-          serverTime: res.serverTime,
-          clientTime: Date.now(),
-        })
-      );
-    };
 
-    init();
-  }, [props.initialUser.id, props.memo, addLog]);
+    // サーバー時刻情報更新
+    localStorage.setItem(
+      'serverTimeInfo',
+      JSON.stringify({
+        serverTime: props.serverTime,
+        clientTime: Date.now(),
+      })
+    );
+
+    // クッキーの更新
+    apiFetch<{ serverTime: string }>('/api/init', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ guestSessionId: props.guestSessionId }),
+    });
+  }, [props.guestSessionId, props.serverTime, props.memo, addLog]);
 
   useEffect(() => {
     const checkScroll = () => {

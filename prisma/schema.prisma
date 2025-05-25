@@ -72,6 +72,7 @@ model User {
   updatedAt       DateTime         @updatedAt
   lastAccessAt    DateTime         @default(now())
 
+  guestSessions   GuestSession[]   @relation("UserGuestSessions")
   accounts        Account[]        @relation("UserAccounts")
   emaPosts        EmaPost[]        @relation("UserEmaPosts")
   omikujiResults  OmikujiResult[]  @relation("UserOmikujiResults")
@@ -89,4 +90,11 @@ model Account {
   refreshToken    String?
 
   @@unique([provider, providerUserId])
+}
+
+model GuestSession {
+  id              String    @id @default(cuid()) // セッションID
+  userId          String
+  expiresAt       DateTime
+  user            User      @relation("UserGuestSessions", fields: [userId], references: [id])
 }
