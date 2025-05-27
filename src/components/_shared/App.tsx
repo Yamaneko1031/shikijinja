@@ -111,7 +111,10 @@ const App = (props: Props) => {
   return (
     <>
       <Header user={user.user} handleAddCoin={user.handleAddCoin} />
-      <main className="fixed inset-0 overflow-scroll overflow-x-hidden z-0" ref={containerRef}>
+      <main
+        className="fixed inset-0 overflow-scroll overscroll-contain overflow-x-hidden z-0"
+        ref={containerRef}
+      >
         <BackgroundManager
           ref={bgManagerRef}
           initialUrl={sections[0].bgUrl}
