@@ -18,6 +18,7 @@ import OmikujiSelector from './OmikujiSelector';
 import OmikujiButton from './OmikujiButton';
 import { getTokuCoin, getTokuLimit } from '@/utils/toku';
 import { SectionProps } from '@/types/section';
+import Head from 'next/head';
 
 const OmikujiSection = (props: SectionProps) => {
   console.log('OmikujiSection', props.isActive, props.isNeighbor);
@@ -148,6 +149,10 @@ const OmikujiSection = (props: SectionProps) => {
 
   return (
     <>
+      <Head>
+        <link rel="preload" href="/images/omikuji/omikuji.webp" as="image" />
+      </Head>
+
       <div className="relative max-w-2xl min-w-[320px] top-[600px] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2">
         <div className="relative h-full w-full bg-black/50 rounded-lg flex flex-col gap-2 pt-4 pl-4 pb-4 pr-[180px]">
           <div className="">
@@ -230,14 +235,14 @@ const OmikujiSection = (props: SectionProps) => {
       )}
 
       {/* おみくじ背景画像を明示的にプリロード */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      {}
+      {/* <img
         src="/images/omikuji/omikuji.webp"
         alt="omikuji_bg_preload"
         style={{ display: 'none' }}
         width={400}
         height={800}
-      />
+      /> */}
     </>
   );
 };
