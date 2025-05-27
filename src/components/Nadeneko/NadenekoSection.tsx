@@ -14,12 +14,25 @@ const NadenekoSection = (props: SectionProps) => {
 
   return (
     <>
-      <div className="relative top-[600px] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] p-10 bg-black/50 rounded-lg">
-        <TextReveal
-          text="猫を撫でるコンテンツ"
-          delayPerChar={0.1}
-          className="text-2xl font-bold mb-4"
-        />
+      <div className="relative max-w-2xl min-w-[320px] top-[600px] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2">
+        <div className="relative h-full w-full bg-black/50 rounded-lg flex flex-col gap-2 pt-4 pl-4 pb-4 pr-[180px]">
+          <div className="">
+            <TextReveal
+              text="（じー・・・）"
+              delayPerChar={0.1}
+              className="text-xl md:text-2xl font-bold"
+            />
+          </div>
+          <div className="absolute bottom-0 right-0 w-[200px]">
+            <Image
+              src="/images/nadeneko/neko_nadeneko.webp"
+              alt="neko_nadeneko"
+              width={400}
+              height={300}
+            />
+          </div>
+        </div>
+        <div className="relative h-full w-full bg-black/50 rounded-lg flex flex-row gap-2 p-4"></div>
         <Button
           variant="positive"
           size="lg"

@@ -32,7 +32,7 @@ export const sections: SectionData[] = [
       { ratio: 0.5, posX: 60, posY: 50, zoom: 1.1 },
       { ratio: 1.0, posX: 70, posY: 50, zoom: 1.2 },
     ],
-    sectionClass: 'relative w-full h-[1200px] items-center justify-center p-4',
+    sectionClass: 'relative w-full h-[1600px] items-center justify-center p-4',
   },
   {
     id: 'ema',
