@@ -6,18 +6,9 @@ import ShoukaiSection from '@/components/Shoukai/ShoukaiSection';
 import HaidenSection from '@/components/Haiden/HaidenSection';
 import NadenekoSection from '@/components/Nadeneko/NadenekoSection';
 import SandoSection from '@/components/Sando/SandoSection';
-import { SectionProps } from '@/types/section';
+import { SectionData } from '@/types/section';
 
-export type Section = {
-  id: string;
-  bgUrl: string;
-  name: string;
-  component: React.ComponentType<SectionProps>;
-  scrollEffect: { ratio: number; posX: number; posY: number; zoom: number }[];
-  sectionClass: string;
-};
-
-export const sections: Section[] = [
+export const sections: SectionData[] = [
   {
     id: 'top',
     bgUrl: '/images/bg_hude/bg_top.webp',

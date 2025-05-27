@@ -4,7 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import { OmikujiResponse, OmikujiType } from '@/types/omikuji';
 import { Button } from '../_shared/Button';
-import { omikujiNameList, omikujiMonthList } from '@/config/omikuji';
+import { omikujiConfig, omikujiMonthList } from '@/config/omikuji';
 
 type Props = {
   omikujiResponse: OmikujiResponse;
@@ -13,7 +13,7 @@ type Props = {
 };
 
 export default function OmikujiModal({ omikujiResponse, omikujiType, onClose }: Props) {
-  const omikujiName = omikujiNameList[omikujiType];
+  const omikujiName = omikujiConfig[omikujiType].name;
   return (
     // 半透明のオーバーレイ
     <div className="">

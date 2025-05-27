@@ -1,5 +1,5 @@
 import { json } from '@/server/response';
-import { omikujiFortuneTable } from '@/config/omikuji';
+import { omikujiConfig } from '@/config/omikuji';
 
 export async function POST(request: Request) {
   try {
@@ -7,7 +7,7 @@ export async function POST(request: Request) {
       omikujiType: string;
     };
 
-    const fortuneTable = omikujiFortuneTable[omikujiType as keyof typeof omikujiFortuneTable];
+    const fortuneTable = omikujiConfig[omikujiType as keyof typeof omikujiConfig].fortune;
     const fortuneNumber = Math.floor(Math.random() * 100);
 
     let totalCount = 0;

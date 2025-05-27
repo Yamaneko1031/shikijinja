@@ -28,44 +28,40 @@ const OmikujiSection = (props: SectionProps) => {
   const omikujiTypeRef = useRef<OmikujiType>('今年');
 
   const onClickOmikuji = (omikujiType: OmikujiType) => {
-    switch (omikujiType) {
-      case '今年':
-        if (props.handleIsLimitOver('omikuji_omikuji')) {
-          alert(`今日はもう引けません。\nおみくじは1日${getTokuLimit('omikuji_omikuji')}回まで。`);
-          return;
-        }
-        if (!props.handleIsEnoughCoin('omikuji_omikuji')) {
-          alert(`徳が足りません。\nおみくじは1回${getTokuCoin('omikuji_omikuji')}徳です。`);
-          return;
-        }
-        setIsSelector(true);
-        break;
-      case '今月':
-        if (props.handleIsLimitOver('omikuji_hitohira')) {
-          alert(
-            `今日はもう引けません。\nひとひらくじは1日${getTokuLimit('omikuji_hitohira')}回まで。`
-          );
-          return;
-        }
-        if (!props.handleIsEnoughCoin('omikuji_hitohira')) {
-          alert(`徳が足りません。\nひとひらくじは1回${getTokuCoin('omikuji_hitohira')}徳です。`);
-          return;
-        }
-        setIsSelector(true);
-        break;
-      case '明日':
-        if (props.handleIsLimitOver('omikuji_nekobiyori')) {
-          alert(
-            `今日はもう引けません。\nねこ日和は1日${getTokuLimit('omikuji_nekobiyori')}回まで。`
-          );
-          return;
-        }
-        if (!props.handleIsEnoughCoin('omikuji_nekobiyori')) {
-          alert(`徳が足りません。\nねこ日和は1回${getTokuCoin('omikuji_nekobiyori')}徳です。`);
-          return;
-        }
-        fetchOmikujiJob(omikujiType, '');
-        break;
+    const omikujiConfig = {
+      今年: {
+        id: 'omikuji_omikuji',
+        name: 'おみくじ',
+        needsSelector: true,
+      },
+      今月: {
+        id: 'omikuji_hitohira',
+        name: 'ひとひらくじ',
+        needsSelector: true,
+      },
+      明日: {
+        id: 'omikuji_nekobiyori',
+        name: 'ねこ日和',
+        needsSelector: false,
+      },
+    } as const;
+
+    const config = omikujiConfig[omikujiType];
+
+    if (props.handleIsLimitOver(config.id)) {
+      alert(`今日はもう引けません。\n${config.name}は1日${getTokuLimit(config.id)}回まで。`);
+      return;
+    }
+
+    if (!props.handleIsEnoughCoin(config.id)) {
+      alert(`徳が足りません。\n${config.name}は1回${getTokuCoin(config.id)}徳です。`);
+      return;
+    }
+
+    if (config.needsSelector) {
+      setIsSelector(true);
+    } else {
+      fetchOmikujiJob(omikujiType, '');
     }
     omikujiTypeRef.current = omikujiType;
   };

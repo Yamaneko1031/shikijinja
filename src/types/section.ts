@@ -2,6 +2,15 @@ import { MotionValue } from 'framer-motion';
 import { TokuId } from './toku';
 import { User } from './user';
 
+export type SectionData = {
+  id: string;
+  bgUrl: string;
+  name: string;
+  component: React.ComponentType<SectionProps>;
+  scrollEffect: { ratio: number; posX: number; posY: number; zoom: number }[];
+  sectionClass: string;
+};
+
 export type SectionProps = {
   isActive: boolean;
   isNeighbor: boolean;

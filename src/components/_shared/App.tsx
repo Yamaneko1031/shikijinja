@@ -2,11 +2,12 @@
 
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { BackgroundManager, BackgroundManagerHandle } from '@/components/_shared/BackgroundManager';
-import { Section, sections } from '@/config/sections';
 import DebugLogDialog from '@/components/_shared/DebugLogDialog';
 import SectionOverlayText from '@/components/_shared/SctionOverlayText';
 import { useUser } from '@/hooks/useUser';
 import { User } from '@/types/user';
+import { SectionData } from '@/types/section';
+import { sections } from '@/config/sections';
 import Header from '../Header/Header';
 import { apiFetch } from '@/lib/api';
 import { useDebugLog } from '@/hooks/useDebugLog';
@@ -29,7 +30,7 @@ const App = (props: Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
   const bgManagerRef = useRef<BackgroundManagerHandle>(null);
-  const currentSectionRef = useRef<Section>(sections[0]);
+  const currentSectionRef = useRef<SectionData>(sections[0]);
   const allUrls = sections.map(({ bgUrl }) => bgUrl);
   const activeIndex = sections.findIndex((s) => s.id === state.activeId);
   const { scrollY } = useScroll({ container: containerRef });
@@ -40,7 +41,7 @@ const App = (props: Props) => {
   }, [user]);
 
   // セクション切り替え時のコールバック
-  const onSectionChange = useCallback((prevSection: Section, nextSection: Section) => {
+  const onSectionChange = useCallback((prevSection: SectionData, nextSection: SectionData) => {
     console.log('セクション切り替え:', prevSection.id, '→', nextSection.id);
     if (prevSection.id === 'top' && nextSection.id !== 'top') {
       userRef.current.handleTokuGet('torii');
