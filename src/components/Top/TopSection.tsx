@@ -1,31 +1,18 @@
 'use client';
 
 import React from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import TextReveal from '../_shared/TextReveal';
 import ReafParticles from '../_shared/ReafParticles';
-import { User } from '@/types/user';
-import { TokuId } from '@/types/toku';
+import { SectionProps } from '@/types/section';
 
-type Props = {
-  isActive: boolean;
-  isNeighbor: boolean;
-  user: User;
-  handleAddCoin: (coin: number) => void;
-  handleIsLimitOver: (tokuId: TokuId) => boolean;
-  handleTokuGet: (tokuId: TokuId) => void;
-  handleTokuUsed: (tokuId: TokuId) => void;
-  handleIsEnoughCoin: (tokuId: TokuId) => boolean;
-};
-
-const TopSection = (props: Props) => {
+const TopSection = (props: SectionProps) => {
   console.log('TopSection', props.isActive, props.isNeighbor);
-  const { scrollY } = useScroll();
 
-  const toriiScale = useTransform(scrollY, [0, 400], [1, 3.5]);
-  const toriiOpacity = useTransform(scrollY, [100, 500], [1, 0]);
-  const titleOpacity = useTransform(scrollY, [150, 400], [1, 0]);
+  const toriiScale = useTransform(props.scrollY, [0, 400], [1, 3.5]);
+  const toriiOpacity = useTransform(props.scrollY, [100, 500], [1, 0]);
+  const titleOpacity = useTransform(props.scrollY, [150, 400], [1, 0]);
 
   return (
     <div className="pointer-events-none">

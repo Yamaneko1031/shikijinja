@@ -2,22 +2,10 @@
 
 import React, { useState } from 'react';
 import TextReveal from '@/components/_shared/TextReveal';
-import { User } from '@/types/user';
-import { TokuId } from '@/types/toku';
-
-type Props = {
-  isActive: boolean;
-  isNeighbor: boolean;
-  user: User;
-  handleAddCoin: (coin: number) => void;
-  handleIsLimitOver: (tokuId: TokuId) => boolean;
-  handleTokuGet: (tokuId: TokuId) => void;
-  handleTokuUsed: (tokuId: TokuId) => void;
-  handleIsEnoughCoin: (tokuId: TokuId) => boolean;
-};
+import { SectionProps } from '@/types/section';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const OmamoriSection = (props: Props) => {
+const OmamoriSection = (props: SectionProps) => {
   const [selectedOmamori, setSelectedOmamori] = useState('love');
 
   const handlePurchase = () => {

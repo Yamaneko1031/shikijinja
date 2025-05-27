@@ -11,22 +11,10 @@ import { Button } from '../_shared/Button';
 import Modal from '../_shared/Modal';
 import { apiFetch } from '@/lib/api';
 import Image from 'next/image';
-import { User } from '@/types/user';
-import { TokuId } from '@/types/toku';
 import { getTokuCoin } from '@/utils/toku';
+import { SectionProps } from '@/types/section';
 
-type Props = {
-  isActive: boolean;
-  isNeighbor: boolean;
-  user: User;
-  handleAddCoin: (coin: number) => void;
-  handleIsLimitOver: (tokuId: TokuId) => boolean;
-  handleTokuGet: (tokuId: TokuId) => void;
-  handleTokuUsed: (tokuId: TokuId) => void;
-  handleIsEnoughCoin: (tokuId: TokuId) => boolean;
-};
-
-const EmaSection = (props: Props) => {
+const EmaSection = (props: SectionProps) => {
   console.log('EmaSection', props.isActive, props.isNeighbor);
   /* ----------------- data ----------------- */
   const {

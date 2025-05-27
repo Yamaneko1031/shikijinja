@@ -7,6 +7,7 @@ import {
   OmikujiType,
   OmikujiRequest,
   OmikujiFortuneResponse,
+  OmikujiDetail,
 } from '@/types/omikuji';
 import Modal from '../_shared/Modal';
 import OmikujiModal from './OmikujiModal';
@@ -15,23 +16,10 @@ import OmikujiLoding from './OmikujiLoding';
 import Image from 'next/image';
 import OmikujiSelector from './OmikujiSelector';
 import OmikujiButton from './OmikujiButton';
-import { User } from '@/types/user';
-import { TokuId } from '@/types/toku';
 import { getTokuCoin, getTokuLimit } from '@/utils/toku';
-import { postSlackError } from '@/lib/slack';
+import { SectionProps } from '@/types/section';
 
-type Props = {
-  isActive: boolean;
-  isNeighbor: boolean;
-  user: User;
-  handleAddCoin: (coin: number) => void;
-  handleIsLimitOver: (tokuId: TokuId) => boolean;
-  handleTokuGet: (tokuId: TokuId) => void;
-  handleTokuUsed: (tokuId: TokuId) => void;
-  handleIsEnoughCoin: (tokuId: TokuId) => boolean;
-};
-
-const OmikujiSection = (props: Props) => {
+const OmikujiSection = (props: SectionProps) => {
   console.log('OmikujiSection', props.isActive, props.isNeighbor);
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -83,6 +71,9 @@ const OmikujiSection = (props: Props) => {
   };
 
   const fetchOmikujiJob = async (omikujiType: OmikujiType, job: string) => {
+    setIsSelector(false);
+    setLoading(true);
+
     try {
       const bodyFortune = { omikujiType };
       const dataFortune = await apiFetch<OmikujiFortuneResponse>('/api/omikuji/fortune', {
@@ -91,68 +82,27 @@ const OmikujiSection = (props: Props) => {
         body: JSON.stringify(bodyFortune),
       });
 
-      setIsSelector(false);
-      setLoading(true);
-
-      let apiUri = '';
-      switch (omikujiType) {
-        case '今年':
-        case '今月':
-          apiUri = '/api/omikuji/free';
-          break;
-        case '明日':
-          apiUri = '/api/omikuji/neko';
-          break;
-      }
-
       const body: OmikujiRequest = {
         job,
         fortuneNumber: dataFortune.fortune,
         period: omikujiType,
       };
 
-      const res: Response = await apiFetch(apiUri, {
+      const res: {
+        details: OmikujiDetail[];
+        fortune: string;
+        msg: string;
+      } = await apiFetch('https://omikuji-245510097867.asia-northeast1.run.app', {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
-        raw: true,
       });
 
-      // Uint8Array[]にバッファしてからdecode
-      let text = '';
-      const decoder = new TextDecoder();
-      const chunks: Uint8Array[] = [];
-
-      if (res.body) {
-        if (res.body[Symbol.asyncIterator]) {
-          for await (const chunk of res.body) {
-            chunks.push(chunk);
-          }
-        } else if (res.body.getReader) {
-          const reader = res.body.getReader();
-          while (true) {
-            const { value, done } = await reader.read();
-            if (done) break;
-            if (value) chunks.push(value);
-          }
-        }
-
-        const totalLength = chunks.reduce((acc, val) => acc + val.length, 0);
-        const full = new Uint8Array(totalLength);
-        let offset = 0;
-        for (const chunk of chunks) {
-          full.set(chunk, offset);
-          offset += chunk.length;
-        }
-
-        text = decoder.decode(full);
-      } else {
-        text = await res.text(); // フォールバック
-      }
-      postSlackError(text);
-
       const omikujiResponse: OmikujiResponse = {
-        ...JSON.parse(text),
+        details: res.details,
+        fortune: res.fortune,
+        msg: res.msg,
         job,
         period: omikujiType,
         fortuneNumber: dataFortune.fortune,
@@ -172,6 +122,25 @@ const OmikujiSection = (props: Props) => {
         case '明日':
           props.handleTokuUsed('omikuji_nekobiyori');
           break;
+      }
+
+      try {
+        const bodySave = {
+          details: omikujiResponse.details,
+          fortune: omikujiResponse.fortune,
+          msg: omikujiResponse.msg,
+          job: omikujiResponse.job,
+          period: omikujiResponse.period,
+          fortuneNumber: omikujiResponse.fortuneNumber,
+        };
+        apiFetch('/api/omikuji/save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(bodySave),
+        });
+      } catch (err) {
+        console.error(err);
+        alert('おみくじの保存に失敗しました。' + err);
       }
     } catch (err) {
       console.error(err);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { User } from '@/types/user';
 import HeaderCoinCounter from './HeaderCoinCounter';
@@ -12,20 +12,6 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = (props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [userId, setUserId] = useState<string>('');
-
-  useEffect(() => {
-    const cookieUserId = document.cookie
-      .split('; ')
-      .find((row) => row.startsWith('userId='))
-      ?.split('=')[1];
-
-    if (cookieUserId) {
-      setUserId(cookieUserId);
-    }
-  }, []);
-  // デバッグ用にuserIdを表示
-  console.log('Cookie userId:', userId);
 
   return (
     <header className="fixed top-0 left-0 w-full h-[50px] bg-white z-1">

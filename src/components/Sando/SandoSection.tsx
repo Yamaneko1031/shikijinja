@@ -2,21 +2,9 @@
 
 import React from 'react';
 import TextReveal from '@/components/_shared/TextReveal';
-import { User } from '@/types/user';
-import { TokuId } from '@/types/toku';
+import { SectionProps } from '@/types/section';
 
-type Props = {
-  isActive: boolean;
-  isNeighbor: boolean;
-  user: User;
-  handleAddCoin: (coin: number) => void;
-  handleIsLimitOver: (tokuId: TokuId) => boolean;
-  handleTokuGet: (tokuId: TokuId) => void;
-  handleTokuUsed: (tokuId: TokuId) => void;
-  handleIsEnoughCoin: (tokuId: TokuId) => boolean;
-};
-
-const SandoSection = (props: Props) => {
+const SandoSection = (props: SectionProps) => {
   console.log('SandoSection', props.isActive, props.isNeighbor);
   const handlePostWish = () => {
     alert(`参拝マナーを見ました`);

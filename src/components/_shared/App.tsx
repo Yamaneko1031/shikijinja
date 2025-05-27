@@ -10,6 +10,7 @@ import { User } from '@/types/user';
 import Header from '../Header/Header';
 import { apiFetch } from '@/lib/api';
 import { useDebugLog } from '@/hooks/useDebugLog';
+import { useScroll } from 'framer-motion';
 
 interface Props {
   initialUser: User;
@@ -25,11 +26,13 @@ const App = (props: Props) => {
   const user = useUser(props.initialUser);
   const [state, setState] = useState({ activeId: sections[0].id });
   const userRef = useRef(user);
+  const containerRef = useRef<HTMLDivElement>(null);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
   const bgManagerRef = useRef<BackgroundManagerHandle>(null);
   const currentSectionRef = useRef<Section>(sections[0]);
   const allUrls = sections.map(({ bgUrl }) => bgUrl);
   const activeIndex = sections.findIndex((s) => s.id === state.activeId);
+  const { scrollY } = useScroll({ container: containerRef });
 
   // Appコンポーネントで参照するユーザー情報の更新
   useEffect(() => {
@@ -47,7 +50,6 @@ const App = (props: Props) => {
   // 初期処理
   useEffect(() => {
     addLog(`user init: ${props.memo}`);
-
     // サーバー時刻情報更新
     localStorage.setItem(
       'serverTimeInfo',
@@ -109,7 +111,7 @@ const App = (props: Props) => {
   return (
     <>
       <Header user={user.user} handleAddCoin={user.handleAddCoin} />
-      <main className="relative overflow-x-hidden z-0">
+      <main className="fixed inset-0 overflow-scroll overflow-x-hidden z-0" ref={containerRef}>
         <BackgroundManager
           ref={bgManagerRef}
           initialUrl={sections[0].bgUrl}
@@ -143,6 +145,7 @@ const App = (props: Props) => {
                   isActive={isActive}
                   isNeighbor={isNeighbor}
                   user={user.user}
+                  scrollY={scrollY}
                   handleAddCoin={user.handleAddCoin}
                   handleIsLimitOver={user.handleIsLimitOver}
                   handleTokuGet={user.handleTokuGet}
