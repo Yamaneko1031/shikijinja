@@ -7,6 +7,7 @@ export type SectionData = {
   bgUrl: string;
   name: string;
   overlayText: string;
+  jumpOffset: number;
   component: React.ComponentType<SectionProps>;
   scrollEffect: { ratio: number; posX: number; posY: number; zoom: number }[];
   sectionClass: string;

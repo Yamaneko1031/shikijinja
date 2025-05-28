@@ -57,8 +57,9 @@ const App = (props: Props) => {
   const scrollToSection = useCallback((sectionId: string) => {
     const section = sectionRefs.current[sectionId];
     if (section && containerRef.current) {
+      const jumpOffset = sections.find((s) => s.id === sectionId)?.jumpOffset;
       containerRef.current.scrollTo({
-        top: section.offsetTop - window.innerHeight / 2 + 500,
+        top: section.offsetTop - window.innerHeight / 2 + (jumpOffset || 0),
         behavior: 'smooth',
       });
     }
