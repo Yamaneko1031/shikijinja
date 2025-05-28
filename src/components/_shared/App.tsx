@@ -12,6 +12,7 @@ import Header from '../Header/Header';
 import { apiFetch } from '@/lib/api';
 import { useDebugLog } from '@/hooks/useDebugLog';
 import { useScroll } from 'framer-motion';
+import Footer from '../Footer/Footer';
 
 interface Props {
   initialUser: User;
@@ -34,6 +35,34 @@ const App = (props: Props) => {
   const allUrls = sections.map(({ bgUrl }) => bgUrl);
   const activeIndex = sections.findIndex((s) => s.id === state.activeId);
   const { scrollY } = useScroll({ container: containerRef });
+
+  const getNextSectionId = useCallback((): string | null => {
+    console.log('getNextSectionId');
+    const currentIndex = sections.findIndex((s) => s.id === state.activeId);
+    if (currentIndex === -1 || currentIndex === sections.length - 1) {
+      return null;
+    }
+    return sections[currentIndex + 1].id;
+  }, [state.activeId]);
+
+  const getPrevSectionId = useCallback((): string | null => {
+    console.log('getPrevSectionId');
+    const currentIndex = sections.findIndex((s) => s.id === state.activeId);
+    if (currentIndex <= 0) {
+      return null;
+    }
+    return sections[currentIndex - 1].id;
+  }, [state.activeId]);
+
+  const scrollToSection = useCallback((sectionId: string) => {
+    const section = sectionRefs.current[sectionId];
+    if (section && containerRef.current) {
+      containerRef.current.scrollTo({
+        top: section.offsetTop - window.innerHeight / 2 + 500,
+        behavior: 'smooth',
+      });
+    }
+  }, []);
 
   // Appコンポーネントで参照するユーザー情報の更新
   useEffect(() => {
@@ -112,6 +141,12 @@ const App = (props: Props) => {
   return (
     <>
       <Header user={user.user} handleAddCoin={user.handleAddCoin} />
+      <button
+        className="fixed top-10 left-10 w-10 h-10 bg-black text-white z-3"
+        onClick={() => scrollToSection('sando')}
+      >
+        Sando
+      </button>
       <main
         className="fixed inset-0 overflow-scroll overscroll-contain overflow-x-hidden z-0"
         ref={containerRef}
@@ -161,12 +196,18 @@ const App = (props: Props) => {
           );
         })}
 
-        <SectionOverlayText text={currentSectionRef.current.name} />
+        <SectionOverlayText text={currentSectionRef.current.overlayText} />
 
         <DebugLogDialog handleTokuGet={user.handleTokuGet} handleTokuUsed={user.handleTokuUsed} />
 
         <div className="overlay-gradient" />
       </main>
+      <Footer
+        user={user.user}
+        handleGetNextSectionId={getNextSectionId}
+        handleGetPrevSectionId={getPrevSectionId}
+        handleScrollToSection={scrollToSection}
+      />
     </>
   );
 };

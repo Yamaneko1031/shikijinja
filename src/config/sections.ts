@@ -12,7 +12,8 @@ export const sections: SectionData[] = [
   {
     id: 'top',
     bgUrl: '/images/bg_hude/bg_top.webp',
-    name: '',
+    name: '入口',
+    overlayText: '',
     component: TopSection,
     scrollEffect: [
       { ratio: 0.0, posX: 60, posY: 50, zoom: 1.0 },
@@ -26,6 +27,7 @@ export const sections: SectionData[] = [
     id: 'sando',
     bgUrl: '/images/bg_hude/bg_sando.webp',
     name: '参道',
+    overlayText: '参道',
     component: SandoSection,
     scrollEffect: [
       { ratio: 0.0, posX: 45, posY: 50, zoom: 1.0 },
@@ -38,6 +40,7 @@ export const sections: SectionData[] = [
     id: 'ema',
     bgUrl: '/images/bg_hude/bg_ema.webp',
     name: '絵馬掛所',
+    overlayText: '絵馬掛所',
     component: EmaSection,
     scrollEffect: [
       { ratio: 0.0, posX: 30, posY: 50, zoom: 1.0 },
@@ -51,6 +54,7 @@ export const sections: SectionData[] = [
     id: 'omamori',
     bgUrl: '/images/bg_hude/bg_omamori.webp',
     name: '授与所',
+    overlayText: '授与所',
     component: OmamoriSection,
     scrollEffect: [
       { ratio: 0.0, posX: 30, posY: 50, zoom: 1.0 },
@@ -64,6 +68,7 @@ export const sections: SectionData[] = [
     id: 'omikuji',
     bgUrl: '/images/bg_hude/bg_omikuji.webp',
     name: 'おみくじ結び所',
+    overlayText: 'おみくじ結び所',
     component: OmikujiSection,
     scrollEffect: [
       { ratio: 0.0, posX: 40, posY: 50, zoom: 1.0 },
@@ -77,6 +82,7 @@ export const sections: SectionData[] = [
     id: 'nadeneko',
     bgUrl: '/images/bg_hude/bg_nadeneko.webp',
     name: 'なで猫の社',
+    overlayText: 'なで猫の社',
     component: NadenekoSection,
     scrollEffect: [
       { ratio: 0.0, posX: 45, posY: 50, zoom: 1.0 },
@@ -91,6 +97,7 @@ export const sections: SectionData[] = [
     id: 'shoukai',
     bgUrl: '/images/bg_hude/bg_shoukai.webp',
     name: '宝物殿',
+    overlayText: '宝物殿',
     component: ShoukaiSection,
     scrollEffect: [
       { ratio: 0.0, posX: 30, posY: 50, zoom: 1.0 },
@@ -104,6 +111,7 @@ export const sections: SectionData[] = [
     id: 'haiden',
     bgUrl: '/images/bg_hude/bg_haiden.webp',
     name: '拝殿',
+    overlayText: '拝殿',
     component: HaidenSection,
     scrollEffect: [
       { ratio: 0.0, posX: 50, posY: 50, zoom: 1.0 },
