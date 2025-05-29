@@ -14,7 +14,7 @@ const Header: React.FC<HeaderProps> = (props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 left-0 w-full h-[50px] bg-white z-1">
+    <header className="fixed top-0 left-0 w-full h-[50px] bg-white z-60 overscroll-contain">
       <Modal isOpen={isMenuOpen}>
         <HeaderMenu user={props.user} handleCloseMenu={() => setIsMenuOpen(false)} />
       </Modal>

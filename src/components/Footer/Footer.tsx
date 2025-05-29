@@ -15,7 +15,7 @@ const Footer: React.FC<FooterProps> = (props) => {
   const [isMapOpen, setIsMapOpen] = useState(false);
 
   return (
-    <footer className="fixed bottom-0 w-full h-[50px] z-1 flex items-center justify-center gap-4">
+    <footer className="fixed bottom-2 w-full h-[50px] z-60 flex items-center justify-center gap-4 overscroll-contain">
       <Modal isOpen={isMapOpen}>
         <FooterMap
           handleCloseMenu={() => setIsMapOpen(false)}
@@ -25,7 +25,7 @@ const Footer: React.FC<FooterProps> = (props) => {
 
       <Button
         variant="subNatural"
-        size="sm"
+        size="md"
         disabled={!props.handleGetPrevSectionId()}
         onClick={() => {
           const prevSectionId = props.handleGetPrevSectionId();
@@ -34,14 +34,14 @@ const Footer: React.FC<FooterProps> = (props) => {
           }
         }}
       >
-        ＜
+        戻る
       </Button>
-      <Button variant="subNatural" size="sm" onClick={() => setIsMapOpen(true)}>
+      <Button variant="subNatural" size="md" onClick={() => setIsMapOpen(true)}>
         地図
       </Button>
       <Button
         variant="subNatural"
-        size="sm"
+        size="md"
         disabled={!props.handleGetNextSectionId()}
         onClick={() => {
           const nextSectionId = props.handleGetNextSectionId();
@@ -50,7 +50,7 @@ const Footer: React.FC<FooterProps> = (props) => {
           }
         }}
       >
-        ＞
+        進む
       </Button>
     </footer>
   );

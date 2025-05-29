@@ -141,17 +141,11 @@ const App = (props: Props) => {
 
   return (
     <>
-      <Header user={user.user} handleAddCoin={user.handleAddCoin} />
-      <button
-        className="fixed top-10 left-10 w-10 h-10 bg-black text-white z-3"
-        onClick={() => scrollToSection('sando')}
-      >
-        Sando
-      </button>
       <main
         className="fixed inset-0 overflow-scroll overscroll-contain overflow-x-hidden z-0"
         ref={containerRef}
       >
+        <Header user={user.user} handleAddCoin={user.handleAddCoin} />
         <BackgroundManager
           ref={bgManagerRef}
           initialUrl={sections[0].bgUrl}
@@ -202,13 +196,13 @@ const App = (props: Props) => {
         <DebugLogDialog handleTokuGet={user.handleTokuGet} handleTokuUsed={user.handleTokuUsed} />
 
         <div className="overlay-gradient" />
+        <Footer
+          user={user.user}
+          handleGetNextSectionId={getNextSectionId}
+          handleGetPrevSectionId={getPrevSectionId}
+          handleScrollToSection={scrollToSection}
+        />
       </main>
-      <Footer
-        user={user.user}
-        handleGetNextSectionId={getNextSectionId}
-        handleGetPrevSectionId={getPrevSectionId}
-        handleScrollToSection={scrollToSection}
-      />
     </>
   );
 };
