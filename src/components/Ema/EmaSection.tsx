@@ -151,7 +151,9 @@ const EmaSection = (props: SectionProps) => {
           <div className="text-xl font-bold">絵馬に願いを書く</div>
           <div className="flex flex-row items-center">
             <Image src="/images/icon/icon_coin.webp" alt="omikuji_button" width={24} height={24} />
-            <div className="text-sm font-bold">{getTokuCoin('ema_post')}獲得（1日1回）</div>
+            <div className="text-sm text-yellow-400 font-bold">
+              {getTokuCoin('ema_post')}獲得（1日1回）
+            </div>
           </div>
         </Button>
       </div>

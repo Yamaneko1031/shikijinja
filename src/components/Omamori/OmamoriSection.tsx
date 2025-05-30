@@ -1,17 +1,34 @@
 'use client';
 
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import TextReveal from '@/components/_shared/TextReveal';
 import { SectionProps } from '@/types/section';
 import Image from 'next/image';
+import { OmamoriData } from '@/types/omamori';
+import { apiFetch } from '@/lib/api';
+import OmamoriWindow from './OmamoriWindow';
+import Modal from '../_shared/Modal';
+import OmamoriLoading from './OmamoriLoading';
+import OmamoriModal from './OmamoriModal';
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const OmamoriSection = (props: SectionProps) => {
-  // const [selectedOmamori, setSelectedOmamori] = useState('love');
+  const [loading, setLoading] = useState(false);
+  const [omamoriData, setOmamoriData] = useState<OmamoriData | null>(null);
+  const [omamoriModalOpen, setOmamoriModalOpen] = useState(false);
+  const omamoriDataRef = useRef<OmamoriData | null>(null);
 
-  // const handlePurchase = () => {
-  //   // 購入処理（例えば、APIに購入リクエストを送る）
-  //   alert('御守りを受け取りました！');
-  // };
+  const handlePurchase = async (selectedOmamori: OmamoriData) => {
+    setOmamoriData(selectedOmamori);
+    setLoading(true);
+    omamoriDataRef.current = await apiFetch<OmamoriData>('/api/omamori/buy', {
+      method: 'POST',
+      body: JSON.stringify({ omamoriName: selectedOmamori.name }),
+    });
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+    setLoading(false);
+    setOmamoriModalOpen(true);
+  };
 
   return (
     <>
@@ -33,28 +50,22 @@ const OmamoriSection = (props: SectionProps) => {
             />
           </div>
         </div>
-        <div className="relative h-full w-full bg-black/50 rounded-lg flex flex-row gap-2 p-4"></div>
+        <OmamoriWindow handlePurchase={handlePurchase} />
       </div>
-      {/* 
-      <div className="relative top-[600px] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] p-10 bg-black/50 rounded-lg">
-        <TextReveal
-          text="ご利益を得たい御守りを選択して受け取るコンテンツ"
-          delayPerChar={0.1}
-          className="text-2xl font-bold mb-4"
-        />
-        <select
-          className="p-2 mb-4"
-          value={selectedOmamori}
-          onChange={(e) => setSelectedOmamori(e.target.value)}
-        >
-          <option value="project">プロジェクト運</option>
-          <option value="health">健康運</option>
-          <option value="money">金運</option>
-        </select>
-        <button className="bg-indigo-600 text-white px-4 py-2 rounded" onClick={handlePurchase}>
-          受け取る
-        </button>
-      </div> */}
+
+      {/* おみくじ抽選中画面 */}
+      <Modal isOpen={loading} className="relative min-w-[340px] w-[500px] mx-2 overscroll-contain">
+        <OmamoriLoading omamoriData={omamoriData} />
+      </Modal>
+
+      <Modal isOpen={omamoriModalOpen}>
+        {omamoriDataRef.current && (
+          <OmamoriModal
+            omamoriData={omamoriDataRef.current}
+            onClose={() => setOmamoriModalOpen(false)}
+          />
+        )}
+      </Modal>
     </>
   );
 };

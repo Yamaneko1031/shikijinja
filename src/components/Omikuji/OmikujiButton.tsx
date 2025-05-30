@@ -29,7 +29,7 @@ export default function OmikujiButton({ title, imagePath, imageAlt, onClick, typ
         <div className="text-xl font-bold">引く</div>
         <div className="flex flex-row items-center">
           <Image src="/images/icon/icon_coin.webp" alt="omikuji_button" width={24} height={24} />
-          <div className="text-sm text-yellow-400 font-bold">{coin}消費</div>
+          <div className="text-sm text-white font-bold">{coin}消費</div>
         </div>
       </Button>
     </div>

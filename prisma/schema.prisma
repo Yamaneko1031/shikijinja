@@ -52,6 +52,21 @@ model OmikujiResult {
   user            User?       @relation("UserOmikujiResults", fields: [userId], references: [id], onDelete: SetNull)
 }
 
+
+model Omamori {
+  id                      String      @id @default(cuid())
+  userId                  String?
+  name                    String
+  description             String
+  additionalDescription   String
+  imageUrl                String
+  price                   Int
+  effects                 Json        @default("[]")
+  createdAt               DateTime    @default(now())
+  user                    User?       @relation("UserOmamoriItems", fields: [userId], references: [id], onDelete: SetNull)
+}
+
+
 model TokuCount {
   id              String      @id @default(cuid())
   userId          String
@@ -76,6 +91,7 @@ model User {
   accounts        Account[]        @relation("UserAccounts")
   emaPosts        EmaPost[]        @relation("UserEmaPosts")
   omikujiResults  OmikujiResult[]  @relation("UserOmikujiResults")
+  omamoriItems    Omamori[]        @relation("UserOmamoriItems")
 
   @@index([isGuest, lastAccessAt])
 }

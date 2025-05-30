@@ -27,11 +27,11 @@ const App = (props: Props) => {
 
   const user = useUser(props.initialUser);
   const [state, setState] = useState({ activeId: sections[0].id });
-  const userRef = useRef(user);
   const containerRef = useRef<HTMLDivElement>(null);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
   const bgManagerRef = useRef<BackgroundManagerHandle>(null);
   const currentSectionRef = useRef<SectionData>(sections[0]);
+  const autoScrollTargetRef = useRef<string | null>(null);
   const allUrls = sections.map(({ bgUrl }) => bgUrl);
   const activeIndex = sections.findIndex((s) => s.id === state.activeId);
   const { scrollY } = useScroll({ container: containerRef });
@@ -54,29 +54,28 @@ const App = (props: Props) => {
     return sections[currentIndex - 1].id;
   }, [state.activeId]);
 
+  // セクションへの自動スクロール
   const scrollToSection = useCallback((sectionId: string) => {
+    autoScrollTargetRef.current = sectionId;
     const section = sectionRefs.current[sectionId];
     if (section && containerRef.current) {
       const jumpOffset = sections.find((s) => s.id === sectionId)?.jumpOffset;
       containerRef.current.scrollTo({
-        top: section.offsetTop - window.innerHeight / 2 + (jumpOffset || 0),
+        top: section.offsetTop + (jumpOffset ?? 0),
         behavior: 'smooth',
       });
     }
   }, []);
 
-  // Appコンポーネントで参照するユーザー情報の更新
-  useEffect(() => {
-    userRef.current = user;
-  }, [user]);
-
   // セクション切り替え時のコールバック
-  const onSectionChange = useCallback((prevSection: SectionData, nextSection: SectionData) => {
-    console.log('セクション切り替え:', prevSection.id, '→', nextSection.id);
-    if (prevSection.id === 'top' && nextSection.id !== 'top') {
-      userRef.current.handleTokuGet('torii');
-    }
-  }, []);
+  const onSectionChange = useCallback(
+    (prevSection: SectionData, nextSection: SectionData) => {
+      if (prevSection.id === 'top' && nextSection.id !== 'top') {
+        user.handleTokuGet('torii');
+      }
+    },
+    [user]
+  );
 
   // 初期処理
   useEffect(() => {
@@ -99,6 +98,7 @@ const App = (props: Props) => {
     });
   }, [props.guestSessionId, props.serverTime, props.memo, addLog]);
 
+  // スクロール監視＆セクション切り替え時の処理
   useEffect(() => {
     const checkScroll = () => {
       const centerY = window.innerHeight / 2;
@@ -114,6 +114,15 @@ const App = (props: Props) => {
           currentSectionRef.current.id != nextSection.id &&
           bgManagerRef.current.isReadyForTransition()
         ) {
+          if (autoScrollTargetRef.current) {
+            if (autoScrollTargetRef.current === nextSection.id) {
+              autoScrollTargetRef.current = null;
+            } else {
+              // 自動スクロール時は、スクロールが完了するまで待つ
+              requestAnimationFrame(checkScroll);
+              return;
+            }
+          }
           // セクション切り替え時のコールバックを呼び出し
           onSectionChange(currentSectionRef.current, nextSection);
 
@@ -146,22 +155,14 @@ const App = (props: Props) => {
         ref={containerRef}
       >
         <Header user={user.user} handleAddCoin={user.handleAddCoin} />
+
+        {/* 背景画像の管理 */}
         <BackgroundManager
           ref={bgManagerRef}
           initialUrl={sections[0].bgUrl}
           allUrls={allUrls}
           scrollEffect={sections[0].scrollEffect}
         />
-
-        {/* テロップ表示 */}
-        {user.telop.currentText && (
-          <div
-            key={user.telop.currentId.current}
-            className="fixed right-6 top-16 bg-black backdrop-blur-sm rounded-sm p-2 text-xl font-bold animate-telop-slide-in-out z-60"
-          >
-            {user.telop.currentText}
-          </div>
-        )}
 
         {sections.map(({ id, component: SectionComponent }, idx) => {
           const isActive = id === state.activeId;
@@ -191,17 +192,30 @@ const App = (props: Props) => {
           );
         })}
 
+        {/* セクションの切り替え時に表示されるテキスト */}
         <SectionOverlayText text={currentSectionRef.current.overlayText} />
 
-        <DebugLogDialog handleTokuGet={user.handleTokuGet} handleTokuUsed={user.handleTokuUsed} />
-
+        {/* 上部＆下部のグラデーション */}
         <div className="overlay-gradient" />
+
+        {/* 獲得テロップ表示 */}
+        {user.telop.currentText && (
+          <div
+            key={user.telop.currentId.current}
+            className="fixed right-6 top-16 bg-black backdrop-blur-sm rounded-sm p-2 text-xl font-bold animate-telop-slide-in-out z-60"
+          >
+            {user.telop.currentText}
+          </div>
+        )}
+
         <Footer
           user={user.user}
           handleGetNextSectionId={getNextSectionId}
           handleGetPrevSectionId={getPrevSectionId}
           handleScrollToSection={scrollToSection}
         />
+
+        <DebugLogDialog handleTokuGet={user.handleTokuGet} handleTokuUsed={user.handleTokuUsed} />
       </main>
     </>
   );

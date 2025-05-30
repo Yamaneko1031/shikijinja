@@ -73,25 +73,25 @@ export default function DebugLogDialog({ handleTokuGet, handleTokuUsed }: Props)
               onClick={cookieInit}
               className="text-sm text-yellow-300 mb-4 hover:text-yellow-400"
             >
-              🔄 Cookie Init
+              🔄 Cookie削除
             </button>
             <button
               onClick={() => handleTokuGet('debug_add')}
               className="text-sm text-yellow-300 mb-4 hover:text-yellow-400"
             >
-              🔄 Coin Get
+              🔄 Coin取得
             </button>
             <button
               onClick={() => handleTokuUsed('debug_sub')}
               className="text-sm text-yellow-300 mb-4 hover:text-yellow-400"
             >
-              🔄 Coin Used
+              🔄 Coin消費
             </button>
             <button
               onClick={() => postSlackError(logs.join('\n'))}
               className="text-sm text-yellow-300 mb-4 hover:text-yellow-400"
             >
-              🔄 Send Slack Logs
+              🔄 Slack送信
             </button>
 
             {appTime && (

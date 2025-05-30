@@ -40,7 +40,7 @@ export const useRequestQueue = () => {
       });
     } catch {
       // 通信失敗したらキューに戻す
-      queueRef.current.unshift(req);
+      // queueRef.current.unshift(req);
     } finally {
       isProcessingRef.current = false;
     }
