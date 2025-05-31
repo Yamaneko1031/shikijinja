@@ -15,7 +15,7 @@ const Footer: React.FC<FooterProps> = (props) => {
   const [isMapOpen, setIsMapOpen] = useState(false);
 
   return (
-    <footer className="fixed bottom-2 w-full h-[50px] z-60 flex items-center justify-center gap-4 overscroll-contain">
+    <footer className="fixed bottom-2 w-full h-[3.125rem] z-60 flex items-center justify-center gap-4 overscroll-contain">
       <Modal isOpen={isMapOpen}>
         <FooterMap
           handleCloseMenu={() => setIsMapOpen(false)}

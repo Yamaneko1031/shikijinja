@@ -21,7 +21,7 @@ export default function OmamoriWindow(props: Props) {
         ))}
       </div>
       <div className="w-full flex flex-row gap-4 justify-center">
-        <div className="min-w-[140px] max-w-[200px] flex justify-center items-center">
+        <div className="min-w-[8rem] max-w-[12rem] flex justify-center items-center">
           <Image
             src={selectedOmamori.imageUrl}
             alt={selectedOmamori.name}
@@ -29,7 +29,7 @@ export default function OmamoriWindow(props: Props) {
             height={300}
           />
         </div>
-        <div className="max-w-[320px] flex flex-col justify-items-start items-center gap-2">
+        <div className="max-w-[20rem] flex flex-col justify-items-start items-center gap-2">
           <div className="w-full text-2xl font-bold text-left">【{selectedOmamori.name}】</div>
           <div className="w-full h-full text-md text-left whitespace-pre-line">
             {selectedOmamori.description}

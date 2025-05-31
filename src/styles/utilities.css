@@ -56,8 +56,8 @@ body {
   height: 100lvh;
   background: linear-gradient(
     to bottom,
-    white 0px,
-    white 50px,
+    white 0rem,
+    white 3rem,
     rgba(255, 255, 255, 0) 15%,
     rgba(255, 255, 255, 0) 80%,
     white 100%

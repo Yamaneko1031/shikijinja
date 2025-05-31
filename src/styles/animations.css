@@ -1,7 +1,7 @@
 @keyframes fade-in-out {
   0% {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(0.625rem);
   }
   20%,
   80% {
@@ -10,7 +10,7 @@
   }
   100% {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-0.625rem);
   }
 }
 
@@ -36,7 +36,7 @@
 @keyframes ema-popup {
   0% {
     opacity: 0;
-    transform: translate(-50%, 10px);
+    transform: translate(-50%, 0.625rem);
   }
   10%,
   90% {
@@ -45,7 +45,7 @@
   }
   100% {
     opacity: 0;
-    transform: translate(-50%, -10px);
+    transform: translate(-50%, -0.625rem);
   }
 }
 
@@ -58,16 +58,16 @@
     transform: translateY(0);
   }
   10% {
-    transform: translateY(5px);
+    transform: translateY(0.3125rem);
   }
   40% {
-    transform: translateY(-10px);
+    transform: translateY(-0.625rem);
   }
   60% {
-    transform: translateY(0px);
+    transform: translateY(0rem);
   }
   90% {
-    transform: translateY(-2px);
+    transform: translateY(-0.125rem);
   }
   100% {
     transform: translateY(0);
@@ -81,7 +81,7 @@
 @keyframes section-overlay-fade {
   0% {
     opacity: 0;
-    transform: translateY(15px);
+    transform: translateY(1rem);
   }
   20%,
   50% {
@@ -90,7 +90,7 @@
   }
   100% {
     opacity: 0;
-    transform: translateY(-15px);
+    transform: translateY(-1rem);
   }
 }
 
@@ -104,35 +104,35 @@
     rotate: 0deg;
   }
   10% {
-    transform: translateX(-10px) translateY(5px);
+    transform: translateX(-0.625rem) translateY(0.3125rem);
     rotate: -10deg;
   }
   20% {
-    transform: translateX(1px) translateY(-1px);
+    transform: translateX(0.0625rem) translateY(-0.0625rem);
     rotate: 0deg;
   }
   40% {
-    transform: translateX(1px) translateY(-1px);
+    transform: translateX(0.0625rem) translateY(-0.0625rem);
     rotate: 0deg;
   }
   50% {
-    transform: translateX(-10px) translateY(5px);
+    transform: translateX(-0.625rem) translateY(0.3125rem);
     rotate: -10deg;
   }
   60% {
-    transform: translateX(2px) translateY(1px);
+    transform: translateX(0.125rem) translateY(0.0625rem);
     rotate: 0deg;
   }
   70% {
-    transform: translateX(-10px) translateY(5px);
+    transform: translateX(-0.625rem) translateY(0.3125rem);
     rotate: -10deg;
   }
   80% {
-    transform: translateX(0px) translateY(0px);
+    transform: translateX(0rem) translateY(0rem);
     rotate: 0deg;
   }
   90% {
-    transform: translateX(0px) translateY(0px);
+    transform: translateX(0rem) translateY(0rem);
     rotate: 0deg;
   }
   100% {
@@ -150,13 +150,13 @@
     transform: translateY(0);
   }
   10% {
-    transform: translateY(-5px);
+    transform: translateY(-0.3125rem);
   }
   20% {
     transform: translateY(0);
   }
   30% {
-    transform: translateY(-5px);
+    transform: translateY(-0.3125rem);
   }
   40% {
     transform: translateY(0);
@@ -172,13 +172,13 @@
 
 @keyframes inori-slide {
   to {
-    background-position-x: -512px;
+    background-position-x: -32rem;
   }
 }
 
 .omikuji-inori {
-  width: 256px;
-  height: 256px;
+  width: 16rem;
+  height: 16rem;
   background: url('/images/omikuji/neko_inori.webp') 0 0 / auto 100%;
   animation: inori-slide 1.5s steps(2) infinite;
   will-change: background-position;
@@ -212,7 +212,7 @@
 @keyframes coin-popup {
   0% {
     opacity: 0;
-    transform: translate(-50%, 10px);
+    transform: translate(-50%, 0.625rem);
   }
   15%,
   85% {
@@ -221,7 +221,7 @@
   }
   100% {
     opacity: 0;
-    transform: translate(-50%, -10px);
+    transform: translate(-50%, -0.625rem);
   }
 }
 

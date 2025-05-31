@@ -4,8 +4,8 @@ import Image from 'next/image';
 const OmikujiLoding: React.FC = () => {
   console.log('OmikujiLoding');
   return (
-    <div className="relative w-full h-[300px] bg-[url('/images/bg_hude/bg_washi.webp')] bg-[length:100%_100%]">
-      <div className="absolute top-2 left-1/2 -translate-x-1/2 w-[300px] text-left text-black text-2xl font-bold omikuji-lot">
+    <div className="relative w-full h-[19rem] bg-[url('/images/bg_hude/bg_washi.webp')] bg-[length:100%_100%]">
+      <div className="absolute top-2 left-1/2 -translate-x-1/2 w-[19rem] text-left text-black text-2xl font-bold omikuji-lot">
         おみくじ抽選中
       </div>
       <div className="absolute bottom-2 left-2 omikuji-inori" aria-hidden="true"></div>
@@ -14,7 +14,7 @@ const OmikujiLoding: React.FC = () => {
         alt="omikuji_box"
         width={128}
         height={128}
-        className="absolute bottom-30 right-5 object-contain animate-omikuji-shuffle"
+        className="absolute bottom-30 right-5 object-contain animate-omikuji-shuffle w-[8rem] h-[8rem]"
         aria-hidden="true"
       />
     </div>

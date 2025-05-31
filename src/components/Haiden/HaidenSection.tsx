@@ -12,7 +12,7 @@ const HaidenSection = (props: SectionProps) => {
 
   return (
     <>
-      <div className="relative top-[600px] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] p-10 bg-black/50 rounded-lg">
+      <div className="relative top-[37.5rem] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[25rem] p-10 bg-black/50 rounded-lg">
         <TextReveal
           text="拝殿のコンテンツ"
           delayPerChar={0.1}

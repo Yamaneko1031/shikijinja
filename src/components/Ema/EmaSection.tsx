@@ -104,8 +104,8 @@ const EmaSection = (props: SectionProps) => {
   /* ----------------- render -------------- */
   return (
     <>
-      <div className="relative top-[600px] max-w-2xl min-w-[320px] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center items-center gap-2">
-        <div className="relative w-full bg-black/50 rounded-lg flex flex-col gap-2 pt-4 pl-4 pb-4 pr-[200px]">
+      <div className="relative top-[37.5rem] max-w-2xl min-w-[20rem] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col justify-center items-center gap-2">
+        <div className="relative w-full bg-black/50 rounded-lg flex flex-col gap-2 pt-4 pl-4 pb-4 pr-[12.5rem]">
           <div className="">
             <TextReveal
               text="願い事を書いていくにゃ！"
@@ -113,7 +113,7 @@ const EmaSection = (props: SectionProps) => {
               className="text-xl md:text-2xl font-bold"
             />
           </div>
-          <div className="absolute bottom-0 right-0 w-[200px]">
+          <div className="absolute bottom-0 right-0 w-[12.5rem]">
             <Image src="/images/ema/neko_ema.webp" alt="neko_ema" width={400} height={300} />
           </div>
         </div>

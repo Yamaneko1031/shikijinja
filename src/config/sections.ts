@@ -22,7 +22,7 @@ export const sections: SectionData[] = [
       { ratio: 0.6, posX: 60, posY: 50, zoom: 1.2 },
       { ratio: 1.0, posX: 60, posY: 50, zoom: 1.4 },
     ],
-    sectionClass: 'relative w-full h-[1200px] items-center justify-center p-4',
+    sectionClass: 'relative w-full h-[75rem] items-center justify-center p-4',
   },
   {
     id: 'sando',
@@ -36,7 +36,7 @@ export const sections: SectionData[] = [
       { ratio: 0.5, posX: 60, posY: 50, zoom: 1.1 },
       { ratio: 1.0, posX: 70, posY: 50, zoom: 1.2 },
     ],
-    sectionClass: 'relative w-full h-[1600px] items-center justify-center p-4',
+    sectionClass: 'relative w-full h-[100rem] items-center justify-center p-4',
   },
   {
     id: 'ema',
@@ -51,7 +51,7 @@ export const sections: SectionData[] = [
       { ratio: 0.7, posX: 50, posY: 50, zoom: 1.1 },
       { ratio: 1.0, posX: 60, posY: 50, zoom: 1.0 },
     ],
-    sectionClass: 'relative w-full h-[1200px] items-center justify-center p-4',
+    sectionClass: 'relative w-full h-[75rem] items-center justify-center p-4',
   },
   {
     id: 'omamori',
@@ -66,7 +66,7 @@ export const sections: SectionData[] = [
       { ratio: 0.7, posX: 55, posY: 50, zoom: 1.1 },
       { ratio: 1.0, posX: 68, posY: 50, zoom: 1.0 },
     ],
-    sectionClass: 'relative w-full h-[1200px] items-center justify-center p-4',
+    sectionClass: 'relative w-full h-[75rem] items-center justify-center p-4',
   },
   {
     id: 'omikuji',
@@ -81,7 +81,7 @@ export const sections: SectionData[] = [
       { ratio: 0.6, posX: 52, posY: 50, zoom: 1.2 },
       { ratio: 1.0, posX: 60, posY: 50, zoom: 1.0 },
     ],
-    sectionClass: 'relative w-full h-[1200px] items-center justify-center p-4',
+    sectionClass: 'relative w-full h-[75rem] items-center justify-center p-4',
   },
   {
     id: 'nadeneko',
@@ -97,7 +97,7 @@ export const sections: SectionData[] = [
       { ratio: 0.7, posX: 55, posY: 50, zoom: 1.2 },
       { ratio: 1.0, posX: 60, posY: 50, zoom: 1.1 },
     ],
-    sectionClass: 'relative w-full h-[1200px] items-center justify-center p-4',
+    sectionClass: 'relative w-full h-[75rem] items-center justify-center p-4',
   },
   {
     id: 'shoukai',
@@ -112,7 +112,7 @@ export const sections: SectionData[] = [
       { ratio: 0.7, posX: 55, posY: 50, zoom: 1.0 },
       { ratio: 1.0, posX: 65, posY: 50, zoom: 1.0 },
     ],
-    sectionClass: 'relative w-full h-[1200px] items-center justify-center p-4',
+    sectionClass: 'relative w-full h-[75rem] items-center justify-center p-4',
   },
   {
     id: 'haiden',
@@ -127,6 +127,6 @@ export const sections: SectionData[] = [
       { ratio: 0.6, posX: 50, posY: 50, zoom: 1.5 },
       { ratio: 1.0, posX: 50, posY: 50, zoom: 1.5 },
     ],
-    sectionClass: 'relative w-full h-[1200px] items-center justify-center p-4',
+    sectionClass: 'relative w-full h-[75rem] items-center justify-center p-4',
   },
 ];

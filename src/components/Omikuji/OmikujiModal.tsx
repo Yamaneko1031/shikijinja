@@ -27,17 +27,17 @@ export default function OmikujiModal({ omikujiResponse, omikujiType, onClose }: 
       >
         閉じる
       </Button>
-      <div className="relative w-[420px] m-auto min-w-[420px] h-[100vh] min-h-[900px] flex items-center justify-center">
+      <div className="relative w-[26rem] m-auto min-w-[26rem] h-[100vh] min-h-[56rem] flex items-center justify-center">
         {/* 紙テクスチャのウィンドウ */}
         <Image
-          className="absolute h-auto w-full pl-[10px] pr-[10px] pt-[10px]"
+          className="absolute h-auto w-full pl-[0.625rem] pr-[0.625rem] pt-[0.625rem]"
           src="/images/omikuji/omikuji.webp"
           alt="omikuji_bg"
           width={400}
           height={800}
           priority
         />
-        <div className="relative w-[400px] -mt-10 pt-6 pl-12 pr-12 text-black flex flex-col">
+        <div className="relative w-[25rem] -mt-10 pt-6 pl-12 pr-12 text-black flex flex-col">
           {/* おみくじ名 */}
           <h2 className="w-full h-10 text-center text-2xl font-bold">【{omikujiName}】</h2>
           {/* 運勢表示 */}
@@ -72,7 +72,7 @@ export default function OmikujiModal({ omikujiResponse, omikujiType, onClose }: 
           {/* 本文 */}
           <p
             className={`w-full h-42 vertical font-otsutome text-left flex justify-center items-center mt-5 ${
-              omikujiResponse.msg.length > 130 ? 'text-[14px]' : 'text-[16px]'
+              omikujiResponse.msg.length > 130 ? 'text-[0.875rem]' : 'text-[1rem]'
             }`}
           >
             {omikujiResponse.msg}
@@ -90,10 +90,12 @@ export default function OmikujiModal({ omikujiResponse, omikujiType, onClose }: 
               })
               .map((d) => (
                 <div key={d.type} className="flex justify-start items-start h-45 text-left">
-                  <div className="font-otsutome w-[40px] mt-4 vertical align-top">{d.element}</div>
+                  <div className="font-otsutome w-[2.5rem] mt-4 vertical align-top">
+                    {d.element}
+                  </div>
                   <div
                     className={`font-otsutome vertical align-top ${
-                      d.type.length > 10 ? 'text-[12px]' : ''
+                      d.type.length > 10 ? 'text-[0.75rem]' : ''
                     }`}
                   >
                     {d.type}★{d.rank}

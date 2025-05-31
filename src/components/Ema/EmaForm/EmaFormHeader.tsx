@@ -21,23 +21,23 @@ const EmaFormHeader: React.FC<EmaFormHeaderProps> = ({
   return (
     <div className="relative flex flex-col items-center w-full">
       {/* 神様の説明 */}
-      <div className="relative flex items-center gap-2 bg-white/20 rounded-sm p-2 h-[74px] w-full">
+      <div className="relative flex items-center gap-2 bg-white/20 rounded-sm p-2 h-[5rem] w-full">
         <Button
           variant="subNatural"
           size="sm"
           onClick={() => setDeityKey(prevKey)}
-          className="w-[30px] h-[30px] bg-white/10 hover:bg-white/20 text-white text-sm rounded-full"
+          className="w-[1.875rem] h-[1.875rem] bg-white/10 hover:bg-white/20 text-white text-sm rounded-full"
         >
           ←
         </Button>
         <div className="flex items-center gap-4 flex-1 overflow-hidden">
-          <div className="w-1/4 min-w-[64px] flex justify-center">
-            <div className="w-[64px] h-[64px] rounded-md overflow-hidden">
+          <div className="w-1/4 min-w-[4rem] flex justify-center">
+            <div className="w-[4rem] h-[4rem] rounded-md overflow-hidden">
               <Image
                 src={`/images/illust/${emaList[deityKey].illustname}`}
                 alt={emaList[deityKey].label}
-                width={80}
-                height={80}
+                width={128}
+                height={128}
                 className="object-cover"
               />
             </div>
@@ -53,7 +53,7 @@ const EmaFormHeader: React.FC<EmaFormHeaderProps> = ({
           variant="subNatural"
           size="sm"
           onClick={() => setDeityKey(nextKey)}
-          className="w-[30px] h-[30px] bg-white/10 hover:bg-white/20 text-white text-sm rounded-full"
+          className="w-[1.875rem] h-[1.875rem] bg-white/10 hover:bg-white/20 text-white text-sm rounded-full"
         >
           →
         </Button>
@@ -63,7 +63,7 @@ const EmaFormHeader: React.FC<EmaFormHeaderProps> = ({
         <TextReveal
           text={`自由に願い事を書いて投稿しよう。\nお祈りした神様から一言もらえるかもしません。`}
           delayPerChar={0.1}
-          className="text-[14px]"
+          className="text-[0.875rem]"
         />
       </div>
     </div>

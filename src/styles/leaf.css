@@ -2,7 +2,7 @@
   position: fixed;
   list-style: none;
   border-radius: 0% 80%;
-  border: 2px solid rgb(0, 0, 0);
+  border: 0.125rem solid rgb(0, 0, 0);
   animation: fadeOut 5s forwards;
 }
 
@@ -14,19 +14,19 @@
 
 @keyframes sway1 {
   from {
-    transform: translateX(0px) rotate(0deg);
+    transform: translateX(0rem) rotate(0deg);
   }
   to {
-    transform: translateX(200px) rotate(-45deg);
+    transform: translateX(12.5rem) rotate(-45deg);
   }
 }
 
 @keyframes sway2 {
   from {
-    transform: translateX(200px) rotate(-45deg);
+    transform: translateX(12.5rem) rotate(-45deg);
   }
   to {
-    transform: translateX(0px) rotate(0deg);
+    transform: translateX(0rem) rotate(0deg);
   }
 }
 
@@ -47,9 +47,9 @@
 
 .leaf li:nth-child(1) {
   left: 0%;
-  top: 0px;
-  width: 24px;
-  height: 15px;
+  top: 0rem;
+  width: 1.5rem;
+  height: 1rem;
   background-color: #6d8222;
   z-index: 30;
   animation:
@@ -61,9 +61,9 @@
 
 .leaf li:nth-child(2) {
   left: 5%;
-  top: -70px;
-  width: 13px;
-  height: 9px;
+  top: -4.375rem;
+  width: 0.8125rem;
+  height: 0.5625rem;
   background-color: #647919;
   z-index: 10;
   animation:
@@ -75,9 +75,9 @@
 
 .leaf li:nth-child(3) {
   left: 15%;
-  top: -50px;
-  width: 16px;
-  height: 10px;
+  top: -3.125rem;
+  width: 1rem;
+  height: 0.625rem;
   background-color: #718919;
   z-index: 10;
   animation:
@@ -89,9 +89,9 @@
 
 .leaf li:nth-child(4) {
   left: 30%;
-  top: -70px;
-  width: 16px;
-  height: 10px;
+  top: -4.375rem;
+  width: 1rem;
+  height: 0.625rem;
   background-color: #558222;
   z-index: 30;
   animation:
@@ -100,11 +100,12 @@
     fadeOut 8s forwards infinite;
   animation-delay: 7s;
 }
+
 .leaf li:nth-child(5) {
   left: 40%;
-  top: -60px;
-  width: 16px;
-  height: 10px;
+  top: -3.75rem;
+  width: 1rem;
+  height: 0.625rem;
   background-color: #5d6412;
   z-index: 30;
   animation:
@@ -113,11 +114,12 @@
     fadeOut 9s forwards infinite;
   animation-delay: 0s;
 }
+
 .leaf li:nth-child(6) {
   left: 55%;
-  top: -50px;
-  width: 24px;
-  height: 15px;
+  top: -3.125rem;
+  width: 1.5rem;
+  height: 1rem;
   background-color: #498025;
   z-index: 30;
   animation:
@@ -126,11 +128,12 @@
     fadeOut 14s forwards infinite;
   animation-delay: 3s;
 }
+
 .leaf li:nth-child(7) {
   left: 65%;
-  top: -40px;
-  width: 16px;
-  height: 10px;
+  top: -2.5rem;
+  width: 1rem;
+  height: 0.625rem;
   background-color: #647622;
   z-index: 30;
   animation:
@@ -139,11 +142,12 @@
     fadeOut 8s forwards infinite;
   animation-delay: 7s;
 }
+
 .leaf li:nth-child(8) {
   left: 50%;
-  top: -60px;
-  width: 13px;
-  height: 9px;
+  top: -3.75rem;
+  width: 0.8125rem;
+  height: 0.5625rem;
   background-color: #6d8222;
   z-index: 30;
   animation:
@@ -152,11 +156,12 @@
     fadeOut 8s forwards infinite;
   animation-delay: 3s;
 }
+
 .leaf li:nth-child(9) {
   left: 80%;
-  top: -70px;
-  width: 16px;
-  height: 10px;
+  top: -4.375rem;
+  width: 1rem;
+  height: 0.625rem;
   background-color: #84a01f;
   z-index: 30;
   animation:

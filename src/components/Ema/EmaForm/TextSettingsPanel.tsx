@@ -43,16 +43,16 @@ export default function TextSettingsPanel({ textBlock, onChange }: TextSettingsP
   };
 
   return (
-    <div className="text-white rounded-sm shadow-lg min-w-[80px] space-y-2 select-none">
+    <div className="text-white rounded-sm shadow-lg min-w-[5rem] space-y-2 select-none">
       {/* 文字色 */}
       <div>
-        <label className="block underline underline-offset-2 text-[12px] mb-1">文字色</label>
+        <label className="block underline underline-offset-2 text-[0.75rem] mb-1">文字色</label>
         <div className="grid grid-cols-2 gap-2 w-fit">
           {fontColorList.map(({ key, value }) => (
             <button
               key={key}
               onClick={() => onChange({ fontColor: key })}
-              className={`w-[30px] h-[30px] rounded-full border-2 shadow-white cursor-pointer ${
+              className={`w-[1.875rem] h-[1.875rem] rounded-full border-2 shadow-white cursor-pointer ${
                 textBlock.fontColor === key ? 'border-white' : 'border-transparent'
               }`}
               style={{ backgroundColor: value, boxShadow: '0 0 1px white' }}
@@ -65,8 +65,8 @@ export default function TextSettingsPanel({ textBlock, onChange }: TextSettingsP
       {/* サイズ調整 */}
       <TextAdjustmentButton
         label="文字サイズ"
-        onDecrease={() => adjustField('fontSize', -1)}
-        onIncrease={() => adjustField('fontSize', 1)}
+        onDecrease={() => adjustField('fontSize', -0.125)}
+        onIncrease={() => adjustField('fontSize', 0.125)}
         decreaseIconPath="/images/icon/icon_down.svg"
         increaseIconPath="/images/icon/icon_up.svg"
       />
@@ -93,16 +93,16 @@ export default function TextSettingsPanel({ textBlock, onChange }: TextSettingsP
       {textBlock.isVertical ? (
         <TextAdjustmentButton
           label="最大高さ"
-          onDecrease={() => adjustField('textHeight', -5)}
-          onIncrease={() => adjustField('textHeight', 5)}
+          onDecrease={() => adjustField('textHeight', -0.125)}
+          onIncrease={() => adjustField('textHeight', 0.125)}
           decreaseIconPath="/images/icon/icon_down.svg"
           increaseIconPath="/images/icon/icon_up.svg"
         />
       ) : (
         <TextAdjustmentButton
           label="最大幅"
-          onDecrease={() => adjustField('textWidth', -5)}
-          onIncrease={() => adjustField('textWidth', 5)}
+          onDecrease={() => adjustField('textWidth', -0.125)}
+          onIncrease={() => adjustField('textWidth', 0.125)}
           decreaseIconPath="/images/icon/icon_down.svg"
           increaseIconPath="/images/icon/icon_up.svg"
         />

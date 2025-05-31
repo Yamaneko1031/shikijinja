@@ -33,10 +33,10 @@ export const emaList: EmaList = {
 } as const;
 
 export const defaultTextRectSize = {
-  top: 120,
-  left: 30,
-  width: 180,
-  height: 105,
+  top: 7.5,
+  left: 1.875,
+  width: 11.25,
+  height: 6.5625,
 } as const;
 
 export const initialTexts: TextBlock[] = [
@@ -44,12 +44,12 @@ export const initialTexts: TextBlock[] = [
     text: '',
     isVertical: false,
     font: 'ackaisyo',
-    fontSize: 24,
+    fontSize: 1.5,
     fontColor: 'black',
     textRotate: '0',
     lineHeight: '1.2',
     offsetX: 0,
-    offsetY: -10,
+    offsetY: -0.125,
     textWidth: defaultTextRectSize.width,
     textHeight: defaultTextRectSize.height,
   },
@@ -57,20 +57,20 @@ export const initialTexts: TextBlock[] = [
     text: '',
     isVertical: false,
     font: 'ackaisyo',
-    fontSize: 16,
+    fontSize: 1,
     fontColor: 'black',
     textRotate: '0',
     lineHeight: '1.2',
-    offsetX: 30,
-    offsetY: 38,
+    offsetX: 1.875,
+    offsetY: 2.375,
     textWidth: defaultTextRectSize.width,
     textHeight: defaultTextRectSize.height,
   },
 ];
 
 export const fontSizePxRange = {
-  min: 14,
-  max: 32,
+  min: 0.5,
+  max: 2,
 } as const;
 
 export const textRotateRange = {
@@ -84,11 +84,11 @@ export const lineHeightRange = {
 } as const;
 
 export const textWidthRange = {
-  min: 50,
+  min: 3,
   max: defaultTextRectSize.width,
 } as const;
 
 export const textHeightRange = {
-  min: 50,
+  min: 3,
   max: defaultTextRectSize.height,
 } as const;

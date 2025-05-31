@@ -14,8 +14,8 @@ const NadenekoSection = (props: SectionProps) => {
 
   return (
     <>
-      <div className="relative max-w-2xl min-w-[320px] top-[600px] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2">
-        <div className="relative h-full w-full bg-black/50 rounded-lg flex flex-col gap-2 pt-4 pl-4 pb-4 pr-[180px]">
+      <div className="relative max-w-2xl min-w-[20rem] top-[37.5rem] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2">
+        <div className="relative h-full w-full bg-black/50 rounded-lg flex flex-col gap-2 pt-4 pl-4 pb-4 pr-[11.25rem]">
           <div className="">
             <TextReveal
               text="（じー・・・）"
@@ -23,7 +23,7 @@ const NadenekoSection = (props: SectionProps) => {
               className="text-xl md:text-2xl font-bold"
             />
           </div>
-          <div className="absolute bottom-0 right-0 w-[200px]">
+          <div className="absolute bottom-0 right-0 w-[12.5rem]">
             <Image
               src="/images/nadeneko/neko_nadeneko.webp"
               alt="neko_nadeneko"

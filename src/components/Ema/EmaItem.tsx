@@ -51,7 +51,7 @@ export default function EmaItem({ post, setIsAutoScrollStop, handleTokuGet }: Em
 
   return (
     <div
-      className="min-w-[240px] h-[240px] relative text-center cursor-pointer"
+      className="min-w-[15rem] h-[15rem] relative text-center cursor-pointer"
       style={{ marginRight: post.marginRight }}
       onClick={() => {
         handleClick();
@@ -62,20 +62,20 @@ export default function EmaItem({ post, setIsAutoScrollStop, handleTokuGet }: Em
         <div
           className={`absolute bottom-17 left-1/2 z-50 ${popupVisible ? 'animate-ema-popup' : ''}`}
         >
-          <div className="relative max-h-[200px] w-[200px] bg-black/70 backdrop-blur-sm text-[14px] text-white px-3 py-2 rounded-lg shadow-lg text-center whitespace-pre-wrap select-none">
+          <div className="relative max-h-[12.5rem] w-[12.5rem] bg-black/70 backdrop-blur-sm text-[0.875rem] text-white px-3 py-2 rounded-lg shadow-lg text-center whitespace-pre-wrap select-none">
             {post.reply}
 
             {/* 吹き出しの出てる部分 */}
             <div
               className="
                 absolute
-                bottom-[-5px]
+                bottom-[-0.3125rem]
                 left-8
                 transform -translate-x-1/2
                 w-0 h-0
-                border-l-[6px] border-l-transparent
-                border-r-[6px] border-r-transparent
-                border-t-[6px] border-t-black/70
+                border-l-[0.375rem] border-l-transparent
+                border-r-[0.375rem] border-r-transparent
+                border-t-[0.375rem] border-t-black/70
               "
             />
           </div>
@@ -94,7 +94,12 @@ export default function EmaItem({ post, setIsAutoScrollStop, handleTokuGet }: Em
       >
         <div
           className="absolute flex items-center justify-center overflow-hidden"
-          style={{ ...defaultTextRectSize }}
+          style={{
+            width: `${defaultTextRectSize.width}rem`,
+            height: `${defaultTextRectSize.height}rem`,
+            top: `${defaultTextRectSize.top}rem`,
+            left: `${defaultTextRectSize.left}rem`,
+          }}
         >
           {post.texts.map((block: TextBlock, i) => (
             <p
@@ -103,12 +108,12 @@ export default function EmaItem({ post, setIsAutoScrollStop, handleTokuGet }: Em
                 block.isVertical ? 'vertical' : ''
               }`}
               style={{
-                maxWidth: block.isVertical ? undefined : `${block.textWidth}px`,
-                maxHeight: block.isVertical ? `${block.textHeight}px` : undefined,
+                maxWidth: block.isVertical ? undefined : `${block.textWidth}rem`,
+                maxHeight: block.isVertical ? `${block.textHeight}rem` : undefined,
                 color: fontColorList.find((c) => c.key === block.fontColor)?.value,
-                transform: `translate(${block.offsetX}px, ${block.offsetY}px) rotate(${block.textRotate}deg)`,
+                transform: `translate(${block.offsetX}rem, ${block.offsetY}rem) rotate(${block.textRotate}deg)`,
                 lineHeight: block.lineHeight,
-                fontSize: `${block.fontSize}px`,
+                fontSize: `${block.fontSize}rem`,
               }}
             >
               {block.text}

@@ -32,7 +32,7 @@ export default function EmaPreview({
   return (
     <div
       ref={previewWrapperRef}
-      className="relative w-[240px] h-[240px] bg-cover bg-center select-none"
+      className="relative w-[15rem] h-[15rem] bg-cover bg-center select-none"
       style={{ backgroundImage: `url(/images/ema/${emaList[emaImageKey].filename})` }}
     >
       {/* テキスト表示領域 */}
@@ -40,10 +40,10 @@ export default function EmaPreview({
         ref={previewContainerRef}
         className="absolute flex items-center justify-center"
         style={{
-          top: `${defaultTextRectSize.top}px`,
-          left: `${defaultTextRectSize.left}px`,
-          width: `${defaultTextRectSize.width}px`,
-          height: `${defaultTextRectSize.height}px`,
+          top: `${defaultTextRectSize.top}rem`,
+          left: `${defaultTextRectSize.left}rem`,
+          width: `${defaultTextRectSize.width}rem`,
+          height: `${defaultTextRectSize.height}rem`,
         }}
       >
         {texts.map((block, index) => {
@@ -62,14 +62,14 @@ export default function EmaPreview({
                 fontList.find((f) => f.key === block.font)?.className
               } text-center box-border whitespace-pre-wrap text-shadow ${block.isVertical ? 'vertical' : ''}`}
               style={{
-                maxWidth: block.isVertical ? undefined : `${block.textWidth}px`,
-                maxHeight: block.isVertical ? `${block.textHeight}px` : undefined,
+                maxWidth: block.isVertical ? undefined : `${block.textWidth}rem`,
+                maxHeight: block.isVertical ? `${block.textHeight}rem` : undefined,
                 color: fontColorList.find((c) => c.key === block.fontColor)?.value,
-                transform: `translate(${block.offsetX}px, ${block.offsetY}px) rotate(${block.textRotate}deg)`,
+                transform: `translate(${block.offsetX}rem, ${block.offsetY}rem) rotate(${block.textRotate}deg)`,
                 lineHeight: block.lineHeight,
-                fontSize: `${block.fontSize}px`,
-                border: `${isCurrent ? `2px dashed ${isOverflowing ? 'red' : 'lime'}` : 'none'}`,
-                borderRadius: '4px',
+                fontSize: `${block.fontSize}rem`,
+                border: `${isCurrent ? `0.125rem dashed ${isOverflowing ? 'red' : 'lime'}` : 'none'}`,
+                borderRadius: '0.25rem',
               }}
             >
               {isEmpty ? placeholders[index] + ' (例' : block.text}
@@ -82,10 +82,10 @@ export default function EmaPreview({
       <div
         className="absolute border-2 border-yellow-300 rounded pointer-events-none"
         style={{
-          top: `${defaultTextRectSize.top}px`,
-          left: `${defaultTextRectSize.left}px`,
-          width: `${defaultTextRectSize.width}px`,
-          height: `${defaultTextRectSize.height}px`,
+          top: `${defaultTextRectSize.top}rem`,
+          left: `${defaultTextRectSize.left}rem`,
+          width: `${defaultTextRectSize.width}rem`,
+          height: `${defaultTextRectSize.height}rem`,
         }}
       />
     </div>

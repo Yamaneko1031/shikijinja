@@ -153,8 +153,8 @@ const OmikujiSection = (props: SectionProps) => {
         <link rel="preload" href="/images/omikuji/omikuji.webp" as="image" />
       </Head>
 
-      <div className="relative max-w-2xl min-w-[320px] top-[600px] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2">
-        <div className="relative h-full w-full bg-black/50 rounded-lg flex flex-col gap-2 pt-4 pl-4 pb-4 pr-[180px]">
+      <div className="relative max-w-2xl min-w-[20rem] top-[38rem] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2">
+        <div className="relative h-full w-full bg-black/50 rounded-lg flex flex-col gap-2 pt-4 pl-4 pb-4 pr-[11.25rem]">
           <div className="">
             <TextReveal
               text="おみくじを引いていくかにゃ？"
@@ -162,7 +162,7 @@ const OmikujiSection = (props: SectionProps) => {
               className="text-xl md:text-2xl font-bold"
             />
           </div>
-          <div className="absolute bottom-0 right-0 w-[200px]">
+          <div className="absolute bottom-0 right-0 w-[12rem]">
             <Image
               src="/images/omikuji/neko_omikuji.webp"
               alt="neko_omikuji"
@@ -200,7 +200,7 @@ const OmikujiSection = (props: SectionProps) => {
       </div>
 
       {/* おみくじ抽選中画面 */}
-      <Modal isOpen={loading} className="relative min-w-[340px] w-[500px] mx-2 overscroll-contain">
+      <Modal isOpen={loading} className="relative min-w-[20rem] w-[30rem] mx-2 overscroll-contain">
         <OmikujiLoding />
       </Modal>
 

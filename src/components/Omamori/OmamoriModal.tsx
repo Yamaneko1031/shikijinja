@@ -12,12 +12,12 @@ type Props = {
 
 export default function OmamoriModal({ omamoriData, onClose }: Props) {
   return (
-    <div className="flex flex-col gap-4 items-center min-w-[320px]">
+    <div className="flex flex-col gap-4 items-center min-w-[20rem]">
       <div className="w-full flex flex-row gap-4 justify-center">
-        <div className="min-w-[140px] max-w-[200px] flex justify-center items-center">
+        <div className="min-w-[8.75rem] max-w-[12.5rem] flex justify-center items-center">
           <Image src={omamoriData.imageUrl} alt={omamoriData.name} width={200} height={300} />
         </div>
-        <div className="max-w-[320px] flex flex-col justify-items-start items-center gap-2">
+        <div className="max-w-[20rem] flex flex-col justify-items-start items-center gap-2">
           <div className="w-full text-2xl font-bold text-left">【{omamoriData.name}】</div>
           <div className="w-full h-full text-md text-left whitespace-pre-line">
             {omamoriData.description}

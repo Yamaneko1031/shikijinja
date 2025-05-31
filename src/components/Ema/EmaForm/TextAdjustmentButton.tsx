@@ -19,7 +19,7 @@ export default function TextAdjustmentButton({
 }: TextAdjustmentButtonProps) {
   return (
     <div className="flex flex-col gap-1">
-      <span className="underline underline-offset-2 text-[12px]">{label}</span>
+      <span className="underline underline-offset-2 text-[0.75rem]">{label}</span>
       <div className="flex items-center gap-2">
         <Button
           variant="subNatural"

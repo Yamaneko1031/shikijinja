@@ -13,7 +13,7 @@ interface DeitySelectorProps {
 
 export default function DeitySelector({ onSelect, onCancel }: DeitySelectorProps) {
   return (
-    <div className="flex flex-col gap-4 items-center min-w-[320px]">
+    <div className="flex flex-col gap-4 items-center min-w-[20rem]">
       <h2 className="text-xl font-bold">どの神様に願いを届けますか？</h2>
       <div className="w-full flex flex-col gap-2">
         {Object.entries(emaList).map(([key, data]) => (
@@ -23,13 +23,13 @@ export default function DeitySelector({ onSelect, onCancel }: DeitySelectorProps
             onClick={() => onSelect(key as EmaImageKey)}
             className="flex justify-center items-center gap-2 p-2 rounded-lg bg-white/10 hover:bg-white/20 text-left text-white"
           >
-            <div className="w-1/4 flex justify-center items-center min-w-[64px] rounded-md overflow-hidden shrink-0">
+            <div className="w-1/4 min-w-[4rem] h-[4rem] flex justify-center items-center rounded-md overflow-hidden shrink-0">
               <Image
                 src={`/images/illust/${data.illustname}`}
                 alt={data.label}
                 width={64}
                 height={64}
-                className="object-cover"
+                style={{ width: 'auto', height: '100%' }}
               />
             </div>
             <div className="w-full flex flex-col text-sm whitespace-pre-line">

@@ -5,6 +5,7 @@ import { FontKey, FontColorKey } from '@/types/fonts';
 import EmaPreview from './EmaPreview';
 import TextSettingsPanel from './TextSettingsPanel';
 import { fontList } from '@/config/fonts';
+import { pxToRem } from '@/lib/size';
 
 interface EmaFormEditorProps {
   deityKey: EmaImageKey;
@@ -115,8 +116,8 @@ const EmaFormEditor: React.FC<EmaFormEditorProps> = ({
       setTexts((prev) => {
         const copy = [...prev];
         const cur = { ...copy[draggingRef.current as number] };
-        cur.offsetX += dx;
-        cur.offsetY += dy;
+        cur.offsetX += pxToRem(dx);
+        cur.offsetY += pxToRem(dy);
         copy[draggingRef.current as number] = cur;
         return copy;
       });
@@ -194,13 +195,13 @@ const EmaFormEditor: React.FC<EmaFormEditorProps> = ({
       {/* プレビューエリア */}
       <div className="relative w-full">
         <div className="flex gap-4">
-          <div className="relative w-full min-w-[220px] border border-white rounded-sm flex flex-col items-center overflow-hidden">
+          <div className="relative w-full min-w-[13rem] border border-white rounded-sm flex flex-col items-center overflow-hidden">
             {/* フォント選択 */}
             <div className="absolute top-2 left-2 z-1 flex justify-between gap-2 w-full select-none">
               <select
                 value={texts[currentTextIndex].font}
                 onChange={(e) => updateCurrentText({ font: e.target.value as TextBlock['font'] })}
-                className="max-w-[170px] w-full h-8 bg-black border border-white rounded px-1 py-1 text-[14px] cursor-pointer"
+                className="max-w-[10rem] w-full h-8 bg-black border border-white rounded px-1 py-1 text-[0.875rem] cursor-pointer"
               >
                 {fontList.map((f) => (
                   <option key={f.key} value={f.key}>
@@ -216,7 +217,7 @@ const EmaFormEditor: React.FC<EmaFormEditorProps> = ({
                   onChange={(e) => updateCurrentText({ isVertical: e.target.checked })}
                   className="w-5 h-5 text-black rounded"
                 />
-                <span className="text-sm text-left w-[60px]">縦書き</span>
+                <span className="text-sm text-left w-[3.75rem]">縦書き</span>
               </label>
             </div>
 
@@ -235,10 +236,10 @@ const EmaFormEditor: React.FC<EmaFormEditorProps> = ({
                 placeholders={[emaList[deityKey].sampleText, emaList[deityKey].label]}
               />
             </div>
-            {/* <span className="text-[10px] mt-[-6px] text-gray-300">
+            {/* <span className="text-[0.625rem] mt-[-0.375rem] text-gray-300">
               文字の位置は自由に動かせるよ
             </span> */}
-            <div className="w-full p-2 mt-[-10px]">
+            <div className="w-full p-2 -mt-2">
               {/* 対象テキスト選択 */}
               <nav className="flex">
                 {['本文', 'ニックネーム'].map((label, idx) => {
@@ -267,7 +268,7 @@ const EmaFormEditor: React.FC<EmaFormEditorProps> = ({
                 maxLength={40}
                 rows={3}
                 autoFocus
-                className="relative w-full p-2 bg-black/90 rounded-sm text-[16px] text-white resize-none"
+                className="relative w-full p-2 bg-black/90 rounded-sm text-white resize-none"
                 placeholder={currentTextIndex === 0 ? '願い事を入力...' : 'ニックネームを入力...'}
               />
             </div>
