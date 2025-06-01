@@ -11,8 +11,9 @@ import { sections } from '@/config/sections';
 import Header from '../Header/Header';
 import { apiFetch } from '@/lib/api';
 import { useDebugLog } from '@/hooks/useDebugLog';
-import { useScroll } from 'framer-motion';
+import { useMotionValue, useScroll } from 'framer-motion';
 import Footer from '../Footer/Footer';
+import { remToPx } from '@/lib/size';
 
 interface Props {
   initialUser: User;
@@ -26,6 +27,7 @@ const App = (props: Props) => {
   const { addLog } = useDebugLog();
 
   const user = useUser(props.initialUser);
+  const userRef = useRef(user);
   const [state, setState] = useState({ activeId: sections[0].id });
   const containerRef = useRef<HTMLDivElement>(null);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
@@ -35,6 +37,29 @@ const App = (props: Props) => {
   const allUrls = sections.map(({ bgUrl }) => bgUrl);
   const activeIndex = sections.findIndex((s) => s.id === state.activeId);
   const { scrollY } = useScroll({ container: containerRef });
+  const scrollRatioMotionValue = useMotionValue(0);
+  const fallbackScrollRatio = useMotionValue(0);
+
+  // 初期処理
+  useEffect(() => {
+    addLog(`user init: ${props.memo}`);
+    // サーバー時刻情報更新
+    localStorage.setItem(
+      'serverTimeInfo',
+      JSON.stringify({
+        serverTime: props.serverTime,
+        clientTime: Date.now(),
+      })
+    );
+
+    // クッキーの更新
+    apiFetch<{ serverTime: string }>('/api/init', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ guestSessionId: props.guestSessionId }),
+    });
+  }, [props.guestSessionId, props.serverTime, props.memo, addLog]);
 
   const getNextSectionId = useCallback((): string | null => {
     console.log('getNextSectionId');
@@ -59,7 +84,7 @@ const App = (props: Props) => {
     autoScrollTargetRef.current = sectionId;
     const section = sectionRefs.current[sectionId];
     if (section && containerRef.current) {
-      const jumpOffset = sections.find((s) => s.id === sectionId)?.jumpOffset;
+      const jumpOffset = remToPx(sections.find((s) => s.id === sectionId)?.jumpOffset ?? 0);
       containerRef.current.scrollTo({
         top: section.offsetTop + (jumpOffset ?? 0),
         behavior: 'smooth',
@@ -68,35 +93,15 @@ const App = (props: Props) => {
   }, []);
 
   // セクション切り替え時のコールバック
-  const onSectionChange = useCallback(
-    (prevSection: SectionData, nextSection: SectionData) => {
-      if (prevSection.id === 'top' && nextSection.id !== 'top') {
-        user.handleTokuGet('torii');
-      }
-    },
-    [user]
-  );
-
-  // 初期処理
   useEffect(() => {
-    addLog(`user init: ${props.memo}`);
-    // サーバー時刻情報更新
-    localStorage.setItem(
-      'serverTimeInfo',
-      JSON.stringify({
-        serverTime: props.serverTime,
-        clientTime: Date.now(),
-      })
-    );
+    userRef.current = user;
+  }, [user]);
 
-    // クッキーの更新
-    apiFetch<{ serverTime: string }>('/api/init', {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ guestSessionId: props.guestSessionId }),
-    });
-  }, [props.guestSessionId, props.serverTime, props.memo, addLog]);
+  const onSectionChange = useCallback((prevSection: SectionData, nextSection: SectionData) => {
+    if (prevSection.id === 'top' && nextSection.id !== 'top') {
+      userRef.current.handleTokuGet('torii');
+    }
+  }, []);
 
   // スクロール監視＆セクション切り替え時の処理
   useEffect(() => {
@@ -139,6 +144,7 @@ const App = (props: Props) => {
             1
           );
           bgManagerRef.current.setScrollRatio(scrollRatio);
+          scrollRatioMotionValue.set(scrollRatio);
         }
       }
 
@@ -146,7 +152,7 @@ const App = (props: Props) => {
     };
 
     requestAnimationFrame(checkScroll);
-  }, [onSectionChange]);
+  }, [onSectionChange, scrollRatioMotionValue]);
 
   return (
     <>
@@ -181,6 +187,7 @@ const App = (props: Props) => {
                   isNeighbor={isNeighbor}
                   user={user.user}
                   scrollY={scrollY}
+                  scrollRatio={isActive ? scrollRatioMotionValue : fallbackScrollRatio}
                   handleAddCoin={user.handleAddCoin}
                   handleIsLimitOver={user.handleIsLimitOver}
                   handleTokuGet={user.handleTokuGet}
@@ -215,7 +222,11 @@ const App = (props: Props) => {
           handleScrollToSection={scrollToSection}
         />
 
-        <DebugLogDialog handleTokuGet={user.handleTokuGet} handleTokuUsed={user.handleTokuUsed} />
+        <DebugLogDialog
+          user={user.user}
+          handleTokuGet={user.handleTokuGet}
+          handleTokuUsed={user.handleTokuUsed}
+        />
       </main>
     </>
   );

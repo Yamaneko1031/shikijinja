@@ -18,6 +18,7 @@ export type SectionProps = {
   isNeighbor: boolean;
   user: User;
   scrollY: MotionValue<number>;
+  scrollRatio: MotionValue<number>;
   handleAddCoin: (coin: number) => void;
   handleIsLimitOver: (tokuId: TokuId) => boolean;
   handleTokuGet: (tokuId: TokuId) => void;

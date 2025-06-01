@@ -6,14 +6,16 @@ import { getAppTime } from '@/lib/appTime';
 import { useState } from 'react';
 import { TokuId } from '@/types/toku';
 import { postSlackError } from '@/lib/slack';
+import { User } from '@/types/user';
 
 interface Props {
+  user: User;
   handleTokuGet: (tokuId: TokuId) => void;
   handleTokuUsed: (tokuId: TokuId) => void;
 }
 
-export default function DebugLogDialog({ handleTokuGet, handleTokuUsed }: Props) {
-  const { logs, clearLogs } = useDebugLog();
+export default function DebugLogDialog({ user, handleTokuGet, handleTokuUsed }: Props) {
+  const { addLog, logs, clearLogs } = useDebugLog();
   const [isOpen, setIsOpen] = useState(false);
   const [appTime, setAppTime] = useState<Date | null>(null);
   const [cookieUserId, setCookieUserId] = useState<string>('');
@@ -92,6 +94,12 @@ export default function DebugLogDialog({ handleTokuGet, handleTokuUsed }: Props)
               className="text-sm text-yellow-300 mb-4 hover:text-yellow-400"
             >
               🔄 Slack送信
+            </button>
+            <button
+              onClick={() => addLog(JSON.stringify(user))}
+              className="text-sm text-yellow-300 mb-4 hover:text-yellow-400"
+            >
+              🔄 User
             </button>
 
             {appTime && (
