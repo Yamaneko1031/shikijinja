@@ -30,7 +30,7 @@ const EmaCarousel = forwardRef<HTMLDivElement, Props>((props, ref) => {
 
   return (
     <div
-      className="h-[20rem] overflow-hidden bg-cover bg-center rounded-lg border-4 border-[rgba(40,20,0,0.5)]"
+      className="h-[18.5rem] overflow-hidden bg-cover bg-center rounded-lg border-4 border-[rgba(40,20,0,0.5)]"
       style={{ backgroundImage: props.backgroundImageUrl }}
     >
       <div className="absolute top-0 left-0 text-white text-sm m-2">絵馬をタップすると…？</div>

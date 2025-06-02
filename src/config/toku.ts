@@ -8,6 +8,7 @@ export const tokuMaster: TokuMasterData[] = [
   { tokuId: 'omikuji_hitohira', label: 'ひとひらくじを引いた', limit: 3, coin: 100 },
   { tokuId: 'omikuji_omikuji', label: 'おみくじを引いた', limit: 3, coin: 300 },
   { tokuId: 'nadeneko', label: 'なで猫をなでた', limit: 1, coin: 100 },
+  { tokuId: 'omamori_buy', label: 'お守りを購入', limit: 10, coin: 500 },
 
   { tokuId: 'debug_add', label: 'デバッグ用：コイン追加', limit: 99, coin: 100 },
   { tokuId: 'debug_sub', label: 'デバッグ用：コイン減算', limit: 99, coin: 100 },

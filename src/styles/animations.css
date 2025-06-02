@@ -251,3 +251,23 @@
 .animate-telop-slide-in-out {
   animation: telop-slide-in-out 3s ease-in-out forwards;
 }
+
+@keyframes omamori-effect-popup {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 0.625rem);
+  }
+  15%,
+  85% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -0.625rem);
+  }
+}
+
+.animate-omamori-effect-popup {
+  animation: omamori-effect-popup var(--omamori-effect-popup-duration) ease-in-out forwards;
+}

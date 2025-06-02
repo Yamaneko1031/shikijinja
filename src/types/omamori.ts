@@ -11,3 +11,9 @@ export type OmamoriData = {
   price: number;
   effects: OmamoriEffect[];
 };
+
+export type OmamoriCommentUserPrompt = {
+  name: string;
+  description: string;
+  effects: OmamoriEffect[];
+};

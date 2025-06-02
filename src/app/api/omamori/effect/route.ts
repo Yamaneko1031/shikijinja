@@ -1,6 +1,4 @@
 import { json } from '@/server/response';
-// import { openaiTemplateRequest } from '@/server/openaiTemplateRequest';
-import { prisma } from '@/server/prisma';
 import { getSessionUser } from '@/server/userSession';
 import { baseOmamoriList, effectNames } from '@/config/omamori';
 
@@ -22,27 +20,25 @@ export async function POST(request: Request) {
 
     for (let i = 0; i < 5; i++) {
       const randomEffect = effectNames[Math.floor(Math.random() * effectNames.length)];
-      setOmamori.effects.push({
-        name: randomEffect,
-        power: Math.floor(Math.random() * 10) + 1,
-      });
+      // すでに同じeffect.nameがある場合はpowerを加算、なければ新規追加
+      const existingEffect = setOmamori.effects.find((effect) => effect.name === randomEffect);
+      if (existingEffect) {
+        existingEffect.power += Math.floor(Math.random() * 10) + 1;
+        if (existingEffect.power > 10) {
+          existingEffect.power = 10;
+        }
+        i--;
+      } else {
+        setOmamori.effects.push({
+          name: randomEffect,
+          power: Math.floor(Math.random() * 10) + 1,
+        });
+      }
     }
-
-    await prisma.omamori.create({
-      data: {
-        userId: user.id,
-        name: omamoriName,
-        description: setOmamori.description,
-        additionalDescription: setOmamori.additionalDescription,
-        imageUrl: setOmamori.imageUrl,
-        price: setOmamori.price,
-        effects: setOmamori.effects,
-      },
-    });
 
     return json(setOmamori, { status: 200 });
   } catch (err) {
     console.error('POST /api/omikuji error', err);
-    return json({ error: 'おみくじ生成に失敗しました' + err }, { status: 500 });
+    return json({ error: 'お守り購入に失敗しました' + err }, { status: 500 });
   }
 }

@@ -17,9 +17,9 @@ const OmamoriLoading: React.FC<Props> = (props: Props) => {
       <Image
         src={props.omamoriData?.imageUrl || ''}
         alt="omikuji_box"
-        width={100}
-        height={100}
-        className="absolute bottom-10 right-15 object-contain animate-omamori-shuffle w-[6rem] h-[6rem]"
+        width={128}
+        height={128}
+        className="absolute bottom-20 right-1/10 object-contain animate-omamori-shuffle w-[7rem] h-[7rem]"
         aria-hidden="true"
       />
     </div>

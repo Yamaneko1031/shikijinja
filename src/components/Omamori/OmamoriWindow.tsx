@@ -3,13 +3,27 @@ import { OmamoriData } from '@/types/omamori';
 import Image from 'next/image';
 import { Button } from '../_shared/Button';
 import { baseOmamoriList } from '@/config/omamori';
+import { getTokuMaster } from '@/utils/toku';
+import { TokuId } from '@/types/toku';
 
 interface Props {
   handlePurchase: (selectedOmamori: OmamoriData) => void;
+  handleIsEnoughCoin: (tokuId: TokuId) => boolean;
 }
 
 export default function OmamoriWindow(props: Props) {
   const [selectedOmamori, setSelectedOmamori] = useState<OmamoriData>(baseOmamoriList[0]);
+
+  const purchase = (selectedOmamori: OmamoriData) => {
+    const tokudata = getTokuMaster('omamori_buy');
+    if (tokudata) {
+      if (!props.handleIsEnoughCoin(tokudata.tokuId)) {
+        alert(`徳が足りません。\n${tokudata.label}は1回${tokudata.coin}徳です。`);
+        return;
+      }
+      props.handlePurchase(selectedOmamori);
+    }
+  };
 
   return (
     <div className="relative w-full bg-black/50 rounded-lg flex flex-col items-center gap-2 p-4">
@@ -38,7 +52,7 @@ export default function OmamoriWindow(props: Props) {
             <Button
               variant="positive"
               size="lg"
-              onClick={() => props.handlePurchase(selectedOmamori)}
+              onClick={() => purchase(selectedOmamori)}
               className="w-full max-w-md flex flex-col pt-2 pb-2 pl-0 pr-0"
             >
               <div className="text-xl font-bold">買う</div>

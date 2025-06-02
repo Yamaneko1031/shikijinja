@@ -10,22 +10,71 @@ import OmamoriWindow from './OmamoriWindow';
 import Modal from '../_shared/Modal';
 import OmamoriLoading from './OmamoriLoading';
 import OmamoriModal from './OmamoriModal';
+// import OmamoriEffectPopup from './OmamoriEffectPopup';
+import { useTelop } from '@/hooks/useTelop';
+import { getTokuMaster } from '@/utils/toku';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const OmamoriSection = (props: SectionProps) => {
   const [loading, setLoading] = useState(false);
   const [omamoriData, setOmamoriData] = useState<OmamoriData | null>(null);
   const [omamoriModalOpen, setOmamoriModalOpen] = useState(false);
   const omamoriDataRef = useRef<OmamoriData | null>(null);
 
+  const telop = useTelop();
+
   const handlePurchase = async (selectedOmamori: OmamoriData) => {
+    const tokudata = getTokuMaster('omamori_buy');
+    if (tokudata) {
+      if (props.handleIsLimitOver(tokudata.tokuId)) {
+        alert(`今日はもう変えません。\n${tokudata.label}は1日${tokudata.limit}回まで。`);
+        return;
+      }
+      if (!props.handleIsEnoughCoin(tokudata.tokuId)) {
+        alert(`徳が足りません。\n${tokudata.label}は1回${tokudata.coin}徳です。`);
+        return;
+      }
+    }
+
     setOmamoriData(selectedOmamori);
     setLoading(true);
-    omamoriDataRef.current = await apiFetch<OmamoriData>('/api/omamori/buy', {
+
+    omamoriDataRef.current = await apiFetch<OmamoriData>('/api/omamori/effect', {
       method: 'POST',
       body: JSON.stringify({ omamoriName: selectedOmamori.name }),
     });
-    await new Promise((resolve) => setTimeout(resolve, 5000));
+
+    // ①と②を並列で実行し、③は両方完了後に実行する
+    // ①: お守りコメントAPIリクエスト
+    const commentPromise = apiFetch<OmamoriData>('/api/omamori/comment', {
+      method: 'POST',
+      body: JSON.stringify({ setOmamori: omamoriDataRef.current }),
+    });
+
+    // ②: エフェクト演出（/effectのレスポンスを先に取得する必要があるので、先に取得）
+    const effectOmamori = await apiFetch<OmamoriData>('/api/omamori/effect', {
+      method: 'POST',
+      body: JSON.stringify({ omamoriName: omamoriDataRef.current.name }),
+    });
+
+    // エフェクト演出を非同期で開始
+    const effectPromise = (async () => {
+      for (const effect of effectOmamori?.effects ?? []) {
+        console.log('effect', effect);
+        telop.showPop(`${effect.name} +${effect.power} を獲得`);
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+      }
+    })();
+
+    // ①のAPIレスポンスを取得
+    omamoriDataRef.current = await commentPromise;
+
+    // ①②両方完了まで待つ
+    await effectPromise;
+
+    props.handleTokuUsed('omamori_buy');
+    // ③: 両方終わったらsetOmamoriData
+    setOmamoriData(omamoriDataRef.current);
+
     setLoading(false);
     setOmamoriModalOpen(true);
   };
@@ -50,12 +99,24 @@ const OmamoriSection = (props: SectionProps) => {
             />
           </div>
         </div>
-        <OmamoriWindow handlePurchase={handlePurchase} />
+        <OmamoriWindow
+          handlePurchase={handlePurchase}
+          handleIsEnoughCoin={props.handleIsEnoughCoin}
+        />
       </div>
 
       {/* おみくじ抽選中画面 */}
       <Modal isOpen={loading} className="relative min-w-[20rem] w-[30rem] mx-2 overscroll-contain">
         <OmamoriLoading omamoriData={omamoriData} />
+        {/* 獲得テロップ表示 */}
+        {telop.currentText && (
+          <div
+            key={telop.currentId.current}
+            className="absolute top-1/2 left-1/2 -translate-y-1/2 bg-black/80 rounded-sm p-2 text-xl animate-omamori-effect-popup"
+          >
+            {telop.currentText}
+          </div>
+        )}
       </Modal>
 
       <Modal isOpen={omamoriModalOpen}>
