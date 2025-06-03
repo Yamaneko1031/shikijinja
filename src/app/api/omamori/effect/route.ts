@@ -22,16 +22,18 @@ export async function POST(request: Request) {
       const randomEffect = effectNames[Math.floor(Math.random() * effectNames.length)];
       // すでに同じeffect.nameがある場合はpowerを加算、なければ新規追加
       const existingEffect = setOmamori.effects.find((effect) => effect.name === randomEffect);
+      const addPower = Math.floor(Math.random() * 100) + 1;
       if (existingEffect) {
-        existingEffect.power += Math.floor(Math.random() * 10) + 1;
-        if (existingEffect.power > 10) {
-          existingEffect.power = 10;
+        existingEffect.power += addPower;
+        if (existingEffect.power > 100) {
+          existingEffect.power = 100;
         }
         i--;
+        console.log('重複', existingEffect.name, existingEffect.power);
       } else {
         setOmamori.effects.push({
           name: randomEffect,
-          power: Math.floor(Math.random() * 10) + 1,
+          power: addPower,
         });
       }
     }

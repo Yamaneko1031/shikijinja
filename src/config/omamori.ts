@@ -10,12 +10,12 @@ export const baseOmamoriList: OmamoriData[] = [
     price: 500,
     effects: [
       {
-        name: '仕事運',
-        power: 5,
+        name: '成功運',
+        power: 60,
       },
       {
-        name: '成功運',
-        power: 5,
+        name: '仕事運',
+        power: 40,
       },
     ],
   },
@@ -28,12 +28,12 @@ export const baseOmamoriList: OmamoriData[] = [
     price: 500,
     effects: [
       {
-        name: '厄除け運',
-        power: 5,
+        name: 'デバッグ運',
+        power: 60,
       },
       {
-        name: 'デバッグ運',
-        power: 5,
+        name: '厄除け運',
+        power: 40,
       },
     ],
   },
@@ -47,11 +47,11 @@ export const baseOmamoriList: OmamoriData[] = [
     effects: [
       {
         name: '健康運',
-        power: 5,
+        power: 60,
       },
       {
         name: '美容運',
-        power: 5,
+        power: 40,
       },
     ],
   },
@@ -65,11 +65,11 @@ export const baseOmamoriList: OmamoriData[] = [
     effects: [
       {
         name: '金運',
-        power: 5,
+        power: 60,
       },
       {
         name: '商売運',
-        power: 5,
+        power: 40,
       },
     ],
   },
@@ -83,15 +83,15 @@ export const baseOmamoriList: OmamoriData[] = [
     effects: [
       {
         name: '厄除け運',
-        power: 5,
+        power: 60,
       },
       {
         name: '家内安全運',
-        power: 5,
+        power: 20,
       },
       {
         name: '交通安全運',
-        power: 5,
+        power: 20,
       },
     ],
   },
@@ -123,11 +123,11 @@ export const baseOmamoriList: OmamoriData[] = [
     effects: [
       {
         name: '勝負運',
-        power: 5,
+        power: 60,
       },
       {
         name: '成功運',
-        power: 5,
+        power: 40,
       },
     ],
   },
@@ -141,11 +141,11 @@ export const baseOmamoriList: OmamoriData[] = [
     effects: [
       {
         name: 'セキュリティ運',
-        power: 5,
+        power: 60,
       },
       {
         name: 'インフラ運',
-        power: 5,
+        power: 40,
       },
     ],
   },
@@ -159,11 +159,11 @@ export const baseOmamoriList: OmamoriData[] = [
     effects: [
       {
         name: '勉強運',
-        power: 5,
+        power: 60,
       },
       {
         name: '学業運',
-        power: 5,
+        power: 40,
       },
     ],
   },
@@ -194,12 +194,12 @@ export const baseOmamoriList: OmamoriData[] = [
     price: 500,
     effects: [
       {
-        name: '恋愛運',
-        power: 5,
+        name: '対人運',
+        power: 60,
       },
       {
-        name: '対人運',
-        power: 5,
+        name: '健康運',
+        power: 40,
       },
     ],
   },
@@ -212,12 +212,12 @@ export const baseOmamoriList: OmamoriData[] = [
     price: 500,
     effects: [
       {
-        name: '恋愛運',
-        power: 5,
+        name: '開運',
+        power: 60,
       },
       {
-        name: '対人運',
-        power: 5,
+        name: '商売運',
+        power: 40,
       },
     ],
   },

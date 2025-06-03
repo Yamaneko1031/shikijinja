@@ -43,32 +43,26 @@ const OmamoriSection = (props: SectionProps) => {
       body: JSON.stringify({ omamoriName: selectedOmamori.name }),
     });
 
-    // ①と②を並列で実行し、③は両方完了後に実行する
-    // ①: お守りコメントAPIリクエスト
+    // お守りコメントAPIを非同期で実行
     const commentPromise = apiFetch<OmamoriData>('/api/omamori/comment', {
       method: 'POST',
       body: JSON.stringify({ setOmamori: omamoriDataRef.current }),
     });
 
-    // ②: エフェクト演出（/effectのレスポンスを先に取得する必要があるので、先に取得）
-    const effectOmamori = await apiFetch<OmamoriData>('/api/omamori/effect', {
-      method: 'POST',
-      body: JSON.stringify({ omamoriName: omamoriDataRef.current.name }),
-    });
-
-    // エフェクト演出を非同期で開始
+    // エフェクト演出を開始
     const effectPromise = (async () => {
-      for (const effect of effectOmamori?.effects ?? []) {
+      for (const effect of omamoriDataRef.current?.effects ?? []) {
         console.log('effect', effect);
         telop.showPop(`${effect.name} +${effect.power} を獲得`);
         await new Promise((resolve) => setTimeout(resolve, 2000));
       }
     })();
 
-    // ①のAPIレスポンスを取得
+    // お守りコメントAPIレスポンスを取得
     omamoriDataRef.current = await commentPromise;
+    console.log('omamoriDataRef.current', omamoriDataRef.current);
 
-    // ①②両方完了まで待つ
+    // 両方完了まで待つ
     await effectPromise;
 
     props.handleTokuUsed('omamori_buy');
