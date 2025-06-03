@@ -15,21 +15,18 @@ export async function POST(request: Request) {
     if (!setOmamori) return json({ error: 'お守りが見つかりません' }, { status: 404 });
 
     setOmamori.effects.map((effect) => {
-      effect.power += Math.floor(Math.random() * 6);
+      effect.power += Math.floor(Math.random() * (100 - effect.power)) + 1;
     });
 
-    for (let i = 0; i < 5; i++) {
+    // 3~6個のエフェクトを追加
+    const effectCount = Math.floor(Math.random() * 4) + 3;
+    for (let i = 0; i < effectCount; i++) {
       const randomEffect = effectNames[Math.floor(Math.random() * effectNames.length)];
       // すでに同じeffect.nameがある場合はpowerを加算、なければ新規追加
       const existingEffect = setOmamori.effects.find((effect) => effect.name === randomEffect);
       const addPower = Math.floor(Math.random() * 100) + 1;
       if (existingEffect) {
-        existingEffect.power += addPower;
-        if (existingEffect.power > 100) {
-          existingEffect.power = 100;
-        }
         i--;
-        console.log('重複', existingEffect.name, existingEffect.power);
       } else {
         setOmamori.effects.push({
           name: randomEffect,
