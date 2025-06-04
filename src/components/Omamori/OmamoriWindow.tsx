@@ -1,40 +1,66 @@
-import { useState } from 'react';
-import { OmamoriData } from '@/types/omamori';
+// import { useState } from 'react';
+// import { OmamoriData } from '@/types/omamori';
 import Image from 'next/image';
 import { Button } from '../_shared/Button';
-import { baseOmamoriList } from '@/config/omamori';
+// import { baseOmamoriList } from '@/config/omamori';
 import { getTokuMaster } from '@/utils/toku';
 import { TokuId } from '@/types/toku';
 
 interface Props {
-  handlePurchase: (selectedOmamori: OmamoriData) => void;
+  handlePurchase: () => void;
   handleIsEnoughCoin: (tokuId: TokuId) => boolean;
 }
 
 export default function OmamoriWindow(props: Props) {
-  const [selectedOmamori, setSelectedOmamori] = useState<OmamoriData>(baseOmamoriList[0]);
+  const tokudata = getTokuMaster('omamori_buy');
+  // const [selectedOmamori, setSelectedOmamori] = useState<OmamoriData>(baseOmamoriList[0]);
 
-  const purchase = (selectedOmamori: OmamoriData) => {
-    const tokudata = getTokuMaster('omamori_buy');
+  const purchase = () => {
     if (tokudata) {
       if (!props.handleIsEnoughCoin(tokudata.tokuId)) {
         alert(`徳が足りません。\n${tokudata.label}は1回${tokudata.coin}徳です。`);
         return;
       }
-      props.handlePurchase(selectedOmamori);
+      props.handlePurchase();
     }
   };
 
   return (
     <div className="relative w-full bg-black/50 rounded-lg flex flex-col items-center gap-2 p-4">
-      <div className="w-full flex flex-row gap-4 justify-center">
+      {/* <div className="w-full flex flex-row gap-4 justify-center">
         {baseOmamoriList.map((omamori) => (
           <div key={omamori.name}>
             <Image src={omamori.imageUrl} alt={omamori.name} width={100} height={100} />
           </div>
         ))}
+      </div> */}
+      <div className="text-xl flex flex-col gap-4 items-start">
+        <p>
+          みこ猫があなたに必要なお守りを（適当に）選び、そのお守りに祈りを捧げることで様々な効能を付与してくれます。
+        </p>
+        <p>※同じ種類のお守りでも付与される効能は毎回変わります。</p>
       </div>
-      <div className="w-full flex flex-row gap-4 justify-center">
+      <Button
+        variant="positive"
+        size="lg"
+        onClick={() => {}}
+        className="w-full max-w-md flex flex-col pt-2 pb-2 pl-0 pr-0"
+      >
+        <div className="text-xl font-bold">お守り一覧</div>
+      </Button>
+      <Button
+        variant="positive"
+        size="lg"
+        onClick={() => purchase()}
+        className="w-full max-w-md flex flex-col pt-2 pb-2 pl-0 pr-0"
+      >
+        <div className="text-xl font-bold">買う</div>
+        <div className="flex flex-row items-center">
+          <Image src="/images/icon/icon_coin.webp" alt="omikuji_button" width={24} height={24} />
+          <div className="text-sm text-white font-bold">{tokudata?.coin}消費</div>
+        </div>
+      </Button>
+      {/* <div className="w-full flex flex-row gap-4 justify-center">
         <div className="min-w-[8rem] max-w-[12rem] flex justify-center items-center">
           <Image
             src={selectedOmamori.imageUrl}
@@ -67,15 +93,6 @@ export default function OmamoriWindow(props: Props) {
               </div>
             </Button>
           </div>
-          {/* {selectedOmamori.effects.map((effect) => (
-          <div key={effect.name}>
-            <div className="text-sm">
-              {effect.name + ' '}
-              {'★'.repeat(effect.power)}
-              {'☆'.repeat(10 - effect.power)}
-            </div>
-          </div>
-        ))} */}
         </div>
         <div className="absolute top-0 left-0">
           <Button
@@ -109,7 +126,7 @@ export default function OmamoriWindow(props: Props) {
             →
           </Button>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

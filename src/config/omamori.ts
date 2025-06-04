@@ -3,6 +3,7 @@ import { OmamoriData } from '@/types/omamori';
 export const baseOmamoriList: OmamoriData[] = [
   {
     name: '納期守',
+    hurigana: 'のうきまもり',
     description:
       '納期を守り、心の余裕を持たせるお守り。\n締め切り前の焦りやプレッシャーをやわらげ、落ち着きを与えます。時間を味方にして、安心して仕事に取り組みましょう。',
     additionalDescription: '',
@@ -21,6 +22,7 @@ export const baseOmamoriList: OmamoriData[] = [
   },
   {
     name: '不具合守',
+    hurigana: 'ふぐあいまもり',
     description:
       '予期せぬ不具合やバグから守ってくれる、頼れるお守り。\nトラブル発生時にも冷静な対処ができる力を与えてくれます。穏やかな心で、不具合を素早く解決しましょう。',
     additionalDescription: '',
@@ -39,6 +41,7 @@ export const baseOmamoriList: OmamoriData[] = [
   },
   {
     name: '平癒守',
+    hurigana: 'へいゆまもり',
     description:
       '心身の健康を回復させ、病気や疲れから守るお守り。\n不調を感じたとき、優しく癒して回復を促します。日々の健康を支え、元気な毎日を送る力となります。',
     additionalDescription: '',
@@ -57,6 +60,7 @@ export const baseOmamoriList: OmamoriData[] = [
   },
   {
     name: '金運守',
+    hurigana: 'きんうんまもり',
     description:
       '収入や貯蓄など、お金にまつわる運気を上げるお守り。\n無駄遣いを防ぎ、豊かな暮らしへの道を示します。毎日を豊かに暮らすためのお守りとして身近に置いてください。',
     additionalDescription: '',
@@ -75,6 +79,7 @@ export const baseOmamoriList: OmamoriData[] = [
   },
   {
     name: '厄除守',
+    hurigana: 'やくよけまもり',
     description:
       '厄災やトラブルから身を守ってくれる強力なお守り。\n悪い運気や邪気を跳ね返し、平穏な日々を保ちます。穏やかで安心できる日常を手に入れましょう。',
     additionalDescription: '',
@@ -95,26 +100,9 @@ export const baseOmamoriList: OmamoriData[] = [
       },
     ],
   },
-  //   {
-  //     name: '開運守',
-  //     description:
-  //       '新たな運気を開き、前向きな気持ちをもたらすお守り。\n停滞を抜け、物事をスムーズに進展させる力を秘めています。新しい挑戦をするあなたの背中を後押しします。',
-  //     additionalDescription: '',
-  //     imageUrl: '/images/omamori/omamori_kaiun.png',
-  //     price: 500,
-  //     effects: [
-  //       {
-  //         name: '開運',
-  //         power: 5,
-  //       },
-  //       {
-  //         name: '旅行運',
-  //         power: 5,
-  //       },
-  //     ],
-  //   },
   {
     name: '勝守',
+    hurigana: 'かちまもり',
     description:
       '勝負事や競争、プレッシャーのかかる状況で力を発揮するお守り。\nここぞという場面で勇気と自信を与えてくれます。大事な勝負に臨むとき、あなたの力強い味方になります。',
     additionalDescription: '',
@@ -133,10 +121,11 @@ export const baseOmamoriList: OmamoriData[] = [
   },
   {
     name: '情報守',
+    hurigana: 'じょうほうまもり',
     description:
       '情報漏えいやデータのトラブルから守るIT時代のお守り。\n大切な情報を安全に保ち、秘密をしっかり守ります。情報管理に携わるすべての人のための心強い存在です。',
     additionalDescription: '',
-    imageUrl: '/images/omamori/omamori_jouhou.png',
+    imageUrl: '/images/omamori/omamori_jouhou.webp',
     price: 500,
     effects: [
       {
@@ -151,10 +140,11 @@ export const baseOmamoriList: OmamoriData[] = [
   },
   {
     name: '合格守',
+    hurigana: 'ごうかくまもり',
     description:
       '試験や資格取得、受験での成功を願うお守り。\n日頃の勉強の成果を発揮し、合格を後押しします。努力が実を結び、未来の扉を開く力を与えます。',
     additionalDescription: '',
-    imageUrl: '/images/omamori/omamori_goukaku.png',
+    imageUrl: '/images/omamori/omamori_goukaku.webp',
     price: 500,
     effects: [
       {
@@ -167,30 +157,13 @@ export const baseOmamoriList: OmamoriData[] = [
       },
     ],
   },
-  //   {
-  //     name: '縁結守',
-  //     description:
-  //       '良いご縁を引き寄せ、つながりを深めるお守り。\n恋愛だけでなく、人間関係全般を円滑にする力を持っています。あなたのそばに素敵なご縁を呼び込みましょう。',
-  //     additionalDescription: '',
-  //     imageUrl: '/images/omamori/omamori_enmusubi.png',
-  //     price: 500,
-  //     effects: [
-  //       {
-  //         name: '恋愛運',
-  //         power: 5,
-  //       },
-  //       {
-  //         name: '対人運',
-  //         power: 5,
-  //       },
-  //     ],
-  //   },
   {
     name: '余白守',
+    hurigana: 'よはくまもり',
     description:
       '心に、暮らしに、ちょうどいい余白を与えてくれるお守り。\n日々の慌ただしさの中で、心の余裕、時間のゆとり、人との程よい距離感を保てるようになるでしょう。',
     additionalDescription: '',
-    imageUrl: '/images/omamori/omamori_enmusubi.png',
+    imageUrl: '/images/omamori/omamori_yohaku.webp',
     price: 500,
     effects: [
       {
@@ -205,10 +178,11 @@ export const baseOmamoriList: OmamoriData[] = [
   },
   {
     name: '閃守',
+    hurigana: 'ひらめきまもり',
     description:
       'あなたのもとへ、ひらめきが舞い降りてくるお守り。\nアイデアに困った時や、新しい発想を求める場面で、天啓のようなひらめきで乗り越えていけるでしょう。',
     additionalDescription: '',
-    imageUrl: '/images/omamori/omamori_enmusubi.png',
+    imageUrl: '/images/omamori/omamori_hirameki.webp',
     price: 500,
     effects: [
       {

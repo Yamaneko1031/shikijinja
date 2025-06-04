@@ -5,6 +5,7 @@ export type OmamoriEffect = {
 
 export type OmamoriData = {
   name: string;
+  hurigana: string;
   description: string;
   additionalDescription: string;
   imageUrl: string;

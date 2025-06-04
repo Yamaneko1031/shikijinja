@@ -27,10 +27,7 @@ export async function POST(request: Request) {
       data: {
         userId: user.id,
         name: setOmamori.name,
-        description: setOmamori.description,
         additionalDescription: setOmamori.additionalDescription,
-        imageUrl: setOmamori.imageUrl,
-        price: setOmamori.price,
         effects: setOmamori.effects,
       },
     });

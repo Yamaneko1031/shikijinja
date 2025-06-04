@@ -18,15 +18,15 @@ const OmamoriSection = (props: SectionProps) => {
   const [loading, setLoading] = useState(false);
   const [omamoriData, setOmamoriData] = useState<OmamoriData | null>(null);
   const [omamoriModalOpen, setOmamoriModalOpen] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState<string>('');
   const omamoriDataRef = useRef<OmamoriData | null>(null);
-
   const telop = useTelop();
 
-  const handlePurchase = async (selectedOmamori: OmamoriData) => {
+  const handlePurchase = async () => {
     const tokudata = getTokuMaster('omamori_buy');
     if (tokudata) {
       if (props.handleIsLimitOver(tokudata.tokuId)) {
-        alert(`今日はもう変えません。\n${tokudata.label}は1日${tokudata.limit}回まで。`);
+        alert(`今日はもう買えません。\n${tokudata.label}は1日${tokudata.limit}回まで。`);
         return;
       }
       if (!props.handleIsEnoughCoin(tokudata.tokuId)) {
@@ -35,13 +35,20 @@ const OmamoriSection = (props: SectionProps) => {
       }
     }
 
-    setOmamoriData(selectedOmamori);
+    setOmamoriData(null);
+    setLoadingMessage('お守りを選択中');
     setLoading(true);
 
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     omamoriDataRef.current = await apiFetch<OmamoriData>('/api/omamori/effect', {
       method: 'POST',
-      body: JSON.stringify({ omamoriName: selectedOmamori.name }),
     });
+    telop.showPop(`${omamoriDataRef.current?.name} が選択されました`);
+    console.log('omamoriDataRef.current?.name', omamoriDataRef.current?.name);
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
+    setLoadingMessage('効能を付与中');
+    setOmamoriData(omamoriDataRef.current);
 
     // お守りコメントAPIを非同期で実行
     const commentPromise = apiFetch<OmamoriData>('/api/omamori/comment', {
@@ -101,7 +108,7 @@ const OmamoriSection = (props: SectionProps) => {
 
       {/* おみくじ抽選中画面 */}
       <Modal isOpen={loading} className="relative min-w-[20rem] w-[30rem] mx-2 overscroll-contain">
-        <OmamoriLoading omamoriData={omamoriData} />
+        <OmamoriLoading omamoriData={omamoriData} loadingMessage={loadingMessage} />
         {/* 獲得テロップ表示 */}
         {telop.currentText && (
           <div
