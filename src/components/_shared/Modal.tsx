@@ -26,7 +26,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, children, className }) => {
 
   // モーダルの中身（本来描画したい要素）
   const modalContent = isOpen ? (
-    <div className="fixed inset-0 z-2 bg-black/50 overflow-scroll overscroll-contain flex justify-center items-center">
+    <div className="fixed inset-0 z-2 bg-black/80 overflow-scroll overscroll-contain flex justify-center items-center">
       <div className="absolute top-0 left-0 w-full h-[calc(100%+1px)]" />
       <div
         className={

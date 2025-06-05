@@ -5,6 +5,9 @@ import { Button } from '../_shared/Button';
 // import { baseOmamoriList } from '@/config/omamori';
 import { getTokuMaster } from '@/utils/toku';
 import { TokuId } from '@/types/toku';
+import Modal from '../_shared/Modal';
+import OmamoriList from './OmamoriList';
+import { useState } from 'react';
 
 interface Props {
   handlePurchase: () => void;
@@ -13,6 +16,7 @@ interface Props {
 
 export default function OmamoriWindow(props: Props) {
   const tokudata = getTokuMaster('omamori_buy');
+  const [omamoriListOpen, setOmamoriListOpen] = useState(false);
   // const [selectedOmamori, setSelectedOmamori] = useState<OmamoriData>(baseOmamoriList[0]);
 
   const purchase = () => {
@@ -43,7 +47,7 @@ export default function OmamoriWindow(props: Props) {
       <Button
         variant="positive"
         size="lg"
-        onClick={() => {}}
+        onClick={() => setOmamoriListOpen(true)}
         className="w-full max-w-md flex flex-col pt-2 pb-2 pl-0 pr-0"
       >
         <div className="text-xl font-bold">お守り一覧</div>
@@ -60,6 +64,10 @@ export default function OmamoriWindow(props: Props) {
           <div className="text-sm text-white font-bold">{tokudata?.coin}消費</div>
         </div>
       </Button>
+
+      <Modal isOpen={omamoriListOpen}>
+        <OmamoriList onClose={() => setOmamoriListOpen(false)} />
+      </Modal>
       {/* <div className="w-full flex flex-row gap-4 justify-center">
         <div className="min-w-[8rem] max-w-[12rem] flex justify-center items-center">
           <Image

@@ -25,6 +25,7 @@ model EmaPost {
   reasons   Json        @default("[]")
   createdAt DateTime    @default(now())
   user      User?       @relation("UserEmaPosts", fields: [userId], references: [id], onDelete: SetNull)
+  @@index([userId])
 }
 
 model PromptTemplate {
@@ -50,19 +51,34 @@ model OmikujiResult {
   details         Json        @default("[]")
   createdAt       DateTime    @default(now())
   user            User?       @relation("UserOmikujiResults", fields: [userId], references: [id], onDelete: SetNull)
+  @@index([userId])
 }
 
+model OmamoriBase {
+  id                      String        @id @default(cuid())
+  name                    String
+  hurigana                String
+  description             String
+  imageUrl                String
+  price                   Int
+  effects                 Json          @default("[]")
+  createdAt               DateTime      @default(now())
+  omamoriItems            Omamori[]     @relation("OmamoriBaseItems")
+}
 
 model Omamori {
-  id                      String      @id @default(cuid())
+  id                      String        @id @default(cuid())
   userId                  String?
-  name                    String
+  baseId                  String
   additionalDescription   String
-  effects                 Json        @default("[]")
-  createdAt               DateTime    @default(now())
-  user                    User?       @relation("UserOmamoriItems", fields: [userId], references: [id], onDelete: SetNull)
+  effects                 Json          @default("[]")
+  updatedAt               DateTime      @updatedAt
+  createdAt               DateTime      @default(now())
+  user                    User?         @relation("UserOmamoriItems", fields: [userId], references: [id], onDelete: SetNull)
+  base                    OmamoriBase   @relation("OmamoriBaseItems", fields: [baseId], references: [id])
+  @@index([userId])
+  @@index([baseId])
 }
-
 
 model TokuCount {
   id              String      @id @default(cuid())
@@ -109,5 +125,5 @@ model GuestSession {
   id              String    @id @default(cuid()) // セッションID
   userId          String
   expiresAt       DateTime
-  user            User      @relation("UserGuestSessions", fields: [userId], references: [id])
+  user            User      @relation("UserGuestSessions", fields: [userId], references: [id], onDelete: Cascade)
 }

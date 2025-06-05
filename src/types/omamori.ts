@@ -3,14 +3,20 @@ export type OmamoriEffect = {
   power: number;
 };
 
-export type OmamoriData = {
+export type OmamoriBase = {
+  id: string;
   name: string;
   hurigana: string;
   description: string;
-  additionalDescription: string;
   imageUrl: string;
   price: number;
   effects: OmamoriEffect[];
+};
+
+export type OmamoriDataResponse = OmamoriBase & {
+  id: string;
+  additionalDescription: string;
+  createdAt: string;
 };
 
 export type OmamoriCommentUserPrompt = {

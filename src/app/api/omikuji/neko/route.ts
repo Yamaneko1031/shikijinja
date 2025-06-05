@@ -33,6 +33,7 @@ export async function POST(request: Request) {
     });
 
     const omikujiResponse: OmikujiResponse = {
+      id: result.id,
       job: '',
       period,
       fortuneNumber,

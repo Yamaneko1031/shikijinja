@@ -1,7 +1,7 @@
 import { json } from '@/server/response';
 import { prisma } from '@/server/prisma';
 import { getSessionUser } from '@/server/userSession';
-import { OmikujiDetail } from '@/types/omikuji';
+import { OmikujiDetail, OmikujiResponse } from '@/types/omikuji';
 
 export async function POST(request: Request) {
   try {
@@ -17,7 +17,7 @@ export async function POST(request: Request) {
       fortuneNumber: number;
     };
 
-    await prisma.omikujiResult.create({
+    const omikujiResult = await prisma.omikujiResult.create({
       data: {
         userId: user.id,
         job,
@@ -29,7 +29,18 @@ export async function POST(request: Request) {
       },
     });
 
-    return json({ result: 'OK' }, { status: 200 });
+    const omikujiResponse: OmikujiResponse = {
+      id: omikujiResult.id,
+      job: omikujiResult.job,
+      period: omikujiResult.period,
+      fortuneNumber: omikujiResult.fortuneNumber,
+      fortune: omikujiResult.fortune,
+      msg: omikujiResult.msg,
+      details: omikujiResult.details as OmikujiDetail[],
+      createdAt: omikujiResult.createdAt.toISOString(),
+    };
+
+    return json(omikujiResponse, { status: 200 });
   } catch (err) {
     console.error('POST /api/omikuji error', err);
     return json({ error: 'おみくじ保存に失敗しました' }, { status: 500 });

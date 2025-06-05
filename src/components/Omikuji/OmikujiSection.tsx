@@ -96,45 +96,36 @@ const OmikujiSection = (props: SectionProps) => {
         body: JSON.stringify(body),
       });
 
-      const omikujiResponse: OmikujiResponse = {
-        details: res.details,
-        fortune: res.fortune,
-        msg: res.msg,
-        job,
-        period: omikujiType,
-        fortuneNumber: dataFortune.fortune,
-        createdAt: new Date().toISOString(),
-      };
-
-      resultRef.current = omikujiResponse;
-      setIsOpen(true);
-
-      switch (omikujiType) {
-        case '今年':
-          props.handleTokuUsed('omikuji_omikuji');
-          break;
-        case '今月':
-          props.handleTokuUsed('omikuji_hitohira');
-          break;
-        case '明日':
-          props.handleTokuUsed('omikuji_nekobiyori');
-          break;
-      }
-
       try {
         const bodySave = {
-          details: omikujiResponse.details,
-          fortune: omikujiResponse.fortune,
-          msg: omikujiResponse.msg,
-          job: omikujiResponse.job,
-          period: omikujiResponse.period,
-          fortuneNumber: omikujiResponse.fortuneNumber,
+          details: res.details,
+          fortune: res.fortune,
+          msg: res.msg,
+          job,
+          period: omikujiType,
+          fortuneNumber: dataFortune.fortune,
         };
-        apiFetch('/api/omikuji/save', {
+        const omikujiResponse = await apiFetch<OmikujiResponse>('/api/omikuji/save', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(bodySave),
         });
+        console.log('omikuji', omikujiResponse);
+
+        resultRef.current = omikujiResponse;
+        setIsOpen(true);
+
+        switch (omikujiType) {
+          case '今年':
+            props.handleTokuUsed('omikuji_omikuji');
+            break;
+          case '今月':
+            props.handleTokuUsed('omikuji_hitohira');
+            break;
+          case '明日':
+            props.handleTokuUsed('omikuji_nekobiyori');
+            break;
+        }
       } catch (err) {
         console.error(err);
         alert('おみくじの保存に失敗しました。' + err);

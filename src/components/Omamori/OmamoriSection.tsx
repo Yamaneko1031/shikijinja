@@ -4,7 +4,7 @@ import React, { useRef, useState } from 'react';
 import TextReveal from '@/components/_shared/TextReveal';
 import { SectionProps } from '@/types/section';
 import Image from 'next/image';
-import { OmamoriData } from '@/types/omamori';
+import { OmamoriDataResponse } from '@/types/omamori';
 import { apiFetch } from '@/lib/api';
 import OmamoriWindow from './OmamoriWindow';
 import Modal from '../_shared/Modal';
@@ -16,10 +16,10 @@ import { getTokuMaster } from '@/utils/toku';
 
 const OmamoriSection = (props: SectionProps) => {
   const [loading, setLoading] = useState(false);
-  const [omamoriData, setOmamoriData] = useState<OmamoriData | null>(null);
+  const [omamoriData, setOmamoriData] = useState<OmamoriDataResponse | null>(null);
   const [omamoriModalOpen, setOmamoriModalOpen] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState<string>('');
-  const omamoriDataRef = useRef<OmamoriData | null>(null);
+  const omamoriDataRef = useRef<OmamoriDataResponse | null>(null);
   const telop = useTelop();
 
   const handlePurchase = async () => {
@@ -35,26 +35,34 @@ const OmamoriSection = (props: SectionProps) => {
       }
     }
 
+    telop.clear();
     setOmamoriData(null);
     setLoadingMessage('お守りを選択中');
     setLoading(true);
 
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    omamoriDataRef.current = await apiFetch<OmamoriData>('/api/omamori/effect', {
+    omamoriDataRef.current = await apiFetch<OmamoriDataResponse>('/api/omamori/effect', {
       method: 'POST',
     });
-    telop.showPop(`${omamoriDataRef.current?.name} が選択されました`);
-    console.log('omamoriDataRef.current?.name', omamoriDataRef.current?.name);
-    await new Promise((resolve) => setTimeout(resolve, 3000));
 
-    setLoadingMessage('効能を付与中');
+    if (!omamoriDataRef.current) {
+      alert('お守りの作成に失敗しました。');
+      return;
+    }
+    // お守りコメントAPIを非同期で実行
+    const commentPromise = apiFetch<OmamoriDataResponse>('/api/omamori/comment', {
+      method: 'POST',
+      body: JSON.stringify({ omamoriId: omamoriDataRef.current.id }),
+    });
+
+    // 演出
+    telop.showPop(`${omamoriDataRef.current.name} が選択されました`);
     setOmamoriData(omamoriDataRef.current);
 
-    // お守りコメントAPIを非同期で実行
-    const commentPromise = apiFetch<OmamoriData>('/api/omamori/comment', {
-      method: 'POST',
-      body: JSON.stringify({ setOmamori: omamoriDataRef.current }),
-    });
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    setLoadingMessage('効能を付与中');
+    // setOmamoriData(omamoriDataRef.current);
 
     // エフェクト演出を開始
     const effectPromise = (async () => {
@@ -65,15 +73,11 @@ const OmamoriSection = (props: SectionProps) => {
       }
     })();
 
-    // お守りコメントAPIレスポンスを取得
-    omamoriDataRef.current = await commentPromise;
-    console.log('omamoriDataRef.current', omamoriDataRef.current);
-
     // 両方完了まで待つ
+    omamoriDataRef.current = await commentPromise;
     await effectPromise;
 
     props.handleTokuUsed('omamori_buy');
-    // ③: 両方終わったらsetOmamoriData
     setOmamoriData(omamoriDataRef.current);
 
     setLoading(false);
@@ -120,7 +124,10 @@ const OmamoriSection = (props: SectionProps) => {
         )}
       </Modal>
 
-      <Modal isOpen={omamoriModalOpen}>
+      <Modal
+        isOpen={omamoriModalOpen}
+        className="absolute top-0 left-0 min-h-[100lvh] min-w-[100vw] bg-transparent overscroll-contain"
+      >
         {omamoriDataRef.current && (
           <OmamoriModal
             omamoriData={omamoriDataRef.current}

@@ -13,6 +13,11 @@ export const useTelop = () => {
     // setQueue((q) => [...q, pop]);
   }, []);
 
+  const clear = useCallback(() => {
+    setCurrentText(null);
+    currentId.current = null;
+  }, []);
+
   // キューによるポップアップ
   // const [queue, setQueue] = useState<string[]>([]);
   // const [currentText, setCurrentText] = useState<string | null>(null);
@@ -44,5 +49,6 @@ export const useTelop = () => {
     currentText,
     currentId,
     showPop,
+    clear,
   } as const;
 };

@@ -1,9 +1,9 @@
 import React from 'react';
 import Image from 'next/image';
-import { OmamoriData } from '@/types/omamori';
+import { OmamoriDataResponse } from '@/types/omamori';
 
 interface Props {
-  omamoriData: OmamoriData | null;
+  omamoriData: OmamoriDataResponse | null;
   loadingMessage: string;
 }
 
@@ -21,7 +21,7 @@ const OmamoriLoading: React.FC<Props> = (props: Props) => {
           alt="omikuji_box"
           width={128}
           height={128}
-          className="absolute bottom-20 right-1/10 object-contain animate-omamori-shuffle w-[7rem] h-[7rem]"
+          className="absolute bottom-20 right-1/10 object-contain animate-omamori-shuffle w-[8rem] h-[8rem]"
           aria-hidden="true"
         />
       )}
