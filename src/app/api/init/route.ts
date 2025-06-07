@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { json } from '@/server/response';
+import { jsonResponse } from '@/server/response';
 
 export async function POST(request: Request) {
   const { guestSessionId } = await request.json();
@@ -14,5 +14,5 @@ export async function POST(request: Request) {
       maxAge: 60 * 60 * 24 * 30,
     });
   }
-  return json({ result: true }, { status: 200 });
+  return jsonResponse({ result: true }, { status: 200 });
 }

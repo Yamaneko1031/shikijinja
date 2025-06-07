@@ -1,4 +1,4 @@
-import { json } from '@/server/response';
+import { jsonResponse } from '@/server/response';
 import { getSessionUser } from '@/server/userSession';
 import { effectNames } from '@/config/omamori';
 import { OmamoriDataResponse } from '@/types/omamori';
@@ -7,7 +7,7 @@ import { prisma } from '@/server/prisma';
 export async function POST() {
   try {
     const { user } = await getSessionUser();
-    if (!user) return json({ error: 'ユーザー情報が見つかりません' }, { status: 404 });
+    if (!user) return jsonResponse({ error: 'ユーザー情報が見つかりません' }, { status: 404 });
 
     // マスタからランダムで一つ選ぶ
     const allBases = await prisma.omamoriBase.findMany();
@@ -55,9 +55,9 @@ export async function POST() {
       createdAt: omamoriData.createdAt.toISOString(),
     };
 
-    return json(omamoriDataResponse, { status: 200 });
+    return jsonResponse(omamoriDataResponse, { status: 200 });
   } catch (err) {
     console.error('POST /api/omikuji error', err);
-    return json({ error: 'お守り購入に失敗しました' + err }, { status: 500 });
+    return jsonResponse({ error: 'お守り購入に失敗しました' + err }, { status: 500 });
   }
 }

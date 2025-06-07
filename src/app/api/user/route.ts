@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { prisma } from '@/server/prisma';
-import { json } from '@/server/response';
+import { jsonResponse } from '@/server/response';
 import { TokuCounts } from '@/types/toku';
 import { User } from '@/types/user';
 import { getJapanTodayMidnight } from '@/server/date';
@@ -72,7 +72,7 @@ export async function PATCH(req: Request) {
     const userId = cookieStore.get('userId')?.value;
 
     if (!userId) {
-      return json({ error: '未認証' }, { status: 401 });
+      return jsonResponse({ error: '未認証' }, { status: 401 });
     }
 
     // 送信データを取得（部分的にどれが来てもOKなように）
@@ -94,7 +94,7 @@ export async function PATCH(req: Request) {
 
     if (!user) {
       // 新規作成やエラー返却など適切に
-      return json({ error: 'ユーザー情報が見つかりません' + userId }, { status: 404 });
+      return jsonResponse({ error: 'ユーザー情報が見つかりません' + userId }, { status: 404 });
     }
 
     if (Object.keys(userUpdateData).length !== 0) {
@@ -123,7 +123,7 @@ export async function PATCH(req: Request) {
       });
     }
     if (!tokuCounts) {
-      return json({ error: '徳カウント情報が見つかりません' }, { status: 404 });
+      return jsonResponse({ error: '徳カウント情報が見つかりません' }, { status: 404 });
     }
 
     // クライアントで使用するユーザー情報を返す
@@ -137,9 +137,9 @@ export async function PATCH(req: Request) {
       tokuCounts: tokuCounts.counts as TokuCounts,
     };
 
-    return json(userData, { status: 200 });
+    return jsonResponse(userData, { status: 200 });
   } catch (err) {
     console.error('PATCH /api/user error', err);
-    return json({ error: 'ユーザー情報の更新に失敗しました' }, { status: 500 });
+    return jsonResponse({ error: 'ユーザー情報の更新に失敗しました' }, { status: 500 });
   }
 }

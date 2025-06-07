@@ -1,4 +1,4 @@
-import { json } from '@/server/response';
+import { jsonResponse } from '@/server/response';
 import { cookies } from 'next/headers';
 
 export async function GET() {
@@ -6,9 +6,9 @@ export async function GET() {
     const cookieStore = await cookies();
     const userId = cookieStore.get('userId')?.value ?? '';
 
-    return json({ userId }, { status: 200 });
+    return jsonResponse({ userId }, { status: 200 });
   } catch (err) {
     console.error('POST /api/debug/cookie error', err);
-    return json({ error: 'cookie取得に失敗しました' }, { status: 500 });
+    return jsonResponse({ error: 'cookie取得に失敗しました' }, { status: 500 });
   }
 }

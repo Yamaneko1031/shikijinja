@@ -1,6 +1,6 @@
 import { prisma } from '@/server/prisma';
 import { getTokuMaster } from '@/utils/toku';
-import { json } from '@/server/response';
+import { jsonResponse } from '@/server/response';
 import { getJapanTodayMidnight } from '@/server/date';
 import { TokuCounts, TokuId } from '@/types/toku';
 import { User } from '@/types/user';
@@ -12,8 +12,8 @@ export async function POST(req: Request) {
   let addCount = count;
 
   try {
-    if (!user) return json({ error: 'ユーザー情報が見つかりません' }, { status: 404 });
-    if (!tokuMaster) return json({ error: 'マスタが見つかりません' }, { status: 404 });
+    if (!user) return jsonResponse({ error: 'ユーザー情報が見つかりません' }, { status: 404 });
+    if (!tokuMaster) return jsonResponse({ error: 'マスタが見つかりません' }, { status: 404 });
 
     // 今日の徳カウント情報を取得
     const today = getJapanTodayMidnight();
@@ -45,7 +45,7 @@ export async function POST(req: Request) {
     }
 
     if (addCount <= 0) {
-      return json({ error: '回数制限に達しています' }, { status: 400 });
+      return jsonResponse({ error: '回数制限に達しています' }, { status: 400 });
     }
 
     // ユーザーデータ更新
@@ -82,9 +82,9 @@ export async function POST(req: Request) {
       tokuCounts: tokuCounts.counts as TokuCounts,
     };
 
-    return json(userData, { status: 200 });
+    return jsonResponse(userData, { status: 200 });
   } catch (err) {
     console.error('POST /api/toku/get error', err);
-    return json({ error: '徳カウント取得に失敗しました' }, { status: 500 });
+    return jsonResponse({ error: '徳カウント取得に失敗しました' }, { status: 500 });
   }
 }

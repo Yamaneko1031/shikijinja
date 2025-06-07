@@ -1,4 +1,4 @@
-import { json } from '@/server/response';
+import { jsonResponse } from '@/server/response';
 import { omikujiConfig } from '@/config/omikuji';
 
 export async function POST(request: Request) {
@@ -19,9 +19,9 @@ export async function POST(request: Request) {
         }
       }) + 1;
 
-    return json({ fortune, showType: 0 }, { status: 200 });
+    return jsonResponse({ fortune, showType: 0 }, { status: 200 });
   } catch (err) {
     console.error('POST /api/omikuji error', err);
-    return json({ error: 'おみくじ生成に失敗しました' }, { status: 500 });
+    return jsonResponse({ error: 'おみくじ生成に失敗しました' }, { status: 500 });
   }
 }

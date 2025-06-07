@@ -1,6 +1,6 @@
 // app/api/ema/[id]/route.ts
 import { prisma } from '@/server/prisma';
-import { json } from '@/server/response';
+import { jsonResponse } from '@/server/response';
 import type { PatchEmaBody } from '@/types/ema';
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -21,9 +21,9 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       data,
     });
 
-    return json(updated);
+    return jsonResponse(updated);
   } catch (err) {
     console.error(`PATCH /api/ema/${id} error`, err);
-    return json({ error: '絵馬の更新に失敗しました' }, { status: 500 });
+    return jsonResponse({ error: '絵馬の更新に失敗しました' }, { status: 500 });
   }
 }

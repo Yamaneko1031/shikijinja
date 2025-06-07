@@ -1,17 +1,17 @@
 // app/api/ai/prompt-templates/route.ts
 import { prisma } from '@/server/prisma';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { json } from '@/server/response';
+import { jsonResponse } from '@/server/response';
 
 export async function GET() {
   try {
     const templates = await prisma.promptTemplate.findMany({
       orderBy: { createdAt: 'desc' },
     });
-    return json({ templates }, { status: 200 });
+    return jsonResponse({ templates }, { status: 200 });
   } catch (err) {
     console.error('GET /api/ai/prompt-templates error', err);
-    return json({ error: 'テンプレート一覧の取得に失敗しました' }, { status: 500 });
+    return jsonResponse({ error: 'テンプレート一覧の取得に失敗しました' }, { status: 500 });
   }
 }
 
@@ -27,7 +27,10 @@ export async function POST(request: Request) {
         temperature?: number;
       };
     if (!label || !systemPrompt || !userPrompt || !model) {
-      return json({ error: 'label, systemPrompt, userPrompt, model は必須です' }, { status: 400 });
+      return jsonResponse(
+        { error: 'label, systemPrompt, userPrompt, model は必須です' },
+        { status: 400 }
+      );
     }
     try {
       const created = await prisma.promptTemplate.create({
@@ -40,16 +43,16 @@ export async function POST(request: Request) {
           temperature: temperature ?? 0.7,
         },
       });
-      return json(created, { status: 201 });
+      return jsonResponse(created, { status: 201 });
     } catch (e: unknown) {
       if (e instanceof PrismaClientKnownRequestError && e.code === 'P2002') {
-        return json({ error: 'label が重複しています' }, { status: 409 });
+        return jsonResponse({ error: 'label が重複しています' }, { status: 409 });
       }
       throw e;
     }
   } catch (err) {
     console.error('POST /api/ai/prompt-templates error', err);
-    return json({ error: 'テンプレートの作成に失敗しました' }, { status: 500 });
+    return jsonResponse({ error: 'テンプレートの作成に失敗しました' }, { status: 500 });
   }
 }
 
@@ -66,7 +69,7 @@ export async function PUT(request: Request) {
         temperature?: number;
       };
     if (!id || !label || !systemPrompt || !userPrompt || !model) {
-      return json(
+      return jsonResponse(
         { error: 'id, label, systemPrompt, userPrompt, model は必須です' },
         { status: 400 }
       );
@@ -83,15 +86,15 @@ export async function PUT(request: Request) {
           temperature: temperature ?? 0.7,
         },
       });
-      return json(updated, { status: 200 });
+      return jsonResponse(updated, { status: 200 });
     } catch (e: unknown) {
       if (e instanceof PrismaClientKnownRequestError && e.code === 'P2002') {
-        return json({ error: 'label が重複しています' }, { status: 409 });
+        return jsonResponse({ error: 'label が重複しています' }, { status: 409 });
       }
       throw e;
     }
   } catch (err) {
     console.error('PUT /api/ai/prompt-templates error', err);
-    return json({ error: 'テンプレートの更新に失敗しました' }, { status: 500 });
+    return jsonResponse({ error: 'テンプレートの更新に失敗しました' }, { status: 500 });
   }
 }

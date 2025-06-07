@@ -1,6 +1,6 @@
 import { prisma } from '@/server/prisma';
 import { EmaPost } from '@/types/ema';
-import { json } from '@/server/response';
+import { jsonResponse } from '@/server/response';
 import { openaiTemplateRequest } from '@/server/openaiTemplateRequest';
 import { getSessionUser } from '@/server/userSession';
 
@@ -16,17 +16,17 @@ export async function GET(request: Request) {
       orderBy: { createdAt: 'desc' },
       take: 30,
     });
-    return json(posts);
+    return jsonResponse(posts);
   } catch (err) {
     console.error('GET /api/ema error', err);
-    return json({ error: '絵馬一覧の取得に失敗しました' }, { status: 500 });
+    return jsonResponse({ error: '絵馬一覧の取得に失敗しました' }, { status: 500 });
   }
 }
 
 export async function POST(request: Request) {
   try {
     const { user } = await getSessionUser();
-    if (!user) return json({ error: 'ユーザー情報が見つかりません' }, { status: 404 });
+    if (!user) return jsonResponse({ error: 'ユーザー情報が見つかりません' }, { status: 404 });
 
     // クライアントから texts と絵馬画像キーを受け取る
     const { texts, emaImage } = (await request.json()) as EmaPost;
@@ -54,7 +54,7 @@ export async function POST(request: Request) {
     const checkResult = await openaiTemplateRequest('ema_check', checkText);
 
     if (!checkResult) {
-      return json({ error: 'チェック用テンプレートの実行に失敗しました' }, { status: 500 });
+      return jsonResponse({ error: 'チェック用テンプレートの実行に失敗しました' }, { status: 500 });
     }
 
     const checkResultJson = JSON.parse(checkResult);
@@ -64,7 +64,7 @@ export async function POST(request: Request) {
     const newReply = await openaiTemplateRequest(templateLabel, texts[0]?.text ?? '');
 
     if (!newReply) {
-      return json({ error: 'チェック用テンプレートの実行に失敗しました' }, { status: 500 });
+      return jsonResponse({ error: 'チェック用テンプレートの実行に失敗しました' }, { status: 500 });
     }
 
     // EmaPost テーブルに texts, reply, emaImage をまとめて保存
@@ -80,9 +80,9 @@ export async function POST(request: Request) {
     });
 
     // クライアントへ新規レコードを返却
-    return json(post, { status: 201 });
+    return jsonResponse(post, { status: 201 });
   } catch (err) {
     console.error('POST /api/ema error', err);
-    return json({ error: '絵馬投稿または返信生成に失敗しました' }, { status: 500 });
+    return jsonResponse({ error: '絵馬投稿または返信生成に失敗しました' }, { status: 500 });
   }
 }

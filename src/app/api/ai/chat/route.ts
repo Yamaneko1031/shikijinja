@@ -1,6 +1,6 @@
 import { openai } from '@/server/openai';
 import { gemini } from '@/server/gemini';
-import { json } from '@/server/response';
+import { jsonResponse } from '@/server/response';
 
 export async function POST(request: Request) {
   const { model, systemPrompt, userPrompt, instructions, temperature } = (await request.json()) as {
@@ -13,7 +13,7 @@ export async function POST(request: Request) {
 
   // 必要なら入力チェックを入れる
   if (!model || !systemPrompt || !userPrompt) {
-    return json({ error: 'model, systemPrompt, userPrompt は必須です' }, { status: 400 });
+    return jsonResponse({ error: 'model, systemPrompt, userPrompt は必須です' }, { status: 400 });
   }
 
   if (model.includes('gemini')) {
@@ -32,10 +32,10 @@ export async function POST(request: Request) {
         },
       });
       const reply = response.text ?? '';
-      return json({ reply });
+      return jsonResponse({ reply });
     } catch (err: unknown) {
       console.error('POST /api/ai/chat error', err);
-      return json({ error: 'AI 生成に失敗しました' }, { status: 500 });
+      return jsonResponse({ error: 'AI 生成に失敗しました' }, { status: 500 });
     }
   } else {
     const fullSystem = instructions
@@ -55,10 +55,10 @@ export async function POST(request: Request) {
 
       const reply = resp.choices?.[0]?.message?.content ?? '';
 
-      return json({ reply });
+      return jsonResponse({ reply });
     } catch (err: unknown) {
       console.error('POST /api/ai/chat error', err);
-      return json({ error: 'AI 生成に失敗しました' }, { status: 500 });
+      return jsonResponse({ error: 'AI 生成に失敗しました' }, { status: 500 });
     }
   }
 }
