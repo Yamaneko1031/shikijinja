@@ -27,6 +27,6 @@ function serializeDates(obj: unknown): unknown {
  * Prisma から返ってきたオブジェクトをそのまま渡せば
  * Date→string の変換を自動でやってくれる。
  */
-export function json<T>(data: T, init?: ResponseInit) {
+export function jsonResponse<T>(data: T, init?: ResponseInit) {
   return NextResponse.json(serializeDates(data), init);
 }
