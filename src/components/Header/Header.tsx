@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { User } from '@/types/user';
+import { User, UserItems } from '@/types/user';
 import HeaderCoinCounter from './HeaderCoinCounter';
 import HeaderMenu from './HeaderMenu';
 import Modal from '../_shared/Modal';
+import useSWR from 'swr';
+import { apiFetch } from '@/lib/api';
 
 interface HeaderProps {
   user: User;
@@ -13,10 +15,25 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = (props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const fetcher = (url: string) => apiFetch<UserItems>(url).then((res) => res);
+  const {
+    data: userItems,
+    isLoading: isLoadingUserItems,
+    mutate: mutateUserItems,
+  } = useSWR('/api/user/items', fetcher, {
+    revalidateOnFocus: false,
+  });
+
   return (
     <header className="fixed top-0 left-0 w-full h-[3.125rem] bg-white z-60 overscroll-contain">
       <Modal isOpen={isMenuOpen}>
-        <HeaderMenu user={props.user} handleCloseMenu={() => setIsMenuOpen(false)} />
+        <HeaderMenu
+          user={props.user}
+          userItems={userItems}
+          isLoadingUserItems={isLoadingUserItems}
+          mutateUserItems={mutateUserItems}
+          handleCloseMenu={() => setIsMenuOpen(false)}
+        />
       </Modal>
       {/* {isMenuOpen && <HeaderMenu user={props.user} handleCloseMenu={() => setIsMenuOpen(false)} />} */}
       <div className="flex items-center">

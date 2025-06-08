@@ -8,10 +8,11 @@ export async function POST(request: Request) {
     const { user } = await getSessionUser();
     if (!user) return jsonResponse({ error: 'ユーザー情報が見つかりません' }, { status: 404 });
 
-    const { job, fortuneNumber, period } = (await request.json()) as {
+    const { job, fortuneNumber, period, type } = (await request.json()) as {
       job: string;
       fortuneNumber: number;
       period: string;
+      type: string;
     };
 
     const userPrompt = `\n職業：${job}\n運勢：${fortuneNumber}\n対象期間：${period}`;
@@ -23,6 +24,7 @@ export async function POST(request: Request) {
       data: {
         userId: user.id,
         job,
+        type,
         period,
         fortuneNumber,
         fortune,
@@ -34,6 +36,7 @@ export async function POST(request: Request) {
     const omikujiResponse: OmikujiResponse = {
       id: result.id,
       job,
+      type,
       period,
       fortuneNumber,
       fortune,

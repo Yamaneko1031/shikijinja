@@ -7,6 +7,7 @@ export type OmikujiDetail = {
 export type OmikujiResponse = {
   id: string;
   job: string;
+  type: string;
   period: string;
   fortuneNumber: number;
   fortune: string;
@@ -17,8 +18,9 @@ export type OmikujiResponse = {
 
 export type OmikujiRequest = {
   job: string;
-  period: string;
+  period: OmikujiPeriod;
   fortuneNumber: number;
+  type: OmikujiType;
 };
 
 export type OmikujiFortuneResponse = {
@@ -26,4 +28,5 @@ export type OmikujiFortuneResponse = {
   showType: number;
 };
 
-export type OmikujiType = '今年' | '今月' | '明日';
+export type OmikujiPeriod = '今年' | '今月' | '明日';
+export type OmikujiType = 'omikuji' | 'hitohira' | 'nekobiyori';

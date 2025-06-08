@@ -4,10 +4,10 @@ import React, { useRef, useState } from 'react';
 import TextReveal from '@/components/_shared/TextReveal';
 import {
   OmikujiResponse,
-  OmikujiType,
   OmikujiRequest,
   OmikujiFortuneResponse,
   OmikujiDetail,
+  OmikujiType,
 } from '@/types/omikuji';
 import Modal from '../_shared/Modal';
 import OmikujiModal from './OmikujiModal';
@@ -16,9 +16,10 @@ import OmikujiLoding from './OmikujiLoding';
 import Image from 'next/image';
 import OmikujiSelector from './OmikujiSelector';
 import OmikujiButton from './OmikujiButton';
-import { getTokuCoin, getTokuLimit } from '@/utils/toku';
+import { getTokuCoin, getTokuMaster } from '@/utils/toku';
 import { SectionProps } from '@/types/section';
 import Head from 'next/head';
+import { mutate } from 'swr';
 
 const OmikujiSection = (props: SectionProps) => {
   console.log('OmikujiSection', props.isActive, props.isNeighbor);
@@ -26,36 +27,40 @@ const OmikujiSection = (props: SectionProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSelector, setIsSelector] = useState(false);
   const resultRef = useRef<OmikujiResponse | null>(null);
-  const omikujiTypeRef = useRef<OmikujiType>('今年');
+  const omikujiTypeRef = useRef<OmikujiType>('omikuji');
+
+  const omikujiConfig = {
+    omikuji: {
+      id: 'omikuji_omikuji',
+      period: '今年',
+      name: 'おみくじ',
+      needsSelector: true,
+    },
+    hitohira: {
+      id: 'omikuji_hitohira',
+      period: '今月',
+      name: 'ひとひらくじ',
+      needsSelector: true,
+    },
+    nekobiyori: {
+      id: 'omikuji_nekobiyori',
+      period: '明日',
+      name: 'ねこ日和',
+      needsSelector: false,
+    },
+  } as const;
 
   const onClickOmikuji = (omikujiType: OmikujiType) => {
-    const omikujiConfig = {
-      今年: {
-        id: 'omikuji_omikuji',
-        name: 'おみくじ',
-        needsSelector: true,
-      },
-      今月: {
-        id: 'omikuji_hitohira',
-        name: 'ひとひらくじ',
-        needsSelector: true,
-      },
-      明日: {
-        id: 'omikuji_nekobiyori',
-        name: 'ねこ日和',
-        needsSelector: false,
-      },
-    } as const;
-
     const config = omikujiConfig[omikujiType];
+    const tokudata = getTokuMaster(config.id);
 
     if (props.handleIsLimitOver(config.id)) {
-      alert(`今日はもう引けません。\n${config.name}は1日${getTokuLimit(config.id)}回まで。`);
+      alert(`今日はもう引けません。\n${config.name}は1日${tokudata?.limit}回まで。`);
       return;
     }
 
     if (!props.handleIsEnoughCoin(config.id)) {
-      alert(`徳が足りません。\n${config.name}は1回${getTokuCoin(config.id)}徳です。`);
+      alert(`徳が足りません。\n${config.name}は1回${tokudata?.coin}徳です。`);
       return;
     }
 
@@ -79,10 +84,12 @@ const OmikujiSection = (props: SectionProps) => {
         body: JSON.stringify(bodyFortune),
       });
 
+      const config = omikujiConfig[omikujiType];
       const body: OmikujiRequest = {
         job,
         fortuneNumber: dataFortune.fortune,
-        period: omikujiType,
+        period: config.period,
+        type: omikujiType,
       };
 
       const res: {
@@ -102,8 +109,9 @@ const OmikujiSection = (props: SectionProps) => {
           fortune: res.fortune,
           msg: res.msg,
           job,
-          period: omikujiType,
+          period: config.period,
           fortuneNumber: dataFortune.fortune,
+          type: omikujiType,
         };
         const omikujiResponse = await apiFetch<OmikujiResponse>('/api/omikuji/save', {
           method: 'POST',
@@ -116,16 +124,17 @@ const OmikujiSection = (props: SectionProps) => {
         setIsOpen(true);
 
         switch (omikujiType) {
-          case '今年':
+          case 'omikuji':
             props.handleTokuUsed('omikuji_omikuji');
             break;
-          case '今月':
+          case 'hitohira':
             props.handleTokuUsed('omikuji_hitohira');
             break;
-          case '明日':
+          case 'nekobiyori':
             props.handleTokuUsed('omikuji_nekobiyori');
             break;
         }
+        await mutate('/api/user/items');
       } catch (err) {
         console.error(err);
         alert('おみくじの保存に失敗しました。' + err);
@@ -167,24 +176,24 @@ const OmikujiSection = (props: SectionProps) => {
             title="明日"
             imagePath="/images/omikuji/omikuji_box_nekobiyori.webp"
             imageAlt="omikuji_box_nekobiyori"
-            onClick={() => onClickOmikuji('明日')}
-            type="明日"
+            onClick={() => onClickOmikuji('nekobiyori')}
+            type="nekobiyori"
             coin={getTokuCoin('omikuji_nekobiyori')}
           />
           <OmikujiButton
             title="今月"
             imagePath="/images/omikuji/omikuji_box_hitohira.webp"
             imageAlt="omikuji_box_hitohira"
-            onClick={() => onClickOmikuji('今月')}
-            type="今月"
+            onClick={() => onClickOmikuji('hitohira')}
+            type="hitohira"
             coin={getTokuCoin('omikuji_hitohira')}
           />
           <OmikujiButton
             title="今年"
             imagePath="/images/omikuji/omikuji_box_simple.webp"
             imageAlt="omikuji_box_simple"
-            onClick={() => onClickOmikuji('今年')}
-            type="今年"
+            onClick={() => onClickOmikuji('omikuji')}
+            type="omikuji"
             coin={getTokuCoin('omikuji_omikuji')}
           />
         </div>
@@ -216,7 +225,6 @@ const OmikujiSection = (props: SectionProps) => {
         >
           <OmikujiModal
             omikujiResponse={resultRef.current}
-            omikujiType={omikujiTypeRef.current}
             onClose={() => {
               setIsOpen(false);
               resultRef.current = null;

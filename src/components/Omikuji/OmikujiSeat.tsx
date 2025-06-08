@@ -7,36 +7,30 @@ import { omikujiConfig, omikujiMonthList } from '@/config/omikuji';
 
 type Props = {
   omikujiResponse: OmikujiResponse;
-  omikujiType: OmikujiType;
 };
 
-export default function OmikujiSeat({ omikujiResponse, omikujiType }: Props) {
-  const omikujiName = omikujiConfig[omikujiType].name;
+export default function OmikujiSeat({ omikujiResponse }: Props) {
+  const omikujiName = omikujiConfig[omikujiResponse.type as OmikujiType].name;
+  const omikujiImage = omikujiConfig[omikujiResponse.type as OmikujiType].image;
   return (
     // 半透明のオーバーレイ
-    <div className="relative w-[25rem] min-w-[25rem] h-[50rem] min-h-[50rem] flex items-center justify-center bg-[url('/images/omikuji/omikuji.webp')] bg-[length:100%]">
-      {/* 紙テクスチャのウィンドウ */}
-      {/* <Image
-        className="absolute h-auto w-full pl-[0.625rem] pr-[0.625rem] pt-[0.625rem]"
-        src="/images/omikuji/omikuji.webp"
-        alt="omikuji_bg"
-        width={400}
-        height={800}
-        priority
-      /> */}
-      <div className="relative w-[25rem] -mt-10 pt-4 pl-12 pr-12 text-black flex flex-col">
+    <div
+      className="relative w-[25rem] min-w-[25rem] h-[50rem] min-h-[50rem] flex items-center justify-center bg-[length:100%]"
+      style={{ backgroundImage: `url(${omikujiImage})` }}
+    >
+      <div className="relative w-[25rem] -mt-10 pt-4 pl-12 pr-12 text-black/80 flex flex-col">
         {/* おみくじ名 */}
-        <h2 className="w-full h-10 text-center text-2xl font-bold">【{omikujiName}】</h2>
+        <h2 className="w-full h-10 text-center text-3xl font-bold">{omikujiName}</h2>
         {/* 運勢表示 */}
         <div className="w-full h-14 mt-4 flex" style={{ color: '#D44439' }}>
           <div className="w-1/2 h-full text-2xl font-bold flex items-center justify-center">
             {(() => {
-              switch (omikujiType) {
-                case '今年':
+              switch (omikujiResponse.type) {
+                case 'omikuji':
                   return `${new Date(omikujiResponse.createdAt).getFullYear()}年 運勢`;
-                case '今月':
+                case 'hitohira':
                   return `${omikujiMonthList[new Date(omikujiResponse.createdAt).getMonth()]}`;
-                case '明日':
+                case 'nekobiyori':
                   return (
                     <div className="w-20">
                       <Image

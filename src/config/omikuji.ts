@@ -1,26 +1,29 @@
 export const omikujiDefaultJob = ['エンジニア', 'デザイナー', 'PM'] as const;
 
 export const omikujiConfig = {
-  今年: {
+  omikuji: {
     id: 'omikuji_omikuji',
     name: 'おみくじ',
     needsSelector: true,
     fortune: [5, 10, 20, 20, 20, 20, 5],
     fortuneName: ['大凶', '凶', '末吉', '小吉', '吉', '大吉', '猫'],
+    image: '/images/omikuji/omikuji.webp',
   },
-  今月: {
+  hitohira: {
     id: 'omikuji_hitohira',
     name: 'ひとひらくじ',
     needsSelector: true,
     fortune: [5, 10, 20, 20, 20, 20, 5],
     fortuneName: ['大凶', '凶', '末吉', '小吉', '吉', '大吉', '猫'],
+    image: '/images/omikuji/hitohira.webp',
   },
-  明日: {
+  nekobiyori: {
     id: 'omikuji_nekobiyori',
     name: 'ねこ日和',
     needsSelector: false,
     fortune: [10, 10, 20, 25, 25, 10],
     fortuneName: ['毛玉', '尻尾', '子猫', '中猫', '大猫', '虎'],
+    image: '/images/omikuji/nekobiyori.webp',
   },
 } as const;
 

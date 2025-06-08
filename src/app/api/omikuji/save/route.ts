@@ -8,11 +8,12 @@ export async function POST(request: Request) {
     const { user } = await getSessionUser();
     if (!user) return jsonResponse({ error: 'ユーザー情報が見つかりません' }, { status: 404 });
 
-    const { details, fortune, msg, job, period, fortuneNumber } = (await request.json()) as {
+    const { details, fortune, msg, job, type, period, fortuneNumber } = (await request.json()) as {
       details: OmikujiDetail[];
       fortune: string;
       msg: string;
       job: string;
+      type: string;
       period: string;
       fortuneNumber: number;
     };
@@ -21,6 +22,7 @@ export async function POST(request: Request) {
       data: {
         userId: user.id,
         job,
+        type,
         period,
         fortuneNumber,
         fortune,
@@ -32,6 +34,7 @@ export async function POST(request: Request) {
     const omikujiResponse: OmikujiResponse = {
       id: omikujiResult.id,
       job: omikujiResult.job,
+      type: omikujiResult.type,
       period: omikujiResult.period,
       fortuneNumber: omikujiResult.fortuneNumber,
       fortune: omikujiResult.fortune,

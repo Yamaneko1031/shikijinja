@@ -2,20 +2,26 @@
 
 import React, { useState } from 'react';
 // import Image from 'next/image';
-import { User } from '@/types/user';
+import { User, UserItems } from '@/types/user';
 
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { apiFetch } from '@/lib/api';
 import { Button } from '../_shared/Button';
+import Modal from '../_shared/Modal';
+import MyOmikujiView from './MyOmikujiView';
 
 interface HeaderProps {
   user: User;
+  userItems: UserItems | undefined;
+  isLoadingUserItems: boolean;
+  mutateUserItems: () => void;
   handleCloseMenu: () => void;
 }
 
 const HeaderMenu: React.FC<HeaderProps> = (props) => {
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
+  const [isOmikujiOpen, setIsOmikujiOpen] = useState(false);
 
   const handleSignIn = async (provider: 'google' | 'github') => {
     // リダイレクトされるので戻さない
@@ -55,11 +61,44 @@ const HeaderMenu: React.FC<HeaderProps> = (props) => {
           <Button variant="subNatural" onClick={() => handleSignIn('github')} disabled={loading}>
             GitHubでログイン
           </Button>
+          <Button
+            variant="subNatural"
+            onClick={() => {}}
+            disabled={loading || props.isLoadingUserItems || props.userItems?.omamori.length === 0}
+          >
+            絵馬{props.userItems?.omamori.length}
+          </Button>
+          <Button
+            variant="subNatural"
+            onClick={() => {}}
+            disabled={loading || props.isLoadingUserItems || props.userItems?.omamori.length === 0}
+          >
+            お守り{props.userItems?.omamori.length}
+          </Button>
+          <Button
+            variant="subNatural"
+            onClick={() => setIsOmikujiOpen(true)}
+            disabled={loading || props.isLoadingUserItems || props.userItems?.omikuji.length === 0}
+          >
+            おみくじ{props.userItems?.omikuji.length}
+          </Button>
         </div>
       )}
       <Button variant="negative" onClick={props.handleCloseMenu} disabled={loading}>
         閉じる
       </Button>
+
+      {props.userItems?.omikuji && (
+        <Modal
+          isOpen={isOmikujiOpen}
+          className="absolute top-0 left-0 min-h-[100lvh] min-w-[100vw] bg-transparent overscroll-contain"
+        >
+          <MyOmikujiView
+            omikujiResponses={props.userItems?.omikuji}
+            onClose={() => setIsOmikujiOpen(false)}
+          />
+        </Modal>
+      )}
     </div>
   );
 };

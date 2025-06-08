@@ -44,6 +44,7 @@ model OmikujiResult {
   id              String      @id @default(cuid())
   userId          String?
   job             String
+  type            String
   period          String
   fortuneNumber   Int
   fortune         String

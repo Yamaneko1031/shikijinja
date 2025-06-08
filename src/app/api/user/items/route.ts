@@ -13,6 +13,7 @@ export async function GET() {
 
     const omikuji = await prisma.omikujiResult.findMany({
       where: { userId: user.id },
+      orderBy: { createdAt: 'desc' },
     });
 
     const omamori = await prisma.omamori.findMany({
@@ -20,16 +21,19 @@ export async function GET() {
       include: {
         base: true,
       },
+      orderBy: { createdAt: 'desc' },
     });
 
     const ema = await prisma.emaPost.findMany({
       where: { userId: user.id },
+      orderBy: { createdAt: 'desc' },
     });
 
     const userItems: UserItems = {
       omikuji: omikuji.map((omikuji) => ({
         id: omikuji.id,
         job: omikuji.job,
+        type: omikuji.type,
         period: omikuji.period,
         fortuneNumber: omikuji.fortuneNumber,
         fortune: omikuji.fortune,

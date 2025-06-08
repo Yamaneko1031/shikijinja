@@ -3,14 +3,15 @@
 import React, { useState } from 'react';
 import { OmikujiResponse } from '@/types/omikuji';
 import { Button } from '../_shared/Button';
-import OmikujiSeat from './OmikujiSeat';
+import OmikujiSeat from '../Omikuji/OmikujiSeat';
 
 type Props = {
-  omikujiResponse: OmikujiResponse;
+  omikujiResponses: OmikujiResponse[];
   onClose: () => void;
 };
 
-export default function OmikujiModal({ omikujiResponse, onClose }: Props) {
+export default function MyOmikujiView({ omikujiResponses, onClose }: Props) {
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [rate, setRate] = useState(1);
   let transformOrigin = `left top`;
   if (rate < 1) {
@@ -26,12 +27,35 @@ export default function OmikujiModal({ omikujiResponse, onClose }: Props) {
             transformOrigin: transformOrigin,
           }}
         >
-          <OmikujiSeat omikujiResponse={omikujiResponse} />
+          <OmikujiSeat omikujiResponse={omikujiResponses[currentIndex]} />
         </div>
       </div>
       <div className="fixed w-full bottom-6 m-auto flex flex-row justify-center gap-2">
+        {/* 閉じるボタン */}
+
         <Button variant="negative" size="md" onClick={onClose} aria-label="閉じる">
           閉じる
+        </Button>
+        <Button
+          variant="subNatural"
+          size="md"
+          onClick={() => setCurrentIndex(currentIndex - 1)}
+          disabled={currentIndex === 0}
+          aria-label="前"
+        >
+          前
+        </Button>
+        <div className="">
+          {currentIndex + 1} / {omikujiResponses.length}
+        </div>
+        <Button
+          variant="subNatural"
+          size="md"
+          onClick={() => setCurrentIndex(currentIndex + 1)}
+          disabled={currentIndex === omikujiResponses.length - 1}
+          aria-label="次"
+        >
+          次
         </Button>
         <Button
           variant="subNatural"
