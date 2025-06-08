@@ -17,7 +17,7 @@ export default function OmikujiModal({ omikujiResponse, onClose }: Props) {
     transformOrigin = `center center`;
   }
   return (
-    <>
+    <div className="select-none">
       <div className="min-h-[100lvh] pl-10 pt-5 flex flex-col items-center">
         <div
           className="m-auto pr-10 pb-20 "
@@ -36,20 +36,22 @@ export default function OmikujiModal({ omikujiResponse, onClose }: Props) {
         <Button
           variant="subNatural"
           size="md"
-          onClick={() => setRate(rate + 0.05)}
-          aria-label="拡大"
+          onClick={() => setRate(rate - 0.05)}
+          aria-label="縮小"
+          disabled={rate <= 0.75}
         >
-          拡大
+          -
         </Button>
         <Button
           variant="subNatural"
           size="md"
-          onClick={() => setRate(rate - 0.05)}
-          aria-label="縮小"
+          onClick={() => setRate(rate + 0.05)}
+          aria-label="拡大"
+          disabled={rate >= 1.25}
         >
-          縮小
+          +
         </Button>
       </div>
-    </>
+    </div>
   );
 }

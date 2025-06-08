@@ -75,65 +75,6 @@ body {
   text-orientation: upright;
 }
 
-.btn-positive {
-  @apply rounded;
-  background-color: #358019;
-  color: #ffffff;
-  border: 2px solid #275a15;
-}
-
-.btn-positive:hover {
-  @media (hover: hover) {
-    background-color: #37861b;
-  }
-}
-
-.btn-positive:disabled {
-  background-color: #362317;
-  border: 2px solid #23160f;
-  color: #5c5c5c;
-  cursor: not-allowed;
-}
-
-.btn-negative {
-  @apply rounded;
-  background-color: #8e2c16;
-  color: #ffffff;
-}
-
-.btn-negative:hover {
-  @media (hover: hover) {
-    background-color: #a53319;
-  }
-}
-
-.btn-negative:disabled {
-  background-color: #37120a;
-  border: 2px solid #23160f;
-  color: #804b3f;
-  cursor: not-allowed;
-}
-
-.btn-sub-natural {
-  @apply rounded-full;
-  background-color: #1a1a1a;
-  color: #ffffff;
-  box-shadow: 0 0 1px white;
-}
-
-.btn-sub-natural:hover {
-  @media (hover: hover) {
-    background-color: #323232;
-  }
-}
-
-.btn-sub-natural:disabled {
-  background-color: rgb(12, 12, 12);
-  color: #3b3b3b;
-  cursor: not-allowed;
-  box-shadow: 0 0 1px rgb(110, 110, 110);
-}
-
 input[type='range'] {
   accent-color: #323232;
 }

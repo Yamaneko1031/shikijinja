@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { OmikujiResponse } from '@/types/omikuji';
 import { Button } from '../_shared/Button';
 import OmikujiSeat from '../Omikuji/OmikujiSeat';
-
+import Image from 'next/image';
 type Props = {
   omikujiResponses: OmikujiResponse[];
   onClose: () => void;
@@ -18,7 +18,7 @@ export default function MyOmikujiView({ omikujiResponses, onClose }: Props) {
     transformOrigin = `center center`;
   }
   return (
-    <>
+    <div className="select-none">
       <div className="min-h-[100lvh] pl-10 pt-5 flex flex-col items-center">
         <div
           className="m-auto pr-10 pb-20 "
@@ -45,7 +45,7 @@ export default function MyOmikujiView({ omikujiResponses, onClose }: Props) {
         >
           前
         </Button>
-        <div className="">
+        <div className="w-12 text-md flex items-center justify-center drop-shadow-[1px_1px_1px_rgba(0,0,0,1)]">
           {currentIndex + 1} / {omikujiResponses.length}
         </div>
         <Button
@@ -60,20 +60,22 @@ export default function MyOmikujiView({ omikujiResponses, onClose }: Props) {
         <Button
           variant="subNatural"
           size="md"
-          onClick={() => setRate(rate + 0.05)}
-          aria-label="拡大"
+          onClick={() => setRate(rate - 0.05)}
+          aria-label="縮小"
+          disabled={rate <= 0.75}
         >
-          拡大
+          <Image src="/images/icon/icon_glass_minus.svg" alt="縮小" width={24} height={24} />
         </Button>
         <Button
           variant="subNatural"
           size="md"
-          onClick={() => setRate(rate - 0.05)}
-          aria-label="縮小"
+          onClick={() => setRate(rate + 0.05)}
+          aria-label="拡大"
+          disabled={rate >= 1.25}
         >
-          縮小
+          <Image src="/images/icon/icon_glass_plus.svg" alt="拡大" width={24} height={24} />
         </Button>
       </div>
-    </>
+    </div>
   );
 }

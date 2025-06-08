@@ -2,7 +2,7 @@ import React from 'react';
 
 // ボタンのバリアントとサイズ定義
 
-type ButtonVariant = 'positive' | 'negative' | 'subNatural' | 'custom';
+type ButtonVariant = 'positive' | 'negative' | 'subNatural' | 'subNatural2' | 'custom';
 type ButtonSize = 'sm' | 'md' | 'lg';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -20,6 +20,7 @@ const variantStyles: Record<ButtonVariant, string> = {
   positive: 'btn-positive inline-flex items-center justify-center',
   negative: 'btn-negative inline-flex items-center justify-center',
   subNatural: 'btn-sub-natural inline-flex items-center justify-center',
+  subNatural2: 'btn-sub-natural-2 inline-flex items-center justify-center',
   custom: '',
 };
 
