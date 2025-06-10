@@ -18,9 +18,9 @@ export default function OmikujiModal({ omikujiResponse, onClose }: Props) {
   }
   return (
     <div className="select-none">
-      <div className="min-h-[100lvh] pl-10 pt-5 flex flex-col items-center">
+      <div className="min-h-[100lvh] pt-5 flex flex-col items-center">
         <div
-          className="m-auto pr-10 pb-20 "
+          className="m-auto pb-20 "
           style={{
             transform: `scale(${rate})`,
             transformOrigin: transformOrigin,
