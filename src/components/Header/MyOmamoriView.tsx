@@ -1,17 +1,17 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Button } from '../_shared/Button';
 import { OmamoriDataResponse } from '@/types/omamori';
-import OmamoriSeat from './OmamoriSeat';
+import { Button } from '../_shared/Button';
+import OmamoriSeat from '../Omamori/OmamoriSeat';
 import Image from 'next/image';
-
 type Props = {
-  omamoriData: OmamoriDataResponse;
+  omamoriResponses: OmamoriDataResponse[];
   onClose: () => void;
 };
 
-export default function OmamoriModal({ omamoriData, onClose }: Props) {
+export default function MyOmamoriView({ omamoriResponses, onClose }: Props) {
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [rate, setRate] = useState(1);
   let transformOrigin = `left top`;
   if (rate < 1) {
@@ -27,7 +27,7 @@ export default function OmamoriModal({ omamoriData, onClose }: Props) {
             transformOrigin: transformOrigin,
           }}
         >
-          <OmamoriSeat omamoriData={omamoriData} />
+          <OmamoriSeat omamoriData={omamoriResponses[currentIndex]} />
         </div>
       </div>
       <div className="fixed w-full bottom-6 m-auto flex flex-row justify-center gap-2">
@@ -35,6 +35,27 @@ export default function OmamoriModal({ omamoriData, onClose }: Props) {
 
         <Button variant="negative" size="md" onClick={onClose} aria-label="閉じる">
           閉じる
+        </Button>
+        <Button
+          variant="subNatural"
+          size="md"
+          onClick={() => setCurrentIndex(currentIndex - 1)}
+          disabled={currentIndex === 0}
+          aria-label="前"
+        >
+          前
+        </Button>
+        <div className="w-12 text-md flex items-center justify-center drop-shadow-[1px_1px_1px_rgba(0,0,0,1)]">
+          {currentIndex + 1} / {omamoriResponses.length}
+        </div>
+        <Button
+          variant="subNatural"
+          size="md"
+          onClick={() => setCurrentIndex(currentIndex + 1)}
+          disabled={currentIndex === omamoriResponses.length - 1}
+          aria-label="次"
+        >
+          次
         </Button>
         <Button
           variant="subNatural"

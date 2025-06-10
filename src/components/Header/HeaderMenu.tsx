@@ -9,6 +9,7 @@ import { apiFetch } from '@/lib/api';
 import { Button } from '../_shared/Button';
 import Modal from '../_shared/Modal';
 import MyOmikujiView from './MyOmikujiView';
+import MyOmamoriView from './MyOmamoriView';
 
 interface HeaderProps {
   user: User;
@@ -22,7 +23,7 @@ const HeaderMenu: React.FC<HeaderProps> = (props) => {
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
   const [isOmikujiOpen, setIsOmikujiOpen] = useState(false);
-
+  const [isOmamoriOpen, setIsOmamoriOpen] = useState(false);
   const handleSignIn = async (provider: 'google' | 'github') => {
     // リダイレクトされるので戻さない
     setLoading(true);
@@ -64,13 +65,15 @@ const HeaderMenu: React.FC<HeaderProps> = (props) => {
           <Button
             variant="subNatural"
             onClick={() => {}}
-            disabled={loading || props.isLoadingUserItems || props.userItems?.omamori.length === 0}
+            disabled={loading || props.isLoadingUserItems || props.userItems?.ema.length === 0}
           >
-            絵馬{props.userItems?.omamori.length}
+            絵馬{props.userItems?.ema.length}
           </Button>
           <Button
             variant="subNatural"
-            onClick={() => {}}
+            onClick={() => {
+              setIsOmamoriOpen(true);
+            }}
             disabled={loading || props.isLoadingUserItems || props.userItems?.omamori.length === 0}
           >
             お守り{props.userItems?.omamori.length}
@@ -96,6 +99,17 @@ const HeaderMenu: React.FC<HeaderProps> = (props) => {
           <MyOmikujiView
             omikujiResponses={props.userItems?.omikuji}
             onClose={() => setIsOmikujiOpen(false)}
+          />
+        </Modal>
+      )}
+      {props.userItems?.omamori && (
+        <Modal
+          isOpen={isOmamoriOpen}
+          className="absolute top-0 left-0 min-h-[100lvh] min-w-[100vw] bg-transparent overscroll-contain"
+        >
+          <MyOmamoriView
+            omamoriResponses={props.userItems?.omamori}
+            onClose={() => setIsOmamoriOpen(false)}
           />
         </Modal>
       )}

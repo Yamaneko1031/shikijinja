@@ -13,8 +13,14 @@ export type OmamoriBase = {
   effects: OmamoriEffect[];
 };
 
-export type OmamoriDataResponse = OmamoriBase & {
+export type OmamoriDataResponse = {
   id: string;
+  name: string;
+  hurigana: string;
+  description: string;
+  imageUrl: string;
+  price: number;
+  effects: OmamoriEffect[];
   additionalDescription: string;
   createdAt: string;
 };

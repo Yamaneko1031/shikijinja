@@ -42,13 +42,14 @@ export async function GET() {
         createdAt: omikuji.createdAt.toISOString(),
       })) as OmikujiResponse[],
       omamori: omamori.map((omamori) => ({
-        id: omamori.id,
         name: omamori.base.name,
         hurigana: omamori.base.hurigana,
-        description: omamori.additionalDescription,
+        description: omamori.base.description,
         imageUrl: omamori.base.imageUrl,
         price: omamori.base.price,
-        effects: omamori.base.effects,
+        effects: omamori.effects,
+        id: omamori.id,
+        additionalDescription: omamori.additionalDescription,
         createdAt: omamori.createdAt.toISOString(),
       })) as OmamoriDataResponse[],
       ema: ema.map((ema) => ({

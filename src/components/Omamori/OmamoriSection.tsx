@@ -13,6 +13,7 @@ import OmamoriModal from './OmamoriModal';
 // import OmamoriEffectPopup from './OmamoriEffectPopup';
 import { useTelop } from '@/hooks/useTelop';
 import { getTokuMaster } from '@/utils/toku';
+import { mutate } from 'swr';
 
 const OmamoriSection = (props: SectionProps) => {
   const [loading, setLoading] = useState(false);
@@ -82,6 +83,8 @@ const OmamoriSection = (props: SectionProps) => {
 
     setLoading(false);
     setOmamoriModalOpen(true);
+
+    await mutate('/api/user/items');
   };
 
   return (
