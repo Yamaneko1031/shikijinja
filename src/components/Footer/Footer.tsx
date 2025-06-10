@@ -23,6 +23,9 @@ const Footer: React.FC<FooterProps> = (props) => {
         />
       </Modal>
 
+      <Button variant="subNatural" size="md" onClick={() => setIsMapOpen(true)}>
+        全体図
+      </Button>
       <Button
         variant="subNatural"
         size="md"
@@ -35,9 +38,6 @@ const Footer: React.FC<FooterProps> = (props) => {
         }}
       >
         戻る
-      </Button>
-      <Button variant="subNatural" size="md" onClick={() => setIsMapOpen(true)}>
-        地図
       </Button>
       <Button
         variant="subNatural"

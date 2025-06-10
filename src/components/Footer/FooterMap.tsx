@@ -12,6 +12,7 @@ const FooterMap: React.FC<Props> = (props) => {
 
   return (
     <div className="flex flex-col gap-2 items-center">
+      ※ここに全体図の画像が入る予定
       {sections.map((section) => (
         <Button
           key={section.id}
@@ -24,7 +25,7 @@ const FooterMap: React.FC<Props> = (props) => {
           {section.name}
         </Button>
       ))}
-      <Button variant="subNatural" onClick={props.handleCloseMenu}>
+      <Button variant="negative" onClick={props.handleCloseMenu}>
         閉じる
       </Button>
     </div>
