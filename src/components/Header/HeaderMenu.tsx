@@ -10,6 +10,7 @@ import { Button } from '../_shared/Button';
 import Modal from '../_shared/Modal';
 import MyOmikujiView from './MyOmikujiView';
 import MyOmamoriView from './MyOmamoriView';
+import MyEmaView from './MyEmaView';
 
 interface HeaderProps {
   user: User;
@@ -24,6 +25,7 @@ const HeaderMenu: React.FC<HeaderProps> = (props) => {
   const [loading, setLoading] = useState(false);
   const [isOmikujiOpen, setIsOmikujiOpen] = useState(false);
   const [isOmamoriOpen, setIsOmamoriOpen] = useState(false);
+  const [isEmaOpen, setIsEmaOpen] = useState(false);
   const handleSignIn = async (provider: 'google' | 'github') => {
     // リダイレクトされるので戻さない
     setLoading(true);
@@ -64,7 +66,9 @@ const HeaderMenu: React.FC<HeaderProps> = (props) => {
           </Button>
           <Button
             variant="subNatural"
-            onClick={() => {}}
+            onClick={() => {
+              setIsEmaOpen(true);
+            }}
             disabled={loading || props.isLoadingUserItems || props.userItems?.ema.length === 0}
           >
             絵馬{props.userItems?.ema.length}
@@ -91,6 +95,14 @@ const HeaderMenu: React.FC<HeaderProps> = (props) => {
         閉じる
       </Button>
 
+      {props.userItems?.ema && (
+        <Modal
+          isOpen={isEmaOpen}
+          className="absolute top-0 left-0 min-h-[100lvh] min-w-[100vw] bg-transparent overscroll-contain"
+        >
+          <MyEmaView emaPostResponses={props.userItems?.ema} onClose={() => setIsEmaOpen(false)} />
+        </Modal>
+      )}
       {props.userItems?.omikuji && (
         <Modal
           isOpen={isOmikujiOpen}
