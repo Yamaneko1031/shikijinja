@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { OmikujiResponse } from '@/types/omikuji';
 import { Button } from '../_shared/Button';
 import OmikujiSeat from './OmikujiSeat';
-
+import Image from 'next/image';
 type Props = {
   omikujiResponse: OmikujiResponse;
   onClose: () => void;
@@ -40,7 +40,7 @@ export default function OmikujiModal({ omikujiResponse, onClose }: Props) {
           aria-label="縮小"
           disabled={rate <= 0.75}
         >
-          -
+          <Image src="/images/icon/icon_glass_minus.svg" alt="縮小" width={24} height={24} />
         </Button>
         <Button
           variant="subNatural"
@@ -49,7 +49,7 @@ export default function OmikujiModal({ omikujiResponse, onClose }: Props) {
           aria-label="拡大"
           disabled={rate >= 1.25}
         >
-          +
+          <Image src="/images/icon/icon_glass_plus.svg" alt="拡大" width={24} height={24} />
         </Button>
       </div>
     </div>
