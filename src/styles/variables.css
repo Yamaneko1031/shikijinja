@@ -8,6 +8,7 @@
   --ema-popup-duration: 6000ms;
   --coin-popup-duration: 2500ms;
   --omamori-effect-popup-duration: 2000ms;
+  --omamori-shuffle-stop-duration: 2000ms;
 }
 
 @media (prefers-color-scheme: dark) {

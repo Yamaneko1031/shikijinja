@@ -10,16 +10,14 @@ import OmamoriWindow from './OmamoriWindow';
 import Modal from '../_shared/Modal';
 import OmamoriLoading from './OmamoriLoading';
 import OmamoriModal from './OmamoriModal';
-// import OmamoriEffectPopup from './OmamoriEffectPopup';
 import { useTelop } from '@/hooks/useTelop';
 import { getTokuMaster } from '@/utils/toku';
 import { mutate } from 'swr';
+import { OmamoriLoadingState } from '@/types/omamori';
 
 const OmamoriSection = (props: SectionProps) => {
-  const [loading, setLoading] = useState(false);
-  const [omamoriData, setOmamoriData] = useState<OmamoriDataResponse | null>(null);
   const [omamoriModalOpen, setOmamoriModalOpen] = useState(false);
-  const [loadingMessage, setLoadingMessage] = useState<string>('');
+  const [loadingState, setLoadingState] = useState<OmamoriLoadingState>('none');
   const omamoriDataRef = useRef<OmamoriDataResponse | null>(null);
   const telop = useTelop();
 
@@ -37,9 +35,7 @@ const OmamoriSection = (props: SectionProps) => {
     }
 
     telop.clear();
-    setOmamoriData(null);
-    setLoadingMessage('お守りを選択中');
-    setLoading(true);
+    setLoadingState('shuffle');
 
     await new Promise((resolve) => setTimeout(resolve, 2000));
     omamoriDataRef.current = await apiFetch<OmamoriDataResponse>('/api/omamori/effect', {
@@ -58,30 +54,30 @@ const OmamoriSection = (props: SectionProps) => {
 
     // 演出
     telop.showPop(`${omamoriDataRef.current.name} が選択されました`);
-    setOmamoriData(omamoriDataRef.current);
+    setLoadingState('stop');
 
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    // 選択されたお守りを表示する待ち時間
+    await new Promise((resolve) => setTimeout(resolve, 4000));
 
-    setLoadingMessage('効能を付与中');
-    // setOmamoriData(omamoriDataRef.current);
+    setLoadingState('effect');
 
     // エフェクト演出を開始
     const effectPromise = (async () => {
       for (const effect of omamoriDataRef.current?.effects ?? []) {
+        await new Promise((resolve) => setTimeout(resolve, 2000));
         console.log('effect', effect);
         telop.showPop(`${effect.name} +${effect.power} を獲得`);
-        await new Promise((resolve) => setTimeout(resolve, 2000));
       }
     })();
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
     // 両方完了まで待つ
     omamoriDataRef.current = await commentPromise;
     await effectPromise;
 
     props.handleTokuUsed('omamori_buy');
-    setOmamoriData(omamoriDataRef.current);
 
-    setLoading(false);
+    setLoadingState('none');
     setOmamoriModalOpen(true);
 
     await mutate('/api/user/items');
@@ -114,8 +110,11 @@ const OmamoriSection = (props: SectionProps) => {
       </div>
 
       {/* おみくじ抽選中画面 */}
-      <Modal isOpen={loading} className="relative min-w-[20rem] w-[30rem] mx-2 overscroll-contain">
-        <OmamoriLoading omamoriData={omamoriData} loadingMessage={loadingMessage} />
+      <Modal
+        isOpen={loadingState != 'none'}
+        className="relative min-w-[20rem] w-[30rem] mx-2 overscroll-contain"
+      >
+        <OmamoriLoading omamoriData={omamoriDataRef.current} loadingState={loadingState} />
         {/* 獲得テロップ表示 */}
         {telop.currentText && (
           <div

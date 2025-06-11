@@ -49,6 +49,7 @@ export async function GET() {
         price: omamori.base.price,
         effects: omamori.effects,
         id: omamori.id,
+        baseId: omamori.baseId,
         additionalDescription: omamori.additionalDescription,
         createdAt: omamori.createdAt.toISOString(),
       })) as OmamoriDataResponse[],

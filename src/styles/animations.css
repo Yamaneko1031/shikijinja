@@ -271,3 +271,22 @@
 .animate-omamori-effect-popup {
   animation: omamori-effect-popup var(--omamori-effect-popup-duration) ease-in-out forwards;
 }
+
+@keyframes omamori-shuffle-stop {
+  0% {
+    transform: scale(1);
+  }
+  10% {
+    transform: scale(1.5);
+  }
+  70% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-omamori-shuffle-stop {
+  animation: omamori-shuffle-stop var(--omamori-shuffle-stop-duration) ease-out forwards;
+}

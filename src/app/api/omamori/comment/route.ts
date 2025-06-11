@@ -38,7 +38,7 @@ export async function POST(request: Request) {
         id: omamoriId,
       },
       data: {
-        additionalDescription: res,
+        additionalDescription: setOmamori.additionalDescription,
       },
       include: {
         base: true,
@@ -52,6 +52,7 @@ export async function POST(request: Request) {
       imageUrl: updatedOmamori.base.imageUrl,
       price: updatedOmamori.base.price,
       id: updatedOmamori.id,
+      baseId: updatedOmamori.baseId,
       additionalDescription: updatedOmamori.additionalDescription,
       effects: updatedOmamori.effects as OmamoriEffect[],
       createdAt: updatedOmamori.createdAt.toISOString(),

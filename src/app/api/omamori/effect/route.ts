@@ -50,6 +50,7 @@ export async function POST() {
       imageUrl: omamoriBase.imageUrl,
       price: omamoriBase.price,
       id: omamoriData.id,
+      baseId: omamoriData.baseId,
       additionalDescription: omamoriData.additionalDescription,
       effects: omamoriData.effects as OmamoriEffect[],
       createdAt: omamoriData.createdAt.toISOString(),

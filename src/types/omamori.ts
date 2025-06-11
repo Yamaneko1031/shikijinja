@@ -15,6 +15,7 @@ export type OmamoriBase = {
 
 export type OmamoriDataResponse = {
   id: string;
+  baseId: string;
   name: string;
   hurigana: string;
   description: string;
@@ -30,3 +31,5 @@ export type OmamoriCommentUserPrompt = {
   description: string;
   effects: OmamoriEffect[];
 };
+
+export type OmamoriLoadingState = 'none' | 'shuffle' | 'stop' | 'effect';
