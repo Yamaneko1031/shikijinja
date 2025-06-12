@@ -93,6 +93,7 @@ model TokuCount {
 model User {
   id              String           @id @default(cuid())
   isGuest         Boolean          @default(true)
+  registReward    Boolean          @default(false)
   email           String?          @unique
   passwordHash    String?
   name            String?

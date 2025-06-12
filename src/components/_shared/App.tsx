@@ -59,6 +59,10 @@ const App = (props: Props) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ guestSessionId: props.guestSessionId }),
     });
+
+    if (!userRef.current.user.registReward && !userRef.current.user.isGuest) {
+      userRef.current.handleTokuGet('regist_reward');
+    }
   }, [props.guestSessionId, props.serverTime, props.memo, addLog]);
 
   const getNextSectionId = useCallback((): string | null => {

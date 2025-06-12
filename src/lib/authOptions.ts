@@ -95,30 +95,45 @@ export const authOptions: AuthOptions = {
 
       // 3. ゲストuserIdで「SNS未連携のUser」を本アカウントに昇格
       const cookieStore = await cookies();
-      const guestUserId = cookieStore.get('userId')?.value;
-      if (!guestUserId) return true;
+      const guestUserId = cookieStore.get('guestSessionId')?.value;
+      if (!guestUserId) {
+        return false;
+      }
 
-      // ゲストUserを本アカウント化
-      await prisma.user.update({
-        where: { id: guestUserId },
-        data: {
-          isGuest: false,
-          email: user.email,
-          name: user.name,
+      // GuestSessionからユーザー情報を取得してアップデート
+      const guestSession = await prisma.guestSession.findFirst({
+        where: {
+          id: guestUserId,
+          expiresAt: {
+            gt: new Date(),
+          },
         },
+        include: { user: true },
       });
 
-      // SNS連携情報をAccountに登録
-      await prisma.account.create({
-        data: {
-          userId: guestUserId,
-          provider: account.provider,
-          providerUserId: account.providerAccountId,
-          accessToken: account.access_token,
-          refreshToken: account.refresh_token,
-        },
-      });
-
+      if (guestSession?.user) {
+        // ゲストUserを本アカウント化
+        await prisma.user.update({
+          where: { id: guestSession.user.id },
+          data: {
+            isGuest: false,
+            email: user.email,
+            name: user.name,
+          },
+        });
+        // SNS連携情報をAccountに登録
+        await prisma.account.create({
+          data: {
+            userId: guestSession.user.id,
+            provider: account.provider,
+            providerUserId: account.providerAccountId,
+            accessToken: account.access_token,
+            refreshToken: account.refresh_token,
+          },
+        });
+      } else {
+        return false;
+      }
       return true;
     },
   },

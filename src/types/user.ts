@@ -7,6 +7,7 @@ import { TokuCounts } from './toku';
 export type User = {
   id: string;
   isGuest: boolean;
+  registReward: boolean;
   email: string;
   name: string;
   coin: number;

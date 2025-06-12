@@ -49,8 +49,11 @@ export async function POST(req: Request) {
     }
 
     // ユーザーデータ更新
-    const userUpdateData: Record<string, string | number> = {};
+    const userUpdateData: Record<string, string | number | boolean> = {};
     userUpdateData.coin = user.coin + tokuMaster.coin * addCount;
+    if (tokuId === 'regist_reward') {
+      userUpdateData.registReward = true;
+    }
     user = await prisma.user.update({
       where: { id: user.id },
       data: userUpdateData,
@@ -75,6 +78,7 @@ export async function POST(req: Request) {
     const userData: User = {
       id: user.id,
       isGuest: user.isGuest,
+      registReward: user.registReward,
       email: user.email ?? '',
       name: user.name ?? '',
       coin: user.coin,

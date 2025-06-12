@@ -4,7 +4,7 @@ import { cookies } from 'next/headers';
 export async function GET() {
   try {
     const cookieStore = await cookies();
-    const userId = cookieStore.get('userId')?.value ?? '';
+    const userId = cookieStore.get('guestSessionId')?.value ?? '';
 
     return jsonResponse({ userId }, { status: 200 });
   } catch (err) {

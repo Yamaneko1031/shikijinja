@@ -80,6 +80,7 @@ export async function POST(req: Request) {
     const userData: User = {
       id: user.id,
       isGuest: user.isGuest,
+      registReward: user.registReward,
       email: user.email ?? '',
       name: user.name ?? '',
       coin: user.coin,

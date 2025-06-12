@@ -69,7 +69,7 @@ import { getJapanTodayMidnight } from '@/server/date';
 export async function PATCH(req: Request) {
   try {
     const cookieStore = await cookies();
-    const userId = cookieStore.get('userId')?.value;
+    const userId = cookieStore.get('guestSessionId')?.value;
 
     if (!userId) {
       return jsonResponse({ error: '未認証' }, { status: 401 });
@@ -130,6 +130,7 @@ export async function PATCH(req: Request) {
     const userData: User = {
       id: user.id,
       isGuest: user.isGuest,
+      registReward: user.registReward,
       email: user.email ?? '',
       name: user.name ?? '',
       coin: user.coin,
