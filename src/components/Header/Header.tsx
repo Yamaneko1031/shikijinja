@@ -26,7 +26,7 @@ const Header: React.FC<HeaderProps> = (props) => {
   });
 
   return (
-    <header className="fixed top-0 left-0 w-full h-[3.125rem] bg-white z-60 overscroll-contain">
+    <header className="fixed top-0 left-0 w-full h-[3.125rem] min-w-[24rem] bg-white z-60 overscroll-contain">
       <Modal isOpen={isMenuOpen}>
         <HeaderMenu
           user={props.user}
@@ -45,9 +45,25 @@ const Header: React.FC<HeaderProps> = (props) => {
             <div className="">
               <HeaderCoinCounter user={props.user} />
             </div>
-            <div className="h-full flex items-center">
+            <div className="flex items-center">
               <button
-                className="p-2 hover:bg-gray-100 rounded-md"
+                className="h-[2.5rem] w-[2.5rem] flex justify-center items-center hover:bg-gray-100 rounded-md"
+                onClick={() => {
+                  setIsMenuOpen(true);
+                }}
+              >
+                <Image
+                  src="/images/icon/icon_help.webp"
+                  alt="ヘルプ"
+                  width={32}
+                  height={32}
+                  className="w-6 h-6"
+                />
+              </button>
+            </div>
+            <div className="flex items-center">
+              <button
+                className="h-[2.5rem] w-[2.5rem] flex justify-center items-center hover:bg-gray-100 rounded-md"
                 onClick={() => {
                   setIsMenuOpen(true);
                 }}
