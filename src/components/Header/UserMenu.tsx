@@ -12,7 +12,7 @@ import MyOmikujiView from './MyOmikujiView';
 import MyOmamoriView from './MyOmamoriView';
 import MyEmaView from './MyEmaView';
 
-interface HeaderProps {
+interface Props {
   user: User;
   userItems: UserItems | undefined;
   isLoadingUserItems: boolean;
@@ -20,7 +20,7 @@ interface HeaderProps {
   handleCloseMenu: () => void;
 }
 
-const HeaderMenu: React.FC<HeaderProps> = (props) => {
+const UserMenu: React.FC<Props> = (props) => {
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
   const [isOmikujiOpen, setIsOmikujiOpen] = useState(false);
@@ -139,4 +139,4 @@ const HeaderMenu: React.FC<HeaderProps> = (props) => {
   );
 };
 
-export default HeaderMenu;
+export default UserMenu;

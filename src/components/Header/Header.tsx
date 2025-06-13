@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { User, UserItems } from '@/types/user';
 import HeaderCoinCounter from './HeaderCoinCounter';
-import HeaderMenu from './HeaderMenu';
 import Modal from '../_shared/Modal';
 import useSWR from 'swr';
 import { apiFetch } from '@/lib/api';
+import HelpMenu from './HelpMenu';
+import UserMenu from './UserMenu';
 
 interface HeaderProps {
   user: User;
@@ -14,7 +15,8 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = (props) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isHelpMenuOpen, setIsHelpMenuOpen] = useState(false);
 
   const fetcher = (url: string) => apiFetch<UserItems>(url).then((res) => res);
   const {
@@ -27,14 +29,17 @@ const Header: React.FC<HeaderProps> = (props) => {
 
   return (
     <header className="fixed top-0 left-0 w-full h-[3.125rem] min-w-[24rem] bg-white z-60 overscroll-contain">
-      <Modal isOpen={isMenuOpen}>
-        <HeaderMenu
+      <Modal isOpen={isUserMenuOpen}>
+        <UserMenu
           user={props.user}
           userItems={userItems}
           isLoadingUserItems={isLoadingUserItems}
           mutateUserItems={mutateUserItems}
-          handleCloseMenu={() => setIsMenuOpen(false)}
+          handleCloseMenu={() => setIsUserMenuOpen(false)}
         />
+      </Modal>
+      <Modal isOpen={isHelpMenuOpen}>
+        <HelpMenu handleCloseMenu={() => setIsHelpMenuOpen(false)} />
       </Modal>
       {/* {isMenuOpen && <HeaderMenu user={props.user} handleCloseMenu={() => setIsMenuOpen(false)} />} */}
       <div className="flex items-center">
@@ -49,7 +54,7 @@ const Header: React.FC<HeaderProps> = (props) => {
               <button
                 className="h-[2.5rem] w-[2.5rem] flex justify-center items-center hover:bg-gray-100 rounded-md"
                 onClick={() => {
-                  setIsMenuOpen(true);
+                  setIsHelpMenuOpen(true);
                 }}
               >
                 <Image
@@ -65,7 +70,7 @@ const Header: React.FC<HeaderProps> = (props) => {
               <button
                 className="h-[2.5rem] w-[2.5rem] flex justify-center items-center hover:bg-gray-100 rounded-md"
                 onClick={() => {
-                  setIsMenuOpen(true);
+                  setIsUserMenuOpen(true);
                 }}
               >
                 <Image
