@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { SectionProps } from '@/types/section';
 import FadeInOutText from '../_shared/FadeInOutText';
 
@@ -10,14 +10,6 @@ const SandoSection = (props: SectionProps) => {
   // const handlePostWish = () => {
   //   alert(`参拝マナーを見ました`);
   // };
-
-  useEffect(() => {
-    if (!props.scrollRatio) return;
-    const interval = setInterval(() => {
-      console.log(props.scrollRatio?.get());
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [props.scrollRatio]);
 
   return (
     <>

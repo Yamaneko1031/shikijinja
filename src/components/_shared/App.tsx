@@ -29,6 +29,7 @@ const App = (props: Props) => {
   const user = useUser(props.initialUser);
   const userRef = useRef(user);
   const [state, setState] = useState({ activeId: sections[0].id });
+  const [isInit, setIsInit] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
   const bgManagerRef = useRef<BackgroundManagerHandle>(null);
@@ -63,6 +64,7 @@ const App = (props: Props) => {
     if (!userRef.current.user.registReward && !userRef.current.user.isGuest) {
       userRef.current.handleTokuGet('regist_reward');
     }
+    setIsInit(true);
   }, [props.guestSessionId, props.serverTime, props.memo, addLog]);
 
   const getNextSectionId = useCallback((): string | null => {
@@ -164,7 +166,7 @@ const App = (props: Props) => {
         className="fixed inset-0 overflow-scroll overscroll-contain overflow-x-hidden z-0"
         ref={containerRef}
       >
-        <Header user={user.user} handleAddCoin={user.handleAddCoin} />
+        <Header user={user.user} isInit={isInit} handleAddCoin={user.handleAddCoin} />
 
         {/* 背景画像の管理 */}
         <BackgroundManager

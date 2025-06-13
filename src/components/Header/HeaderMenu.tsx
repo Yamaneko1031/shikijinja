@@ -26,6 +26,14 @@ const HeaderMenu: React.FC<HeaderProps> = (props) => {
   const [isOmikujiOpen, setIsOmikujiOpen] = useState(false);
   const [isOmamoriOpen, setIsOmamoriOpen] = useState(false);
   const [isEmaOpen, setIsEmaOpen] = useState(false);
+
+  const emaCount =
+    props.isLoadingUserItems || props.userItems === undefined ? 0 : props.userItems.ema.length;
+  const omamoriCount =
+    props.isLoadingUserItems || props.userItems === undefined ? 0 : props.userItems.omamori.length;
+  const omikujiCount =
+    props.isLoadingUserItems || props.userItems === undefined ? 0 : props.userItems.omikuji.length;
+
   const handleSignIn = async (provider: 'google' | 'github') => {
     // リダイレクトされるので戻さない
     setLoading(true);
@@ -41,6 +49,8 @@ const HeaderMenu: React.FC<HeaderProps> = (props) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({}),
     });
+    props.handleCloseMenu();
+    props.mutateUserItems();
     await signOut();
   };
 
@@ -64,33 +74,33 @@ const HeaderMenu: React.FC<HeaderProps> = (props) => {
           <Button variant="subNatural" onClick={() => handleSignIn('github')} disabled={loading}>
             GitHubでログイン
           </Button>
-          <Button
-            variant="subNatural"
-            onClick={() => {
-              setIsEmaOpen(true);
-            }}
-            disabled={loading || props.isLoadingUserItems || props.userItems?.ema.length === 0}
-          >
-            絵馬{props.userItems?.ema.length}
-          </Button>
-          <Button
-            variant="subNatural"
-            onClick={() => {
-              setIsOmamoriOpen(true);
-            }}
-            disabled={loading || props.isLoadingUserItems || props.userItems?.omamori.length === 0}
-          >
-            お守り{props.userItems?.omamori.length}
-          </Button>
-          <Button
-            variant="subNatural"
-            onClick={() => setIsOmikujiOpen(true)}
-            disabled={loading || props.isLoadingUserItems || props.userItems?.omikuji.length === 0}
-          >
-            おみくじ{props.userItems?.omikuji.length}
-          </Button>
         </div>
       )}
+      <Button
+        variant="subNatural"
+        onClick={() => {
+          setIsEmaOpen(true);
+        }}
+        disabled={loading || emaCount === 0}
+      >
+        絵馬{emaCount}
+      </Button>
+      <Button
+        variant="subNatural"
+        onClick={() => {
+          setIsOmamoriOpen(true);
+        }}
+        disabled={loading || omamoriCount === 0}
+      >
+        お守り{omamoriCount}
+      </Button>
+      <Button
+        variant="subNatural"
+        onClick={() => setIsOmikujiOpen(true)}
+        disabled={loading || omikujiCount === 0}
+      >
+        おみくじ{omikujiCount}
+      </Button>
       <Button variant="negative" onClick={props.handleCloseMenu} disabled={loading}>
         閉じる
       </Button>

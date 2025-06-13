@@ -9,6 +9,7 @@ import { apiFetch } from '@/lib/api';
 
 interface HeaderProps {
   user: User;
+  isInit: boolean;
   handleAddCoin: (coin: number) => void;
 }
 
@@ -20,7 +21,7 @@ const Header: React.FC<HeaderProps> = (props) => {
     data: userItems,
     isLoading: isLoadingUserItems,
     mutate: mutateUserItems,
-  } = useSWR('/api/user/items', fetcher, {
+  } = useSWR(props.isInit ? '/api/user/items' : null, fetcher, {
     revalidateOnFocus: false,
   });
 
