@@ -201,7 +201,7 @@
     transform: translateX(0) translateY(0);
   }
   100% {
-    scale: 2;
+    scale: 4;
     transform: translateX(100vw) translateY(-50vh);
   }
 }
