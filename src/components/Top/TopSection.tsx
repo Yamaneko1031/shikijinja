@@ -92,13 +92,13 @@ const TopSection = (props: SectionProps) => {
         </motion.div>
       )}
       <motion.h1
-        className="absolute left-1/2 translate-x-20 -translate-y-20 vertical text-shadow-3 z-30"
+        className="absolute left-1/2 translate-x-20 -translate-y-20 vertical text-shadow-3 z-32"
         style={{ top: '30lvh', opacity: titleOpacity }}
       >
         式岐神社
       </motion.h1>
       <motion.div
-        className="absolute left-1/2 -translate-x-25 -translate-y-35 vertical text-shadow-2 z-30"
+        className="absolute left-1/2 -translate-x-25 -translate-y-35 vertical text-shadow-2 z-32"
         style={{ top: '50lvh', opacity: titleOpacity }}
       >
         <TextReveal
@@ -114,19 +114,6 @@ const TopSection = (props: SectionProps) => {
         <motion.div
           className="fixed inset-0 w-[100%] h-[100lvh] z-31"
           style={{ scale: suzumeScale }}
-          // style={{
-          //   position: 'absolute',
-          //   inset: 0,
-          //   width: '100%',
-          //   height: '100lvh',
-          //   objectFit: 'cover',
-          //   objectPosition: 'center',
-          // opacity: url === activeUrl ? 1 : url === prevUrl ? 0 : 0,
-          // zIndex: url === activeUrl ? 1 : url === prevUrl ? 0 : -1,
-          // transition: 'opacity 1.2s ease',
-          // display: 'block',
-          // transform: `scale(${url === activeUrl ? scale : url === prevUrl ? prevScale : 1}) translateZ(0.01px)`,
-          // }}
         >
           <div
             className={`absolute left-1/2 top-1/2 -translate-x-[100%] translate-y-[100%] w-[12lvh] h-[12lvh] suzume ${suzumeAnimationClass1}`}
