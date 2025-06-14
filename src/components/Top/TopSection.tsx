@@ -13,7 +13,6 @@ const TopSection = (props: SectionProps) => {
   const toriiScale = useTransform(props.scrollY, [0, 400], [1, 3.5]);
   const toriiOpacity = useTransform(props.scrollY, [100, 500], [1, 0]);
   const titleOpacity = useTransform(props.scrollY, [150, 400], [1, 0]);
-  const suzumeScale = useTransform(props.scrollY, [0, 1200], [1, 1.2]);
 
   const [suzumeAnimationClass1, setSuzumeAnimationClass1] = useState('hidden');
   const [suzumeAnimationClass2, setSuzumeAnimationClass2] = useState('hidden');
@@ -111,17 +110,14 @@ const TopSection = (props: SectionProps) => {
       {props.isActive && <ReafParticles />}
 
       {props.isActive && (
-        <motion.div
-          className="fixed inset-0 w-[100%] h-[100lvh] z-31"
-          style={{ scale: suzumeScale }}
-        >
+        <div className="fixed inset-0 w-[100%] h-[100lvh] z-31">
           <div
-            className={`absolute left-1/2 top-1/2 -translate-x-[100%] translate-y-[100%] w-[12lvh] h-[12lvh] suzume ${suzumeAnimationClass1}`}
+            className={`absolute left-1/2 top-1/2 -translate-x-[100%] translate-y-[120%] w-[12lvh] h-[12lvh] suzume ${suzumeAnimationClass1}`}
           ></div>
           <div
-            className={`absolute left-1/2 top-1/2 -translate-x-[150%] translate-y-[150%] w-[11lvh] h-[11lvh] suzume ${suzumeAnimationClass2}`}
+            className={`absolute left-1/2 top-1/2 -translate-x-[150%] translate-y-[160%] w-[11lvh] h-[11lvh] suzume ${suzumeAnimationClass2}`}
           ></div>
-        </motion.div>
+        </div>
       )}
     </div>
   );
