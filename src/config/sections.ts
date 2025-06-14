@@ -12,7 +12,7 @@ export const sections: SectionData[] = [
   {
     id: 'top',
     bgUrl: '/images/bg_hude/bg_top.webp',
-    name: '入口',
+    name: '大鳥居',
     overlayText: '',
     component: TopSection,
     jumpOffset: 0,
@@ -23,12 +23,13 @@ export const sections: SectionData[] = [
       { ratio: 1.0, posX: 50, posY: 50, zoom: 1.3 },
     ],
     sectionClass: 'relative w-full h-[75rem] items-center justify-center p-4',
+    offset: { top: 26, left: 7 },
   },
   {
     id: 'sando',
     bgUrl: '/images/bg_hude/bg_sando.webp',
-    name: '参道',
-    overlayText: '参道',
+    name: '入口',
+    overlayText: '入口',
     component: SandoSection,
     jumpOffset: 10,
     scrollEffect: [
@@ -37,6 +38,7 @@ export const sections: SectionData[] = [
       { ratio: 1.0, posX: 70, posY: 50, zoom: 1.2 },
     ],
     sectionClass: 'relative w-full h-[100rem] items-center justify-center p-4',
+    offset: { top: 21.5, left: 7.5 },
   },
   {
     id: 'ema',
@@ -52,6 +54,7 @@ export const sections: SectionData[] = [
       { ratio: 1.0, posX: 60, posY: 50, zoom: 1.0 },
     ],
     sectionClass: 'relative w-full h-[75rem] items-center justify-center p-4',
+    offset: { top: 20.5, left: 14 },
   },
   {
     id: 'omamori',
@@ -67,6 +70,7 @@ export const sections: SectionData[] = [
       { ratio: 1.0, posX: 68, posY: 50, zoom: 1.0 },
     ],
     sectionClass: 'relative w-full h-[75rem] items-center justify-center p-4',
+    offset: { top: 16.5, left: 15.5 },
   },
   {
     id: 'omikuji',
@@ -82,6 +86,7 @@ export const sections: SectionData[] = [
       { ratio: 1.0, posX: 60, posY: 50, zoom: 1.0 },
     ],
     sectionClass: 'relative w-full h-[75rem] items-center justify-center p-4',
+    offset: { top: 14, left: 4.5 },
   },
   {
     id: 'nadeneko',
@@ -98,6 +103,7 @@ export const sections: SectionData[] = [
       { ratio: 1.0, posX: 60, posY: 50, zoom: 1.1 },
     ],
     sectionClass: 'relative w-full h-[75rem] items-center justify-center p-4',
+    offset: { top: 10, left: 6 },
   },
   {
     id: 'shoukai',
@@ -113,6 +119,7 @@ export const sections: SectionData[] = [
       { ratio: 1.0, posX: 65, posY: 50, zoom: 1.0 },
     ],
     sectionClass: 'relative w-full h-[75rem] items-center justify-center p-4',
+    offset: { top: 12, left: 16 },
   },
   {
     id: 'haiden',
@@ -128,5 +135,6 @@ export const sections: SectionData[] = [
       { ratio: 1.0, posX: 50, posY: 50, zoom: 1.5 },
     ],
     sectionClass: 'relative w-full h-[75rem] items-center justify-center p-4',
+    offset: { top: 7.5, left: 14.5 },
   },
 ];

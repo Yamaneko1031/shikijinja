@@ -8,6 +8,7 @@ interface FooterProps {
   user: User;
   handleGetNextSectionId: () => string | null;
   handleGetPrevSectionId: () => string | null;
+  handleGetCurrentSectionId: () => string | null;
   handleScrollToSection: (sectionId: string) => void;
 }
 
@@ -16,10 +17,14 @@ const Footer: React.FC<FooterProps> = (props) => {
 
   return (
     <footer className="fixed bottom-2 w-full h-[3.125rem] min-w-[24rem] z-60 flex items-center justify-center gap-4 overscroll-contain">
-      <Modal isOpen={isMapOpen}>
+      <Modal
+        isOpen={isMapOpen}
+        className="absolute top-0 left-0 min-h-[100lvh] min-w-[100vw] bg-transparent overscroll-contain"
+      >
         <FooterMap
           handleCloseMenu={() => setIsMapOpen(false)}
           handleScrollToSection={props.handleScrollToSection}
+          handleGetCurrentSectionId={props.handleGetCurrentSectionId}
         />
       </Modal>
 

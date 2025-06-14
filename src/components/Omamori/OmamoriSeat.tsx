@@ -10,7 +10,7 @@ type Props = {
 
 export default function OmamoriSeat({ omamoriData }: Props) {
   return (
-    <div className="relative w-[25rem] h-[42rem] text-black flex flex-col bg-[url('/images/bg_hude/bg_kanteisho.png')] bg-[length:100%_100%]">
+    <div className="relative w-[25rem] h-[42rem] text-black flex flex-col bg-[url('/images/bg_hude/bg_kanteisho.webp')] bg-[length:100%_100%]">
       <div className="absolute top-7 w-full text-md font-bold text-center mb-2">
         - お守り鑑定書 -
       </div>

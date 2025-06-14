@@ -11,6 +11,7 @@ export type SectionData = {
   component: React.ComponentType<SectionProps>;
   scrollEffect: { ratio: number; posX: number; posY: number; zoom: number }[];
   sectionClass: string;
+  offset: { top: number; left: number };
 };
 
 export type SectionProps = {
