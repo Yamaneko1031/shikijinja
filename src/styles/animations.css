@@ -233,7 +233,7 @@
 
 .suzume {
   background: url('/images/bg_hude/suzume.webp') 0 0 / auto 100%;
-  will-change: background-position;
+  will-change: background-position, transform;
 }
 
 .animate-suzume-in {
