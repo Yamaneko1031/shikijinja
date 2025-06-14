@@ -68,16 +68,11 @@ const App = (props: Props) => {
   }, [props.guestSessionId, props.serverTime, props.memo, addLog]);
 
   const getCurrentSectionId = useCallback((): string | null => {
-    console.log('getCurrentSectionId');
     const currentIndex = sections.findIndex((s) => s.id === state.activeId);
-    if (currentIndex === -1 || currentIndex === sections.length - 1) {
-      return null;
-    }
     return sections[currentIndex].id;
   }, [state.activeId]);
 
   const getNextSectionId = useCallback((): string | null => {
-    console.log('getNextSectionId');
     const currentIndex = sections.findIndex((s) => s.id === state.activeId);
     if (currentIndex === -1 || currentIndex === sections.length - 1) {
       return null;
@@ -86,7 +81,6 @@ const App = (props: Props) => {
   }, [state.activeId]);
 
   const getPrevSectionId = useCallback((): string | null => {
-    console.log('getPrevSectionId');
     const currentIndex = sections.findIndex((s) => s.id === state.activeId);
     if (currentIndex <= 0) {
       return null;
