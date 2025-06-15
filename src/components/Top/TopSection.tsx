@@ -21,21 +21,22 @@ const TopSection = (props: SectionProps) => {
 
   useEffect(() => {
     const timeouts: NodeJS.Timeout[] = [];
+    let interval: NodeJS.Timeout | undefined;
 
     if (props.isActive) {
-      timeouts[0] = setInterval(() => {
+      interval = setInterval(() => {
         if (inAnimationSetting.current === false) {
           if (props.scrollY.get() < 10) {
             inAnimationSetting.current = true;
-            timeouts[1] = setTimeout(() => {
+            timeouts[0] = setTimeout(() => {
               setSuzumeAnimationClass1('animate-suzume-in');
             }, 200);
 
-            timeouts[2] = setTimeout(() => {
+            timeouts[1] = setTimeout(() => {
               setSuzumeAnimationClass2('animate-suzume-in');
             }, 500);
 
-            timeouts[3] = setTimeout(() => {
+            timeouts[2] = setTimeout(() => {
               setSuzumeAnimationClass1('');
               setSuzumeAnimationClass2('');
               inAnimationFinished.current = true;
@@ -45,7 +46,7 @@ const TopSection = (props: SectionProps) => {
         if (inAnimationFinished.current && props.scrollY.get() > 10) {
           inAnimationFinished.current = false;
           setSuzumeAnimationClass1('animate-suzume-out');
-          timeouts[4] = setTimeout(() => {
+          timeouts[3] = setTimeout(() => {
             setSuzumeAnimationClass2('animate-suzume-out');
           }, 200);
         }
@@ -55,10 +56,12 @@ const TopSection = (props: SectionProps) => {
       setSuzumeAnimationClass1('hidden');
       setSuzumeAnimationClass2('hidden');
       timeouts.forEach((timeout) => clearTimeout(timeout));
+      if (interval) clearInterval(interval);
     }
 
     return () => {
       timeouts.forEach((timeout) => clearTimeout(timeout));
+      if (interval) clearInterval(interval);
     };
   }, [props.scrollY, props.isActive]);
 
