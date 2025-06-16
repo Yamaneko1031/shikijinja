@@ -5,6 +5,8 @@ import { SectionProps } from '@/types/section';
 import TextReveal from '../_shared/TextReveal';
 import { ShintakuResponse } from '@/types/shintaku';
 import ShintakuMessage from './ShintakuMessage';
+import useSWR from 'swr';
+import { apiFetch } from '@/lib/api';
 
 const SandoSection = (props: SectionProps) => {
   // const scrollRatio = useMotionValue(props.scrollRatio);
@@ -13,36 +15,12 @@ const SandoSection = (props: SectionProps) => {
   //   alert(`参拝マナーを見ました`);
   // };
 
-  const scrollRef = useRef(null);
+  const fetcher = (url: string) => apiFetch<ShintakuResponse>(url).then((res) => res);
+  const { data, isLoading, error } = useSWR('/api/shintaku', fetcher, {
+    revalidateOnFocus: false,
+  });
 
-  // メッセージが更新されるたびに一番下にスクロール
-  const test: ShintakuResponse = {
-    posts: [
-      {
-        id: '1',
-        message:
-          '完璧な最初のcommitなんて存在しないよ。まずは動くもの、そしてそれを愛でることから始めよう。美しさは後からついてくる。',
-        isReply: false,
-        createdAt: '2021-01-01 12:00:00',
-        imageKey: 'shikineko',
-      },
-      {
-        id: '2',
-        message:
-          '最も美しいさえずりは、沈黙の後に訪れるもの。言葉を紡ぐ前に、心の静けさを味わう時間を大切に。',
-        isReply: false,
-        createdAt: '2021-01-01 12:00:00',
-        imageKey: 'iroha',
-      },
-      {
-        id: '3',
-        message: 'まず獲物（ゴール）を決めい！どこへ向かうか分からぬまま、森へ入る馬鹿がおるか。',
-        isReply: false,
-        createdAt: '2021-01-01 12:00:00',
-        imageKey: 'tenten',
-      },
-    ],
-  };
+  const scrollRef = useRef(null);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -50,7 +28,7 @@ const SandoSection = (props: SectionProps) => {
         scrollRef.current as HTMLElement
       ).scrollHeight;
     }
-  }, [test.posts]);
+  }, [data?.posts]);
 
   return (
     <>
@@ -68,9 +46,16 @@ const SandoSection = (props: SectionProps) => {
           ref={scrollRef}
           className="h-[20rem] w-full flex flex-col gap-2 overflow-y-auto overflow-x-hidden bg-cover bg-center rounded-lg border-4 border-[rgba(40,20,0,0.5)] bg-[url('/images/bg_hude/bg_shintaku.webp')] scroll-smooth"
         >
-          {test.posts.map((post) => (
-            <ShintakuMessage key={post.id} message={post} />
-          ))}
+          {isLoading ? (
+            <div className="p-4 text-center text-black">読み込み中...</div>
+          ) : error ? (
+            <div className="p-4 text-center text-red-500">データの取得に失敗しました</div>
+          ) : (
+            data?.posts
+              .slice()
+              .reverse()
+              .map((post) => <ShintakuMessage key={post.id} message={post} />)
+          )}
         </div>
       </div>
 

@@ -49,13 +49,13 @@ export default function ShintakuPage() {
           className="bg-blue-500 text-white px-2 py-1 rounded"
           onClick={async () => {
             try {
-              const response = await fetch(`/api/shintaku/`, {
+              const response = await fetch(`/api/shintaku/auto`, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                 },
-                // body: JSON.stringify({}),
-                body: JSON.stringify({ key: 'iroha' }),
+                body: JSON.stringify({}),
+                // body: JSON.stringify({ key: 'iroha' }),
               });
               if (response.ok) {
                 alert('ご神託が投稿されました。');

@@ -1,3 +1,4 @@
+import { openaiTemplateRequest } from '@/server/openaiTemplateRequest';
 import { prisma } from '@/server/prisma';
 import { jsonResponse } from '@/server/response';
 import { ShintakuData } from '@/types/system';
@@ -90,6 +91,41 @@ export async function POST(request: Request) {
         message: message,
         imageKey: nextKey,
         isReply: false,
+      },
+    });
+
+    // 返信の生成
+    let template = '';
+    let imageKey = '';
+    const replyRandom = Math.floor(Math.random() * 2);
+    switch (nextKey) {
+      case 'shikineko':
+        template =
+          replyRandom === 0 ? 'shintaku_reply_iroha_shikineko' : 'shintaku_reply_tenten_shikineko';
+        imageKey = replyRandom === 0 ? 'iroha' : 'tenten';
+        break;
+      case 'iroha':
+        template =
+          replyRandom === 0 ? 'shintaku_reply_shikineko_iroha' : 'shintaku_reply_tenten_iroha';
+        imageKey = replyRandom === 0 ? 'shikineko' : 'tenten';
+        break;
+      case 'tenten':
+        template =
+          replyRandom === 0 ? 'shintaku_reply_iroha_tenten' : 'shintaku_reply_shikineko_tenten';
+        imageKey = replyRandom === 0 ? 'iroha' : 'shikineko';
+        break;
+      default:
+        return jsonResponse({ error: '不正なキーです' }, { status: 400 });
+    }
+
+    const reply = await openaiTemplateRequest(template, message);
+    if (!reply) return jsonResponse({ error: '返信の生成に失敗しました' }, { status: 500 });
+
+    await prisma.shintakuMessage.create({
+      data: {
+        message: reply,
+        imageKey: imageKey,
+        isReply: true,
       },
     });
 
