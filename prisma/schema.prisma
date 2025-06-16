@@ -129,3 +129,24 @@ model GuestSession {
   expiresAt       DateTime
   user            User      @relation("UserGuestSessions", fields: [userId], references: [id], onDelete: Cascade)
 }
+
+model ShintakuMessage {
+  id              String    @id @default(cuid())
+  message         String
+  isReply         Boolean   @default(false)
+  imageKey        String
+  createdAt       DateTime  @default(now())
+}
+
+model ShintakuMessageMaster {
+  id              String    @id @default(cuid())
+  message         String
+  imageKey        String
+}
+
+model SystemInfomations {
+  id              Int       @id @default(1)
+  shintakuData    Json      @default("{}")
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}

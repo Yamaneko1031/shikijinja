@@ -17,6 +17,11 @@ export default function AdminTopPage() {
             📝 絵馬の一覧ページへ
           </a>
         </li>
+        <li>
+          <a href="/admin/shintaku" className="text-blue-500 hover:underline">
+            � ご神託の一覧ページへ
+          </a>
+        </li>
       </ul>
     </div>
   );
