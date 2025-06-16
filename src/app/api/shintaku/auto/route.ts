@@ -38,6 +38,8 @@ export async function POST(request: Request) {
       if (body.key !== undefined) {
         nextKey = body.key;
         console.log('key', body.key);
+      } else {
+        throw new Error('key none');
       }
     } catch {
       console.log('key none');
