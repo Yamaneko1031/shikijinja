@@ -106,7 +106,7 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
         dragStateRef.current = 'waiting';
 
         // 前のアニメーションを削除
-        setScreenClass('');
+        // setScreenClass('');
         setCoinRateClasses((prev) => {
           const newStates = [...prev];
           newStates[getCoinIndexRef.current % coinPopupElementCount] = '';
@@ -123,7 +123,7 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
           coinValueRef.current[getCoinIndexRef.current % coinPopupElementCount] =
             lotData.addCoins[getCoinIndexRef.current];
 
-          setScreenClass('animate-nadeneko-screen-shake');
+          //   setScreenClass('animate-nadeneko-screen-shake');
           setCoinRateClasses((prev) => {
             const newStates = [...prev];
             let rateClassNumber = '1';
@@ -251,24 +251,22 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
 
         {/* コインのアニメーション */}
         <div className="nadeneko-coin-popup-position">
-          <ul>
-            {Array.from({ length: coinPopupElementCount }).map((_, index) => (
-              <li
-                key={index}
-                // className={coinRateClasses[index]}
-                style={{
-                  left: `${coinPositionRef.current[index].left}%`,
-                  top: `${coinPositionRef.current[index].top}%`,
-                }}
-              >
-                <div className={coinClasses[index]}>
-                  <p className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-3/5 text-3xl font-bold text-shadow-huchi">
-                    {coinValueRef.current[index]}
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ul>
+          {Array.from({ length: coinPopupElementCount }).map((_, index) => (
+            <div
+              key={index}
+              className={`absolute ${coinRateClasses[index]}`}
+              style={{
+                left: `${coinPositionRef.current[index].left}%`,
+                top: `${coinPositionRef.current[index].top}%`,
+              }}
+            >
+              <div className={coinClasses[index]}>
+                <p className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-3/5 text-3xl font-bold text-shadow-huchi">
+                  {coinValueRef.current[index]}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
