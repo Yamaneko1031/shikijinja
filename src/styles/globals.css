@@ -6,6 +6,9 @@
 @import './utilities.css';
 @import './leaf.css';
 @import './buttons.css';
+@import './nadeneko.css';
+@import './texts.css';
+
 /* デバッグ用 */
 section {
   border: 1px dashed red; /* ← お好みで dashed / solid / dotted */

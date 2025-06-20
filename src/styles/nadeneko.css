@@ -1,0 +1,153 @@
+@keyframes nadeneko-coin-scale-1 {
+  0% {
+    transform: scale(0);
+  }
+  20%,
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes nadeneko-coin-scale-2 {
+  0% {
+    transform: scale(0);
+  }
+  20%,
+  100% {
+    transform: scale(1.2);
+  }
+}
+@keyframes nadeneko-coin-scale-3 {
+  0% {
+    transform: scale(0);
+  }
+  20%,
+  100% {
+    transform: scale(1.5);
+  }
+}
+@keyframes nadeneko-coin-scale-4 {
+  0% {
+    transform: scale(0);
+  }
+  20%,
+  100% {
+    transform: scale(2);
+  }
+}
+@keyframes nadeneko-coin-scale-5 {
+  0% {
+    transform: scale(0);
+  }
+  20%,
+  100% {
+    transform: scale(3);
+  }
+}
+
+.animate-nadeneko-coin-rate-1 {
+  animation: nadeneko-coin-scale-1 var(--coin-popup-duration) ease-in-out forwards;
+}
+.animate-nadeneko-coin-rate-2 {
+  animation: nadeneko-coin-scale-2 var(--coin-popup-duration) ease-in-out forwards;
+}
+.animate-nadeneko-coin-rate-3 {
+  animation: nadeneko-coin-scale-3 var(--coin-popup-duration) ease-in-out forwards;
+}
+.animate-nadeneko-coin-rate-4 {
+  animation: nadeneko-coin-scale-4 var(--coin-popup-duration) ease-in-out forwards;
+}
+.animate-nadeneko-coin-rate-5 {
+  animation: nadeneko-coin-scale-5 var(--coin-popup-duration) ease-in-out forwards;
+}
+
+@keyframes nadeneko-coin-popup {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 1rem) rotateY(0deg);
+  }
+  20%,
+  85% {
+    opacity: 1;
+    transform: translate(-50%, 0) rotateY(360deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -0.625rem) rotateY(360deg);
+  }
+}
+
+.animate-nadeneko-coin-popup {
+  position: absolute;
+  /* 背景画像を指定する */
+  background-image: url('/images/icon/icon_coin_nadeneko.png');
+  background-size: cover;
+  background-position: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  animation: nadeneko-coin-popup var(--coin-popup-duration) ease-in-out forwards;
+}
+
+.nadeneko-coin-popup-position {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.nadeneko-coin-popup-position li {
+  position: absolute;
+}
+
+@keyframes nadeneko-finish {
+  0% {
+    transform: scale(1) rotateZ(0deg);
+  }
+  100% {
+    transform: scale(0) rotateZ(360deg);
+  }
+}
+
+.animate-nadeneko-screen-finish {
+  transform-origin: center center;
+  animation: nadeneko-finish 0.4s ease-out forwards;
+}
+
+/* 画面全体の振動エフェクト */
+.animate-nadeneko-screen-shake {
+  animation: shake 0.1s ease-in-out;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  10% {
+    transform: translateX(-0.05rem) translateY(-0.07rem);
+  }
+  30% {
+    transform: translateX(0.07rem) translateY(0.07rem);
+  }
+  50% {
+    transform: translateX(-0.05rem) translateY(-0.04rem);
+  }
+  70% {
+    transform: translateX(0.03rem) translateY(0.01rem);
+  }
+  90% {
+    transform: translateX(-0.02rem) translateY(-0.01rem);
+  }
+}
+
+@keyframes nadeneko-result {
+  0% {
+    transform: scale(0) rotateZ(360deg);
+  }
+  100% {
+    transform: scale(1) rotateZ(0deg);
+  }
+}
+
+.animate-nadeneko-result {
+  transform-origin: center center;
+  animation: nadeneko-result 0.4s ease-out forwards;
+}

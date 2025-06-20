@@ -1,15 +1,48 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import TextReveal from '@/components/_shared/TextReveal';
 import { getTokuCoin } from '@/utils/toku';
 import { Button } from '../_shared/Button';
 import Image from 'next/image';
 import { SectionProps } from '@/types/section';
+import { apiFetch } from '@/lib/api';
+import { NadenekoResponse } from '@/types/nadeneko';
+import Modal from '../_shared/Modal';
+import NadenekoModal from './NadenekoModal';
 
 const NadenekoSection = (props: SectionProps) => {
-  const handlePostWish = () => {
-    props.handleTokuGet('nadeneko');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const lotDataRef = useRef<NadenekoResponse | null>(null);
+
+  /* ----------------- submit -------------- */
+  const handlePet = async () => {
+    setIsLoading(true);
+
+    try {
+      const data = await apiFetch<NadenekoResponse>('/api/nadeneko', {
+        method: 'POST',
+      });
+
+      // const data = {
+      //   totalAddCoin: 0,
+      //   addCoins: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+      // };
+
+      lotDataRef.current = data;
+      setIsModalOpen(true);
+
+      // props.handleAddCoin(data.totalAddCoin);
+      // console.log(data.addCoins);
+
+      //   props.handleTokuGet('ema_post');
+    } catch (err) {
+      console.error('nadeneko error:', err);
+      alert('なでるのに失敗しました。再度お試しください。');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -42,9 +75,10 @@ const NadenekoSection = (props: SectionProps) => {
             variant="positive"
             size="lg"
             onClick={() => {
-              handlePostWish();
+              handlePet();
             }}
             className="w-full max-w-md flex flex-col pt-2 pb-2"
+            disabled={isLoading || isModalOpen}
           >
             <div className="text-xl font-bold">なでる</div>
             <div className="flex flex-row items-center">
@@ -61,6 +95,19 @@ const NadenekoSection = (props: SectionProps) => {
           </Button>
         </div>
       </div>
+
+      <Modal
+        isOpen={isModalOpen}
+        className="absolute top-0 left-0 min-h-[100lvh] min-w-[100vw] bg-transparent overscroll-contain"
+      >
+        {lotDataRef.current && (
+          <NadenekoModal
+            onClose={() => setIsModalOpen(false)}
+            lotData={lotDataRef.current}
+            handleAddCoin={props.handleAddCoin}
+          />
+        )}
+      </Modal>
     </>
   );
 };
