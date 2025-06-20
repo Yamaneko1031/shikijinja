@@ -101,6 +101,9 @@ export default function DebugLogDialog({ user, handleTokuGet, handleTokuUsed }: 
             >
               🔄 User
             </button>
+            <a href="/admin" className="text-blue-500 hover:underline">
+              admin
+            </a>
 
             {appTime && (
               <p className="text-sm text-gray-400 mb-4">App Time: {appTime.toLocaleString()}</p>

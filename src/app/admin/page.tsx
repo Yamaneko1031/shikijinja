@@ -22,6 +22,11 @@ export default function AdminTopPage() {
             � ご神託の一覧ページへ
           </a>
         </li>
+        <li>
+          <a href="/admin/trial" className="text-blue-500 hover:underline">
+            🔄 お試しページへ
+          </a>
+        </li>
       </ul>
     </div>
   );
