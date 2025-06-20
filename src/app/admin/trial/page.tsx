@@ -1,5 +1,6 @@
 'use client';
 
+import NadenekoSeat from '@/components/Nadeneko/NadenekoSeat';
 import { useState } from 'react';
 
 export default function TrialPage() {
@@ -24,7 +25,7 @@ export default function TrialPage() {
       <button className="bg-blue-500 text-white px-4 py-2 rounded-md" onClick={handleClick}>
         ボタン
       </button>
-      <div className="absolute top-100 left-0 w-[30rem] h-[30rem] bg-amber-950">
+      <div className="absolute top-50 left-0 w-[30rem] h-[30rem] bg-amber-950">
         <div className="top-20 left-20 animate-nadeneko-coin-popup"></div>
         <div className="top-20 left-40 animate-nadeneko-coin-popup2"></div>
         <div className="top-20 left-60 animate-nadeneko-coin-popup3"></div>
@@ -34,6 +35,15 @@ export default function TrialPage() {
         <div className={`top-60 left-20 ${classState1}`}>1</div>
         <div className={`top-60 left-40 ${classState2}`}>2</div>
         <div className={`top-60 left-60 ${classState3}`}>3</div>
+      </div>
+      <div className="absolute top-150 left-0 w-[30rem] h-[30rem]">
+        <NadenekoSeat
+          lotData={{
+            totalAddCoin: 10,
+            addCoins: [1, 2, 1, 2, 5, 10, 30, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2],
+          }}
+          handleFinished={() => {}}
+        />
       </div>
     </div>
   );
