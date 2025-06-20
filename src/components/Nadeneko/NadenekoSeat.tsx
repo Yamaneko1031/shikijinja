@@ -255,7 +255,7 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
             {Array.from({ length: coinPopupElementCount }).map((_, index) => (
               <li
                 key={index}
-                className={coinRateClasses[index]}
+                // className={coinRateClasses[index]}
                 style={{
                   left: `${coinPositionRef.current[index].left}%`,
                   top: `${coinPositionRef.current[index].top}%`,
