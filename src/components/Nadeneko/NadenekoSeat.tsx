@@ -60,16 +60,14 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
     })();
   }, []);
 
-  const eventStop = (e: WheelEvent | TouchEvent) => {
-    e.preventDefault();
-  };
-
   // ドラッグ開始イベント
   const handleMouseDown = (e: React.MouseEvent) => {
     draggingRef.current = true;
     startPosRef.current = { x: e.clientX, y: e.clientY };
   };
+
   const handleTouchStart = (e: React.TouchEvent) => {
+    e.preventDefault(); // iOSでの問題を防ぐ
     const touch = e.touches[0];
     draggingRef.current = true;
     startPosRef.current = { x: touch.clientX, y: touch.clientY };
@@ -78,8 +76,13 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
   // ドラッグ中の移動処理
   useEffect(() => {
     const handleMove = (e: MouseEvent | TouchEvent) => {
+      // イベントの伝播を止める（重要）
+      e.preventDefault();
+      e.stopPropagation();
+
       if (draggingRef.current === false) return;
       if (getCoinIndexRef.current >= lotData.addCoins.length) return;
+
       // ドラッグした移動量を取得
       const clientX = 'touches' in e ? e.touches[0].clientX : (e as MouseEvent).clientX;
       const clientY = 'touches' in e ? e.touches[0].clientY : (e as MouseEvent).clientY;
@@ -184,24 +187,23 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
 
       startPosRef.current = { x: clientX, y: clientY };
     };
-    const handleEnd = () => {
+
+    const handleEnd = (e: MouseEvent | TouchEvent) => {
+      e.preventDefault();
       draggingRef.current = false;
     };
+
+    // イベントリスナーを統合（重複を避ける）
     window.addEventListener('mousemove', handleMove);
     window.addEventListener('mouseup', handleEnd);
     window.addEventListener('touchmove', handleMove, { passive: false });
-    window.addEventListener('touchend', handleEnd);
+    window.addEventListener('touchend', handleEnd, { passive: false });
 
-    window.addEventListener('wheel', eventStop, { passive: false });
-    window.addEventListener('touchmove', eventStop, { passive: false });
     return () => {
       window.removeEventListener('mousemove', handleMove);
       window.removeEventListener('mouseup', handleEnd);
       window.removeEventListener('touchmove', handleMove);
       window.removeEventListener('touchend', handleEnd);
-
-      window.removeEventListener('wheel', eventStop);
-      window.removeEventListener('touchmove', eventStop);
     };
   }, [handleFinished, lotData.addCoins]);
 
@@ -217,6 +219,7 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
         }
         onMouseDown={(e) => handleMouseDown(e)}
         onTouchStart={(e) => handleTouchStart(e)}
+        style={{ touchAction: 'none' }} // 追加: ブラウザのデフォルトタッチ動作を無効化
       >
         {/* <div className="absolute top-15 left-20 text-center text-white font-bold text-xl text-shadow-huchi2">
           にゃんー！
@@ -239,21 +242,13 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
         <div className="absolute top-45 left-20 text-center text-white font-bold text-xl text-shadow-huchi2">
           にゃにゃ！
         </div> */}
-
         <div className="absolute top-10 left-0 w-full h-full text-center text-white font-bold text-4xl text-shadow-huchi2">
           ↓なでて！
         </div>
-        {/* <div
-          className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 text-center text-white font-bold text-7xl text-shadow-huchi2 whitespace-nowrap"
-          style={{
-            transform: 'rotateZ(-10deg)',
-            transformOrigin: 'center center',
-          }}
-        >
-          満足にゃ！
-        </div> */}
+
         {/* なでる判定領域 */}
         <div className="absolute top-[26%] left-[26%] w-[48%] h-[68%]" ref={targetAreaRef}></div>
+
         {/* コインのアニメーション */}
         <div className="nadeneko-coin-popup-position">
           <ul>
