@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+
 export default function AdminTopPage() {
   return (
     <div className="p-8">
@@ -8,24 +10,29 @@ export default function AdminTopPage() {
 
       <ul className="mt-6 space-y-2">
         <li>
-          <a href="/admin/prompt" className="text-blue-500 hover:underline">
+          <Link href="/" className="text-blue-500 hover:underline">
+            神社へ
+          </Link>
+        </li>
+        <li>
+          <Link href="/admin/prompt" className="text-blue-500 hover:underline">
             🐾 プロンプトの管理ページへ
-          </a>
+          </Link>
         </li>
         <li>
-          <a href="/admin/ema" className="text-blue-500 hover:underline">
+          <Link href="/admin/ema" className="text-blue-500 hover:underline">
             📝 絵馬の一覧ページへ
-          </a>
+          </Link>
         </li>
         <li>
-          <a href="/admin/shintaku" className="text-blue-500 hover:underline">
+          <Link href="/admin/shintaku" className="text-blue-500 hover:underline">
             � ご神託の一覧ページへ
-          </a>
+          </Link>
         </li>
         <li>
-          <a href="/admin/trial" className="text-blue-500 hover:underline">
+          <Link href="/admin/trial" className="text-blue-500 hover:underline">
             🔄 お試しページへ
-          </a>
+          </Link>
         </li>
       </ul>
     </div>
