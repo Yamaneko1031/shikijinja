@@ -73,23 +73,22 @@
 @keyframes nadeneko-coin-popup {
   0% {
     opacity: 0;
-    transform: translate(-50%, 1rem) rotateY(0deg);
+    transform: translateY(1rem) rotateY(0deg);
   }
   20%,
   85% {
     opacity: 1;
-    transform: translate(-50%, 0) rotateY(360deg);
+    transform: translateY(0) rotateY(360deg);
   }
   100% {
     opacity: 0;
-    transform: translate(-50%, -0.625rem) rotateY(360deg);
+    transform: translateY(-0.625rem) rotateY(360deg);
   }
 }
 
 .animate-nadeneko-coin-popup {
   position: absolute;
   will-change: transform, opacity;
-  transform: translate3d(0, 0, 0);
   /* 背景画像を指定する */
   background-image: url('/images/icon/icon_coin_nadeneko.png');
   background-size: cover;
