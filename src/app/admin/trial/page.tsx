@@ -3,12 +3,18 @@
 import { useState } from 'react';
 
 export default function TrialPage() {
-  const [classState, setClassState] = useState<string>('hidden');
+  const [classState1, setClassState1] = useState<string>('hidden');
+  const [classState2, setClassState2] = useState<string>('hidden');
+  const [classState3, setClassState3] = useState<string>('hidden');
 
   const handleClick = () => {
-    setClassState('hidden');
+    setClassState1('hidden');
+    setClassState2('hidden');
+    setClassState3('hidden');
     requestAnimationFrame(() => {
-      setClassState('animate-nadeneko-coin-popup');
+      setClassState1('animate-nadeneko-coin-popup');
+      setClassState2('animate-nadeneko-coin-popup2');
+      setClassState3('animate-nadeneko-coin-popup3');
     });
   };
 
@@ -20,8 +26,9 @@ export default function TrialPage() {
       </button>
       <div className="absolute top-100 left-0 w-[30rem] h-[30rem] bg-amber-950">
         <div className="absolute top-20 left-20 animate-nadeneko-coin-popup"></div>
-        <div className={`absolute top-40 left-20 ${classState}`}></div>
-        <div className={`absolute top-40 left-40 ${classState}`}></div>
+        <div className={`absolute top-40 left-20 ${classState1}`}></div>
+        <div className={`absolute top-40 left-40 ${classState2}`}></div>
+        <div className={`absolute top-40 left-60 ${classState3}`}></div>
       </div>
     </div>
   );
