@@ -25,10 +25,15 @@ export default function TrialPage() {
         ボタン
       </button>
       <div className="absolute top-100 left-0 w-[30rem] h-[30rem] bg-amber-950">
-        <div className="absolute top-20 left-20 animate-nadeneko-coin-popup"></div>
-        <div className={`absolute top-40 left-20 ${classState1}`}></div>
-        <div className={`absolute top-40 left-40 ${classState2}`}></div>
-        <div className={`absolute top-40 left-60 ${classState3}`}></div>
+        <div className="top-20 left-20 animate-nadeneko-coin-popup"></div>
+        <div className="top-20 left-40 animate-nadeneko-coin-popup2"></div>
+        <div className="top-20 left-60 animate-nadeneko-coin-popup3"></div>
+        <div className={`top-40 left-20 ${classState1}`}>1</div>
+        <div className={`top-40 left-40 ${classState2}`}>2</div>
+        <div className={`top-40 left-60 ${classState3}`}>3</div>
+        <div className={`top-60 left-20 ${classState1}`}>1</div>
+        <div className={`top-60 left-40 ${classState2}`}>2</div>
+        <div className={`top-60 left-60 ${classState3}`}>3</div>
       </div>
     </div>
   );
