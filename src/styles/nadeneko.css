@@ -22,35 +22,8 @@
     transform: translate3d(0, 0, 0) scaleX(1);
   }
   100% {
-    opacity: 0;
-    transform: translate3d(0, -0.625rem, 0) scaleX(1);
-  }
-}
-@-webkit-keyframes nadeneko-coin-popup {
-  0% {
-    opacity: 0;
-    -webkit-transform: translate3d(0, 1rem, 0) scaleX(1);
-  }
-  5% {
-    opacity: 0.25;
-    -webkit-transform: translate3d(0, 0.75rem, 0) scaleX(0);
-  }
-  10% {
-    opacity: 0.5;
-    -webkit-transform: translate3d(0, 0.5rem, 0) scaleX(1);
-  }
-  15% {
-    opacity: 0.75;
-    -webkit-transform: translate3d(0, 0.25rem, 0) scaleX(0);
-  }
-  20%,
-  85% {
     opacity: 1;
-    -webkit-transform: translate3d(0, 0, 0) scaleX(1);
-  }
-  100% {
-    opacity: 0;
-    -webkit-transform: translate3d(0, -0.625rem, 0) scaleX(1);
+    transform: translate3d(0, -0.625rem, 0) scaleX(1);
   }
 }
 
@@ -58,7 +31,7 @@
   animation: nadeneko-coin-popup var(--coin-popup-duration, 600ms) ease-in-out forwards;
 }
 
-.coin {
+.nadeneko-coin {
   position: absolute;
   width: 3.5rem;
   height: 3.5rem;
@@ -68,7 +41,8 @@
 }
 
 @keyframes nadeneko-finish {
-  0% {
+  0%,
+  90% {
     transform: scale(1) rotateZ(0deg);
   }
   100% {
@@ -78,7 +52,7 @@
 
 .animate-nadeneko-screen-finish {
   transform-origin: center center;
-  animation: nadeneko-finish 0.4s ease-out forwards;
+  animation: nadeneko-finish 2s ease-out forwards;
 }
 
 /* 画面全体の振動エフェクト */

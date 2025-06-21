@@ -56,10 +56,10 @@ export default function TrialPage() {
         <div className="top-5 left-40 animate-nadeneko-coin-popup2"></div>
         <div className="top-5 left-60 animate-nadeneko-coin-popup3"></div> */}
 
-        <div className={`top-20 left-10 coin ${classState1}`}>1</div>
-        <div className={`top-20 left-30 coin ${classState2}`}>2</div>
-        <div className={`top-20 left-50 coin ${classState3}`}>3</div>
-        <div className={`top-20 left-70 coin ${classState4}`}>4</div>
+        <div className={`top-20 left-10 nadeneko-coin ${classState1}`}>1</div>
+        <div className={`top-20 left-30 nadeneko-coin ${classState2}`}>2</div>
+        <div className={`top-20 left-50 nadeneko-coin ${classState3}`}>3</div>
+        <div className={`top-20 left-70 nadeneko-coin ${classState4}`}>4</div>
       </div>
       <div className="absolute top-80 left-0 w-[30rem] h-[30rem]">
         <NadenekoSeat

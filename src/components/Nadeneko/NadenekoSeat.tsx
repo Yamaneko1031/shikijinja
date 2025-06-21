@@ -11,7 +11,7 @@ type Props = {
 type DragState = 'standby' | 'waiting' | 'finished';
 
 const waitTime = 100;
-const finishedTime = 500;
+const finishedTime = 2000;
 
 const coinPopupElementCount = 10;
 const coinOffsetLeftRange = 16;
@@ -42,7 +42,6 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
   const dragStateRef = useRef<DragState>('standby');
   const [screenClass, setScreenClass] = useState('');
   const [coinClasses, setCoinClasses] = useState(Array(coinPopupElementCount).fill(''));
-  //   const [coinRateClasses, setCoinRateClasses] = useState(Array(coinPopupElementCount).fill(''));
   const coinValueRef = useRef(Array(coinPopupElementCount).fill(0));
   const coinPositionRef = useRef(Array(coinPopupElementCount).fill({ left: 0, top: 0, rate: 1 }));
   const randomPositionIndeicesRef = useRef(
@@ -103,13 +102,6 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
         console.log(getCoinIndexRef.current, dragStateRef.current, isInArea);
         dragStateRef.current = 'waiting';
 
-        // 前のアニメーションを削除
-        // setScreenClass('');
-        // setCoinRateClasses((prev) => {
-        //   const newStates = [...prev];
-        //   newStates[getCoinIndexRef.current % coinPopupElementCount] = '';
-        //   return newStates;
-        // });
         setCoinClasses((prev) => {
           const newStates = [...prev];
           newStates[getCoinIndexRef.current % coinPopupElementCount] = '';
@@ -121,13 +113,6 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
           coinValueRef.current[getCoinIndexRef.current % coinPopupElementCount] =
             lotData.addCoins[getCoinIndexRef.current];
 
-          //   setScreenClass('animate-nadeneko-screen-shake');
-          //   setCoinRateClasses((prev) => {
-          //     const newStates = [...prev];
-          //     newStates[getCoinIndexRef.current % coinPopupElementCount] =
-          //       `animate-nadeneko-coin-rate-${rateClassNumber}`;
-          //     return newStates;
-          //   });
           setCoinClasses((prev) => {
             const newStates = [...prev];
             newStates[getCoinIndexRef.current % coinPopupElementCount] = `coin--popup`;
@@ -215,7 +200,7 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
       {/* ドラッグ領域 */}
       <div
         className={
-          'absolute max-w-[30rem] w-[100vw] aspect-square bg-[url("/images/nadeneko/neko_action.png")] bg-[length:100%_auto] bg-no-repeat rounded-md border-4 border-[rgba(40,20,0,0.5)] ' +
+          'absolute max-w-[30rem] min-w-[25rem] w-[100vw] aspect-square bg-[url("/images/nadeneko/neko_action.png")] bg-[length:100%_auto] bg-no-repeat rounded-md border-4 border-[rgba(40,20,0,0.5)] ' +
           screenClass
         }
         onMouseDown={(e) => handleMouseDown(e)}
@@ -262,7 +247,7 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
                 transform: `scale(${coinPositionRef.current[index].rate})`,
               }}
             >
-              <div className={`coin ${coinClasses[index]}`}>
+              <div className={`nadeneko-coin -translate-x-1/2 ${coinClasses[index]}`}>
                 <p className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-3/5 text-3xl font-bold text-shadow-huchi">
                   {coinValueRef.current[index]}
                 </p>
@@ -270,6 +255,14 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
             </div>
           ))}
         </div>
+
+        {dragStateRef.current === 'finished' && (
+          <div className="absolute w-full h-full flex items-center justify-center">
+            <div className="-rotate-10 text-white font-bold text-7xl text-shadow-huchi2 whitespace-nowrap">
+              満足にゃ！
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
