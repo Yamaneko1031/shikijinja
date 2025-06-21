@@ -18,19 +18,19 @@ export default function TrialPage() {
   const handleClick2 = () => {
     setClassState2('');
     setTimeout(() => {
-      setClassState2('animate-nadeneko-coin-popup');
+      setClassState2('animate-nadeneko-coin-popup-2');
     }, 10);
   };
   const handleClick3 = () => {
     setClassState3('');
     setTimeout(() => {
-      setClassState3('animate-nadeneko-coin-popup');
+      setClassState3('animate-nadeneko-coin-popup-3');
     }, 10);
   };
   const handleClick4 = () => {
     setClassState4('');
     setTimeout(() => {
-      setClassState4('animate-nadeneko-coin-popup');
+      setClassState4('animate-nadeneko-coin-popup-4');
     }, 10);
   };
 
@@ -52,9 +52,9 @@ export default function TrialPage() {
         ボタン
       </button>
       <div className="absolute top-30 left-0 w-[30rem] h-[20rem] bg-amber-950">
-        <div className="top-5 left-20 animate-nadeneko-coin-popup"></div>
+        {/* <div className="top-5 left-20 animate-nadeneko-coin-popup"></div>
         <div className="top-5 left-40 animate-nadeneko-coin-popup2"></div>
-        <div className="top-5 left-60 animate-nadeneko-coin-popup3"></div>
+        <div className="top-5 left-60 animate-nadeneko-coin-popup3"></div> */}
 
         {/* <div
           key={1}
