@@ -117,7 +117,7 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
         });
 
         // 新しいアニメーションを設定
-        requestAnimationFrame(() => {
+        setTimeout(() => {
           coinValueRef.current[getCoinIndexRef.current % coinPopupElementCount] =
             lotData.addCoins[getCoinIndexRef.current];
 
@@ -180,7 +180,7 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
               }, finishedTime);
             }
           }, waitTime);
-        });
+        }, 10);
       }
 
       startPosRef.current = { x: clientX, y: clientY };
