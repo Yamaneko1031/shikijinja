@@ -23,7 +23,7 @@
   background-position: center;
   width: 3.5rem;
   height: 3.5rem;
-  animation: nadeneko-coin-popup var(--coin-popup-duration) ease-in-out forwards;
+  animation: nadeneko-coin-popup 2s ease-in-out forwards;
 }
 
 @keyframes nadeneko-coin-popup-2 {
@@ -51,7 +51,7 @@
   background-position: center;
   width: 3.5rem;
   height: 3.5rem;
-  animation: nadeneko-coin-popup-2 var(--coin-popup-duration) ease-in-out forwards;
+  animation: nadeneko-coin-popup-2 2s ease-in-out forwards;
 }
 
 @keyframes nadeneko-coin-popup-3 {
@@ -79,7 +79,7 @@
   background-position: center;
   width: 3.5rem;
   height: 3.5rem;
-  animation: nadeneko-coin-popup-3 var(--coin-popup-duration) ease-in-out forwards;
+  animation: nadeneko-coin-popup-3 2s ease-in-out forwards;
 }
 
 @keyframes nadeneko-coin-popup-4 {
@@ -107,7 +107,7 @@
   background-position: center;
   width: 3.5rem;
   height: 3.5rem;
-  animation: nadeneko-coin-popup-4 var(--coin-popup-duration) ease-in-out forwards;
+  animation: nadeneko-coin-popup-4 2s ease-in-out forwards;
 }
 
 @keyframes nadeneko-finish {
