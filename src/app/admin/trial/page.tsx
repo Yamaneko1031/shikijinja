@@ -12,25 +12,25 @@ export default function TrialPage() {
   const handleClick1 = () => {
     setClassState1('');
     setTimeout(() => {
-      setClassState1('animate-nadeneko-coin-popup');
+      setClassState1('coin--popup');
     }, 10);
   };
   const handleClick2 = () => {
     setClassState2('');
     setTimeout(() => {
-      setClassState2('animate-nadeneko-coin-popup-2');
+      setClassState2('coin--popup');
     }, 10);
   };
   const handleClick3 = () => {
     setClassState3('');
     setTimeout(() => {
-      setClassState3('animate-nadeneko-coin-popup-3');
+      setClassState3('coin--popup');
     }, 10);
   };
   const handleClick4 = () => {
     setClassState4('');
     setTimeout(() => {
-      setClassState4('animate-nadeneko-coin-popup-4');
+      setClassState4('coin--popup');
     }, 10);
   };
 
@@ -56,31 +56,10 @@ export default function TrialPage() {
         <div className="top-5 left-40 animate-nadeneko-coin-popup2"></div>
         <div className="top-5 left-60 animate-nadeneko-coin-popup3"></div> */}
 
-        {/* <div
-          key={1}
-          className="absolute"
-          style={{
-            left: `20%`,
-            top: `20%`,
-            transform: `scale(2)`,
-          }}
-        >
-          <div className={classState1}></div>
-        </div> */}
-        {/* {table.map((value, index) => (
-          <div
-            key={index}
-            className={`top-40 left-${value} ${index === 0 ? classState1 : index === 1 ? classState2 : index === 2 ? classState3 : classState4}`}
-          >
-            <p className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-3/5 text-3xl font-bold text-shadow-huchi">
-              {10}
-            </p>
-          </div>
-        ))} */}
-        <div className={`top-20 left-10 ${classState1}`}>1</div>
-        <div className={`top-20 left-30 ${classState2}`}>2</div>
-        <div className={`top-20 left-50 ${classState3}`}>3</div>
-        <div className={`top-20 left-70 ${classState4}`}>4</div>
+        <div className={`top-20 left-10 coin ${classState1}`}>1</div>
+        <div className={`top-20 left-30 coin ${classState2}`}>2</div>
+        <div className={`top-20 left-50 coin ${classState3}`}>3</div>
+        <div className={`top-20 left-70 coin ${classState4}`}>4</div>
       </div>
       <div className="absolute top-80 left-0 w-[30rem] h-[30rem]">
         <NadenekoSeat
