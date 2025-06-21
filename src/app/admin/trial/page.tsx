@@ -4,31 +4,31 @@ import NadenekoSeat from '@/components/Nadeneko/NadenekoSeat';
 import { useState } from 'react';
 
 export default function TrialPage() {
-  const [classState1, setClassState1] = useState<string>('hidden');
-  const [classState2, setClassState2] = useState<string>('hidden');
-  const [classState3, setClassState3] = useState<string>('hidden');
-  const [classState4, setClassState4] = useState<string>('hidden');
+  const [classState1, setClassState1] = useState<string>('');
+  const [classState2, setClassState2] = useState<string>('');
+  const [classState3, setClassState3] = useState<string>('');
+  const [classState4, setClassState4] = useState<string>('');
 
   const handleClick1 = () => {
-    setClassState1('hidden');
+    setClassState1('');
     requestAnimationFrame(() => {
       setClassState1('animate-nadeneko-coin-popup');
     });
   };
   const handleClick2 = () => {
-    setClassState2('hidden');
+    setClassState2('');
     requestAnimationFrame(() => {
       setClassState2('animate-nadeneko-coin-popup');
     });
   };
   const handleClick3 = () => {
-    setClassState3('hidden');
+    setClassState3('');
     requestAnimationFrame(() => {
       setClassState3('animate-nadeneko-coin-popup');
     });
   };
   const handleClick4 = () => {
-    setClassState4('hidden');
+    setClassState4('');
     requestAnimationFrame(() => {
       setClassState4('animate-nadeneko-coin-popup');
     });
