@@ -41,7 +41,7 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
   const getCoinIndexRef = useRef(0);
   const dragStateRef = useRef<DragState>('standby');
   const [screenClass, setScreenClass] = useState('');
-  const [coinClasses, setCoinClasses] = useState(Array(coinPopupElementCount).fill('hidden'));
+  const [coinClasses, setCoinClasses] = useState(Array(coinPopupElementCount).fill(''));
   //   const [coinRateClasses, setCoinRateClasses] = useState(Array(coinPopupElementCount).fill(''));
   const coinValueRef = useRef(Array(coinPopupElementCount).fill(0));
   const coinPositionRef = useRef(Array(coinPopupElementCount).fill({ left: 0, top: 0, rate: 1 }));
@@ -112,7 +112,7 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
         // });
         setCoinClasses((prev) => {
           const newStates = [...prev];
-          newStates[getCoinIndexRef.current % coinPopupElementCount] = 'hidden';
+          newStates[getCoinIndexRef.current % coinPopupElementCount] = '';
           return newStates;
         });
 
@@ -130,8 +130,7 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
           //   });
           setCoinClasses((prev) => {
             const newStates = [...prev];
-            newStates[getCoinIndexRef.current % coinPopupElementCount] =
-              `animate-nadeneko-coin-popup`;
+            newStates[getCoinIndexRef.current % coinPopupElementCount] = `coin--popup`;
             return newStates;
           });
 
@@ -263,7 +262,7 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
                 transform: `scale(${coinPositionRef.current[index].rate})`,
               }}
             >
-              <div className={coinClasses[index]}>
+              <div className={`coin ${coinClasses[index]}`}>
                 <p className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-3/5 text-3xl font-bold text-shadow-huchi">
                   {coinValueRef.current[index]}
                 </p>

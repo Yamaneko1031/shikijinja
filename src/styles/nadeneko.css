@@ -1,38 +1,5 @@
-@keyframes nadeneko-coin-popup {
-  0% {
-    opacity: 0;
-    transform: translateY(1rem) rotateY(0deg) translateZ(0.01px);
-  }
-  20%,
-  85% {
-    opacity: 1;
-    transform: translateY(0) rotateY(360deg) translateZ(0.01px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(-0.625rem) rotateY(360deg) translateZ(0.01px);
-  }
-}
-
-.animate-nadeneko-coin-popup {
-  position: absolute;
-  will-change: transform, opacity;
-  /* 背景画像を指定する */
-  background-image: url('/images/icon/icon_coin_nadeneko.png');
-  background-size: cover;
-  background-position: center;
-  width: 3.5rem;
-  height: 3.5rem;
-  animation: nadeneko-coin-popup var(--coin-popup-duration) ease-in-out forwards;
-}
-
-/* アニメーションを付与する時だけクラスを追加 */
-.coin--popup {
-  animation: nadeneko-coin-popup-2 var(--coin-popup-duration, 600ms) ease-in-out forwards;
-}
-
 /* Safari 最適化用に -webkit- 付きも併記 */
-@keyframes nadeneko-coin-popup-2 {
+@keyframes nadeneko-coin-popup {
   0% {
     opacity: 0;
     transform: translate3d(0, 1rem, 0) scaleX(1);
@@ -59,7 +26,7 @@
     transform: translate3d(0, -0.625rem, 0) scaleX(1);
   }
 }
-@-webkit-keyframes nadeneko-coin-popup-2 {
+@-webkit-keyframes nadeneko-coin-popup {
   0% {
     opacity: 0;
     -webkit-transform: translate3d(0, 1rem, 0) scaleX(1);
@@ -85,6 +52,10 @@
     opacity: 1;
     -webkit-transform: translate3d(0, -0.625rem, 0) scaleX(1);
   }
+}
+
+.coin--popup {
+  animation: nadeneko-coin-popup var(--coin-popup-duration, 600ms) ease-in-out forwards;
 }
 
 .coin {
