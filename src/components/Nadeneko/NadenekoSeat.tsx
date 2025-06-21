@@ -13,7 +13,7 @@ type DragState = 'standby' | 'waiting' | 'finished';
 const waitTime = 100;
 const finishedTime = 500;
 
-const coinPopupElementCount = 5;
+const coinPopupElementCount = 10;
 const coinOffsetLeftRange = 16;
 const coinOffsetTopRange = 16;
 const coinBasePositions = [
