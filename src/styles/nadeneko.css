@@ -23,8 +23,21 @@
   background-position: center;
   width: 3.5rem;
   height: 3.5rem;
-  transform-origin: center center;
-  animation: nadeneko-coin-popup var(--coin-popup-duration) ease-in-out forwards;
+  /* animation: nadeneko-coin-popup var(--coin-popup-duration) ease-in-out forwards; */
+  /* } */
+  /* 初期状態 */
+  opacity: 1;
+  transform: translateY(-1rem) rotateY(360deg);
+
+  /* transition設定 */
+  transition:
+    opacity 0.5s ease-in-out,
+    transform 0.5s ease-in-out;
+}
+
+.animate-nadeneko-coin-popup.active {
+  opacity: 1;
+  transform: translateY(-0.625rem) rotateY(360deg) translateZ(0.01px);
 }
 
 @keyframes nadeneko-coin-popup2 {
