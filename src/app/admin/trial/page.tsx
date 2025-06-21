@@ -52,9 +52,9 @@ export default function TrialPage() {
         ボタン
       </button>
       <div className="absolute top-30 left-0 w-[30rem] h-[20rem] bg-amber-950">
-        {/* <div className="top-20 left-20 animate-nadeneko-coin-popup"></div>
-        <div className="top-20 left-40 animate-nadeneko-coin-popup2"></div>
-        <div className="top-20 left-60 animate-nadeneko-coin-popup3"></div> */}
+        <div className="top-5 left-20 animate-nadeneko-coin-popup"></div>
+        <div className="top-5 left-40 animate-nadeneko-coin-popup2"></div>
+        <div className="top-5 left-60 animate-nadeneko-coin-popup3"></div>
 
         {/* <div
           key={1}
