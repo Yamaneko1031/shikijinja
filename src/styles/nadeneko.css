@@ -1,16 +1,16 @@
 @keyframes nadeneko-coin-popup {
   0% {
     opacity: 0;
-    transform: translateY(1rem) rotateY(0deg);
+    transform: translateY(1rem) rotateY(0deg) translateZ(0.01px);
   }
   20%,
   85% {
     opacity: 1;
-    transform: translateY(0) rotateY(360deg);
+    transform: translateY(0) rotateY(360deg) translateZ(0.01px);
   }
   100% {
     opacity: 1;
-    transform: translateY(-0.625rem) rotateY(360deg);
+    transform: translateY(-0.625rem) rotateY(360deg) translateZ(0.01px);
   }
 }
 
