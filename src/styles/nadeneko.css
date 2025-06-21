@@ -45,29 +45,24 @@
 }
 
 .animate-nadeneko-coin-rate-1 {
-  will-change: transform;
-  transform: translate3d(0, 0, 0);
-  animation: nadeneko-coin-scale-1 var(--coin-popup-duration) ease-in-out forwards;
+  transform: scale(1);
+  transform-origin: center center;
 }
 .animate-nadeneko-coin-rate-2 {
-  will-change: transform;
-  transform: translate3d(0, 0, 0);
-  animation: nadeneko-coin-scale-2 var(--coin-popup-duration) ease-in-out forwards;
+  transform: scale(1.2);
+  transform-origin: center center;
 }
 .animate-nadeneko-coin-rate-3 {
-  will-change: transform;
-  transform: translate3d(0, 0, 0);
-  animation: nadeneko-coin-scale-3 var(--coin-popup-duration) ease-in-out forwards;
+  transform: scale(1.5);
+  transform-origin: center center;
 }
 .animate-nadeneko-coin-rate-4 {
-  will-change: transform;
-  transform: translate3d(0, 0, 0);
-  animation: nadeneko-coin-scale-4 var(--coin-popup-duration) ease-in-out forwards;
+  transform: scale(2);
+  transform-origin: center center;
 }
 .animate-nadeneko-coin-rate-5 {
-  will-change: transform;
-  transform: translate3d(0, 0, 0);
-  animation: nadeneko-coin-scale-5 var(--coin-popup-duration) ease-in-out forwards;
+  transform: scale(3);
+  transform-origin: center center;
 }
 
 @keyframes nadeneko-coin-popup {
@@ -81,7 +76,7 @@
     transform: translateY(0) rotateY(360deg);
   }
   100% {
-    opacity: 0;
+    opacity: 1;
     transform: translateY(-0.625rem) rotateY(360deg);
   }
 }
@@ -95,6 +90,7 @@
   background-position: center;
   width: 3.5rem;
   height: 3.5rem;
+  transform-origin: center center;
   animation: nadeneko-coin-popup var(--coin-popup-duration) ease-in-out forwards;
 }
 
@@ -116,6 +112,7 @@
   background-position: center;
   width: 3.5rem;
   height: 3.5rem;
+  transform-origin: center center;
   animation: nadeneko-coin-popup2 var(--coin-popup-duration) ease-in-out forwards;
 }
 
@@ -137,17 +134,8 @@
   background-position: center;
   width: 3.5rem;
   height: 3.5rem;
+  transform-origin: center center;
   animation: nadeneko-coin-popup3 var(--coin-popup-duration) ease-in-out forwards;
-}
-
-.nadeneko-coin-popup-position {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-.nadeneko-coin-popup-position li {
-  position: absolute;
 }
 
 @keyframes nadeneko-finish {

@@ -42,9 +42,9 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
   const dragStateRef = useRef<DragState>('standby');
   const [screenClass, setScreenClass] = useState('');
   const [coinClasses, setCoinClasses] = useState(Array(coinPopupElementCount).fill('hidden'));
-  const [coinRateClasses, setCoinRateClasses] = useState(Array(coinPopupElementCount).fill(''));
+  //   const [coinRateClasses, setCoinRateClasses] = useState(Array(coinPopupElementCount).fill(''));
   const coinValueRef = useRef(Array(coinPopupElementCount).fill(0));
-  const coinPositionRef = useRef(Array(coinPopupElementCount).fill({ left: 0, top: 0 }));
+  const coinPositionRef = useRef(Array(coinPopupElementCount).fill({ left: 0, top: 0, rate: 1 }));
   const randomPositionIndeicesRef = useRef(
     Array.from({ length: coinBasePositions.length }, (_, i) => i)
   );
@@ -60,14 +60,16 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
     })();
   }, []);
 
+  const eventStop = (e: WheelEvent | TouchEvent) => {
+    e.preventDefault();
+  };
+
   // ドラッグ開始イベント
   const handleMouseDown = (e: React.MouseEvent) => {
     draggingRef.current = true;
     startPosRef.current = { x: e.clientX, y: e.clientY };
   };
-
   const handleTouchStart = (e: React.TouchEvent) => {
-    e.preventDefault(); // iOSでの問題を防ぐ
     const touch = e.touches[0];
     draggingRef.current = true;
     startPosRef.current = { x: touch.clientX, y: touch.clientY };
@@ -76,10 +78,6 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
   // ドラッグ中の移動処理
   useEffect(() => {
     const handleMove = (e: MouseEvent | TouchEvent) => {
-      // イベントの伝播を止める（重要）
-      e.preventDefault();
-      e.stopPropagation();
-
       if (draggingRef.current === false) return;
       if (getCoinIndexRef.current >= lotData.addCoins.length) return;
 
@@ -107,11 +105,11 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
 
         // 前のアニメーションを削除
         // setScreenClass('');
-        setCoinRateClasses((prev) => {
-          const newStates = [...prev];
-          newStates[getCoinIndexRef.current % coinPopupElementCount] = '';
-          return newStates;
-        });
+        // setCoinRateClasses((prev) => {
+        //   const newStates = [...prev];
+        //   newStates[getCoinIndexRef.current % coinPopupElementCount] = '';
+        //   return newStates;
+        // });
         setCoinClasses((prev) => {
           const newStates = [...prev];
           newStates[getCoinIndexRef.current % coinPopupElementCount] = 'hidden';
@@ -124,30 +122,12 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
             lotData.addCoins[getCoinIndexRef.current];
 
           //   setScreenClass('animate-nadeneko-screen-shake');
-          setCoinRateClasses((prev) => {
-            const newStates = [...prev];
-            let rateClassNumber = '1';
-            switch (coinValueRef.current[getCoinIndexRef.current % coinPopupElementCount]) {
-              case 1:
-                rateClassNumber = '1';
-                break;
-              case 2:
-                rateClassNumber = '2';
-                break;
-              case 5:
-                rateClassNumber = '3';
-                break;
-              case 10:
-                rateClassNumber = '4';
-                break;
-              case 30:
-                rateClassNumber = '5';
-                break;
-            }
-            newStates[getCoinIndexRef.current % coinPopupElementCount] =
-              `animate-nadeneko-coin-rate-${rateClassNumber}`;
-            return newStates;
-          });
+          //   setCoinRateClasses((prev) => {
+          //     const newStates = [...prev];
+          //     newStates[getCoinIndexRef.current % coinPopupElementCount] =
+          //       `animate-nadeneko-coin-rate-${rateClassNumber}`;
+          //     return newStates;
+          //   });
           setCoinClasses((prev) => {
             const newStates = [...prev];
             newStates[getCoinIndexRef.current % coinPopupElementCount] =
@@ -159,6 +139,24 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
             Math.floor(Math.random() * coinOffsetLeftRange) - coinOffsetLeftRange / 2;
           const randomOffetTop =
             Math.floor(Math.random() * coinOffsetTopRange) - coinOffsetTopRange / 2;
+          let rateValue = 1.0;
+          switch (coinValueRef.current[getCoinIndexRef.current % coinPopupElementCount]) {
+            case 1:
+              rateValue = 1.0;
+              break;
+            case 2:
+              rateValue = 1.2;
+              break;
+            case 5:
+              rateValue = 1.5;
+              break;
+            case 10:
+              rateValue = 2.0;
+              break;
+            case 30:
+              rateValue = 3.0;
+              break;
+          }
           coinPositionRef.current[getCoinIndexRef.current % coinPopupElementCount] = {
             left:
               coinBasePositions[
@@ -168,6 +166,7 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
               coinBasePositions[
                 randomPositionIndeicesRef.current[getCoinIndexRef.current % coinPopupElementCount]
               ].top + randomOffetTop,
+            rate: rateValue,
           };
 
           // 一定期間は待ち状態
@@ -188,26 +187,29 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
       startPosRef.current = { x: clientX, y: clientY };
     };
 
-    const handleEnd = (e: MouseEvent | TouchEvent) => {
-      e.preventDefault();
+    const handleEnd = () => {
       draggingRef.current = false;
     };
 
-    // イベントリスナーを統合（重複を避ける）
     window.addEventListener('mousemove', handleMove);
     window.addEventListener('mouseup', handleEnd);
     window.addEventListener('touchmove', handleMove, { passive: false });
-    window.addEventListener('touchend', handleEnd, { passive: false });
+    window.addEventListener('touchend', handleEnd);
 
+    window.addEventListener('wheel', eventStop, { passive: false });
+    window.addEventListener('touchmove', eventStop, { passive: false });
     return () => {
       window.removeEventListener('mousemove', handleMove);
       window.removeEventListener('mouseup', handleEnd);
       window.removeEventListener('touchmove', handleMove);
       window.removeEventListener('touchend', handleEnd);
+
+      window.removeEventListener('wheel', eventStop);
+      window.removeEventListener('touchmove', eventStop);
     };
   }, [handleFinished, lotData.addCoins]);
 
-  console.log(coinRateClasses);
+  //   console.log(coinRateClasses);
 
   return (
     <div className="relative w-full h-full flex flex-col items-center justify-center">
@@ -254,10 +256,11 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
           {Array.from({ length: coinPopupElementCount }).map((_, index) => (
             <div
               key={index}
-              className={`absolute ${coinRateClasses[index]}`}
+              className="absolute"
               style={{
                 left: `${coinPositionRef.current[index].left}%`,
                 top: `${coinPositionRef.current[index].top}%`,
+                transform: `scale(${coinPositionRef.current[index].rate})`,
               }}
             >
               <div className={coinClasses[index]}>
