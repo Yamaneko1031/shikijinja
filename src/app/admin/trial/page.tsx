@@ -11,27 +11,27 @@ export default function TrialPage() {
 
   const handleClick1 = () => {
     setClassState1('');
-    requestAnimationFrame(() => {
+    setTimeout(() => {
       setClassState1('animate-nadeneko-coin-popup');
-    });
+    }, 10);
   };
   const handleClick2 = () => {
     setClassState2('');
-    requestAnimationFrame(() => {
+    setTimeout(() => {
       setClassState2('animate-nadeneko-coin-popup');
-    });
+    }, 10);
   };
   const handleClick3 = () => {
     setClassState3('');
-    requestAnimationFrame(() => {
+    setTimeout(() => {
       setClassState3('animate-nadeneko-coin-popup');
-    });
+    }, 10);
   };
   const handleClick4 = () => {
     setClassState4('');
-    requestAnimationFrame(() => {
+    setTimeout(() => {
       setClassState4('animate-nadeneko-coin-popup');
-    });
+    }, 10);
   };
 
   // const table = [10, 30, 50, 70];
