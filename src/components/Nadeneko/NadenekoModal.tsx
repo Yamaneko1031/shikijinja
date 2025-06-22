@@ -7,7 +7,7 @@ import { NadenekoResponse } from '@/types/nadeneko';
 import NadenekoResult from './NadenekoResult';
 
 type Props = {
-  lotData: NadenekoResponse;
+  lotData: NadenekoResponse | null;
   onClose: () => void;
   handleAddCoin: (coin: number) => void;
 };
@@ -20,8 +20,10 @@ export default function NadenekoModal({ lotData, onClose, handleAddCoin }: Props
   };
 
   const handleClose = () => {
-    onClose();
-    handleAddCoin(lotData.totalAddCoin);
+    if (lotData) {
+      onClose();
+      handleAddCoin(lotData.totalAddCoin);
+    }
   };
 
   return (
@@ -35,9 +37,7 @@ export default function NadenekoModal({ lotData, onClose, handleAddCoin }: Props
       ) : (
         <>
           <div className="min-h-[100lvh] flex flex-col items-center">
-            <div className="m-auto">
-              <NadenekoResult lotData={lotData} />
-            </div>
+            <div className="m-auto">{lotData && <NadenekoResult lotData={lotData} />}</div>
           </div>
           <div className="fixed w-full bottom-6 m-auto flex flex-row justify-center gap-2">
             {/* 閉じるボタン */}

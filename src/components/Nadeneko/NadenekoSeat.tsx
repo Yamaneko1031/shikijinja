@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { NadenekoResponse } from '@/types/nadeneko';
 
 type Props = {
-  lotData: NadenekoResponse;
+  lotData: NadenekoResponse | null;
   handleFinished: () => void;
 };
 
@@ -78,6 +78,7 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
   useEffect(() => {
     const handleMove = (e: MouseEvent | TouchEvent) => {
       if (draggingRef.current === false) return;
+      if (!lotData) return;
       if (getCoinIndexRef.current >= lotData.addCoins.length) return;
 
       // ドラッグした移動量を取得
@@ -99,7 +100,6 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
       }
 
       if (isInArea && dragStateRef.current === 'standby') {
-        console.log(getCoinIndexRef.current, dragStateRef.current, isInArea);
         dragStateRef.current = 'waiting';
 
         setCoinClasses((prev) => {
@@ -175,23 +175,25 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
       draggingRef.current = false;
     };
 
-    window.addEventListener('mousemove', handleMove);
-    window.addEventListener('mouseup', handleEnd);
-    window.addEventListener('touchmove', handleMove, { passive: false });
-    window.addEventListener('touchend', handleEnd);
+    if (lotData) {
+      window.addEventListener('mousemove', handleMove);
+      window.addEventListener('mouseup', handleEnd);
+      window.addEventListener('touchmove', handleMove, { passive: false });
+      window.addEventListener('touchend', handleEnd);
 
-    window.addEventListener('wheel', eventStop, { passive: false });
-    window.addEventListener('touchmove', eventStop, { passive: false });
-    return () => {
-      window.removeEventListener('mousemove', handleMove);
-      window.removeEventListener('mouseup', handleEnd);
-      window.removeEventListener('touchmove', handleMove);
-      window.removeEventListener('touchend', handleEnd);
+      window.addEventListener('wheel', eventStop, { passive: false });
+      window.addEventListener('touchmove', eventStop, { passive: false });
+      return () => {
+        window.removeEventListener('mousemove', handleMove);
+        window.removeEventListener('mouseup', handleEnd);
+        window.removeEventListener('touchmove', handleMove);
+        window.removeEventListener('touchend', handleEnd);
 
-      window.removeEventListener('wheel', eventStop);
-      window.removeEventListener('touchmove', eventStop);
-    };
-  }, [handleFinished, lotData.addCoins]);
+        window.removeEventListener('wheel', eventStop);
+        window.removeEventListener('touchmove', eventStop);
+      };
+    }
+  }, [handleFinished, lotData]);
 
   //   console.log(coinRateClasses);
 
@@ -228,9 +230,11 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
         <div className="absolute top-45 left-20 text-center text-white font-bold text-xl text-shadow-huchi2">
           にゃにゃ！
         </div> */}
-        <div className="absolute top-10 left-0 w-full h-full text-center text-white font-bold text-4xl text-shadow-huchi2">
-          ↓なでて！
-        </div>
+        {lotData && (
+          <div className="absolute top-10 left-0 w-full h-full text-center text-white font-bold text-4xl text-shadow-huchi2">
+            ↓なでて！
+          </div>
+        )}
 
         {/* なでる判定領域 */}
         <div className="absolute top-[26%] left-[26%] w-[48%] h-[68%]" ref={targetAreaRef}></div>

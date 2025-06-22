@@ -13,9 +13,8 @@ import NadenekoModal from './NadenekoModal';
 import { useLoadImages } from '@/hooks/useLoadImages';
 
 const NadenekoSection = (props: SectionProps) => {
-  const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const lotDataRef = useRef<NadenekoResponse | null>(null);
+  const [lotData, setLotData] = useState<NadenekoResponse | null>(null);
   const loadedImagesRef = useRef<HTMLImageElement[]>([]);
   const loadedImages = useLoadImages(props.isActive, [
     '/images/nadeneko/nadeneko_result.webp',
@@ -24,7 +23,7 @@ const NadenekoSection = (props: SectionProps) => {
   loadedImagesRef.current = loadedImages;
 
   const handlePet = async () => {
-    setIsLoading(true);
+    setIsModalOpen(true);
 
     try {
       const data = await apiFetch<NadenekoResponse>('/api/nadeneko', {
@@ -36,8 +35,7 @@ const NadenekoSection = (props: SectionProps) => {
       //   addCoins: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
       // };
 
-      lotDataRef.current = data;
-      setIsModalOpen(true);
+      setLotData(data);
 
       // props.handleAddCoin(data.totalAddCoin);
       // console.log(data.addCoins);
@@ -46,8 +44,7 @@ const NadenekoSection = (props: SectionProps) => {
     } catch (err) {
       console.error('nadeneko error:', err);
       alert('なでるのに失敗しました。再度お試しください。');
-    } finally {
-      setIsLoading(false);
+      setIsModalOpen(false);
     }
   };
 
@@ -84,7 +81,7 @@ const NadenekoSection = (props: SectionProps) => {
               handlePet();
             }}
             className="w-full max-w-md flex flex-col pt-2 pb-2"
-            disabled={isLoading || isModalOpen}
+            disabled={isModalOpen}
           >
             <div className="text-xl font-bold">なでる</div>
             <div className="flex flex-row items-center">
@@ -106,13 +103,11 @@ const NadenekoSection = (props: SectionProps) => {
         isOpen={isModalOpen}
         className="absolute top-0 left-0 min-h-[100lvh] min-w-[100vw] bg-transparent overscroll-contain"
       >
-        {lotDataRef.current && (
-          <NadenekoModal
-            onClose={() => setIsModalOpen(false)}
-            lotData={lotDataRef.current}
-            handleAddCoin={props.handleAddCoin}
-          />
-        )}
+        <NadenekoModal
+          onClose={() => setIsModalOpen(false)}
+          lotData={lotData}
+          handleAddCoin={props.handleAddCoin}
+        />
       </Modal>
     </>
   );

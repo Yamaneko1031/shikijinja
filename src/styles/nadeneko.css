@@ -109,3 +109,19 @@
   transform-origin: center center;
   animation: nadeneko-manzoku 0.4s ease-out forwards;
 }
+
+@keyframes nadeneko-rank {
+  0%,
+  90% {
+    opacity: 0;
+    transform: scale(5);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-nadeneko-rank {
+  animation: nadeneko-rank 1s ease-out forwards;
+}
