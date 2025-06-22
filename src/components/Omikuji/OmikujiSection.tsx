@@ -20,6 +20,7 @@ import { getTokuCoin, getTokuMaster } from '@/utils/toku';
 import { SectionProps } from '@/types/section';
 import Head from 'next/head';
 import { mutate } from 'swr';
+import { useLoadImages } from '@/hooks/useLoadImages';
 
 const OmikujiSection = (props: SectionProps) => {
   console.log('OmikujiSection', props.isActive, props.isNeighbor);
@@ -28,6 +29,14 @@ const OmikujiSection = (props: SectionProps) => {
   const [isSelector, setIsSelector] = useState(false);
   const resultRef = useRef<OmikujiResponse | null>(null);
   const omikujiTypeRef = useRef<OmikujiType>('omikuji');
+  const loadedImagesRef = useRef<HTMLImageElement[]>([]);
+  const loadedImages = useLoadImages(props.isActive, [
+    '/images/omikuji/hitohira.webp',
+    '/images/omikuji/nekobiyori.webp',
+    '/images/omikuji/omikuji.webp',
+    '/images/bg_hude/bg_washi.webp',
+  ]);
+  loadedImagesRef.current = loadedImages;
 
   const omikujiConfig = {
     omikuji: {

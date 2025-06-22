@@ -41,10 +41,9 @@ const App = (props: Props) => {
   const { scrollY } = useScroll({ container: containerRef });
   const scrollRatioMotionValue = useMotionValue(0);
   const fallbackScrollRatio = useMotionValue(0);
-  const loadedImagesRef = useRef<HTMLImageElement[]>([]);
 
-  const loadedImages = useLoadImages();
-  // loadedImagesをGCで消されないようにするための参照を保持
+  const loadedImagesRef = useRef<HTMLImageElement[]>([]);
+  const loadedImages = useLoadImages(true, ['/images/bg_hude/bg_map.webp']);
   loadedImagesRef.current = loadedImages;
 
   // 初期処理

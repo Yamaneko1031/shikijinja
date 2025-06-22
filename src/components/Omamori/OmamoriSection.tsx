@@ -14,12 +14,19 @@ import { useTelop } from '@/hooks/useTelop';
 import { getTokuMaster } from '@/utils/toku';
 import { mutate } from 'swr';
 import { OmamoriLoadingState } from '@/types/omamori';
+import { useLoadImages } from '@/hooks/useLoadImages';
 
 const OmamoriSection = (props: SectionProps) => {
   const [omamoriModalOpen, setOmamoriModalOpen] = useState(false);
   const [loadingState, setLoadingState] = useState<OmamoriLoadingState>('none');
   const omamoriDataRef = useRef<OmamoriDataResponse | null>(null);
   const telop = useTelop();
+  const loadedImagesRef = useRef<HTMLImageElement[]>([]);
+  const loadedImages = useLoadImages(props.isActive, [
+    '/images/bg_hude/bg_kanteisho.webp',
+    '/images/bg_hude/bg_washi.webp',
+  ]);
+  loadedImagesRef.current = loadedImages;
 
   const handlePurchase = async () => {
     const tokudata = getTokuMaster('omamori_buy');

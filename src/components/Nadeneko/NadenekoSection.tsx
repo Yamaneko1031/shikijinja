@@ -10,13 +10,19 @@ import { apiFetch } from '@/lib/api';
 import { NadenekoResponse } from '@/types/nadeneko';
 import Modal from '../_shared/Modal';
 import NadenekoModal from './NadenekoModal';
+import { useLoadImages } from '@/hooks/useLoadImages';
 
 const NadenekoSection = (props: SectionProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const lotDataRef = useRef<NadenekoResponse | null>(null);
+  const loadedImagesRef = useRef<HTMLImageElement[]>([]);
+  const loadedImages = useLoadImages(props.isActive, [
+    '/images/nadeneko/nadeneko_result.webp',
+    '/images/nadeneko/nadeneko_action.webp',
+  ]);
+  loadedImagesRef.current = loadedImages;
 
-  /* ----------------- submit -------------- */
   const handlePet = async () => {
     setIsLoading(true);
 

@@ -14,6 +14,7 @@ import Image from 'next/image';
 import { getTokuCoin } from '@/utils/toku';
 import { SectionProps } from '@/types/section';
 import { mutate } from 'swr';
+import { useLoadImages } from '@/hooks/useLoadImages';
 
 const EmaSection = (props: SectionProps) => {
   console.log('EmaSection', props.isActive, props.isNeighbor);
@@ -27,6 +28,18 @@ const EmaSection = (props: SectionProps) => {
 
   /* ----------------- refs ----------------- */
   const carouselRef = useRef<HTMLDivElement>(null);
+  const loadedImagesRef = useRef<HTMLImageElement[]>([]);
+  const loadedImages = useLoadImages(props.isActive, [
+    '/images/ema/ema_iroha.webp',
+    '/images/ema/ema_shikineko.webp',
+    '/images/ema/ema_tenten.webp',
+    '/images/ema/ema_nadeneko.webp',
+    '/images/illust/illust_iroha.webp',
+    '/images/illust/illust_shikineko.webp',
+    '/images/illust/illust_tenten.webp',
+    '/images/illust/illust_nadeneko.webp',
+  ]);
+  loadedImagesRef.current = loadedImages;
 
   /* ----------------- local UI state ------- */
   const [selectedDeity, setSelectedDeity] = useState<EmaImageKey | null>(null);
