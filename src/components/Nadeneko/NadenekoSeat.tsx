@@ -200,7 +200,7 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
       {/* ドラッグ領域 */}
       <div
         className={
-          'absolute max-w-[30rem] min-w-[25rem] w-[100vw] aspect-square bg-[url("/images/nadeneko/neko_action.png")] bg-[length:100%_auto] bg-no-repeat rounded-md border-4 border-[rgba(40,20,0,0.5)] ' +
+          'absolute max-w-[30rem] min-w-[25rem] w-[100vw] aspect-square bg-[url("/images/nadeneko/nadeneko_action.webp")] bg-[length:100%_auto] bg-no-repeat rounded-md border-4 border-[rgba(40,20,0,0.5)] ' +
           screenClass
         }
         onMouseDown={(e) => handleMouseDown(e)}
@@ -258,9 +258,18 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
 
         {dragStateRef.current === 'finished' && (
           <div className="absolute w-full h-full flex items-center justify-center">
-            <div className="-rotate-10 text-white font-bold text-7xl text-shadow-huchi2 whitespace-nowrap">
+            {/* <div className="text-white font-bold text-7xl text-shadow-huchi2 whitespace-nowrap animate-nadeneko-manzoku">
               満足にゃ！
-            </div>
+            </div> */}
+            <div
+              className="w-[80%] h-[80%] animate-nadeneko-manzoku"
+              style={{
+                backgroundImage: `url(/images/nadeneko/nadeneko_manzoku.webp)`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+              }}
+            ></div>
           </div>
         )}
       </div>

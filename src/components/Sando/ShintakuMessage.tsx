@@ -1,6 +1,5 @@
 import { shintakuTypeTable } from '@/config/shintaku';
 import { ShintakuPost } from '@/types/shintaku';
-import Image from 'next/image';
 interface ShintakuMessageProps {
   message: ShintakuPost;
 }
@@ -23,30 +22,30 @@ export default function ShintakuMessage({ message }: ShintakuMessageProps) {
             </div>
           </div>
           <div className="w-16 md:w-18 flex flex-col items-center">
-            <div className="w-16 h-16 md:w-18 md:h-18 overflow-hidden rounded-md border-3 border-[rgba(40,20,0,0.5)]">
-              <Image
-                src={`/images/illust/${shintakuTypeData.illustname}`}
-                alt={shintakuTypeData.label}
-                width={100}
-                height={100}
-                className="w-full h-full object-cover"
-              />
-            </div>
+            <div
+              className="w-16 h-16 md:w-18 md:h-18 overflow-hidden rounded-md border-3 border-[rgba(40,20,0,0.5)]"
+              style={{
+                backgroundImage: `url(/images/illust/${shintakuTypeData.illustname})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+              }}
+            ></div>
             <div className="text-center text-sm">{shintakuTypeData.label}</div>
           </div>
         </>
       ) : (
         <>
           <div className="w-16 md:w-18 flex flex-col items-center">
-            <div className="w-16 h-16 md:w-18 md:h-18 overflow-hidden rounded-md border-3 border-[rgba(40,20,0,0.5)]">
-              <Image
-                src={`/images/illust/${shintakuTypeData.illustname}`}
-                alt={shintakuTypeData.label}
-                width={100}
-                height={100}
-                className="w-full h-full object-cover"
-              />
-            </div>
+            <div
+              className="w-16 h-16 md:w-18 md:h-18 overflow-hidden rounded-md border-3 border-[rgba(40,20,0,0.5)]"
+              style={{
+                backgroundImage: `url(/images/illust/${shintakuTypeData.illustname})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+              }}
+            ></div>
             <div className="text-center text-sm">{shintakuTypeData.label}</div>
           </div>
           <div className="flex flex-col gap-1 ml-2 mr-8">

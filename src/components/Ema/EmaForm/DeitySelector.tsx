@@ -2,7 +2,6 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
 import { EmaImageKey } from '@/types/ema';
 import { emaList } from '@/config/ema';
 import { Button } from '@/components/_shared/Button';
@@ -21,17 +20,17 @@ export default function DeitySelector({ onSelect, onCancel }: DeitySelectorProps
             variant="custom"
             key={key}
             onClick={() => onSelect(key as EmaImageKey)}
-            className="flex justify-center items-center gap-2 p-2 rounded-lg bg-white/10 hover:bg-white/20 text-left text-white"
+            className="flex justify-center items-center gap-4 p-2 rounded-lg bg-white/10 hover:bg-white/20 text-left text-white"
           >
-            <div className="w-1/4 min-w-[4rem] h-[4rem] flex justify-center items-center rounded-md overflow-hidden shrink-0">
-              <Image
-                src={`/images/illust/${data.illustname}`}
-                alt={data.label}
-                width={64}
-                height={64}
-                style={{ width: 'auto', height: '100%' }}
-              />
-            </div>
+            <div
+              className="w-[4rem] h-[4rem] flex justify-center items-center rounded-md overflow-hidden shrink-0"
+              style={{
+                backgroundImage: `url(/images/illust/${data.illustname})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+              }}
+            ></div>
             <div className="w-full flex flex-col text-sm whitespace-pre-line">
               <div className="font-bold text-base">{data.label}</div>
               <div className="text-gray-300">{data.grace}</div>

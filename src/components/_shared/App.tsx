@@ -14,6 +14,7 @@ import { useDebugLog } from '@/hooks/useDebugLog';
 import { useMotionValue, useScroll } from 'framer-motion';
 import Footer from '../Footer/Footer';
 import { remToPx } from '@/lib/size';
+import { useLoadImages } from '@/hooks/useLoadImages';
 
 interface Props {
   initialUser: User;
@@ -40,6 +41,11 @@ const App = (props: Props) => {
   const { scrollY } = useScroll({ container: containerRef });
   const scrollRatioMotionValue = useMotionValue(0);
   const fallbackScrollRatio = useMotionValue(0);
+  const loadedImagesRef = useRef<HTMLImageElement[]>([]);
+
+  const loadedImages = useLoadImages();
+  // loadedImagesをGCで消されないようにするための参照を保持
+  loadedImagesRef.current = loadedImages;
 
   // 初期処理
   useEffect(() => {

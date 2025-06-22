@@ -12,7 +12,7 @@ export default function NadenekoResult({ lotData }: Props) {
     <div className="relative w-full h-full flex flex-col items-center justify-center animate-nadeneko-result">
       <div
         className={
-          'absolute min-w-[30rem] aspect-square bg-[url("/images/nadeneko/nadeneko_result.png")] bg-[length:100%_auto] bg-no-repeat rounded-md border-4 border-[rgba(40,20,0,0.5)]'
+          'absolute min-w-[30rem] aspect-square bg-[url("/images/nadeneko/nadeneko_result.webp")] bg-[length:100%_auto] bg-no-repeat rounded-md border-4 border-[rgba(40,20,0,0.5)]'
         }
       >
         <div className="absolute top-30 left-50 text-orange-200 font-bold text-6xl text-shadow-huchi2">

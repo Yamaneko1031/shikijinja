@@ -1,5 +1,4 @@
 import React from 'react';
-import Image from 'next/image';
 import { Button } from '@/components/_shared/Button';
 import TextReveal from '@/components/_shared/TextReveal';
 import { emaList } from '@/config/ema';
@@ -32,19 +31,19 @@ const EmaFormHeader: React.FC<EmaFormHeaderProps> = ({
         </Button>
         <div className="flex items-center gap-4 flex-1 overflow-hidden">
           <div className="w-1/4 min-w-[4rem] flex justify-center">
-            <div className="w-[4rem] h-[4rem] rounded-md overflow-hidden">
-              <Image
-                src={`/images/illust/${emaList[deityKey].illustname}`}
-                alt={emaList[deityKey].label}
-                width={128}
-                height={128}
-                className="object-cover"
-              />
-            </div>
+            <div
+              className="w-[4rem] h-[4rem] rounded-md overflow-hidden"
+              style={{
+                backgroundImage: `url(/images/illust/${emaList[deityKey].illustname})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+              }}
+            ></div>
           </div>
           <div className="flex-1 overflow-hidden">
             <div className="text-white">【{emaList[deityKey].label}】</div>
-            <div className="text-xs text-gray-300 ml-1 whitespace-pre-line text-center">
+            <div className="text-xs text-gray-300 ml-1 whitespace-pre-line text-start">
               {emaList[deityKey].grace}
             </div>
           </div>

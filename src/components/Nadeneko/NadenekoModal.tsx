@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Button } from '../_shared/Button';
 import NadenekoSeat from './NadenekoSeat';
 import { NadenekoResponse } from '@/types/nadeneko';
@@ -14,7 +14,6 @@ type Props = {
 
 export default function NadenekoModal({ lotData, onClose, handleAddCoin }: Props) {
   const [isFinished, setIsFinished] = useState(false);
-  const loadedImages = useRef<HTMLImageElement[]>([]);
 
   const handleFinished = () => {
     setIsFinished(true);
@@ -24,20 +23,6 @@ export default function NadenekoModal({ lotData, onClose, handleAddCoin }: Props
     onClose();
     handleAddCoin(lotData.totalAddCoin);
   };
-
-  // 先読込み
-  useEffect(() => {
-    const images = [
-      '/images/nadeneko/nadeneko_result.png',
-      '/images/nadeneko/neko_action.png',
-      '/images/icon/icon_coin_nadeneko.png',
-    ];
-    images.forEach((src) => {
-      const img = new Image();
-      img.src = src;
-      loadedImages.current.push(img);
-    });
-  }, []);
 
   return (
     <div className="select-none">
