@@ -61,13 +61,13 @@ export async function POST() {
         addCoins.push(5);
         totalAddCoin += 5;
       } else if (random <= 400) {
+        addCoins.push(3);
+        totalAddCoin += 3;
+      } else {
         addCoins.push(2);
         totalAddCoin += 2;
-      } else {
-        addCoins.push(1);
-        totalAddCoin += 1;
       }
-    } while (Math.floor(Math.random() * 50) !== 0 || addCoins.length < 20);
+    } while (Math.floor(Math.random() * 100) >= 3 || addCoins.length < 20);
 
     // ユーザーデータ更新
     const userUpdateData: Record<string, string | number> = {};

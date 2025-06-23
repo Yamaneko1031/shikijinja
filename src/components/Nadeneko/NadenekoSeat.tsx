@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { NadenekoResponse } from '@/types/nadeneko';
 
 type Props = {
@@ -9,11 +9,18 @@ type Props = {
 };
 
 type DragState = 'standby' | 'waiting' | 'finished';
+type SubMessage = {
+  key: string;
+  message: string;
+  animateClassNumber: number;
+  top: number;
+  left: number;
+};
 
 const waitTime = 100;
-const finishedTime = 2000;
-
-const coinPopupElementCount = 10;
+const finishedTime = 3000;
+const petMessageTime = 2000;
+const coinPopupElementCount = 7;
 const coinOffsetLeftRange = 16;
 const coinOffsetTopRange = 16;
 const coinBasePositions = [
@@ -34,19 +41,45 @@ const coinBasePositions = [
   { left: 80, top: 60 },
 ];
 
+const subMessageTable = [
+  'そこにゃ！',
+  'イイ感じにゃ！',
+  'その調子にゃ！',
+  'もっとにゃ！',
+  'うにゃー。',
+  'ごろごろ。',
+  'にゃんー！',
+  'にゃにゃーん！',
+  'ふにゃー。',
+  'にゃにゃ！',
+];
+
 export default function NadenekoSeat({ lotData, handleFinished }: Props) {
   const draggingRef = useRef(false);
   const startPosRef = useRef({ x: 0, y: 0 });
   const targetAreaRef = useRef<HTMLDivElement>(null);
+  const dragCountRef = useRef(0);
+  const subMessageCountRef = useRef(0);
   const getCoinIndexRef = useRef(0);
   const dragStateRef = useRef<DragState>('standby');
   const [screenClass, setScreenClass] = useState('');
   const [coinClasses, setCoinClasses] = useState(Array(coinPopupElementCount).fill(''));
+  const [petMessage, setPetMessage] = useState(false);
+  const [subMessages, setSubMessages] = useState<SubMessage[]>([]);
+  const previousSubMessageRef = useRef<SubMessage | null>(null);
+  const timeoutIdRef = useRef<NodeJS.Timeout | null>(null);
   const coinValueRef = useRef(Array(coinPopupElementCount).fill(0));
   const coinPositionRef = useRef(Array(coinPopupElementCount).fill({ left: 0, top: 0, rate: 1 }));
   const randomPositionIndeicesRef = useRef(
     Array.from({ length: coinBasePositions.length }, (_, i) => i)
   );
+
+  useEffect(() => {
+    if (lotData) {
+      setPetMessage(true);
+      dragCountRef.current = Math.floor(Math.random() * 30) + 10;
+    }
+  }, [lotData]);
 
   useEffect(() => {
     randomPositionIndeicesRef.current = (() => {
@@ -74,20 +107,59 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
     startPosRef.current = { x: touch.clientX, y: touch.clientY };
   };
 
+  const setPetMessageClear = (isTimeout: boolean = false) => {
+    if (timeoutIdRef.current) {
+      clearTimeout(timeoutIdRef.current);
+      timeoutIdRef.current = null;
+    }
+    setPetMessage(false);
+    // 再表示設定
+    if (isTimeout) {
+      // 一定期間は待ち状態
+      timeoutIdRef.current = setTimeout(() => {
+        setPetMessage(true);
+      }, petMessageTime);
+    }
+  };
+
+  const deleteSubMessages = useCallback(
+    (key: string) => {
+      setSubMessages((prev) => prev.filter((subMessage) => subMessage.key !== key));
+    },
+    [setSubMessages]
+  );
+
+  const postSubMessages = useCallback(() => {
+    let animateClassNumber = Math.floor(Math.random() * 4) + 1;
+    // 連続回避
+    if (previousSubMessageRef.current?.animateClassNumber === animateClassNumber) {
+      animateClassNumber = ((animateClassNumber + 1) % 4) + 1;
+    }
+    const newSubMessage: SubMessage = {
+      message: subMessageTable[Math.floor(Math.random() * subMessageTable.length)],
+      animateClassNumber,
+      top: Math.floor((Math.random() * 4 - 2) * 10) / 10,
+      left: Math.floor((Math.random() * 4 - 2) * 10) / 10,
+      key: Math.random().toString(36).substring(2, 15),
+    };
+    previousSubMessageRef.current = newSubMessage;
+    setSubMessages((prev) => [...prev, newSubMessage]);
+    setTimeout(() => {
+      deleteSubMessages(newSubMessage.key);
+    }, 1000);
+  }, [setSubMessages, deleteSubMessages]);
+
   // ドラッグ中の移動処理
   useEffect(() => {
     const handleMove = (e: MouseEvent | TouchEvent) => {
-      if (draggingRef.current === false) return;
       if (!lotData) return;
+      if (draggingRef.current === false) return;
       if (getCoinIndexRef.current >= lotData.addCoins.length) return;
 
-      // ドラッグした移動量を取得
       const clientX = 'touches' in e ? e.touches[0].clientX : (e as MouseEvent).clientX;
       const clientY = 'touches' in e ? e.touches[0].clientY : (e as MouseEvent).clientY;
 
-      // ドラッグ領域から一定以上外に出ないように移動量を補正
-      let isInArea = false;
-      if (targetAreaRef.current) {
+      if (targetAreaRef.current && dragStateRef.current === 'standby') {
         const targetArea = targetAreaRef.current.getBoundingClientRect();
         if (
           targetArea.left < clientX &&
@@ -95,12 +167,20 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
           targetArea.top < clientY &&
           clientY < targetArea.bottom
         ) {
-          isInArea = true;
+          dragCountRef.current = dragCountRef.current - 1;
+          subMessageCountRef.current = subMessageCountRef.current - 1;
+          if (subMessageCountRef.current <= 0) {
+            subMessageCountRef.current = Math.floor(Math.random() * 10) + 20;
+            postSubMessages();
+          }
         }
       }
 
-      if (isInArea && dragStateRef.current === 'standby') {
+      if (dragCountRef.current <= 0) {
+        dragCountRef.current = Math.floor(Math.random() * 10) + 5;
         dragStateRef.current = 'waiting';
+
+        setPetMessageClear(true);
 
         setCoinClasses((prev) => {
           const newStates = [...prev];
@@ -160,6 +240,7 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
             if (getCoinIndexRef.current >= lotData.addCoins.length) {
               dragStateRef.current = 'finished';
               setScreenClass('animate-nadeneko-screen-finish');
+              setPetMessageClear(false);
               setTimeout(() => {
                 handleFinished();
               }, finishedTime);
@@ -193,9 +274,8 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
         window.removeEventListener('touchmove', eventStop);
       };
     }
-  }, [handleFinished, lotData]);
-
-  //   console.log(coinRateClasses);
+  }, [handleFinished, lotData, postSubMessages]);
+  console.log('subMessages', subMessages);
 
   return (
     <div className="relative w-full h-full flex flex-col items-center justify-center">
@@ -207,8 +287,19 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
         }
         onMouseDown={(e) => handleMouseDown(e)}
         onTouchStart={(e) => handleTouchStart(e)}
-        style={{ touchAction: 'none' }} // 追加: ブラウザのデフォルトタッチ動作を無効化
+        style={{ touchAction: 'none' }}
       >
+        <div className="absolute top-1/2 left-1/2 text-center text-white font-bold text-xl text-shadow-huchi2 whitespace-nowrap">
+          {subMessages.map((subMessage) => (
+            <div
+              key={`${subMessage.key}`}
+              className={`absolute animate-nadeneko-sub-message-${subMessage.animateClassNumber}`}
+              style={{ top: `${subMessage.top}rem`, left: `${subMessage.left}rem` }}
+            >
+              {subMessage.message}
+            </div>
+          ))}
+        </div>
         {/* <div className="absolute top-15 left-20 text-center text-white font-bold text-xl text-shadow-huchi2">
           にゃんー！
         </div>
@@ -230,8 +321,8 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
         <div className="absolute top-45 left-20 text-center text-white font-bold text-xl text-shadow-huchi2">
           にゃにゃ！
         </div> */}
-        {lotData && (
-          <div className="absolute top-10 left-0 w-full h-full text-center text-white font-bold text-4xl text-shadow-huchi2">
+        {petMessage && (
+          <div className="absolute top-10 left-0 w-full text-center text-white font-bold text-4xl text-shadow-huchi2 animate-nadeneko-pet-message">
             ↓なでて！
           </div>
         )}

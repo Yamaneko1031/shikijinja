@@ -125,3 +125,84 @@
 .animate-nadeneko-rank {
   animation: nadeneko-rank 1s ease-out forwards;
 }
+
+@keyframes nadeneko-pet-message {
+  0%,
+  50% {
+    transform: translateY(0);
+  }
+  60% {
+    transform: translateY(-15px);
+  }
+  70% {
+    transform: translateY(0);
+  }
+  80% {
+    transform: translateY(-8px);
+  }
+  90%,
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.animate-nadeneko-pet-message {
+  animation: nadeneko-pet-message 2s ease-out infinite;
+}
+
+@keyframes nadeneko-sub-message-1 {
+  0% {
+    opacity: 1;
+    transform: translateY(-5rem) translateX(-10rem) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-8rem) translateX(-12rem) scale(1.3);
+  }
+}
+
+@keyframes nadeneko-sub-message-2 {
+  0% {
+    opacity: 1;
+    transform: translateY(-8rem) translateX(-6rem) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-12rem) translateX(-8rem) scale(1.3);
+  }
+}
+
+@keyframes nadeneko-sub-message-3 {
+  0% {
+    opacity: 1;
+    transform: translateY(-8rem) translateX(2rem) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-12rem) translateX(4rem) scale(1.3);
+  }
+}
+
+@keyframes nadeneko-sub-message-4 {
+  0% {
+    opacity: 1;
+    transform: translateY(-5rem) translateX(3rem) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-8rem) translateX(5rem) scale(1.3);
+  }
+}
+
+.animate-nadeneko-sub-message-1 {
+  animation: nadeneko-sub-message-1 1s ease-out infinite;
+}
+.animate-nadeneko-sub-message-2 {
+  animation: nadeneko-sub-message-2 1s ease-out infinite;
+}
+.animate-nadeneko-sub-message-3 {
+  animation: nadeneko-sub-message-3 1s ease-out infinite;
+}
+.animate-nadeneko-sub-message-4 {
+  animation: nadeneko-sub-message-4 1s ease-out infinite;
+}
