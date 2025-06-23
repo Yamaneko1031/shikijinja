@@ -20,7 +20,7 @@ type SubMessage = {
 const waitTime = 100;
 const finishedTime = 3000;
 const petMessageTime = 2000;
-const coinPopupElementCount = 7;
+const coinPopupElementCount = 10;
 const coinOffsetLeftRange = 16;
 const coinOffsetTopRange = 16;
 const coinBasePositions = [
@@ -66,6 +66,7 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
   const [coinClasses, setCoinClasses] = useState(Array(coinPopupElementCount).fill(''));
   const [petMessage, setPetMessage] = useState(false);
   const [subMessages, setSubMessages] = useState<SubMessage[]>([]);
+  const [totalCoin, setTotalCoin] = useState(0);
   const previousSubMessageRef = useRef<SubMessage | null>(null);
   const timeoutIdRef = useRef<NodeJS.Timeout | null>(null);
   const coinValueRef = useRef(Array(coinPopupElementCount).fill(0));
@@ -77,7 +78,8 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
   useEffect(() => {
     if (lotData) {
       setPetMessage(true);
-      dragCountRef.current = Math.floor(Math.random() * 30) + 10;
+      dragCountRef.current = Math.floor(Math.random() * 10) + 5;
+      subMessageCountRef.current = Math.floor(Math.random() * 10) + 20;
     }
   }, [lotData]);
 
@@ -181,6 +183,8 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
         dragCountRef.current = Math.floor(Math.random() * 10) + 5;
         dragStateRef.current = 'waiting';
 
+        const addCoin = lotData.addCoins[getCoinIndexRef.current];
+
         setPetMessageClear(true);
 
         setCoinClasses((prev) => {
@@ -191,8 +195,7 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
 
         // 新しいアニメーションを設定
         setTimeout(() => {
-          coinValueRef.current[getCoinIndexRef.current % coinPopupElementCount] =
-            lotData.addCoins[getCoinIndexRef.current];
+          coinValueRef.current[getCoinIndexRef.current % coinPopupElementCount] = addCoin;
 
           setCoinClasses((prev) => {
             const newStates = [...prev];
@@ -236,6 +239,11 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
 
           // 一定期間は待ち状態
           setTimeout(() => {
+            setTotalCoin((prev) => prev + addCoin);
+          }, 1500);
+
+          // 一定期間は待ち状態
+          setTimeout(() => {
             dragStateRef.current = 'standby';
             getCoinIndexRef.current = getCoinIndexRef.current + 1;
             if (getCoinIndexRef.current >= lotData.addCoins.length) {
@@ -276,7 +284,6 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
       };
     }
   }, [handleFinished, lotData, postSubMessages]);
-  console.log('subMessages', subMessages);
 
   return (
     <div className="relative w-full h-full flex flex-col items-center justify-center">
@@ -301,62 +308,55 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
             </div>
           ))}
         </div>
-        {/* <div className="absolute top-15 left-20 text-center text-white font-bold text-xl text-shadow-huchi2">
-          にゃんー！
-        </div>
-        <div className="absolute top-20 left-20 text-center text-white font-bold text-xl text-shadow-huchi2">
-          ごろごろ。
-        </div>
-        <div className="absolute top-25 left-20 text-center text-white font-bold text-xl text-shadow-huchi2">
-          うにゃー。
-        </div>
-        <div className="absolute top-30 left-20 text-center text-white font-bold text-xl text-shadow-huchi2">
-          にゃー！
-        </div>
-        <div className="absolute top-35 left-20 text-center text-white font-bold text-xl text-shadow-huchi2">
-          にゃにゃーん！
-        </div>
-        <div className="absolute top-40 left-20 text-center text-white font-bold text-xl text-shadow-huchi2">
-          ふにゃー。
-        </div>
-        <div className="absolute top-45 left-20 text-center text-white font-bold text-xl text-shadow-huchi2">
-          にゃにゃ！
-        </div> */}
+
         {petMessage && (
-          <div className="absolute top-10 left-0 w-full text-center text-white font-bold text-4xl text-shadow-huchi2 animate-nadeneko-pet-message">
+          <div className="absolute top-[15%] left-0 w-full text-center text-white font-bold text-4xl text-shadow-huchi2 animate-nadeneko-pet-message">
             ↓なでて！
           </div>
         )}
+
+        <div className="absolute top-[4%] left-[4%] w-full text-left text-white font-bold text-4xl text-shadow-huchi2">
+          合計：{totalCoin}
+        </div>
 
         {/* なでる判定領域 */}
         <div className="absolute top-[26%] left-[26%] w-[48%] h-[68%]" ref={targetAreaRef}></div>
 
         {/* コインのアニメーション */}
-        <div className="nadeneko-coin-popup-position">
+        <div className="absolute w-full h-full">
           {Array.from({ length: coinPopupElementCount }).map((_, index) => (
-            <div
-              key={index}
-              className="absolute"
-              style={{
-                left: `${coinPositionRef.current[index].left}%`,
-                top: `${coinPositionRef.current[index].top}%`,
-                transform: `scale(${coinPositionRef.current[index].rate})`,
-              }}
-            >
-              <div className={`nadeneko-coin -translate-x-1/2 ${coinClasses[index]}`}>
-                <p className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-3/5 text-3xl font-bold text-shadow-huchi">
-                  {coinValueRef.current[index]}
-                </p>
+            <>
+              <div
+                key={index}
+                className="absolute"
+                style={{
+                  left: `${coinPositionRef.current[index].left}%`,
+                  top: `${coinPositionRef.current[index].top}%`,
+                  transform: `scale(${coinPositionRef.current[index].rate})`,
+                }}
+              >
+                <div className={`nadeneko-coin -translate-x-1/2 ${coinClasses[index]}`}>
+                  <p className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-3/5 text-3xl font-bold text-shadow-huchi">
+                    {coinValueRef.current[index]}
+                  </p>
+                </div>
               </div>
-            </div>
+              {coinClasses[index] !== '' && (
+                <div
+                  className="nadeneko-coin -translate-x-1/2 nadeneko-coin-total-add"
+                  style={{
+                    left: `${coinPositionRef.current[index].left}%`,
+                    top: `${coinPositionRef.current[index].top}%`,
+                    transform: `scale(${coinPositionRef.current[index].rate})`,
+                  }}
+                ></div>
+              )}
+            </>
           ))}
         </div>
 
         {dragStateRef.current === 'finished' && (
           <div className="absolute w-full h-full flex items-center justify-center">
-            {/* <div className="text-white font-bold text-7xl text-shadow-huchi2 whitespace-nowrap animate-nadeneko-manzoku">
-              満足にゃ！
-            </div> */}
             <div
               className="w-[80%] h-[80%] animate-nadeneko-manzoku"
               style={{

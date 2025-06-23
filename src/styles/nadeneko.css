@@ -1,4 +1,3 @@
-/* Safari 最適化用に -webkit- 付きも併記 */
 @keyframes nadeneko-coin-popup {
   0% {
     opacity: 0;
@@ -17,7 +16,7 @@
     transform: translate3d(0, 0.25rem, 0) scaleX(0);
   }
   20%,
-  85% {
+  55% {
     opacity: 1;
     transform: translate3d(0, 0, 0) scaleX(1);
   }
@@ -28,7 +27,7 @@
 }
 
 .coin--popup {
-  animation: nadeneko-coin-popup var(--coin-popup-duration, 600ms) ease-in-out forwards;
+  animation: nadeneko-coin-popup var(--coin-popup-duration) ease-in-out forwards;
 }
 
 .nadeneko-coin {
@@ -38,6 +37,24 @@
   background: url('/images/icon/icon_coin_nadeneko.png') center / cover;
   opacity: 0;
   will-change: transform, opacity;
+}
+
+@keyframes nadeneko-coin-total-add {
+  0% {
+    opacity: 0.3;
+  }
+  100% {
+    left: 20%;
+    top: 4%;
+    opacity: 0;
+    transform: scale(0.2);
+  }
+}
+
+.nadeneko-coin-total-add {
+  animation: nadeneko-coin-total-add 1s ease forwards;
+  animation-delay: 1s;
+  /* animation-delay: var(--coin-popup-duration); */
 }
 
 @keyframes nadeneko-finish {
