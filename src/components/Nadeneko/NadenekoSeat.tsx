@@ -107,14 +107,15 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
     startPosRef.current = { x: touch.clientX, y: touch.clientY };
   };
 
-  const setPetMessageClear = (isTimeout: boolean = false) => {
+  // なでてメッセージを消す
+  const setPetMessageClear = (isShowAgain: boolean = false) => {
     if (timeoutIdRef.current) {
       clearTimeout(timeoutIdRef.current);
       timeoutIdRef.current = null;
     }
     setPetMessage(false);
     // 再表示設定
-    if (isTimeout) {
+    if (isShowAgain) {
       // 一定期間は待ち状態
       timeoutIdRef.current = setTimeout(() => {
         setPetMessage(true);
