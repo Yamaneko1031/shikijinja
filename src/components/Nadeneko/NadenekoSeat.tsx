@@ -205,10 +205,10 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
             Math.floor(Math.random() * coinOffsetTopRange) - coinOffsetTopRange / 2;
           let rateValue = 1.0;
           switch (coinValueRef.current[getCoinIndexRef.current % coinPopupElementCount]) {
-            case 1:
+            case 2:
               rateValue = 1.0;
               break;
-            case 2:
+            case 3:
               rateValue = 1.2;
               break;
             case 5:
