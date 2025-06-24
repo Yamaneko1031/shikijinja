@@ -9,6 +9,7 @@
   --coin-popup-duration: 1500ms;
   --omamori-effect-popup-duration: 2000ms;
   --omamori-shuffle-stop-duration: 2000ms;
+  --nadeneko-sub-message-duration: 1s;
 }
 
 @media (prefers-color-scheme: dark) {

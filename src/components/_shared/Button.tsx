@@ -37,7 +37,7 @@ const sizeStyles: Record<ButtonSize, string> = {
  * @param className 追加ユーティリティクラス
  */
 export const Button: React.FC<ButtonProps> = ({
-  variant = 'primary',
+  variant = 'positive',
   size = 'md',
   className = '',
   children = null,

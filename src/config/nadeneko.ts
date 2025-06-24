@@ -61,3 +61,34 @@ export const nadenekoRank: NadenekoRank[] = [
     coin: 100000,
   },
 ];
+
+export const coinBasePositions = [
+  { left: 20, top: 20 },
+  { left: 35, top: 20 },
+  { left: 50, top: 20 },
+  { left: 65, top: 20 },
+  { left: 80, top: 20 },
+  { left: 20, top: 40 },
+  { left: 35, top: 40 },
+  { left: 50, top: 40 },
+  { left: 65, top: 40 },
+  { left: 80, top: 40 },
+  { left: 20, top: 60 },
+  { left: 35, top: 60 },
+  { left: 50, top: 60 },
+  { left: 65, top: 60 },
+  { left: 80, top: 60 },
+];
+
+export const subMessageTable = [
+  'そこにゃ！',
+  'イイ感じにゃ！',
+  'その調子にゃ！',
+  'もっとにゃ！',
+  'うにゃー。',
+  'ごろごろ。',
+  'にゃんー！',
+  'にゃにゃーん！',
+  'ふにゃー。',
+  'にゃにゃ！',
+];
