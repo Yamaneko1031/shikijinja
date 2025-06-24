@@ -7,11 +7,12 @@ import Modal from '../_shared/Modal';
 import ShoukaiModal from './ShoukaiModal';
 import { Button } from '../_shared/Button';
 import Image from 'next/image';
-
+import DecalogueModal from './DecalogueModal';
 const ShoukaiSection = (props: SectionProps) => {
   console.log('ShoukaiSection', props.isActive, props.isNeighbor);
 
   const [shoukaiModalOpen, setShoukaiModalOpen] = useState(false);
+  const [decalogueModalOpen, setDecalogueModalOpen] = useState(false);
 
   return (
     <>
@@ -48,6 +49,16 @@ const ShoukaiSection = (props: SectionProps) => {
           >
             <div className="text-xl font-bold">神様の紹介を見る</div>
           </Button>
+          <Button
+            variant="positive"
+            size="lg"
+            onClick={() => {
+              setDecalogueModalOpen(true);
+            }}
+            className="w-full max-w-md flex flex-col pt-2 pb-2"
+          >
+            <div className="text-xl font-bold">十戒を見る</div>
+          </Button>
         </div>
       </div>
 
@@ -56,6 +67,13 @@ const ShoukaiSection = (props: SectionProps) => {
         className="absolute top-0 left-0 min-h-[100lvh] min-w-[100vw] bg-transparent overscroll-contain"
       >
         <ShoukaiModal shoukaiIndex={0} onClose={() => setShoukaiModalOpen(false)} />
+      </Modal>
+
+      <Modal
+        isOpen={decalogueModalOpen}
+        className="absolute top-0 left-0 min-h-[100lvh] min-w-[100vw] bg-transparent overscroll-contain"
+      >
+        <DecalogueModal onClose={() => setDecalogueModalOpen(false)} />
       </Modal>
     </>
   );
