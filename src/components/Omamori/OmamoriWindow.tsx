@@ -8,6 +8,7 @@ import { TokuId } from '@/types/toku';
 import Modal from '../_shared/Modal';
 import OmamoriList from './OmamoriList';
 import { useState } from 'react';
+import { useOmamoriList } from '@/hooks/useOmamoriList';
 
 interface Props {
   handlePurchase: () => void;
@@ -17,7 +18,7 @@ interface Props {
 export default function OmamoriWindow(props: Props) {
   const tokudata = getTokuMaster('omamori_buy');
   const [omamoriListOpen, setOmamoriListOpen] = useState(false);
-  // const [selectedOmamori, setSelectedOmamori] = useState<OmamoriData>(baseOmamoriList[0]);
+  const { omamoriList, error, isLoading } = useOmamoriList();
 
   const purchase = () => {
     if (tokudata) {
@@ -66,7 +67,12 @@ export default function OmamoriWindow(props: Props) {
       </Button>
 
       <Modal isOpen={omamoriListOpen}>
-        <OmamoriList onClose={() => setOmamoriListOpen(false)} />
+        <OmamoriList
+          onClose={() => setOmamoriListOpen(false)}
+          omamoriList={omamoriList}
+          isError={error}
+          isLoading={isLoading}
+        />
       </Modal>
       {/* <div className="w-full flex flex-row gap-4 justify-center">
         <div className="min-w-[8rem] max-w-[12rem] flex justify-center items-center">

@@ -22,7 +22,7 @@ const OmamoriSection = (props: SectionProps) => {
   const omamoriDataRef = useRef<OmamoriDataResponse | null>(null);
   const telop = useTelop();
   const loadedImagesRef = useRef<HTMLImageElement[]>([]);
-  const loadedImages = useLoadImages(props.isActive, [
+  const loadedImages = useLoadImages(props.isActive || props.isNeighbor, [
     '/images/bg_hude/bg_kanteisho.webp',
     '/images/bg_hude/bg_washi.webp',
   ]);

@@ -30,7 +30,7 @@ const OmikujiSection = (props: SectionProps) => {
   const resultRef = useRef<OmikujiResponse | null>(null);
   const omikujiTypeRef = useRef<OmikujiType>('omikuji');
   const loadedImagesRef = useRef<HTMLImageElement[]>([]);
-  const loadedImages = useLoadImages(props.isActive, [
+  const loadedImages = useLoadImages(props.isActive || props.isNeighbor, [
     '/images/omikuji/hitohira.webp',
     '/images/omikuji/nekobiyori.webp',
     '/images/omikuji/omikuji.webp',

@@ -43,7 +43,10 @@ const App = (props: Props) => {
   const fallbackScrollRatio = useMotionValue(0);
 
   const loadedImagesRef = useRef<HTMLImageElement[]>([]);
-  const loadedImages = useLoadImages(true, ['/images/bg_hude/bg_map.webp']);
+  const loadedImages = useLoadImages(true, [
+    '/images/bg_hude/suzume.webp',
+    '/images/bg_hude/bg_map.webp',
+  ]);
   loadedImagesRef.current = loadedImages;
 
   // 初期処理

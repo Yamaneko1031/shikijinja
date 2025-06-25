@@ -1,54 +1,51 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Button } from '../_shared/Button';
 import { OmamoriBase } from '@/types/omamori';
-import { apiFetch } from '@/lib/api';
+
 type Props = {
   onClose: () => void;
+  omamoriList: OmamoriBase[];
+  isError: boolean;
+  isLoading: boolean;
 };
 
-export default function OmamoriList({ onClose }: Props) {
+export default function OmamoriList({ onClose, omamoriList, isError, isLoading }: Props) {
   const [activeOmamori, setActiveOmamori] = useState<OmamoriBase | null>(null);
-  const omamoriListRef = useRef<OmamoriBase[]>([]);
-
   useEffect(() => {
-    const handleGetOmamoriList = async () => {
-      const res = await apiFetch<OmamoriBase[]>('/api/omamori/master', {
-        method: 'GET',
-      });
-      omamoriListRef.current = res;
-      setActiveOmamori(omamoriListRef.current[0]);
-    };
-    handleGetOmamoriList();
-  }, []);
+    if (isLoading) return;
+    if (isError) return;
+    setActiveOmamori(omamoriList[0]);
+  }, [isLoading, isError, omamoriList]);
 
   const handleNextOmamori = () => {
     console.log('handleNextOmamori');
     if (!activeOmamori) return;
     // findの返り値が正しく次の要素を返していないため、indexを使って次の要素を直接取得するように修正
-    const currentIndex = omamoriListRef.current.findIndex(
+    const currentIndex = omamoriList.findIndex(
       (omamori: OmamoriBase) => omamori.name === activeOmamori.name
     );
-    const nextIndex = (currentIndex + 1) % omamoriListRef.current.length;
-    const nextOmamori = omamoriListRef.current[nextIndex];
+    const nextIndex = (currentIndex + 1) % omamoriList.length;
+    const nextOmamori = omamoriList[nextIndex];
     setActiveOmamori(nextOmamori);
   };
 
   const handlePrevOmamori = () => {
     if (!activeOmamori) return;
-    const currentIndex = omamoriListRef.current.findIndex(
+    const currentIndex = omamoriList.findIndex(
       (omamori: OmamoriBase) => omamori.name === activeOmamori.name
     );
-    const prevIndex =
-      (currentIndex - 1 + omamoriListRef.current.length) % omamoriListRef.current.length;
-    const prevOmamori = omamoriListRef.current[prevIndex];
+    const prevIndex = (currentIndex - 1 + omamoriList.length) % omamoriList.length;
+    const prevOmamori = omamoriList[prevIndex];
     setActiveOmamori(prevOmamori);
   };
 
   return (
     <div className="flex flex-col gap-4 items-center min-w-[20rem]">
+      {isLoading && <div>読込み中...</div>}
+      {isError && <div>お守りの読込みに失敗しました。</div>}
       {activeOmamori && (
         <>
           <div className="w-full text-2xl font-bold text-center">
@@ -80,9 +77,8 @@ export default function OmamoriList({ onClose }: Props) {
               前へ
             </Button>
             <div className="w-12 text-md flex items-center justify-center">
-              {omamoriListRef.current.findIndex((omamori) => omamori.name === activeOmamori?.name) +
-                1}
-              /{omamoriListRef.current.length}
+              {omamoriList.findIndex((omamori) => omamori.name === activeOmamori?.name) + 1}/
+              {omamoriList.length}
             </div>
             <Button
               variant="subNatural"

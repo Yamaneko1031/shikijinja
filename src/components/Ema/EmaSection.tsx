@@ -29,7 +29,7 @@ const EmaSection = (props: SectionProps) => {
   /* ----------------- refs ----------------- */
   const carouselRef = useRef<HTMLDivElement>(null);
   const loadedImagesRef = useRef<HTMLImageElement[]>([]);
-  const loadedImages = useLoadImages(props.isActive, [
+  const loadedImages = useLoadImages(props.isActive || props.isNeighbor, [
     '/images/ema/ema_iroha.webp',
     '/images/ema/ema_shikineko.webp',
     '/images/ema/ema_tenten.webp',

@@ -16,7 +16,7 @@ const NadenekoSection = (props: SectionProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [lotData, setLotData] = useState<NadenekoResponse | null>(null);
   const loadedImagesRef = useRef<HTMLImageElement[]>([]);
-  const loadedImages = useLoadImages(props.isActive, [
+  const loadedImages = useLoadImages(props.isActive || props.isNeighbor, [
     '/images/nadeneko/nadeneko_result.webp',
     '/images/nadeneko/nadeneko_action.webp',
   ]);
