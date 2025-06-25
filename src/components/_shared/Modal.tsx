@@ -10,6 +10,7 @@ interface ModalProps {
 const Modal: React.FC<ModalProps> = ({ isOpen, children, className }) => {
   // body 直下に挿入するコンテナ
   const portalRoot = useRef<HTMLDivElement | null>(null);
+  const modalRef = useRef<HTMLDivElement | null>(null);
 
   if (!portalRoot.current && typeof document !== 'undefined') {
     portalRoot.current = document.createElement('div');
@@ -24,9 +25,19 @@ const Modal: React.FC<ModalProps> = ({ isOpen, children, className }) => {
     };
   }, [isOpen]);
 
+  useEffect(() => {
+    if (modalRef.current) {
+      modalRef.current.scrollLeft =
+        (modalRef.current.scrollWidth - modalRef.current.clientWidth) / 2;
+    }
+  }, [isOpen]);
+
   // モーダルの中身（本来描画したい要素）
   const modalContent = isOpen ? (
-    <div className="fixed inset-0 z-2 bg-black/80 overflow-scroll overscroll-contain flex justify-center items-center">
+    <div
+      ref={modalRef}
+      className="fixed inset-0 z-2 bg-black/80 overflow-scroll overscroll-contain flex justify-center items-center"
+    >
       <div className="absolute top-0 left-0 w-full h-[calc(100%+1px)]" />
       <div
         className={
