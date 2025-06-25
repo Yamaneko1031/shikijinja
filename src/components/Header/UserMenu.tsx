@@ -64,17 +64,32 @@ const UserMenu: React.FC<Props> = (props) => {
           </Button>
         </div>
       ) : (
-        <div className="flex flex-col gap-2">
-          <Button variant="subNatural" onClick={() => handleSignIn('google')} disabled={loading}>
-            Googleでログイン
-          </Button>
-          {/* <Button variant="subNatural" onClick={() => signIn('twitter')}>
+        <>
+          <div>ゲストで参拝中</div>
+          <div className="flex flex-col gap-2">
+            <Button variant="subNatural" onClick={() => handleSignIn('google')} disabled={loading}>
+              ログイン
+            </Button>
+            {/* <Button variant="subNatural" onClick={() => signIn('twitter')}>
             Xでログイン
           </Button> */}
-          <Button variant="subNatural" onClick={() => handleSignIn('github')} disabled={loading}>
-            GitHubでログイン
-          </Button>
-        </div>
+            <Button variant="subNatural" onClick={() => handleSignIn('github')} disabled={loading}>
+              新規登録
+            </Button>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <Button variant="subNatural" onClick={() => handleSignIn('google')} disabled={loading}>
+              Googleでログイン
+            </Button>
+            {/* <Button variant="subNatural" onClick={() => signIn('twitter')}>
+            Xでログイン
+          </Button> */}
+            <Button variant="subNatural" onClick={() => handleSignIn('github')} disabled={loading}>
+              GitHubでログイン
+            </Button>
+          </div>
+        </>
       )}
       <Button
         variant="subNatural"

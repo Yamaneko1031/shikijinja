@@ -80,6 +80,11 @@ const Header: React.FC<HeaderProps> = (props) => {
                   height={32}
                   className="w-8 h-8"
                 />
+                {props.user.isGuest && (
+                  <span className="absolute top-1 text-[0.6rem] text-shadow text-amber-950 whitespace-nowrap bg-amber-100 rounded-full px-1">
+                    ゲスト
+                  </span>
+                )}
               </button>
             </div>
           </div>

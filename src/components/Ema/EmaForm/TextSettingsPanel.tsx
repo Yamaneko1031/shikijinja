@@ -43,7 +43,7 @@ export default function TextSettingsPanel({ textBlock, onChange }: TextSettingsP
   };
 
   return (
-    <div className="text-white rounded-sm shadow-lg min-w-[5rem] space-y-2 select-none">
+    <div className="text-white min-w-[5rem] space-y-2 select-none">
       {/* 文字色 */}
       <div>
         <label className="block underline underline-offset-2 text-[0.75rem] mb-1">文字色</label>
