@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { User, UserItems } from '@/types/user';
 import HeaderCoinCounter from './HeaderCoinCounter';
-import Modal from '../_shared/Modal';
 import useSWR from 'swr';
 import { apiFetch } from '@/lib/api';
 import HelpMenu from './HelpMenu';
 import UserMenu from './UserMenu';
+import MenuWindow from '../_shared/MenuWindow';
 
 interface HeaderProps {
   user: User;
@@ -29,7 +29,11 @@ const Header: React.FC<HeaderProps> = (props) => {
 
   return (
     <header className="fixed top-0 left-0 w-full h-[3.125rem] min-w-[24rem] bg-white z-60 overscroll-contain">
-      <Modal isOpen={isUserMenuOpen}>
+      <MenuWindow
+        isOpen={isUserMenuOpen}
+        className="absolute bg-white rounded-md border-2 border-gray-200 top-12 right-2"
+        handleOutsideClick={() => setIsUserMenuOpen(false)}
+      >
         <UserMenu
           user={props.user}
           userItems={userItems}
@@ -37,10 +41,14 @@ const Header: React.FC<HeaderProps> = (props) => {
           mutateUserItems={mutateUserItems}
           handleCloseMenu={() => setIsUserMenuOpen(false)}
         />
-      </Modal>
-      <Modal isOpen={isHelpMenuOpen}>
-        <HelpMenu handleCloseMenu={() => setIsHelpMenuOpen(false)} />
-      </Modal>
+      </MenuWindow>
+      <MenuWindow
+        isOpen={isHelpMenuOpen}
+        className="absolute bg-white rounded-md border-2 border-gray-200 top-12 right-8"
+        handleOutsideClick={() => setIsHelpMenuOpen(false)}
+      >
+        <HelpMenu />
+      </MenuWindow>
       {/* {isMenuOpen && <HeaderMenu user={props.user} handleCloseMenu={() => setIsMenuOpen(false)} />} */}
       <div className="flex items-center">
         <div className="left-0 min-w-[12.5rem] h-[3.125rem] flex items-center justify-center">

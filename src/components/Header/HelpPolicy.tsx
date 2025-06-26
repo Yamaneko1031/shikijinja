@@ -9,29 +9,22 @@ type Props = {
 
 export default function HelpPolicy({ onClose }: Props) {
   return (
-    <div className="select-none">
-      <div className="flex flex-col items-center">
-        <div className="w-full max-w-[30rem]">
-          <div className="relative w-full flex flex-col p-4 bg-white rounded-md text-black">
-            {/* <div
-              className="relative w-full aspect-square flex flex-col bg-[length:100%_100%]"
-              style={{
-                backgroundImage: `url('/images/illust/${shoukaiData.illustname}')`,
-              }}
-            ></div> */}
-            <div className="w-full font-bold text-left mb-2">プライバシーポリシー</div>
-            <div className="w-full font-bold text-left mb-2"></div>
-            <Button variant="negative" size="md" onClick={onClose} aria-label="閉じる">
-              閉じる
-            </Button>
-          </div>
-        </div>
+    <div className="w-full h-full flex flex-col items-center text-black">
+      <div className="min-h-[3rem] flex justify-center items-center">プライバシーポリシー</div>
+      <div className="max-h-[60vh] overflow-scroll m-1 p-2 border-2 border-gray-100">
+        本文あああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ
+        本文あああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ
+        本文あああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ
+        本文あああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ
+        本文あああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ
+        本文あああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ
+        本文あああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ
       </div>
-      {/* <div className="fixed w-full bottom-6 m-auto flex flex-row justify-center gap-2">
+      <div className="min-h-[3rem] flex justify-center items-center">
         <Button variant="negative" size="md" onClick={onClose} aria-label="閉じる">
           閉じる
         </Button>
-      </div> */}
+      </div>
     </div>
   );
 }

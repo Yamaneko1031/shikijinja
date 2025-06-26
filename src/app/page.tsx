@@ -61,6 +61,7 @@ export default async function Page() {
   const userData = {
     id: workUser.id,
     isGuest: workUser.isGuest,
+    registReward: workUser.registReward,
     email: workUser.email ?? '',
     name: workUser.name ?? '',
     coin: workUser.coin,
