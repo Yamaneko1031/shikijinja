@@ -8,6 +8,7 @@ export const tokuIds = [
   'nadeneko',
   'omamori_buy',
   'regist_reward',
+  'saisen',
   'saisen_50',
   'saisen_100',
   'saisen_500',

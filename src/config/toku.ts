@@ -7,9 +7,10 @@ export const tokuMaster: TokuMasterData[] = [
   { tokuId: 'omikuji_nekobiyori', label: 'ねこ日和を引いた', limit: 3, coin: 300 },
   { tokuId: 'omikuji_hitohira', label: 'ひとひらくじを引いた', limit: 3, coin: 300 },
   { tokuId: 'omikuji_omikuji', label: 'おみくじを引いた', limit: 3, coin: 300 },
-  { tokuId: 'nadeneko', label: 'なで猫をなでた', limit: 100, coin: 0 }, // 特殊抽選
+  { tokuId: 'nadeneko', label: 'なで猫をなでた', limit: 1, coin: 0 }, // 特殊抽選
   { tokuId: 'omamori_buy', label: 'お守りを購入', limit: 10, coin: 500 },
   { tokuId: 'regist_reward', label: 'アカウント登録をした', limit: 1, coin: 500 },
+  { tokuId: 'saisen', label: '賽銭を投げた', limit: 1000, coin: 0 }, // 特殊抽選
   { tokuId: 'saisen_50', label: '賽銭を50円投げた', limit: 1000, coin: 50 },
   { tokuId: 'saisen_100', label: '賽銭を100円投げた', limit: 1000, coin: 100 },
   { tokuId: 'saisen_500', label: '賽銭を500円投げた', limit: 1000, coin: 500 },

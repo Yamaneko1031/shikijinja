@@ -2,7 +2,6 @@
 
 import React, { useState, useRef } from 'react';
 import TextReveal from '@/components/_shared/TextReveal';
-import { getTokuCoin } from '@/utils/toku';
 import { Button } from '../_shared/Button';
 import Image from 'next/image';
 import { SectionProps } from '@/types/section';
@@ -29,18 +28,7 @@ const NadenekoSection = (props: SectionProps) => {
       const data = await apiFetch<NadenekoResponse>('/api/nadeneko', {
         method: 'POST',
       });
-
-      // const data = {
-      //   totalAddCoin: 0,
-      //   addCoins: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
-      // };
-
       setLotData(data);
-
-      // props.handleAddCoin(data.totalAddCoin);
-      // console.log(data.addCoins);
-
-      //   props.handleTokuGet('ema_post');
     } catch (err) {
       console.error('nadeneko error:', err);
       alert('なでるのに失敗しました。再度お試しください。');
@@ -91,9 +79,7 @@ const NadenekoSection = (props: SectionProps) => {
                 width={24}
                 height={24}
               />
-              <div className="text-sm text-yellow-400 font-bold">
-                {getTokuCoin('nadeneko')}獲得（1日1回）
-              </div>
+              <div className="text-sm text-yellow-400 font-bold">ランダム獲得（1日1回）</div>
             </div>
           </Button>
         </div>
