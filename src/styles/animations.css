@@ -429,7 +429,7 @@
 .animate-rotate-coin {
   width: 6rem;
   height: 6rem;
-  background: url('/images/icon/icon_coin_nadeneko.png') center / cover;
+  background: url('/images/icon/icon_coin_nadeneko.webp') center / cover;
   animation: rotate-coin 1s ease-in-out forwards;
 }
 

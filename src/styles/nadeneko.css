@@ -34,7 +34,7 @@
   position: absolute;
   width: 3.5rem;
   height: 3.5rem;
-  background: url('/images/icon/icon_coin_nadeneko.png') center / cover;
+  background: url('/images/icon/icon_coin_nadeneko.webp') center / cover;
   opacity: 0;
   will-change: transform, opacity;
 }

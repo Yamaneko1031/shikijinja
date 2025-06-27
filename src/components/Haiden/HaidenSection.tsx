@@ -5,12 +5,17 @@ import TextReveal from '@/components/_shared/TextReveal';
 import { SectionProps } from '@/types/section';
 import { Button } from '../_shared/Button';
 import { TokuId } from '@/types/toku';
-// import Image from 'next/image';
+import { useLoadImages } from '@/hooks/useLoadImages';
 
 const HaidenSection = (props: SectionProps) => {
   const [isThrowing, setIsThrowing] = useState(false);
   const sisenValue = useRef(0);
   const sisenValueTextSize = useRef('');
+  const loadedImagesRef = useRef<HTMLImageElement[]>([]);
+  const loadedImages = useLoadImages(props.isActive || props.isNeighbor, [
+    '/images/icon/icon_coin_nadeneko.webp',
+  ]);
+  loadedImagesRef.current = loadedImages;
 
   const throwCoin = (value: number) => {
     setIsThrowing(true);
