@@ -388,3 +388,72 @@
 .animate-omamori-shuffle-stop {
   animation: omamori-shuffle-stop var(--omamori-shuffle-stop-duration) ease-out forwards;
 }
+
+@keyframes throw-coin {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.6) translateY(-25vh);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.2) translateY(20vh);
+  }
+}
+
+.animate-throw-coin {
+  animation: throw-coin 1s ease-in forwards;
+}
+
+.saisen {
+  position: fixed;
+  bottom: 40%;
+  left: 40%;
+  transform: translate(-50%, -50%);
+  opacity: 1;
+  will-change: transform, opacity;
+}
+
+@keyframes rotate-coin {
+  from {
+    transform: rotate(0deg) rotateY(0deg);
+  }
+  to {
+    transform: rotate(360deg) rotateY(360deg);
+  }
+}
+
+.animate-rotate-coin {
+  width: 6rem;
+  height: 6rem;
+  background: url('/images/icon/icon_coin_nadeneko.png') center / cover;
+  animation: rotate-coin 1s ease-in-out forwards;
+}
+
+@keyframes saisen-se {
+  0% {
+    opacity: 1;
+    transform: translateY(0) translateX(0);
+  }
+  10%,
+  50% {
+    opacity: 1;
+    transform: translateY(-1rem) translateX(-0.2rem);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-1.2rem) translateX(-0.3rem);
+  }
+}
+
+.animate-saisen-se {
+  position: fixed;
+  bottom: 40%;
+  left: 40%;
+  opacity: 0;
+  animation: saisen-se 0.5s ease-in-out forwards;
+  animation-delay: 1.2s;
+}

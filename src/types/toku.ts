@@ -8,6 +8,9 @@ export const tokuIds = [
   'nadeneko',
   'omamori_buy',
   'regist_reward',
+  'saisen_50',
+  'saisen_100',
+  'saisen_500',
   'debug_add',
   'debug_sub',
 ] as const;

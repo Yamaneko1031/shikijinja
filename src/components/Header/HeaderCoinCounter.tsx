@@ -27,12 +27,20 @@ const HeaderCoinCounter: React.FC<HeaderCoinCounterProps> = (props) => {
     }
 
     if (targetViewCoinRef.current > viewCoin) {
+      let addCoin = 1;
+      if (targetViewCoinRef.current - viewCoin >= 30) {
+        addCoin = 3;
+      }
       requestAnimationFrame(() => {
-        setViewCoin(viewCoin + 1);
+        setViewCoin(viewCoin + addCoin);
       });
     } else if (targetViewCoinRef.current < viewCoin) {
+      let subCoin = 1;
+      if (viewCoin - targetViewCoinRef.current >= 30) {
+        subCoin = 3;
+      }
       requestAnimationFrame(() => {
-        setViewCoin(viewCoin - 1);
+        setViewCoin(viewCoin - subCoin);
       });
     }
   }, [viewCoin, props.user.coin]);
