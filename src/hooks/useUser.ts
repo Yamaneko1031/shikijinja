@@ -48,7 +48,7 @@ export const useUser = (initialUser: User) => {
     return limit !== undefined && currentTokuCount !== undefined && currentTokuCount >= limit;
   };
 
-  const handleTokuGet = async (tokuId: TokuId): Promise<boolean> => {
+  const handleTokuGet = async (tokuId: TokuId, dbUpdate: boolean = true): Promise<boolean> => {
     try {
       if (handleIsLimitOver(tokuId)) {
         return false;
@@ -58,8 +58,10 @@ export const useUser = (initialUser: User) => {
       const tokuMaster = getTokuMaster(tokuId);
       if (tokuMaster) {
         // 先にテロップ表示
-        const text = `${tokuMaster.label} [${count + 1}/${tokuMaster.limit}]`;
-        telop.showPop(text);
+        if (tokuMaster.coin > 0) {
+          const text = `${tokuMaster.label} [${count + 1}/${tokuMaster.limit}]`;
+          telop.showPop(text);
+        }
 
         setUser((prevUser) => ({
           ...prevUser,
@@ -73,7 +75,9 @@ export const useUser = (initialUser: User) => {
         }));
       }
       // DBの更新は非同期で行う
-      pushRequest({ uri: '/api/toku/get', tokuId, count: 1 });
+      if (dbUpdate) {
+        pushRequest({ uri: '/api/toku/get', tokuId, count: 1 });
+      }
     } catch (err) {
       console.error('徳カウント更新失敗', err);
       return false;
@@ -89,7 +93,7 @@ export const useUser = (initialUser: User) => {
     return false;
   };
 
-  const handleTokuUsed = async (tokuId: TokuId): Promise<boolean> => {
+  const handleTokuUsed = async (tokuId: TokuId, dbUpdate: boolean = true): Promise<boolean> => {
     if (!handleIsEnoughCoin(tokuId)) {
       return false;
     }
@@ -114,7 +118,9 @@ export const useUser = (initialUser: User) => {
         }));
       }
       // DBの更新は非同期で行う
-      pushRequest({ uri: '/api/toku/used', tokuId, count: 1 });
+      if (dbUpdate) {
+        pushRequest({ uri: '/api/toku/used', tokuId, count: 1 });
+      }
     } catch (err) {
       console.error('徳カウント更新失敗', err);
       return false;

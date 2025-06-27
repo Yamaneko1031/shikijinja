@@ -29,6 +29,7 @@ const NadenekoSection = (props: SectionProps) => {
         method: 'POST',
       });
       setLotData(data);
+      props.handleTokuGet('nadeneko', false);
     } catch (err) {
       console.error('nadeneko error:', err);
       alert('なでるのに失敗しました。再度お試しください。');
@@ -69,17 +70,23 @@ const NadenekoSection = (props: SectionProps) => {
               handlePet();
             }}
             className="w-full max-w-md flex flex-col pt-2 pb-2"
-            disabled={isModalOpen}
+            disabled={isModalOpen || props.handleIsLimitOver('nadeneko')}
           >
             <div className="text-xl font-bold">なでる</div>
             <div className="flex flex-row items-center">
-              <Image
-                src="/images/icon/icon_coin.webp"
-                alt="omikuji_button"
-                width={24}
-                height={24}
-              />
-              <div className="text-sm text-yellow-400 font-bold">ランダム獲得（1日1回）</div>
+              {props.handleIsLimitOver('nadeneko') ? (
+                <div className="text-sm text-yellow-800 font-bold">本日分済み</div>
+              ) : (
+                <>
+                  <Image
+                    src="/images/icon/icon_coin.webp"
+                    alt="omikuji_button"
+                    width={24}
+                    height={24}
+                  />
+                  <div className="text-sm text-yellow-400 font-bold">ランダム獲得（1日1回）</div>
+                </>
+              )}
             </div>
           </Button>
         </div>
