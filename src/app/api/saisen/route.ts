@@ -17,7 +17,7 @@ export async function POST(req: Request) {
     if (!user) return jsonResponse({ error: 'ユーザー情報が見つかりません' }, { status: 404 });
     if (!tokuMaster) return jsonResponse({ error: 'マスタが見つかりません' }, { status: 404 });
 
-    if (user.coin < tokuMaster.coin) {
+    if (user.coin < value) {
       return jsonResponse({ error: 'コインが不足しています' }, { status: 400 });
     }
 
@@ -73,10 +73,23 @@ export async function POST(req: Request) {
       power: addPower,
     };
 
+    console.log(user.fortunes);
+
+    // すでに同じeffect.nameがある場合はpowerを加算、なければ新規追加
+    const setFortunes = (user.fortunes as Fortune[]).length > 0 ? (user.fortunes as Fortune[]) : [];
+    const existingEffect = setFortunes.find((fortune) => fortune.name === randomFortune);
+    let isNew = false;
+    if (existingEffect) {
+      existingEffect.power += addPower;
+    } else {
+      setFortunes.push(fortune);
+      isNew = true;
+    }
+
     // ユーザーデータ更新
     const userUpdateData: Record<string, string | number | Fortune[]> = {};
     userUpdateData.coin = user.coin - value;
-    userUpdateData.fortunes = [...(user.fortunes as Fortune[]), fortune];
+    userUpdateData.fortunes = setFortunes;
     user = await prisma.user.update({
       where: { id: user.id },
       data: userUpdateData,
@@ -97,7 +110,7 @@ export async function POST(req: Request) {
       },
     });
 
-    return jsonResponse(fortune, { status: 200 });
+    return jsonResponse({ isNew, fortune }, { status: 200 });
   } catch (err) {
     console.error('POST /api/toku/get error', err);
     return jsonResponse({ error: '徳カウント取得に失敗しました' }, { status: 500 });

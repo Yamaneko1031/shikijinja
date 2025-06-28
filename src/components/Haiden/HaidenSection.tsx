@@ -6,7 +6,8 @@ import { SectionProps } from '@/types/section';
 import { Button } from '../_shared/Button';
 import { TokuId } from '@/types/toku';
 import { useLoadImages } from '@/hooks/useLoadImages';
-
+import { apiFetch } from '@/lib/api';
+import { SaisenResponse } from '@/types/saisen';
 const HaidenSection = (props: SectionProps) => {
   const [isThrowing, setIsThrowing] = useState(false);
   const sisenValue = useRef(0);
@@ -17,11 +18,24 @@ const HaidenSection = (props: SectionProps) => {
   ]);
   loadedImagesRef.current = loadedImages;
 
-  const throwCoin = (value: number) => {
+  const throwCoin = async (value: number) => {
     setIsThrowing(true);
-    setTimeout(() => {
-      setIsThrowing(false);
-    }, 2000);
+
+    const saisenPromise = apiFetch<SaisenResponse>('/api/saisen', {
+      method: 'POST',
+      body: JSON.stringify({ value }),
+    });
+
+    // // エフェクト演出を開始
+    // const effectPromise = (async () => {
+    //   for (const fortune of omamoriDataRef.current?.fortunes ?? []) {
+    //     await new Promise((resolve) => setTimeout(resolve, 2000));
+    //     console.log('effect', fortune);
+    //     telop.showPop(`${fortune.name} +${fortune.power} を獲得`);
+    //   }
+    // })();
+
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
     let tokuId: TokuId = 'saisen_50';
     switch (value) {
@@ -42,6 +56,12 @@ const HaidenSection = (props: SectionProps) => {
         break;
     }
     props.handleTokuUsed(tokuId);
+
+    // 両方完了まで待つ
+    const saisenData = await saisenPromise;
+    console.log('saisenData', saisenData);
+
+    setIsThrowing(false);
   };
 
   return (

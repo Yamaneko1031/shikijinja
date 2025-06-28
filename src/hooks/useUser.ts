@@ -47,12 +47,6 @@ export const useUser = (initialUser: User) => {
       const tokuMaster = getTokuMaster(tokuId);
       let count = 0;
       if (tokuMaster) {
-        // 先にテロップ表示
-        if (tokuMaster.coin > 0) {
-          const text = `${tokuMaster.label} [${count + 1}/${tokuMaster.limit}]`;
-          telop.showPop(text);
-        }
-
         if (tokuMaster.permanent) {
           count = user.permanentTokuCounts[tokuId]?.count ?? 0;
           setUser((prevUser) => ({
@@ -83,6 +77,10 @@ export const useUser = (initialUser: User) => {
               },
             },
           }));
+        }
+        if (tokuMaster.coin > 0) {
+          const text = `${tokuMaster.label} [${count + 1}/${tokuMaster.limit}]`;
+          telop.showPop(text);
         }
       }
       // DBの更新は非同期で行う
