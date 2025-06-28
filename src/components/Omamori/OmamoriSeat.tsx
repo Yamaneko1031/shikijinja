@@ -33,9 +33,9 @@ export default function OmamoriSeat({ omamoriData }: Props) {
       <div className="absolute w-[8rem] top-88 left-8 flex flex-col justify-start items-start gap-2">
         <div className="text-md font-bold text-left">効能</div>
         <div className="w-full h-[16.5rem] flex flex-col justify-items-start items-start gap-1 overflow-y-auto">
-          {omamoriData.effects.map((effect) => (
-            <div key={effect.name}>
-              <div className="text-sm">{effect.name + ' +' + effect.power}</div>
+          {omamoriData.fortunes.map((fortune) => (
+            <div key={fortune.name}>
+              <div className="text-sm">{fortune.name + ' +' + fortune.power}</div>
             </div>
           ))}
         </div>

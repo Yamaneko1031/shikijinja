@@ -1,9 +1,10 @@
 import { jsonResponse } from '@/server/response';
 import { getSessionUser } from '@/server/userSession';
-import { effectNames } from '@/config/omamori';
+import { fortuneNames } from '@/config/fortune';
 import { OmamoriDataResponse } from '@/types/omamori';
-import { OmamoriEffect } from '@/types/omamori';
 import { prisma } from '@/server/prisma';
+import { Fortune } from '@/types/user';
+
 export async function POST() {
   try {
     const { user } = await getSessionUser();
@@ -13,21 +14,21 @@ export async function POST() {
     const allBases = await prisma.omamoriBase.findMany();
     const omamoriBase = allBases[Math.floor(Math.random() * allBases.length)];
 
-    // 3~6個のエフェクトを追加
-    const setEffects = omamoriBase.effects as OmamoriEffect[];
-    setEffects.map((effect) => {
-      effect.power += Math.floor(Math.random() * (100 - effect.power)) + 1;
+    // 3~6個の運を追加
+    const setFortunes = omamoriBase.fortunes as Fortune[];
+    setFortunes.map((fortune) => {
+      fortune.power += Math.floor(Math.random() * (100 - fortune.power)) + 1;
     });
     const effectCount = Math.floor(Math.random() * 4) + 3;
     for (let i = 0; i < effectCount; i++) {
-      const randomEffect = effectNames[Math.floor(Math.random() * effectNames.length)];
+      const randomEffect = fortuneNames[Math.floor(Math.random() * fortuneNames.length)];
       // すでに同じeffect.nameがある場合はpowerを加算、なければ新規追加
-      const existingEffect = setEffects.find((effect) => effect.name === randomEffect);
+      const existingEffect = setFortunes.find((fortune) => fortune.name === randomEffect);
       const addPower = Math.floor(Math.random() * 100) + 1;
       if (existingEffect) {
         i--;
       } else {
-        setEffects.push({
+        setFortunes.push({
           name: randomEffect,
           power: addPower,
         });
@@ -39,7 +40,7 @@ export async function POST() {
         userId: user.id,
         baseId: omamoriBase.id,
         additionalDescription: '',
-        effects: setEffects,
+        fortunes: setFortunes,
       },
     });
 
@@ -52,13 +53,13 @@ export async function POST() {
       id: omamoriData.id,
       baseId: omamoriData.baseId,
       additionalDescription: omamoriData.additionalDescription,
-      effects: omamoriData.effects as OmamoriEffect[],
+      fortunes: omamoriData.fortunes as Fortune[],
       createdAt: omamoriData.createdAt.toISOString(),
     };
 
     return jsonResponse(omamoriDataResponse, { status: 200 });
   } catch (err) {
-    console.error('POST /api/omikuji error', err);
-    return jsonResponse({ error: 'お守り購入に失敗しました' + err }, { status: 500 });
+    console.error('POST /api/omamori/effect error', err);
+    return jsonResponse({ error: 'お守り効能取得に失敗しました' + err }, { status: 500 });
   }
 }

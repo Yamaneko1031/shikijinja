@@ -3,7 +3,7 @@ import { getTokuMaster } from '@/utils/toku';
 import { jsonResponse } from '@/server/response';
 import { getJapanTodayMidnight } from '@/server/date';
 import { TokuCounts, TokuId } from '@/types/toku';
-import { User } from '@/types/user';
+import { Fortune, User } from '@/types/user';
 import { getSessionUser } from '@/server/userSession';
 export async function POST(req: Request) {
   const { tokuId, count }: { tokuId: TokuId; count: number } = await req.json();
@@ -92,6 +92,7 @@ export async function POST(req: Request) {
       tokuUpdatedAt: tokuCounts.date.toISOString(),
       tokuCounts: tokuCounts.counts as TokuCounts,
       permanentTokuCounts: user.permanentTokuCounts as TokuCounts,
+      fortunes: user.fortunes as Fortune[],
     };
 
     return jsonResponse(userData, { status: 200 });

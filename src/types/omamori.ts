@@ -1,7 +1,4 @@
-export type OmamoriEffect = {
-  name: string;
-  power: number;
-};
+import { Fortune } from './user';
 
 export type OmamoriBase = {
   id: string;
@@ -10,7 +7,7 @@ export type OmamoriBase = {
   description: string;
   imageUrl: string;
   price: number;
-  effects: OmamoriEffect[];
+  fortunes: Fortune[];
 };
 
 export type OmamoriDataResponse = {
@@ -21,7 +18,7 @@ export type OmamoriDataResponse = {
   description: string;
   imageUrl: string;
   price: number;
-  effects: OmamoriEffect[];
+  fortunes: Fortune[];
   additionalDescription: string;
   createdAt: string;
 };
@@ -29,7 +26,7 @@ export type OmamoriDataResponse = {
 export type OmamoriCommentUserPrompt = {
   name: string;
   description: string;
-  effects: OmamoriEffect[];
+  fortunes: Fortune[];
 };
 
-export type OmamoriLoadingState = 'none' | 'shuffle' | 'stop' | 'effect';
+export type OmamoriLoadingState = 'none' | 'shuffle' | 'stop' | 'fortune';

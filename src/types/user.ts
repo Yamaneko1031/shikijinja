@@ -3,6 +3,11 @@ import { OmamoriDataResponse } from './omamori';
 import { OmikujiResponse } from './omikuji';
 import { TokuCounts } from './toku';
 
+export type Fortune = {
+  name: string;
+  power: number;
+};
+
 // ユーザーデータ
 export type User = {
   id: string;
@@ -13,6 +18,7 @@ export type User = {
   tokuUpdatedAt: string;
   tokuCounts: TokuCounts;
   permanentTokuCounts: TokuCounts;
+  fortunes: Fortune[];
 };
 
 export type UserItems = {

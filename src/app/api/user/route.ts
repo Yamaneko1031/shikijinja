@@ -2,7 +2,7 @@ import { cookies } from 'next/headers';
 import { prisma } from '@/server/prisma';
 import { jsonResponse } from '@/server/response';
 import { TokuCounts } from '@/types/toku';
-import { User } from '@/types/user';
+import { Fortune, User } from '@/types/user';
 import { getJapanTodayMidnight } from '@/server/date';
 
 // export async function POST() {
@@ -130,12 +130,13 @@ export async function PATCH(req: Request) {
     const userData: User = {
       id: user.id,
       isGuest: user.isGuest,
-      registReward: user.registReward,
       email: user.email ?? '',
       name: user.name ?? '',
       coin: user.coin,
       tokuUpdatedAt: tokuCounts.date.toISOString(),
       tokuCounts: tokuCounts.counts as TokuCounts,
+      permanentTokuCounts: user.permanentTokuCounts as TokuCounts,
+      fortunes: user.fortunes as Fortune[],
     };
 
     return jsonResponse(userData, { status: 200 });

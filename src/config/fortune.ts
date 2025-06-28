@@ -1,4 +1,4 @@
-export const effectNames = [
+export const fortuneNames = [
   '健康運',
   '金運',
   '恋愛運',

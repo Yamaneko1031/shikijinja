@@ -2,8 +2,8 @@ import { jsonResponse } from '@/server/response';
 import { prisma } from '@/server/prisma';
 import { getSessionUser } from '@/server/userSession';
 import { openaiTemplateRequest } from '@/server/openaiTemplateRequest';
-import { OmamoriCommentUserPrompt, OmamoriDataResponse, OmamoriEffect } from '@/types/omamori';
-
+import { OmamoriCommentUserPrompt, OmamoriDataResponse } from '@/types/omamori';
+import { Fortune } from '@/types/user';
 export async function POST(request: Request) {
   try {
     const { user } = await getSessionUser();
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     const userPrompt: OmamoriCommentUserPrompt = {
       name: setOmamori.base.name,
       description: setOmamori.base.description,
-      effects: setOmamori.effects as OmamoriEffect[],
+      fortunes: setOmamori.fortunes as Fortune[],
     };
     const res = await openaiTemplateRequest('omamori_comment', JSON.stringify(userPrompt));
     if (!res) return jsonResponse({ error: 'おまもりコメント生成に失敗しました' }, { status: 500 });
@@ -54,13 +54,13 @@ export async function POST(request: Request) {
       id: updatedOmamori.id,
       baseId: updatedOmamori.baseId,
       additionalDescription: updatedOmamori.additionalDescription,
-      effects: updatedOmamori.effects as OmamoriEffect[],
+      fortunes: updatedOmamori.fortunes as Fortune[],
       createdAt: updatedOmamori.createdAt.toISOString(),
     };
 
     return jsonResponse(omamoriDataResponse, { status: 200 });
   } catch (err) {
-    console.error('POST /api/omikuji error', err);
-    return jsonResponse({ error: 'おみくじ生成に失敗しました' + err }, { status: 500 });
+    console.error('POST /api/omamori/comment error', err);
+    return jsonResponse({ error: 'お守りコメント生成に失敗しました' + err }, { status: 500 });
   }
 }

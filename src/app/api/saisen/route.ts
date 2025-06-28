@@ -2,15 +2,16 @@ import { prisma } from '@/server/prisma';
 import { getTokuMaster } from '@/utils/toku';
 import { jsonResponse } from '@/server/response';
 import { getJapanTodayMidnight } from '@/server/date';
-import { TokuCounts, TokuId } from '@/types/toku';
-import { Fortune, User } from '@/types/user';
+import { TokuCounts } from '@/types/toku';
 import { getSessionUser } from '@/server/userSession';
+import { fortuneNames } from '@/config/fortune';
+import { Fortune } from '@/types/user';
 
 export async function POST(req: Request) {
-  const { tokuId, count }: { tokuId: TokuId; count: number } = await req.json();
+  const { value }: { value: number } = await req.json();
+  const tokuId = 'saisen';
   const tokuMaster = getTokuMaster(tokuId);
   let { user } = await getSessionUser();
-  let addCount = count;
 
   try {
     if (!user) return jsonResponse({ error: 'ユーザー情報が見つかりません' }, { status: 404 });
@@ -18,14 +19,6 @@ export async function POST(req: Request) {
 
     if (user.coin < tokuMaster.coin) {
       return jsonResponse({ error: 'コインが不足しています' }, { status: 400 });
-    }
-
-    if (tokuMaster.permanent) {
-      const permanentTokuCounts = user.permanentTokuCounts as TokuCounts;
-      permanentTokuCounts[tokuId] = {
-        count: (permanentTokuCounts[tokuId]?.count ?? 0) + addCount,
-      };
-      user.permanentTokuCounts = permanentTokuCounts;
     }
 
     // 今日の徳カウント情報を取得
@@ -54,16 +47,44 @@ export async function POST(req: Request) {
         : tokuCountsUpdateData.counts[tokuId]!.count;
 
     if (prevCount >= tokuMaster.limit) {
-      addCount = tokuMaster.limit - prevCount;
-    }
-
-    if (addCount <= 0) {
       return jsonResponse({ error: '回数制限に達しています' }, { status: 400 });
     }
 
+    const randomFortune = fortuneNames[Math.floor(Math.random() * fortuneNames.length)];
+    let addPower = 0;
+    let percent = 0;
+    if (value <= 50) {
+      addPower = 5;
+      percent = 90;
+    } else if (value <= 100) {
+      addPower = 10;
+      percent = 95;
+    } else {
+      addPower = 20;
+      percent = 98;
+    }
+
+    while (Math.floor(Math.random() * 100) < percent) {
+      addPower += 1;
+    }
+
+    const fortune: Fortune = {
+      name: randomFortune,
+      power: addPower,
+    };
+
+    // ユーザーデータ更新
+    const userUpdateData: Record<string, string | number | Fortune[]> = {};
+    userUpdateData.coin = user.coin - value;
+    userUpdateData.fortunes = [...(user.fortunes as Fortune[]), fortune];
+    user = await prisma.user.update({
+      where: { id: user.id },
+      data: userUpdateData,
+    });
+
     // 徳カウントデータ更新
     tokuCountsUpdateData.counts[tokuId] = {
-      count: prevCount + addCount,
+      count: prevCount + 1,
     };
     // 今日のデータがなければ作る、あれば更新
     tokuCounts = await prisma.tokuCount.upsert({
@@ -76,33 +97,9 @@ export async function POST(req: Request) {
       },
     });
 
-    // ユーザーデータ更新
-    const userUpdateData: Record<string, string | number | TokuCounts> = {};
-    userUpdateData.coin = user.coin - tokuMaster.coin * addCount;
-    if (tokuMaster.permanent) {
-      userUpdateData.permanentTokuCounts = user.permanentTokuCounts as TokuCounts;
-    }
-    user = await prisma.user.update({
-      where: { id: user.id },
-      data: userUpdateData,
-    });
-
-    // クライアントで使用するユーザー情報を返す
-    const userData: User = {
-      id: user.id,
-      isGuest: user.isGuest,
-      email: user.email ?? '',
-      name: user.name ?? '',
-      coin: user.coin,
-      tokuUpdatedAt: tokuCounts?.date.toISOString() ?? '',
-      tokuCounts: tokuCounts?.counts as TokuCounts,
-      permanentTokuCounts: user.permanentTokuCounts as TokuCounts,
-      fortunes: user.fortunes as Fortune[],
-    };
-
-    return jsonResponse(userData, { status: 200 });
+    return jsonResponse(fortune, { status: 200 });
   } catch (err) {
-    console.error('POST /api/toku/used error', err);
-    return jsonResponse({ error: '徳カウント使用に失敗しました' }, { status: 500 });
+    console.error('POST /api/toku/get error', err);
+    return jsonResponse({ error: '徳カウント取得に失敗しました' }, { status: 500 });
   }
 }

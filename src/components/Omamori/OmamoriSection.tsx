@@ -45,7 +45,7 @@ const OmamoriSection = (props: SectionProps) => {
     setLoadingState('shuffle');
 
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    omamoriDataRef.current = await apiFetch<OmamoriDataResponse>('/api/omamori/effect', {
+    omamoriDataRef.current = await apiFetch<OmamoriDataResponse>('/api/omamori/fortune', {
       method: 'POST',
     });
 
@@ -64,23 +64,24 @@ const OmamoriSection = (props: SectionProps) => {
     setLoadingState('stop');
 
     // 選択されたお守りを表示する待ち時間
-    await new Promise((resolve) => setTimeout(resolve, 4000));
+    await new Promise((resolve) => setTimeout(resolve, 3000));
 
-    setLoadingState('effect');
+    setLoadingState('fortune');
 
     // エフェクト演出を開始
     const effectPromise = (async () => {
-      for (const effect of omamoriDataRef.current?.effects ?? []) {
+      for (const fortune of omamoriDataRef.current?.fortunes ?? []) {
         await new Promise((resolve) => setTimeout(resolve, 2000));
-        console.log('effect', effect);
-        telop.showPop(`${effect.name} +${effect.power} を獲得`);
+        console.log('effect', fortune);
+        telop.showPop(`${fortune.name} +${fortune.power} を獲得`);
       }
     })();
-    await new Promise((resolve) => setTimeout(resolve, 2000));
 
     // 両方完了まで待つ
     omamoriDataRef.current = await commentPromise;
     await effectPromise;
+
+    await new Promise((resolve) => setTimeout(resolve, 1500));
 
     props.handleTokuUsed('omamori_buy');
 

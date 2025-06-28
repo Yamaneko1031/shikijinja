@@ -47,7 +47,7 @@ export async function GET() {
         description: omamori.base.description,
         imageUrl: omamori.base.imageUrl,
         price: omamori.base.price,
-        effects: omamori.effects,
+        fortunes: omamori.fortunes,
         id: omamori.id,
         baseId: omamori.baseId,
         additionalDescription: omamori.additionalDescription,

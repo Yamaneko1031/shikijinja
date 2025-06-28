@@ -21,7 +21,7 @@ const OmamoriLoading: React.FC<Props> = (props: Props) => {
       loadingMessage = 'お守りを選択中';
       stopNumber = Number(props.omamoriData?.baseId) - 1;
       break;
-    case 'effect':
+    case 'fortune':
       loadingMessage = '効能を付与中';
       break;
   }
@@ -32,7 +32,7 @@ const OmamoriLoading: React.FC<Props> = (props: Props) => {
         {loadingMessage}
       </div>
 
-      {props.loadingState !== 'none' && props.loadingState !== 'effect' && (
+      {props.loadingState !== 'none' && props.loadingState !== 'fortune' && (
         <>
           <Image
             src="/images/omamori/neko_nayami.webp"
@@ -47,7 +47,7 @@ const OmamoriLoading: React.FC<Props> = (props: Props) => {
         </>
       )}
 
-      {props.loadingState === 'effect' && props.omamoriData && (
+      {props.loadingState === 'fortune' && props.omamoriData && (
         <>
           <div className="absolute bottom-2 left-2 omikuji-inori" aria-hidden="true"></div>
           <Image

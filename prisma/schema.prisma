@@ -62,7 +62,7 @@ model OmamoriBase {
   description             String
   imageUrl                String
   price                   Int
-  effects                 Json          @default("[]")
+  fortunes                Json          @default("[]")
   createdAt               DateTime      @default(now())
   omamoriItems            Omamori[]     @relation("OmamoriBaseItems")
 }
@@ -72,7 +72,7 @@ model Omamori {
   userId                  String?
   baseId                  String
   additionalDescription   String
-  effects                 Json          @default("[]")
+  fortunes                Json          @default("[]")
   updatedAt               DateTime      @updatedAt
   createdAt               DateTime      @default(now())
   user                    User?         @relation("UserOmamoriItems", fields: [userId], references: [id], onDelete: SetNull)
@@ -97,7 +97,7 @@ model User {
   passwordHash            String?
   name                    String?
   coin                    Int              @default(0)
-  effects                 Json             @default("{}")
+  fortunes                Json             @default("{}")
   permanentTokuCounts     Json             @default("{}")
   createdAt               DateTime         @default(now())
   updatedAt               DateTime         @updatedAt

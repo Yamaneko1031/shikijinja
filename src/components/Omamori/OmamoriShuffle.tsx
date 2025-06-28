@@ -28,7 +28,7 @@ export default function OmamoriShuffle({ stopNumber, loadingState }: OmamoriShuf
     } else if (loadingState === 'stop' && stopNumber !== null) {
       setPosition(stopNumber);
       setIsStop(true);
-    } else if (loadingState === 'effect') {
+    } else if (loadingState === 'fortune') {
       setPosition(null);
     }
   }, [stopNumber, loadingState]);
