@@ -7,18 +7,13 @@ interface ModalProps {
   handleOutsideClick: () => void;
 }
 
-const MenuWindow: React.FC<ModalProps> = ({ isOpen, children, className, handleOutsideClick }) => {
+const HelpWindow: React.FC<ModalProps> = ({ isOpen, children, className, handleOutsideClick }) => {
   const windowRef = useRef<HTMLDivElement | null>(null);
   const documentClickHandler = useRef<((e: Event) => void) | null>(null);
 
   useEffect(() => {
     if (isOpen) {
       documentClickHandler.current = (e: Event) => {
-        const mainElement = document.querySelector('main');
-        if (!mainElement?.contains(e.target as Node)) {
-          // ※main要素の外側 = Modalの想定
-          return;
-        }
         if (windowRef.current?.contains(e.target as Node)) {
           return;
         }
@@ -52,4 +47,4 @@ const MenuWindow: React.FC<ModalProps> = ({ isOpen, children, className, handleO
   ) : null;
 };
 
-export default React.memo(MenuWindow);
+export default React.memo(HelpWindow);

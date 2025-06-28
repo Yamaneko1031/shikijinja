@@ -5,6 +5,9 @@ import { NadenekoResponse } from '@/types/nadeneko';
 import { coinBasePositions, subMessageTable } from '@/config/nadeneko';
 import { getCssDuration } from '@/utils/getCssDuration';
 import { Button } from '../_shared/Button';
+import HelpWindow from '../_shared/HelpWindow';
+import NadenekoHelp from './NadenekoHelp';
+
 type Props = {
   lotData: NadenekoResponse | null;
   handleFinished: () => void;
@@ -41,6 +44,7 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
   const [subMessages, setSubMessages] = useState<SubMessage[]>([]);
   const [totalCoin, setTotalCoin] = useState(0);
   const [isAuto, setIsAuto] = useState(false);
+  const [isHelp, setIsHelp] = useState(false);
   const previousSubMessageRef = useRef<SubMessage | null>(null);
   const timeoutIdRef = useRef<NodeJS.Timeout | null>(null);
   const coinValueRef = useRef(Array(coinPopupElementCount).fill(0));
@@ -382,11 +386,42 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
             variant="subNatural"
             size="sm"
             onClick={() => setIsAuto(!isAuto)}
-            disabled={isAuto || lotData === null}
+            disabled={isAuto || isHelp || lotData === null}
           >
             おまかせ
           </Button>
         </div>
+
+        {/* ヘルプ */}
+        <div className="absolute top-4 right-4">
+          <Button
+            variant="custom"
+            className="w-[1.5rem] h-[1.5rem] bg-white disabled:bg-white/50 rounded-full flex items-center justify-center bg-[url('/images/icon/icon_help.webp')] bg-[length:100%_100%] bg-no-repeat"
+            onClick={() => {
+              setIsHelp(!isHelp);
+              console.log('click');
+            }}
+            disabled={isAuto || isHelp || lotData === null}
+          ></Button>
+        </div>
+        {/* <button
+              className="absolute top-[4%] right-[4%] w-[2rem] h-[2rem] rounded-full bg-white/80 flex items-center justify-center"
+              onClick={() => {
+                setIsHelp(true);
+                console.log('click');
+              }}
+            >
+              <Image src="/images/icon/icon_help.webp" alt="ヘルプ" width={48} height={48} />
+              あああ
+            </button> */}
+
+        <HelpWindow
+          isOpen={isHelp}
+          className="absolute bg-white rounded-md border-2 border-gray-200 top-12 right-8"
+          handleOutsideClick={() => setIsHelp(false)}
+        >
+          <NadenekoHelp />
+        </HelpWindow>
 
         {dragStateRef.current === 'finished' && (
           <div className="absolute w-full h-full flex items-center justify-center">

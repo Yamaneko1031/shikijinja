@@ -98,3 +98,32 @@ input[type='range'] {
 input[type='checkbox'] {
   accent-color: #323232;
 }
+
+.help-ul {
+  @apply flex flex-col gap-4;
+}
+
+.help-ul li {
+  @apply flex flex-col gap-1;
+}
+
+.help-ul li p:first-child {
+  @apply text-lg font-bold;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.help-ul li p:first-child::before {
+  /* content: '・'; */
+  display: inline-block;
+  width: 0.9rem;
+  height: 0.4rem;
+  border-bottom: 0.1rem solid #02600c;
+  border-left: 0.2rem solid #02600c;
+  transform: rotate(-45deg) translateY(-0.3rem);
+  content: '';
+}
+
+.help-ul li p:not(:first-child) {
+  @apply text-sm ml-4;
+}
