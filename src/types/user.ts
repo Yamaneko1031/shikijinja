@@ -7,12 +7,12 @@ import { TokuCounts } from './toku';
 export type User = {
   id: string;
   isGuest: boolean;
-  registReward: boolean;
   email: string;
   name: string;
   coin: number;
   tokuUpdatedAt: string;
   tokuCounts: TokuCounts;
+  permanentTokuCounts: TokuCounts;
 };
 
 export type UserItems = {

@@ -12,6 +12,8 @@ export const tokuIds = [
   'saisen_50',
   'saisen_100',
   'saisen_500',
+  'shoukai',
+  'jikkai',
   'debug_add',
   'debug_sub',
 ] as const;
@@ -23,6 +25,7 @@ export type TokuMasterData = {
   label: string;
   limit: number;
   coin: number;
+  permanent: boolean;
 };
 
 export type TokuCounts = {

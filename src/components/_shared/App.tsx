@@ -69,7 +69,10 @@ const App = (props: Props) => {
       body: JSON.stringify({ guestSessionId: props.guestSessionId }),
     });
 
-    if (!userRef.current.user.registReward && !userRef.current.user.isGuest) {
+    if (
+      !userRef.current.user.permanentTokuCounts['regist_reward'] &&
+      !userRef.current.user.isGuest
+    ) {
       userRef.current.handleTokuGet('regist_reward');
     }
     setIsInit(true);

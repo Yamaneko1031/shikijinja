@@ -8,11 +8,26 @@ import ShoukaiModal from './ShoukaiModal';
 import { Button } from '../_shared/Button';
 import Image from 'next/image';
 import DecalogueModal from './DecalogueModal';
+import { getTokuCoin } from '@/utils/toku';
 const ShoukaiSection = (props: SectionProps) => {
   console.log('ShoukaiSection', props.isActive, props.isNeighbor);
 
   const [shoukaiModalOpen, setShoukaiModalOpen] = useState(false);
   const [decalogueModalOpen, setDecalogueModalOpen] = useState(false);
+
+  const handleShoukaiModalClose = () => {
+    if (!props.handleIsLimitOver('shoukai')) {
+      props.handleTokuGet('shoukai');
+    }
+    setShoukaiModalOpen(false);
+  };
+
+  const handleDecalogueModalClose = () => {
+    if (!props.handleIsLimitOver('jikkai')) {
+      props.handleTokuGet('jikkai');
+    }
+    setDecalogueModalOpen(false);
+  };
 
   return (
     <>
@@ -42,22 +57,44 @@ const ShoukaiSection = (props: SectionProps) => {
           <Button
             variant="positive"
             size="lg"
-            onClick={() => {
-              setShoukaiModalOpen(true);
-            }}
+            onClick={() => setShoukaiModalOpen(true)}
             className="w-full max-w-md flex flex-col pt-2 pb-2"
           >
             <div className="text-xl font-bold">神様の紹介を見る</div>
+            {!props.handleIsLimitOver('shoukai') && (
+              <div className="flex flex-row items-center">
+                <Image
+                  src="/images/icon/icon_coin.webp"
+                  alt="omikuji_button"
+                  width={24}
+                  height={24}
+                />
+                <div className="text-sm text-yellow-400 font-bold">
+                  {getTokuCoin('shoukai')}獲得（初回）
+                </div>
+              </div>
+            )}
           </Button>
           <Button
             variant="positive"
             size="lg"
-            onClick={() => {
-              setDecalogueModalOpen(true);
-            }}
+            onClick={() => setDecalogueModalOpen(true)}
             className="w-full max-w-md flex flex-col pt-2 pb-2"
           >
             <div className="text-xl font-bold">十戒を見る</div>
+            {!props.handleIsLimitOver('jikkai') && (
+              <div className="flex flex-row items-center">
+                <Image
+                  src="/images/icon/icon_coin.webp"
+                  alt="omikuji_button"
+                  width={24}
+                  height={24}
+                />
+                <div className="text-sm text-yellow-400 font-bold">
+                  {getTokuCoin('jikkai')}獲得（初回）
+                </div>
+              </div>
+            )}
           </Button>
         </div>
       </div>
@@ -66,14 +103,14 @@ const ShoukaiSection = (props: SectionProps) => {
         isOpen={shoukaiModalOpen}
         className="absolute top-0 left-0 min-h-[100lvh] min-w-[100vw] bg-transparent overscroll-contain"
       >
-        <ShoukaiModal shoukaiIndex={0} onClose={() => setShoukaiModalOpen(false)} />
+        <ShoukaiModal shoukaiIndex={0} onClose={handleShoukaiModalClose} />
       </Modal>
 
       <Modal
         isOpen={decalogueModalOpen}
         className="absolute top-0 left-0 min-h-[100lvh] min-w-[100vw] bg-transparent overscroll-contain"
       >
-        <DecalogueModal onClose={() => setDecalogueModalOpen(false)} />
+        <DecalogueModal onClose={handleDecalogueModalClose} />
       </Modal>
     </>
   );

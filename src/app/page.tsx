@@ -61,12 +61,12 @@ export default async function Page() {
   const userData = {
     id: workUser.id,
     isGuest: workUser.isGuest,
-    registReward: workUser.registReward,
     email: workUser.email ?? '',
     name: workUser.name ?? '',
     coin: workUser.coin,
     tokuUpdatedAt: tokuCounts.date.toISOString(),
     tokuCounts: tokuCounts.counts as TokuCounts,
+    permanentTokuCounts: workUser.permanentTokuCounts as TokuCounts,
   } as User;
 
   return (

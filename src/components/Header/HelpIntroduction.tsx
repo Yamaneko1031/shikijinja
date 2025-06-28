@@ -11,7 +11,7 @@ export default function HelpIntroduction({ onClose }: Props) {
   return (
     <div className="w-full h-full flex flex-col items-center text-black">
       <div className="min-h-[3rem] flex justify-center items-center">式岐神社について</div>
-      <div className="max-h-[60vh] overflow-scroll m-1 p-2 border-2 border-gray-100">
+      <div className="max-h-[60vh] w-full overflow-scroll m-1 p-2 border-2 border-gray-100">
         式岐神社は、IT業界で日々奮闘する皆さまのためのオンライン神社です。
         <br />
         プロジェクト成功、バグ退散、アイデア閃き、納期厳守など、日々の業務に役立つご利益が満載。

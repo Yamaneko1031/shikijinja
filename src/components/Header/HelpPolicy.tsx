@@ -11,7 +11,7 @@ export default function HelpPolicy({ onClose }: Props) {
   return (
     <div className="w-full h-full flex flex-col items-center text-black">
       <div className="min-h-[3rem] flex justify-center items-center">プライバシーポリシー</div>
-      <div className="max-h-[60vh] overflow-scroll m-1 p-2 border-2 border-gray-100">
+      <div className="max-h-[60vh] w-full overflow-scroll m-1 p-2 border-2 border-gray-100">
         本文あああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ
         本文あああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ
         本文あああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ

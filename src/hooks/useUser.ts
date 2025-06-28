@@ -1,6 +1,6 @@
 import { User } from '@/types/user';
 import { TokuId } from '@/types/toku';
-import { getTokuLimit, getTokuMaster } from '@/utils/toku';
+import { getTokuMaster } from '@/utils/toku';
 import { useState } from 'react';
 import { useTelop } from './useTelop';
 import { getAppTime } from '@/lib/appTime';
@@ -10,20 +10,6 @@ export const useUser = (initialUser: User) => {
   const [user, setUser] = useState<User>(initialUser);
   const telop = useTelop();
   const { pushRequest } = useRequestQueue();
-
-  // const updateUser = async (input: UserUpdateInput) => {
-  //   try {
-  //     const res = await apiFetch('/api/user', {
-  //       method: 'PATCH',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify(input),
-  //     });
-  //     // 更新後のユーザー情報を返す
-  //     return await res;
-  //   } catch (err) {
-  //     console.error('更新に失敗しました:', err);
-  //   }
-  // };
 
   const resetTokuCounts = () => {
     setUser({ ...user, tokuUpdatedAt: new Date().toISOString(), tokuCounts: {} });
@@ -40,12 +26,17 @@ export const useUser = (initialUser: User) => {
   };
 
   const handleIsLimitOver = (tokuId: TokuId): boolean => {
-    const limit = getTokuLimit(tokuId);
+    const tokuMaster = getTokuMaster(tokuId);
+    const limit = tokuMaster?.limit ?? 0;
+    if (tokuMaster?.permanent) {
+      const tokuCount = user.permanentTokuCounts[tokuId]?.count ?? 0;
+      return tokuCount >= limit;
+    }
     if (!checkDate(user.tokuUpdatedAt)) {
       resetTokuCounts();
     }
-    const currentTokuCount = user.tokuCounts[tokuId]?.count;
-    return limit !== undefined && currentTokuCount !== undefined && currentTokuCount >= limit;
+    const tokuCount = user.tokuCounts[tokuId]?.count ?? 0;
+    return tokuCount >= limit;
   };
 
   const handleTokuGet = async (tokuId: TokuId, dbUpdate: boolean = true): Promise<boolean> => {
@@ -53,9 +44,8 @@ export const useUser = (initialUser: User) => {
       if (handleIsLimitOver(tokuId)) {
         return false;
       }
-      const count = user.tokuCounts[tokuId]?.count ?? 0;
-      // 上限を超えてなければローカルは更新
       const tokuMaster = getTokuMaster(tokuId);
+      let count = 0;
       if (tokuMaster) {
         // 先にテロップ表示
         if (tokuMaster.coin > 0) {
@@ -63,16 +53,37 @@ export const useUser = (initialUser: User) => {
           telop.showPop(text);
         }
 
-        setUser((prevUser) => ({
-          ...prevUser,
-          coin: prevUser.coin + tokuMaster.coin,
-          tokuCounts: {
-            ...prevUser.tokuCounts,
-            [tokuId]: {
-              count: count + 1,
+        if (tokuMaster.permanent) {
+          count = user.permanentTokuCounts[tokuId]?.count ?? 0;
+          setUser((prevUser) => ({
+            ...prevUser,
+            coin: prevUser.coin + tokuMaster.coin,
+            permanentTokuCounts: {
+              ...prevUser.permanentTokuCounts,
+              [tokuId]: {
+                count: count + 1,
+              },
             },
-          },
-        }));
+            tokuCounts: {
+              ...prevUser.tokuCounts,
+              [tokuId]: {
+                count: count + 1,
+              },
+            },
+          }));
+        } else {
+          count = user.tokuCounts[tokuId]?.count ?? 0;
+          setUser((prevUser) => ({
+            ...prevUser,
+            coin: prevUser.coin + tokuMaster.coin,
+            tokuCounts: {
+              ...prevUser.tokuCounts,
+              [tokuId]: {
+                count: count + 1,
+              },
+            },
+          }));
+        }
       }
       // DBの更新は非同期で行う
       if (dbUpdate) {
@@ -102,21 +113,43 @@ export const useUser = (initialUser: User) => {
       if (handleIsLimitOver(tokuId)) {
         return false;
       }
-      const count = user.tokuCounts[tokuId]?.count ?? 0;
-      // 上限を超えてなければローカルは更新
+
       const tokuMaster = getTokuMaster(tokuId);
+      let count = 0;
       if (tokuMaster) {
-        setUser((prevUser) => ({
-          ...prevUser,
-          coin: prevUser.coin - tokuMaster.coin,
-          tokuCounts: {
-            ...prevUser.tokuCounts,
-            [tokuId]: {
-              count: count + 1,
+        if (tokuMaster.permanent) {
+          count = user.permanentTokuCounts[tokuId]?.count ?? 0;
+          setUser((prevUser) => ({
+            ...prevUser,
+            coin: prevUser.coin - tokuMaster.coin,
+            permanentTokuCounts: {
+              ...prevUser.permanentTokuCounts,
+              [tokuId]: {
+                count: count + 1,
+              },
             },
-          },
-        }));
+            tokuCounts: {
+              ...prevUser.tokuCounts,
+              [tokuId]: {
+                count: count + 1,
+              },
+            },
+          }));
+        } else {
+          count = user.tokuCounts[tokuId]?.count ?? 0;
+          setUser((prevUser) => ({
+            ...prevUser,
+            coin: prevUser.coin - tokuMaster.coin,
+            tokuCounts: {
+              ...prevUser.tokuCounts,
+              [tokuId]: {
+                count: count + 1,
+              },
+            },
+          }));
+        }
       }
+
       // DBの更新は非同期で行う
       if (dbUpdate) {
         pushRequest({ uri: '/api/toku/used', tokuId, count: 1 });

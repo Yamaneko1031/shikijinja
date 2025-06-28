@@ -51,7 +51,7 @@ const HaidenSection = (props: SectionProps) => {
           <div className="relative h-full w-full bg-black/50 rounded-lg flex flex-col gap-2 p-4">
             <div className="">
               <TextReveal
-                text="拝殿。賽銭箱が置かれています。"
+                text="拝殿。神様に祈りを捧げるための場所です。"
                 delayPerChar={0.1}
                 className="text-xl md:text-2xl font-bold"
               />
@@ -60,7 +60,7 @@ const HaidenSection = (props: SectionProps) => {
 
           <div className="relative w-full bg-black/50 rounded-lg flex flex-col items-center gap-2 p-4">
             <div className="w-full text-xl flex flex-col gap-4 items-start">
-              神様に祈りを捧げるための場所です。 信じる者は救われるかも。
+              信じる者は救われるかも。
             </div>
             <Button
               variant="positive"

@@ -91,22 +91,23 @@ model TokuCount {
 }
 
 model User {
-  id              String           @id @default(cuid())
-  isGuest         Boolean          @default(true)
-  registReward    Boolean          @default(false)
-  email           String?          @unique
-  passwordHash    String?
-  name            String?
-  coin            Int              @default(0)
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  lastAccessAt    DateTime         @default(now())
+  id                      String           @id @default(cuid())
+  isGuest                 Boolean          @default(true)
+  email                   String?          @unique
+  passwordHash            String?
+  name                    String?
+  coin                    Int              @default(0)
+  effects                 Json             @default("{}")
+  permanentTokuCounts     Json             @default("{}")
+  createdAt               DateTime         @default(now())
+  updatedAt               DateTime         @updatedAt
+  lastAccessAt            DateTime         @default(now())
 
-  guestSessions   GuestSession[]   @relation("UserGuestSessions")
-  accounts        Account[]        @relation("UserAccounts")
-  emaPosts        EmaPost[]        @relation("UserEmaPosts")
-  omikujiResults  OmikujiResult[]  @relation("UserOmikujiResults")
-  omamoriItems    Omamori[]        @relation("UserOmamoriItems")
+  guestSessions           GuestSession[]   @relation("UserGuestSessions")
+  accounts                Account[]        @relation("UserAccounts")
+  emaPosts                EmaPost[]        @relation("UserEmaPosts")
+  omikujiResults          OmikujiResult[]  @relation("UserOmikujiResults")
+  omamoriItems            Omamori[]        @relation("UserOmamoriItems")
 
   @@index([isGuest, lastAccessAt])
 }
@@ -147,6 +148,7 @@ model ShintakuMessageMaster {
 model SystemInfomations {
   id              Int       @id @default(1)
   shintakuData    Json      @default("{}")
+  totalSaisen     Int       @default(0)
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 }
