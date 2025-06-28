@@ -4,7 +4,6 @@ import React, { useRef, useState } from 'react';
 import TextReveal from '@/components/_shared/TextReveal';
 import { SectionProps } from '@/types/section';
 import { Button } from '../_shared/Button';
-import { TokuId } from '@/types/toku';
 import { useLoadImages } from '@/hooks/useLoadImages';
 import { apiFetch } from '@/lib/api';
 import { SaisenResponse } from '@/types/saisen';
@@ -26,36 +25,24 @@ const HaidenSection = (props: SectionProps) => {
       body: JSON.stringify({ value }),
     });
 
-    // // エフェクト演出を開始
-    // const effectPromise = (async () => {
-    //   for (const fortune of omamoriDataRef.current?.fortunes ?? []) {
-    //     await new Promise((resolve) => setTimeout(resolve, 2000));
-    //     console.log('effect', fortune);
-    //     telop.showPop(`${fortune.name} +${fortune.power} を獲得`);
-    //   }
-    // })();
-
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    let tokuId: TokuId = 'saisen_50';
     switch (value) {
       case 50:
         sisenValue.current = 50;
         sisenValueTextSize.current = '5xl';
-        tokuId = 'saisen_50';
         break;
       case 100:
         sisenValue.current = 100;
         sisenValueTextSize.current = '4xl';
-        tokuId = 'saisen_100';
         break;
       case 500:
         sisenValue.current = 500;
         sisenValueTextSize.current = '4xl';
-        tokuId = 'saisen_500';
         break;
     }
-    props.handleTokuUsed(tokuId);
+    props.handleAddCoin(-value);
+    props.handleTokuUsed('saisen', false);
 
     // 両方完了まで待つ
     const saisenData = await saisenPromise;
@@ -80,13 +67,13 @@ const HaidenSection = (props: SectionProps) => {
 
           <div className="relative w-full bg-black/50 rounded-lg flex flex-col items-center gap-2 p-4">
             <div className="w-full text-xl flex flex-col gap-4 items-start">
-              信じる者は救われるかも。
+              賽銭を投げてお祈りをしましょう。信じる者は救われるかも。
             </div>
             <Button
               variant="positive"
               size="lg"
               onClick={() => {
-                throwCoin(50);
+                throwCoin(500);
               }}
               className="w-full max-w-md flex flex-col pt-2 pb-2"
             >
