@@ -34,7 +34,7 @@
 
 /* bodyで全体に当てているフォントが優先されるので、特殊フォントは!importantをつける */
 .font-default {
-  font-family: 'Ackaisyo', serif;
+  font-family: 'Ackaisyo';
 }
 .font-fude {
   font-family: 'KouzanMouhitu', serif !important;

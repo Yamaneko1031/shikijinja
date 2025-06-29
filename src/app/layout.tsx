@@ -5,7 +5,7 @@ import '../styles/globals.css';
 export const metadata: Metadata = {
   title: '式岐神社',
   description:
-    '式岐神社 -shiki jinja- オンラインで参拝できる神社で、おみくじやお守りなどもご利用いただけます。',
+    '式岐神社 -shiki jinja- オンラインで参拝できる神社。IT業界で働く人にご利益があると言い伝えられている神社です。',
 };
 
 export default function RootLayout({
