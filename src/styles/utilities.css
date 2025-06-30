@@ -107,13 +107,13 @@ input[type='checkbox'] {
   @apply flex flex-col gap-1;
 }
 
-.help-ul li p:first-child {
+.help-ul li h3 {
   @apply text-lg font-bold;
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }
 
-.help-ul li p:first-child::before {
+.help-ul li h3::before {
   /* content: '・'; */
   display: inline-block;
   width: 0.9rem;
@@ -124,6 +124,18 @@ input[type='checkbox'] {
   content: '';
 }
 
-.help-ul li p:not(:first-child) {
+.help-ul li p {
   @apply ml-4;
+}
+
+.help-ul li dl {
+  @apply ml-4 flex flex-col gap-1;
+}
+
+.help-ul li dl dt {
+  @apply text-sm font-bold;
+}
+
+.help-ul li dl dd {
+  @apply text-xs;
 }

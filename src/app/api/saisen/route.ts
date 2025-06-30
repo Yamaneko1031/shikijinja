@@ -111,6 +111,15 @@ export async function POST(req: Request) {
       },
     });
 
+    await prisma.systemInfomations.update({
+      where: { id: 1 },
+      data: {
+        totalSaisen: {
+          increment: value,
+        },
+      },
+    });
+
     const res: SaisenResponse = { isNew, fortune, fortunes: setFortunes };
 
     return jsonResponse(res, { status: 200 });

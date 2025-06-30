@@ -470,3 +470,17 @@
 .fade-in {
   animation: animate-fade-in 0.5s ease-in-out forwards;
 }
+
+@keyframes animate-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.saisen-result-fade-out {
+  animation: animate-fade-out 0.5s ease-in-out forwards;
+  animation-delay: 4.5s;
+}

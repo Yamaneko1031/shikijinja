@@ -9,6 +9,7 @@ import { apiFetch } from '@/lib/api';
 import { SaisenResponse } from '@/types/saisen';
 import Modal from '../_shared/Modal';
 import Image from 'next/image';
+import useSWR from 'swr';
 type InoriState = 'none' | 'select' | 'throw' | 'inori' | 'inori_waiting' | 'inori_result';
 
 const HaidenSection = (props: SectionProps) => {
@@ -22,6 +23,15 @@ const HaidenSection = (props: SectionProps) => {
     '/images/icon/icon_coin_nadeneko.webp',
   ]);
   loadedImagesRef.current = loadedImages;
+
+  const fetcher = (url: string) => apiFetch<{ totalSaisen: number }>(url).then((res) => res);
+  const {
+    data: totalSaisen,
+    isLoading: isLoadingTotalSaisen,
+    mutate: mutateTotalSaisen,
+  } = useSWR('/api/saisen/total', fetcher, {
+    revalidateOnFocus: false,
+  });
 
   const SaisenSelect = [
     { value: 50, text: 'ちょっと' },
@@ -79,6 +89,7 @@ const HaidenSection = (props: SectionProps) => {
       });
       props.handleTokuUsed('saisen', false);
       setInoriState('inori');
+      mutateTotalSaisen();
     } catch (error) {
       console.error('エラー', error);
       alert('エラーが発生しました。再度試してください。');
@@ -118,6 +129,13 @@ const HaidenSection = (props: SectionProps) => {
           <div className="relative w-full bg-black/50 rounded-lg flex flex-col items-center gap-2 p-4">
             <div className="w-full text-xl flex flex-col gap-4 items-start">
               賽銭を投げてお祈りをしましょう。信じる者は救われるかも。
+            </div>
+            <div className="w-full">
+              {isLoadingTotalSaisen || !totalSaisen ? (
+                <div className="">累計：</div>
+              ) : (
+                <div className="">累計：{totalSaisen.totalSaisen}徳</div>
+              )}
             </div>
             <Button
               variant="positive"
@@ -201,7 +219,7 @@ const HaidenSection = (props: SectionProps) => {
       {inoriState === 'inori_result' && (
         <>
           <div
-            className="fixed top-0 left-0 w-full h-full bg-black/70 flex flex-col items-center justify-center px-8"
+            className="fixed top-0 left-0 w-full h-full bg-black/70 flex flex-col items-center justify-center px-8 saisen-result-fade-out"
             onClick={() => cancelInoriResult()}
           >
             <TextReveal
