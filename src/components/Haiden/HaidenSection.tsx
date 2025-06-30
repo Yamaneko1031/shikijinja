@@ -8,7 +8,7 @@ import { useLoadImages } from '@/hooks/useLoadImages';
 import { apiFetch } from '@/lib/api';
 import { SaisenResponse } from '@/types/saisen';
 import Modal from '../_shared/Modal';
-
+import Image from 'next/image';
 type InoriState = 'none' | 'select' | 'throw' | 'inori' | 'inori_waiting' | 'inori_result';
 
 const HaidenSection = (props: SectionProps) => {
@@ -16,11 +16,18 @@ const HaidenSection = (props: SectionProps) => {
   const sisenValue = useRef(0);
   const sisenValueTextSize = useRef('');
   const inoriResultText = useRef('');
+  const inoriResultTimeout = useRef<NodeJS.Timeout | null>(null);
   const loadedImagesRef = useRef<HTMLImageElement[]>([]);
   const loadedImages = useLoadImages(props.isActive || props.isNeighbor, [
     '/images/icon/icon_coin_nadeneko.webp',
   ]);
   loadedImagesRef.current = loadedImages;
+
+  const SaisenSelect = [
+    { value: 50, text: 'ちょっと' },
+    { value: 100, text: 'ふつう' },
+    { value: 500, text: 'たくさん' },
+  ];
 
   const throwCoin = async (value: number) => {
     setInoriState('throw');
@@ -58,7 +65,7 @@ const HaidenSection = (props: SectionProps) => {
       const saisenData = await saisenPromise;
 
       inoriResultText.current =
-        saisenData.fortune.name + ' が ' + saisenData.fortune.power + ' 上昇しました。';
+        saisenData.fortune.name + ' が ' + saisenData.fortune.power + ' 上昇';
 
       console.log(saisenData.fortunes);
       console.log('saisenData', saisenData);
@@ -82,7 +89,15 @@ const HaidenSection = (props: SectionProps) => {
 
   const inoriFinish = async () => {
     setInoriState('inori_result');
-    await new Promise((resolve) => setTimeout(resolve, 5000));
+    inoriResultTimeout.current = setTimeout(() => {
+      setInoriState('none');
+    }, 5000);
+  };
+
+  const cancelInoriResult = () => {
+    if (inoriResultTimeout.current) {
+      clearTimeout(inoriResultTimeout.current);
+    }
     setInoriState('none');
   };
 
@@ -108,7 +123,6 @@ const HaidenSection = (props: SectionProps) => {
               variant="positive"
               size="lg"
               onClick={() => {
-                // throwCoin(50);
                 setInoriState('select');
               }}
               disabled={inoriState !== 'none'}
@@ -121,20 +135,33 @@ const HaidenSection = (props: SectionProps) => {
       </div>
 
       <Modal isOpen={inoriState === 'select'}>
-        <div>いくら投げますか？</div>
-        <div>
-          <Button variant="positive" size="lg" onClick={() => throwCoin(50)}>
-            50
-          </Button>
-          <Button variant="positive" size="lg" onClick={() => throwCoin(100)}>
-            100
-          </Button>
-          <Button variant="positive" size="lg" onClick={() => throwCoin(500)}>
-            500
-          </Button>
-          <Button variant="negative" size="lg" onClick={() => setInoriState('none')}>
-            キャンセル
-          </Button>
+        <div className="flex flex-col gap-2">
+          <div className="text-xl font-bold">いくら投げますか？</div>
+          <div className="flex flex-col items-center gap-4">
+            {SaisenSelect.map((saisen) => (
+              <Button
+                key={saisen.value}
+                variant="positive"
+                size="md"
+                onClick={() => throwCoin(saisen.value)}
+                className="w-[12rem] flex flex-col"
+              >
+                <div className="text-xl">{saisen.text}</div>
+                <div className="flex flex-row items-center">
+                  <Image
+                    src="/images/icon/icon_coin.webp"
+                    alt="omikuji_button"
+                    width={24}
+                    height={24}
+                  />
+                  <div className="text-yellow-400">{saisen.value}消費</div>
+                </div>
+              </Button>
+            ))}
+            <Button variant="negative" size="lg" onClick={() => setInoriState('none')}>
+              キャンセル
+            </Button>
+          </div>
         </div>
       </Modal>
 
@@ -155,8 +182,8 @@ const HaidenSection = (props: SectionProps) => {
 
       {(inoriState === 'inori' || inoriState === 'inori_waiting') && (
         <>
-          <div className="fixed top-0 left-0 w-full h-full bg-black/90 flex flex-col items-center justify-center z-61 fade-in">
-            <div className="text-2xl font-bold">目を瞑り、手を当てて祈りを捧げましょう。</div>
+          <div className="fixed top-0 left-0 w-full h-full bg-black/90 flex flex-col items-center justify-center z-61 fade-in px-8">
+            <div className="text-2xl font-bold">目を瞑り、手を当てて祈りを捧げましょう</div>
             <div className="fixed w-full bottom-6 m-auto flex flex-row justify-center gap-2">
               <Button
                 variant="negative"
@@ -174,13 +201,13 @@ const HaidenSection = (props: SectionProps) => {
       {inoriState === 'inori_result' && (
         <>
           <div
-            className="fixed top-0 left-0 w-full h-full bg-black/70 flex flex-col items-center justify-center"
-            onClick={() => setInoriState('none')}
+            className="fixed top-0 left-0 w-full h-full bg-black/70 flex flex-col items-center justify-center px-8"
+            onClick={() => cancelInoriResult()}
           >
             <TextReveal
               text={inoriResultText.current}
               delayPerChar={0.1}
-              className="text-2xl font-bold"
+              className="text-3xl font-bold"
             />
           </div>
         </>
