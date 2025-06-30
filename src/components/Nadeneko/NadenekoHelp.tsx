@@ -2,9 +2,13 @@
 
 import React from 'react';
 
-export default function NadenekoHelp() {
+type Props = {
+  handleClose: () => void;
+};
+
+export default function NadenekoHelp({ handleClose }: Props) {
   return (
-    <div className="w-full h-full flex flex-col items-center text-black p-2">
+    <div className="w-full h-full flex flex-col items-center text-black p-2" onClick={handleClose}>
       <ul className="help-ul">
         <li>
           <p>徳を貯めよう</p>

@@ -417,10 +417,10 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
 
         <HelpWindow
           isOpen={isHelp}
-          className="absolute bg-white rounded-md border-2 border-gray-200 top-12 left-8 right-8"
+          className="absolute bg-white rounded-md border-2 border-gray-200 left-8 right-8"
           handleOutsideClick={() => setIsHelp(false)}
         >
-          <NadenekoHelp />
+          <NadenekoHelp handleClose={() => setIsHelp(false)} />
         </HelpWindow>
 
         {dragStateRef.current === 'finished' && (

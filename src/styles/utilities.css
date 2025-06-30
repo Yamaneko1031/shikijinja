@@ -125,5 +125,5 @@ input[type='checkbox'] {
 }
 
 .help-ul li p:not(:first-child) {
-  @apply text-sm ml-4;
+  @apply ml-4;
 }
