@@ -12,7 +12,7 @@ const HelpMenu: React.FC = () => {
   const [isTokuOpen, setIsTokuOpen] = useState(false);
   const [isPolicyOpen, setIsPolicyOpen] = useState(false);
   return (
-    <div className="min-w-[12.5rem] text-black flex flex-col items-start p-2">
+    <div className="min-w-[18rem] text-lg text-black flex flex-col items-start p-2">
       <MenuButton onClick={() => setIsIntroductionOpen(true)}>式岐神社について</MenuButton>
       <MenuButton onClick={() => setIsTokuOpen(true)}>徳コインについて</MenuButton>
       <MenuButton onClick={() => setIsPolicyOpen(true)}>プライバシーポリシー</MenuButton>

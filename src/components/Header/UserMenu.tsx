@@ -12,6 +12,8 @@ import MyOmamoriView from './MyOmamoriView';
 import MyEmaView from './MyEmaView';
 import { MenuButton } from '../_shared/MenuButton';
 import { getTokuCoin } from '@/utils/toku';
+import HelpWindow from '../_shared/HelpWindow';
+import MyFortuneView from './MyFortuneView';
 
 interface Props {
   user: User;
@@ -29,6 +31,7 @@ const UserMenu: React.FC<Props> = (props) => {
   const [isEmaOpen, setIsEmaOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+  const [isFortuneOpen, setIsFortuneOpen] = useState(false);
 
   const emaCount =
     props.isLoadingUserItems || props.userItems === undefined ? 0 : props.userItems.ema.length;
@@ -58,7 +61,7 @@ const UserMenu: React.FC<Props> = (props) => {
   };
 
   return (
-    <div className="min-w-[14rem] text-black flex flex-col items-start p-2">
+    <div className="min-w-[18rem] text-black flex flex-col items-start p-2">
       {session ? (
         <div className="w-full flex flex-col gap-2 items-center">
           <div className="text-black/40 text-sm font-bold">ログイン中</div>
@@ -74,25 +77,25 @@ const UserMenu: React.FC<Props> = (props) => {
         </div>
       ) : (
         <div className="w-full flex flex-col gap-2 items-center">
-          <div className="text-black/40 text-sm font-bold">ゲストで参拝中</div>
+          <div className="text-black/40 font-bold">ゲストで参拝中</div>
           <Button
             variant="positive"
-            size="sm"
+            size="md"
             onClick={() => {
               setIsLoginOpen(true);
             }}
-            className="w-[11rem]"
+            className="w-[12rem]"
             disabled={loading}
           >
             ログイン
           </Button>
           <Button
             variant="positive"
-            size="sm"
+            size="md"
             onClick={() => {
               setIsRegisterOpen(true);
             }}
-            className="w-[11rem] flex flex-col"
+            className="w-[12rem] flex flex-col"
             disabled={loading}
           >
             <div>新規登録</div>
@@ -103,33 +106,79 @@ const UserMenu: React.FC<Props> = (props) => {
                 width={24}
                 height={24}
               />
-              <div className="text-sm text-yellow-400">
-                {getTokuCoin('regist_reward')}獲得（初回）
-              </div>
+              <div className="text-yellow-400">{getTokuCoin('regist_reward')}獲得（初回）</div>
             </div>
           </Button>
         </div>
       )}
       <div className="w-full border-t border-gray-200 my-4"></div>
-      <div className="w-full text-black/40 text-center text-sm font-bold">所持品</div>
+      <div className="w-full text-black/40 text-center font-bold">所持品</div>
+      <div className="w-full flex flex-col gap-2">
+        <MenuButton
+          onClick={() => {
+            setIsEmaOpen(true);
+          }}
+          disabled={loading || emaCount === 0}
+        >
+          <div className="h-7 flex flex-row items-center gap-1 text-lg">
+            <Image
+              src="/images/icon/icon_ema.webp"
+              alt="ema_icon"
+              width={64}
+              height={64}
+              className="h-full w-auto"
+            />
+            <div>絵馬({emaCount}個)</div>
+          </div>
+        </MenuButton>
+        <MenuButton
+          onClick={() => {
+            setIsOmamoriOpen(true);
+          }}
+          disabled={loading || omamoriCount === 0}
+        >
+          <div className="h-7 flex flex-row items-center gap-1 text-lg">
+            <Image
+              src="/images/icon/icon_omamori.webp"
+              alt="omamori_icon"
+              width={64}
+              height={64}
+              className="h-full w-auto"
+            />
+            <div>お守り({omamoriCount}個)</div>
+          </div>
+        </MenuButton>
+        <MenuButton onClick={() => setIsOmikujiOpen(true)} disabled={loading || omikujiCount === 0}>
+          <div className="h-7 flex flex-row items-center gap-1 text-lg">
+            <Image
+              src="/images/icon/icon_omikuji.webp"
+              alt="omikuji_icon"
+              width={64}
+              height={64}
+              className="h-full w-auto"
+            />
+            <div>おみくじ({omikujiCount}個)</div>
+          </div>
+        </MenuButton>
+      </div>
+
+      <div className="w-full border-t border-gray-200 my-4"></div>
       <MenuButton
         onClick={() => {
-          setIsEmaOpen(true);
+          setIsFortuneOpen(true);
         }}
-        disabled={loading || emaCount === 0}
+        disabled={loading}
       >
-        絵馬({emaCount}個)
-      </MenuButton>
-      <MenuButton
-        onClick={() => {
-          setIsOmamoriOpen(true);
-        }}
-        disabled={loading || omamoriCount === 0}
-      >
-        お守り({omamoriCount}個)
-      </MenuButton>
-      <MenuButton onClick={() => setIsOmikujiOpen(true)} disabled={loading || omikujiCount === 0}>
-        おみくじ({omikujiCount}個)
+        <div className="h-7 flex flex-row items-center gap-1 text-lg">
+          <Image
+            src="/images/icon/icon_maneki.webp"
+            alt="maneki_icon"
+            width={64}
+            height={64}
+            className="h-full w-auto"
+          />
+          <div>運パラメータ</div>
+        </div>
       </MenuButton>
 
       <Modal
@@ -187,6 +236,14 @@ const UserMenu: React.FC<Props> = (props) => {
           </Button>
         </div>
       </Modal>
+
+      <HelpWindow
+        isOpen={isFortuneOpen}
+        className="fixed w-[16rem] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-md border-2 border-gray-200"
+        handleOutsideClick={() => setIsFortuneOpen(false)}
+      >
+        <MyFortuneView user={props.user} onClose={() => setIsFortuneOpen(false)} />
+      </HelpWindow>
 
       {props.userItems?.ema && (
         <Modal
