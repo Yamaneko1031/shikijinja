@@ -183,7 +183,7 @@ const UserMenu: React.FC<Props> = (props) => {
 
       <Modal
         isOpen={isLoginOpen}
-        className="absolute w-[14rem] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-md border-2 border-gray-200"
+        className="absolute w-[16rem] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-md border-2 border-gray-200"
         handleOutsideClick={() => setIsLoginOpen(false)}
       >
         <div className="p-4 flex flex-col items-center gap-2">
@@ -211,7 +211,7 @@ const UserMenu: React.FC<Props> = (props) => {
 
       <Modal
         isOpen={isRegisterOpen}
-        className="absolute w-[14rem] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-md border-2 border-gray-200"
+        className="absolute w-[16rem] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-md border-2 border-gray-200"
         handleOutsideClick={() => setIsRegisterOpen(false)}
       >
         <div className="p-4 flex flex-col items-center gap-2">
