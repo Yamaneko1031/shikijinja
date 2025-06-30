@@ -20,6 +20,7 @@ export type SectionProps = {
   user: User;
   scrollY: MotionValue<number>;
   scrollRatio: MotionValue<number>;
+  handleSetUser: (user: User) => void;
   handleAddCoin: (coin: number) => void;
   handleIsLimitOver: (tokuId: TokuId) => boolean;
   handleTokuGet: (tokuId: TokuId, dbUpdate?: boolean) => void;

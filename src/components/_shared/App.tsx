@@ -213,6 +213,7 @@ const App = (props: Props) => {
                   handleTokuGet={user.handleTokuGet}
                   handleTokuUsed={user.handleTokuUsed}
                   handleIsEnoughCoin={user.handleIsEnoughCoin}
+                  handleSetUser={user.setUser}
                 />
               )}
             </section>

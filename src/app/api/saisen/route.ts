@@ -6,6 +6,7 @@ import { TokuCounts } from '@/types/toku';
 import { getSessionUser } from '@/server/userSession';
 import { fortuneNames } from '@/config/fortune';
 import { Fortune } from '@/types/user';
+import { SaisenResponse } from '@/types/saisen';
 
 export async function POST(req: Request) {
   const { value }: { value: number } = await req.json();
@@ -110,7 +111,9 @@ export async function POST(req: Request) {
       },
     });
 
-    return jsonResponse({ isNew, fortune }, { status: 200 });
+    const res: SaisenResponse = { isNew, fortune, fortunes: setFortunes };
+
+    return jsonResponse(res, { status: 200 });
   } catch (err) {
     console.error('POST /api/toku/get error', err);
     return jsonResponse({ error: '徳カウント取得に失敗しました' }, { status: 500 });

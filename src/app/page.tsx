@@ -67,6 +67,7 @@ export default async function Page() {
     tokuUpdatedAt: tokuCounts.date.toISOString(),
     tokuCounts: tokuCounts.counts as TokuCounts,
     permanentTokuCounts: workUser.permanentTokuCounts as TokuCounts,
+    fortunes: workUser.fortunes,
   } as User;
 
   return (

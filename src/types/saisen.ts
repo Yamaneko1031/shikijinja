@@ -4,4 +4,5 @@ import { Fortune } from './user';
 export interface SaisenResponse {
   isNew: boolean;
   fortune: Fortune;
+  fortunes: Fortune[];
 }

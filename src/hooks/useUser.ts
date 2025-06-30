@@ -162,6 +162,7 @@ export const useUser = (initialUser: User) => {
   return {
     user,
     telop,
+    setUser,
     handleAddCoin,
     handleIsLimitOver,
     handleTokuGet,
