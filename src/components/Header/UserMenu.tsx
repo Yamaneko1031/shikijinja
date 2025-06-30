@@ -167,7 +167,7 @@ const UserMenu: React.FC<Props> = (props) => {
         onClick={() => {
           setIsFortuneOpen(true);
         }}
-        disabled={loading}
+        disabled={loading || props.user.fortunes.length === 0}
       >
         <div className="h-7 flex flex-row items-center gap-1 text-lg">
           <Image
