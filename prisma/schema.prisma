@@ -98,7 +98,7 @@ model User {
   name                    String?
   coin                    Int              @default(0)
   fortunes                Json             @default("[]")
-  permanentTokuCounts     Json             @default("[]")
+  permanentTokuCounts     Json             @default("{}")
   createdAt               DateTime         @default(now())
   updatedAt               DateTime         @updatedAt
   lastAccessAt            DateTime         @default(now())

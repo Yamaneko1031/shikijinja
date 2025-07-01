@@ -14,6 +14,8 @@ export const tokuIds = [
   'saisen_500',
   'shoukai',
   'jikkai',
+  'omikuji_share',
+  'omamori_share',
   'debug_add',
   'debug_sub',
 ] as const;

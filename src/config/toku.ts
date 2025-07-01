@@ -29,11 +29,16 @@ export const tokuMaster: TokuMasterData[] = [
     permanent: true,
   },
   { tokuId: 'saisen', label: '賽銭を投げた', limit: 1000, coin: 0, permanent: false }, // 特殊抽選
-  { tokuId: 'saisen_50', label: '賽銭を50円投げた', limit: 1000, coin: 50, permanent: false },
-  { tokuId: 'saisen_100', label: '賽銭を100円投げた', limit: 1000, coin: 100, permanent: false },
-  { tokuId: 'saisen_500', label: '賽銭を500円投げた', limit: 1000, coin: 500, permanent: false },
   { tokuId: 'shoukai', label: '神様紹介を見た', limit: 1, coin: 100, permanent: true },
   { tokuId: 'jikkai', label: '十戒を見た', limit: 1, coin: 100, permanent: true },
+  {
+    tokuId: 'omikuji_share',
+    label: 'おみくじ結果をポストした',
+    limit: 1,
+    coin: 500,
+    permanent: true,
+  },
+  { tokuId: 'omamori_share', label: 'お守りをポストした', limit: 1, coin: 500, permanent: true },
 
   {
     tokuId: 'debug_add',

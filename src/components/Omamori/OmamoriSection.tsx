@@ -142,6 +142,8 @@ const OmamoriSection = (props: SectionProps) => {
           <OmamoriModal
             omamoriData={omamoriDataRef.current}
             onClose={() => setOmamoriModalOpen(false)}
+            handleIsLimitOver={props.handleIsLimitOver}
+            handleTokuGet={props.handleTokuGet}
           />
         )}
       </Modal>

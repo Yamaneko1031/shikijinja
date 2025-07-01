@@ -15,14 +15,6 @@ export async function POST(req: Request) {
     if (!user) return jsonResponse({ error: 'ユーザー情報が見つかりません' }, { status: 404 });
     if (!tokuMaster) return jsonResponse({ error: 'マスタが見つかりません' }, { status: 404 });
 
-    if (tokuMaster.permanent) {
-      const permanentTokuCounts = user.permanentTokuCounts as TokuCounts;
-      permanentTokuCounts[tokuId] = {
-        count: (permanentTokuCounts[tokuId]?.count ?? 0) + addCount,
-      };
-      user.permanentTokuCounts = permanentTokuCounts;
-    }
-
     // 今日の徳カウント情報を取得
     const today = getJapanTodayMidnight();
     let tokuCounts = await prisma.tokuCount.findFirst({
@@ -60,6 +52,7 @@ export async function POST(req: Request) {
     tokuCountsUpdateData.counts[tokuId] = {
       count: prevCount + addCount,
     };
+
     // 今日のデータがなければ作る、あれば更新
     tokuCounts = await prisma.tokuCount.upsert({
       where: { userId_date: { userId: user.id, date: today } },
@@ -75,7 +68,11 @@ export async function POST(req: Request) {
     const userUpdateData: Record<string, string | number | TokuCounts> = {};
     userUpdateData.coin = user.coin + tokuMaster.coin * addCount;
     if (tokuMaster.permanent) {
-      userUpdateData.permanentTokuCounts = user.permanentTokuCounts as TokuCounts;
+      const permanentTokuCounts = user.permanentTokuCounts as TokuCounts;
+      permanentTokuCounts[tokuId] = {
+        count: (permanentTokuCounts[tokuId]?.count ?? 0) + addCount,
+      };
+      userUpdateData.permanentTokuCounts = permanentTokuCounts as TokuCounts;
     }
     user = await prisma.user.update({
       where: { id: user.id },

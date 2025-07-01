@@ -56,3 +56,23 @@
   cursor: not-allowed;
   box-shadow: 0 0 1px rgba(255, 255, 255, 0.3);
 }
+
+.btn-share {
+  @apply rounded-full;
+  background-color: #000000;
+  color: #ffffff;
+  border: 2px solid #5e5e5e;
+}
+
+.btn-share:hover {
+  @media (hover: hover) {
+    background-color: #202020;
+  }
+}
+
+.btn-share:disabled {
+  background-color: #362317;
+  border: 2px solid #23160f;
+  color: #5c5c5c;
+  cursor: not-allowed;
+}

@@ -3,7 +3,7 @@ import React from 'react';
 // ボタンのバリアントとサイズ定義
 
 type ButtonVariant = 'positive' | 'negative' | 'subNatural' | 'subNatural2' | 'custom';
-type ButtonSize = 'sm' | 'md' | 'lg';
+type ButtonSize = 'sm' | 'md' | 'lg' | 'custom';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /** ボタンの見た目 */
@@ -28,6 +28,7 @@ const sizeStyles: Record<ButtonSize, string> = {
   sm: 'text-sm px-4 py-1',
   md: 'text-base px-4 py-2',
   lg: 'text-lg px-6 py-3',
+  custom: '',
 };
 
 /**

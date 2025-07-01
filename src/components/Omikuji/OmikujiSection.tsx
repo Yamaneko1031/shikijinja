@@ -238,6 +238,8 @@ const OmikujiSection = (props: SectionProps) => {
               setIsOpen(false);
               resultRef.current = null;
             }}
+            handleIsLimitOver={props.handleIsLimitOver}
+            handleTokuGet={props.handleTokuGet}
           ></OmikujiModal>
         </Modal>
       )}
