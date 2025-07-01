@@ -63,7 +63,7 @@ export default function OmikujiPage({ params }: { params: Promise<{ id: string }
             </div>
           </div>
           <div className="fixed w-full bottom-6 m-auto flex flex-row justify-center gap-2">
-            <Link href="/">
+            <Link href="/" prefetch={true}>
               <Button variant="positive" size="md">
                 神社に行ってみる
               </Button>
