@@ -29,7 +29,8 @@ export default function OmamoriModal({
       handleTokuGet('omamori_share');
     }
     const shareUrl = `${window.location.origin}/omamori/${omamoriData.id}`;
-    const headText = `【おまもり結果】\n${omamoriData.name}\n`;
+    let headText = '式岐神社でおまもりを貰ったよ！\n';
+    headText += `\n【${omamoriData.name}】`;
 
     // メッセージを短く調整（文字数制限対策）
     let shortMsg = '';
@@ -37,7 +38,7 @@ export default function OmamoriModal({
       shortMsg += `${fortune.name}:+${fortune.power}\n`;
     });
 
-    shortMsg += '\n↓↓ 効能説明 ↓↓';
+    shortMsg += '\n【詳細】';
     const shareText = `${headText}\n${shortMsg}`;
     const hashtags = '式岐神社';
     shareX(shareText, shareUrl, hashtags);

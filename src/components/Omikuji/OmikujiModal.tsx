@@ -28,25 +28,19 @@ export default function OmikujiModal({
       handleTokuGet('omikuji_share');
     }
     const shareUrl = `${window.location.origin}/omikuji/${omikujiResponse.id}`;
-    let headText = '';
+    let headText = '式岐神社でおみくじを引いたよ！\n';
     if (omikujiResponse.job.length === 0) {
-      headText = `【おみくじ結果】\n${omikujiResponse.period}の運勢：${omikujiResponse.fortune}\n`;
+      headText += `\n${omikujiResponse.period}の運勢：${omikujiResponse.fortune}\n`;
     } else {
-      headText = `【おみくじ結果】\n${omikujiResponse.period}の運勢：${omikujiResponse.fortune}\n職業：${omikujiResponse.job}\n`;
+      headText += `\n${omikujiResponse.period}の運勢：${omikujiResponse.fortune}\n職業：${omikujiResponse.job}\n`;
     }
-
-    // メッセージを短く調整（文字数制限対策）
-    // const shortMsg =
-    //   omikujiResponse.msg.length > 70
-    //     ? omikujiResponse.msg.substring(0, 67) + '...'
-    //     : omikujiResponse.msg;
 
     let shortMsg = '';
     omikujiResponse.details.map((detail) => {
       shortMsg += `${detail.type}★${detail.rank}\n`;
     });
 
-    shortMsg += '\n↓↓ 詳細 ↓↓';
+    shortMsg += '\n【詳細】';
     const shareText = `${headText}\n${shortMsg}`;
     const hashtags = '式岐神社';
     shareX(shareText, shareUrl, hashtags);
