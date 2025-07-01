@@ -63,6 +63,11 @@ export const useUser = (initialUser: User) => {
               [tokuId]: {
                 count: count + 1,
               },
+              ...(tokuMaster.someId && {
+                [tokuMaster.someId]: {
+                  count: (prevUser.tokuCounts[tokuMaster.someId]?.count ?? 0) + 1,
+                },
+              }),
             },
           }));
         } else {
@@ -75,6 +80,11 @@ export const useUser = (initialUser: User) => {
               [tokuId]: {
                 count: count + 1,
               },
+              ...(tokuMaster.someId && {
+                [tokuMaster.someId]: {
+                  count: (prevUser.tokuCounts[tokuMaster.someId]?.count ?? 0) + 1,
+                },
+              }),
             },
           }));
         }

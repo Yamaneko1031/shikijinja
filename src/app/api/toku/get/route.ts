@@ -53,6 +53,12 @@ export async function POST(req: Request) {
       count: prevCount + addCount,
     };
 
+    if (tokuMaster.someId) {
+      tokuCountsUpdateData.counts[tokuMaster.someId] = {
+        count: (tokuCountsUpdateData.counts[tokuMaster.someId]?.count ?? 0) + addCount,
+      };
+    }
+
     // 今日のデータがなければ作る、あれば更新
     tokuCounts = await prisma.tokuCount.upsert({
       where: { userId_date: { userId: user.id, date: today } },

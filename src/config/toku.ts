@@ -2,6 +2,14 @@ import { TokuMasterData } from '@/types/toku';
 
 export const tokuMaster: TokuMasterData[] = [
   { tokuId: 'torii', label: '鳥居をくぐった', limit: 1, coin: 100, permanent: false },
+  {
+    tokuId: 'torii_first',
+    label: '始めて鳥居をくぐった',
+    limit: 1,
+    coin: 300,
+    permanent: true,
+    someId: 'torii',
+  },
   { tokuId: 'ema_post', label: '絵馬を書いた', limit: 1, coin: 300, permanent: false },
   { tokuId: 'ema_tap', label: '絵馬をタップした', limit: 5, coin: 20, permanent: false },
   {

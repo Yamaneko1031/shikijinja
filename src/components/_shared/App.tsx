@@ -119,7 +119,11 @@ const App = (props: Props) => {
 
   const onSectionChange = useCallback((prevSection: SectionData, nextSection: SectionData) => {
     if (prevSection.id === 'top' && nextSection.id !== 'top') {
-      userRef.current.handleTokuGet('torii');
+      if (!userRef.current.handleIsLimitOver('torii_first')) {
+        userRef.current.handleTokuGet('torii_first');
+      } else {
+        userRef.current.handleTokuGet('torii');
+      }
     }
   }, []);
 

@@ -1,5 +1,6 @@
 export const tokuIds = [
   'torii',
+  'torii_first',
   'ema_post',
   'ema_tap',
   'omikuji_nekobiyori',
@@ -28,6 +29,7 @@ export type TokuMasterData = {
   limit: number;
   coin: number;
   permanent: boolean;
+  someId?: TokuId;
 };
 
 export type TokuCounts = {
