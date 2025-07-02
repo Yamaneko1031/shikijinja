@@ -56,7 +56,10 @@ export default function OmamoriWindow(props: Props) {
         </div>
       </Button>
 
-      <Modal isOpen={omamoriListOpen}>
+      <Modal
+        isOpen={omamoriListOpen}
+        className="absolute max-w-2xl min-w-[20rem] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-black rounded-md border-2 border-gray-200 overscroll-contain"
+      >
         <OmamoriList
           onClose={() => setOmamoriListOpen(false)}
           omamoriList={omamoriList}

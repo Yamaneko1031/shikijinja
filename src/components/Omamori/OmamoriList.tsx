@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
+// import Image from 'next/image';
 import { Button } from '../_shared/Button';
 import { OmamoriBase } from '@/types/omamori';
 
@@ -14,52 +14,51 @@ type Props = {
 
 export default function OmamoriList({ onClose, omamoriList, isError, isLoading }: Props) {
   const [activeOmamori, setActiveOmamori] = useState<OmamoriBase | null>(null);
+  const [omamoriIndex, setOmamoriIndex] = useState<number>(0);
+
   useEffect(() => {
     if (isLoading) return;
     if (isError) return;
     setActiveOmamori(omamoriList[0]);
+    setOmamoriIndex(0);
   }, [isLoading, isError, omamoriList]);
 
   const handleNextOmamori = () => {
     console.log('handleNextOmamori');
     if (!activeOmamori) return;
-    // findの返り値が正しく次の要素を返していないため、indexを使って次の要素を直接取得するように修正
-    const currentIndex = omamoriList.findIndex(
-      (omamori: OmamoriBase) => omamori.name === activeOmamori.name
-    );
-    const nextIndex = (currentIndex + 1) % omamoriList.length;
-    const nextOmamori = omamoriList[nextIndex];
-    setActiveOmamori(nextOmamori);
+    const nextIndex = (omamoriIndex + 1) % omamoriList.length;
+    setOmamoriIndex(nextIndex);
+    setActiveOmamori(omamoriList[nextIndex]);
   };
 
   const handlePrevOmamori = () => {
     if (!activeOmamori) return;
-    const currentIndex = omamoriList.findIndex(
-      (omamori: OmamoriBase) => omamori.name === activeOmamori.name
-    );
-    const prevIndex = (currentIndex - 1 + omamoriList.length) % omamoriList.length;
-    const prevOmamori = omamoriList[prevIndex];
-    setActiveOmamori(prevOmamori);
+    const prevIndex = (omamoriIndex - 1 + omamoriList.length) % omamoriList.length;
+    setOmamoriIndex(prevIndex);
+    setActiveOmamori(omamoriList[prevIndex]);
   };
 
   return (
-    <div className="flex flex-col gap-4 items-center min-w-[20rem]">
+    <div className="flex flex-col gap-4 items-center p-2">
       {isLoading && <div>読込み中...</div>}
       {isError && <div>お守りの読込みに失敗しました。</div>}
       {activeOmamori && (
         <>
-          <div className="w-full text-2xl font-bold text-center">
+          <div className="w-full text-xl font-bold text-center">
             {activeOmamori.name}（{activeOmamori.hurigana}）
           </div>
+          <div className="w-full border-t border-gray-200"></div>
           <div className="w-full flex flex-row gap-4 justify-center">
-            <div className="min-w-[8.75rem] max-w-[12.5rem] flex justify-center items-center">
-              <Image
-                src={activeOmamori.imageUrl}
-                alt={activeOmamori.name}
-                width={200}
-                height={300}
-              />
-            </div>
+            <div
+              className="min-w-[8rem] h-[12rem]"
+              style={{
+                backgroundImage: 'url("/images/omamori/omamori_all.webp")',
+                backgroundPositionX: `-${omamoriIndex * 8}rem`,
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'auto 100%',
+                transform: 'rotate(8deg)',
+              }}
+            ></div>
             <div className="max-w-[20rem] flex flex-col justify-items-start items-center gap-2">
               <div className="w-full text-md font-bold text-left">【基本説明】</div>
               <div className="w-full h-full text-sm text-left whitespace-pre-line">
@@ -67,10 +66,11 @@ export default function OmamoriList({ onClose, omamoriList, isError, isLoading }
               </div>
             </div>
           </div>
+          <div className="w-full border-t border-gray-200"></div>
           <div className="w-full flex flex-row gap-4 justify-center">
             <Button
               variant="subNatural"
-              size="md"
+              size="sm"
               disabled={!activeOmamori}
               onClick={handlePrevOmamori}
             >
@@ -82,7 +82,7 @@ export default function OmamoriList({ onClose, omamoriList, isError, isLoading }
             </div>
             <Button
               variant="subNatural"
-              size="md"
+              size="sm"
               disabled={!activeOmamori}
               onClick={handleNextOmamori}
             >
