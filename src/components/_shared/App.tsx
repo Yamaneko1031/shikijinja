@@ -181,7 +181,7 @@ const App = (props: Props) => {
   return (
     <>
       <main
-        className="fixed inset-0 overflow-scroll overscroll-contain overflow-x-hidden z-0"
+        className="text-white fixed inset-0 overflow-scroll overscroll-contain overflow-x-hidden z-0"
         ref={containerRef}
       >
         <Header user={user.user} isInit={isInit} handleAddCoin={user.handleAddCoin} />
