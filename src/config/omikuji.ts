@@ -1,4 +1,9 @@
-export const omikujiDefaultJob = ['エンジニア', 'デザイナー', 'PM'] as const;
+export const omikujiJobRadioOptions = [
+  { value: 'engineer', label: 'エンジニア' },
+  { value: 'designer', label: 'デザイナー' },
+  { value: 'manager', label: 'PM' },
+  { value: 'other', label: 'それ以外' },
+];
 
 export const omikujiConfig = {
   omikuji: {

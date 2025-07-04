@@ -79,7 +79,7 @@ export default function OmamoriModal({
               alt="x_icon"
               width={24}
               height={24}
-              className="h-full w-auto"
+              className="h-full w-full"
             />
           </div>
           <div className="flex flex-col items-center">

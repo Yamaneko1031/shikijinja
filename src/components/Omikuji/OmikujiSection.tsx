@@ -14,13 +14,13 @@ import OmikujiModal from './OmikujiModal';
 import { apiFetch } from '@/lib/api';
 import OmikujiLoding from './OmikujiLoding';
 import Image from 'next/image';
-import OmikujiSelector from './OmikujiSelector';
 import OmikujiButton from './OmikujiButton';
 import { getTokuCoin, getTokuMaster } from '@/utils/toku';
 import { SectionProps } from '@/types/section';
 import Head from 'next/head';
 import { mutate } from 'swr';
 import { useLoadImages } from '@/hooks/useLoadImages';
+import OmikujiJobSelector from './OmikujiJobSelector';
 
 const OmikujiSection = (props: SectionProps) => {
   console.log('OmikujiSection', props.isActive, props.isNeighbor);
@@ -214,8 +214,11 @@ const OmikujiSection = (props: SectionProps) => {
       </Modal>
 
       {/* 職業選択画面 */}
-      <Modal isOpen={isSelector}>
-        <OmikujiSelector
+      <Modal
+        isOpen={isSelector}
+        className="absolute max-w-2xl min-w-[20rem] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-black rounded-md border-2 border-gray-200 overscroll-contain"
+      >
+        <OmikujiJobSelector
           onSelect={(job) => {
             fetchOmikujiJob(omikujiTypeRef.current, job);
             // setIsSelector(false)はfetchOmikujiJob内で行っている
