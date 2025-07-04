@@ -5,7 +5,7 @@ import TopSection from '@/components/Top/TopSection';
 import ShoukaiSection from '@/components/Shoukai/ShoukaiSection';
 import HaidenSection from '@/components/Haiden/HaidenSection';
 import NadenekoSection from '@/components/Nadeneko/NadenekoSection';
-import SandoSection from '@/components/Sando/SandoSection';
+// import SandoSection from '@/components/Sando/SandoSection';
 import { SectionData } from '@/types/section';
 
 export const sections: SectionData[] = [
@@ -40,7 +40,7 @@ export const sections: SectionData[] = [
       { ratio: 1.0, posX: 60, posY: 50, zoom: 1.1 },
     ],
     sectionClass: 'relative w-full h-[75rem] items-center justify-center p-4',
-    offset: { top: 10, left: 6 },
+    offset: { top: 19, left: 5 },
   },
   {
     id: 'ema',
@@ -103,23 +103,8 @@ export const sections: SectionData[] = [
       { ratio: 0.7, posX: 55, posY: 50, zoom: 1.0 },
       { ratio: 1.0, posX: 65, posY: 50, zoom: 1.0 },
     ],
-    sectionClass: 'relative w-full h-[75rem] items-center justify-center p-4',
-    offset: { top: 12, left: 16 },
-  },
-  {
-    id: 'sando',
-    bgUrl: '/images/bg_hude/bg_sando.webp',
-    name: '入口',
-    overlayText: '入口',
-    component: SandoSection,
-    jumpOffset: 10,
-    scrollEffect: [
-      { ratio: 0.0, posX: 45, posY: 50, zoom: 1.0 },
-      { ratio: 0.5, posX: 60, posY: 50, zoom: 1.1 },
-      { ratio: 1.0, posX: 70, posY: 50, zoom: 1.2 },
-    ],
-    sectionClass: 'relative w-full h-[75rem] items-center justify-center p-4',
-    offset: { top: 21.5, left: 7.5 },
+    sectionClass: 'relative w-full h-[90rem] items-center justify-center p-4',
+    offset: { top: 11.5, left: 15 },
   },
   {
     id: 'haiden',
@@ -135,6 +120,6 @@ export const sections: SectionData[] = [
       { ratio: 1.0, posX: 50, posY: 50, zoom: 1.5 },
     ],
     sectionClass: 'relative w-full h-[75rem] items-center justify-center p-4',
-    offset: { top: 7.5, left: 14.5 },
+    offset: { top: 7, left: 11.5 },
   },
 ];

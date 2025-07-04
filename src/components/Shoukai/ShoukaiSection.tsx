@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import TextReveal from '@/components/_shared/TextReveal';
 import { SectionProps } from '@/types/section';
 import Modal from '../_shared/Modal';
@@ -9,11 +9,43 @@ import { Button } from '../_shared/Button';
 import Image from 'next/image';
 import DecalogueModal from './DecalogueModal';
 import { getTokuCoin } from '@/utils/toku';
+import useSWR from 'swr';
+import { ShintakuResponse } from '@/types/shintaku';
+import { apiFetch } from '@/lib/api';
+import ShintakuMessage from '../Sando/ShintakuMessage';
 const ShoukaiSection = (props: SectionProps) => {
   console.log('ShoukaiSection', props.isActive, props.isNeighbor);
 
   const [shoukaiModalOpen, setShoukaiModalOpen] = useState(false);
   const [decalogueModalOpen, setDecalogueModalOpen] = useState(false);
+  const scrollRef = useRef(null);
+
+  const fetcher = (url: string) => apiFetch<ShintakuResponse>(url).then((res) => res);
+  const { data, isLoading, error } = useSWR('/api/shintaku', fetcher, {
+    revalidateOnFocus: false,
+  });
+
+  useEffect(() => {
+    // if (scrollRef.current) {
+    //   (scrollRef.current as HTMLElement).scrollTop = (
+    //     scrollRef.current as HTMLElement
+    //   ).scrollHeight;
+    // }
+
+    if (scrollRef.current && data?.posts) {
+      const element = scrollRef.current as HTMLElement;
+      const posts = data.posts.slice().reverse();
+      if (posts.length >= 2) {
+        const todayElement = element.querySelector(`#shintaku_today`);
+        if (todayElement) {
+          const elementRect = todayElement.getBoundingClientRect();
+          const containerRect = element.getBoundingClientRect();
+          const scrollTop = element.scrollTop + (elementRect.top - containerRect.top);
+          (scrollRef.current as HTMLElement).scrollTop = scrollTop;
+        }
+      }
+    }
+  }, [data?.posts]);
 
   const handleShoukaiModalClose = () => {
     if (!props.handleIsLimitOver('shoukai')) {
@@ -31,7 +63,7 @@ const ShoukaiSection = (props: SectionProps) => {
 
   return (
     <>
-      <div className="relative max-w-2xl min-w-[20rem] top-[37.5rem] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2">
+      <div className="relative max-w-2xl min-w-[20rem] top-[45rem] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2">
         <div className="relative h-full w-full bg-black/50 rounded-lg flex flex-col gap-2 pt-4 pl-4 pb-4 pr-[11.25rem]">
           <div className="">
             <TextReveal
@@ -96,6 +128,48 @@ const ShoukaiSection = (props: SectionProps) => {
               </div>
             )}
           </Button>
+        </div>
+        <div className="h-full w-full overflow-x-hidden bg-cover bg-center rounded-lg border-4 border-[rgba(40,20,0,0.5)] bg-[url('/images/bg_hude/bg_shintaku.webp')]">
+          <div className="h-[3.5rem] text-orange-950 flex flex-col items-center justify-center bg-[rgba(255,244,235,0.5)] shadow-lg">
+            <p className="text-xl font-bold">御神託帳</p>
+            <p className="text-xs font-bold">毎日新しい御神託が記されます</p>
+          </div>
+          <div
+            ref={scrollRef}
+            className="h-[20rem] w-full flex flex-col gap-2 overflow-y-auto scroll-smooth"
+          >
+            {isLoading ? (
+              <div className="p-4 text-center text-black">読み込み中...</div>
+            ) : error ? (
+              <div className="p-4 text-center text-red-500">データの取得に失敗しました</div>
+            ) : (
+              data?.posts
+                .slice()
+                .reverse()
+                .map((post, index, array) => {
+                  const element = <ShintakuMessage key={post.id} message={post} />;
+
+                  // 下から2個目と3個目の間に要素を挿入
+                  if (index === array.length - 3) {
+                    return (
+                      <React.Fragment key={`fragment-${post.id}`}>
+                        {element}
+                        <div
+                          id="shintaku_today"
+                          className="px-4 text-center text-black flex items-center"
+                        >
+                          <div className="flex-1 border-t-1 border-black/50"></div>
+                          <span className="px-4 text-sm text-black/50">本日の御神託</span>
+                          <div className="flex-1 border-t-1 border-black/50"></div>
+                        </div>
+                      </React.Fragment>
+                    );
+                  }
+
+                  return element;
+                })
+            )}
+          </div>
         </div>
       </div>
 
