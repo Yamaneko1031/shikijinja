@@ -197,6 +197,7 @@ const App = (props: Props) => {
         {sections.map(({ id, component: SectionComponent }, idx) => {
           const isActive = id === state.activeId;
           const isNeighbor = Math.abs(idx - activeIndex) === 1;
+          const sectionView = (idx === 0 || isInit) && (isActive || isNeighbor);
           return (
             <section
               key={id}
@@ -205,7 +206,7 @@ const App = (props: Props) => {
               }}
               className={`${sections[idx].sectionClass}`}
             >
-              {(isActive || isNeighbor) && SectionComponent && (
+              {sectionView && SectionComponent && (
                 <SectionComponent
                   isActive={isActive}
                   isNeighbor={isNeighbor}

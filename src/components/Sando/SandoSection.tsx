@@ -32,7 +32,7 @@ const SandoSection = (props: SectionProps) => {
         <div className="relative h-full w-full bg-black/50 rounded-lg flex flex-col gap-2 p-4">
           <div className="">
             <TextReveal
-              text="神様が気まぐれで記す御神託帳が置かれています。"
+              text="御神託帳。毎朝8時に新しい御神託が記されます。"
               delayPerChar={0.1}
               className="text-xl md:text-2xl font-bold"
             />
