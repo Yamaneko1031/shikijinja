@@ -129,7 +129,7 @@ const ShoukaiSection = (props: SectionProps) => {
             )}
           </Button>
         </div>
-        <div className="h-full w-full overflow-x-hidden bg-cover bg-center rounded-lg border-4 border-[rgba(40,20,0,0.5)] bg-[url('/images/bg_hude/bg_shintaku.webp')]">
+        <div className="h-full w-full mt-8 overflow-x-hidden bg-cover bg-center rounded-lg border-4 border-[rgba(40,20,0,0.5)] bg-[url('/images/bg_hude/bg_shintaku.webp')]">
           <div className="h-[3.5rem] text-orange-950 flex flex-col items-center justify-center bg-[rgba(255,244,235,0.5)] shadow-lg">
             <p className="text-xl font-bold">御神託帳</p>
             <p className="text-xs font-bold">毎日新しい御神託が記されます</p>
