@@ -61,7 +61,13 @@ const NadenekoSection = (props: SectionProps) => {
         <div className="relative w-full bg-black/50 rounded-lg flex flex-col items-center gap-2 p-4">
           <div className="w-full text-xl flex flex-col items-start">
             <p>なでるとご利益があるとされている「なでねこ像」</p>
-            <p>こちらを見ている気がします。</p>
+            {props.handleIsLimitOver('nadeneko') ? (
+              <p>満足そうにしている気がします。</p>
+            ) : (
+              <>
+                <p>こちらを見ている気がします。</p>
+              </>
+            )}
           </div>
           <Button
             variant="positive"
