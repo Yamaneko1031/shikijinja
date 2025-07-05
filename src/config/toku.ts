@@ -27,7 +27,14 @@ export const tokuMaster: TokuMasterData[] = [
     permanent: false,
   },
   { tokuId: 'omikuji_omikuji', label: 'おみくじを引いた', limit: 3, coin: 300, permanent: false },
-  { tokuId: 'nadeneko', label: 'なで猫をなでた', limit: 1, coin: 0, permanent: false }, // 特殊抽選
+  { tokuId: 'nadeneko', label: 'なで猫をなでた', limit: 100, coin: 0, permanent: false }, // 特殊抽選
+  {
+    tokuId: 'nadeneko_first_help',
+    label: 'なで猫のヘルプを見た',
+    limit: 1,
+    coin: 0,
+    permanent: true,
+  },
   { tokuId: 'omamori_buy', label: 'お守りを購入', limit: 10, coin: 500, permanent: false },
   {
     tokuId: 'regist_reward',

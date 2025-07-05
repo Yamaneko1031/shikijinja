@@ -106,6 +106,8 @@ const NadenekoSection = (props: SectionProps) => {
           onClose={() => setIsModalOpen(false)}
           lotData={lotData}
           handleAddCoin={props.handleAddCoin}
+          handleTokuGet={props.handleTokuGet}
+          handleIsLimitOver={props.handleIsLimitOver}
         />
       </Modal>
     </>

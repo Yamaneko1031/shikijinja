@@ -2,15 +2,17 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { NadenekoResponse } from '@/types/nadeneko';
-import { coinBasePositions, subMessageTable } from '@/config/nadeneko';
+import { subMessageTable } from '@/config/nadeneko';
 import { getCssDuration } from '@/utils/getCssDuration';
 import { Button } from '../_shared/Button';
-import HelpWindow from '../_shared/HelpWindow';
 import NadenekoHelp from './NadenekoHelp';
-
+import Modal from '../_shared/Modal';
+import { TokuId } from '@/types/toku';
 type Props = {
   lotData: NadenekoResponse | null;
   handleFinished: () => void;
+  handleTokuGet: (tokuId: TokuId) => void;
+  handleIsLimitOver: (tokuId: TokuId) => boolean;
 };
 
 type DragState = 'standby' | 'waiting' | 'finished';
@@ -27,17 +29,23 @@ const finishedTime = 3000;
 const petMessageTime = 2000;
 const coinAddDelayTime = 1500;
 const coinPopupElementCount = 10;
-const coinOffsetLeftRange = 16;
-const coinOffsetTopRange = 16;
+const coinOffsetLeftRange = 64;
+const coinOffsetTopRange = 64;
 
-export default function NadenekoSeat({ lotData, handleFinished }: Props) {
-  const draggingRef = useRef(false);
+export default function NadenekoSeat({
+  lotData,
+  handleFinished,
+  handleTokuGet,
+  handleIsLimitOver,
+}: Props) {
   const startPosRef = useRef({ x: 0, y: 0 });
+  const nadenekoAreaRef = useRef<HTMLDivElement>(null);
   const targetAreaRef = useRef<HTMLDivElement>(null);
   const dragCountRef = useRef(0);
   const subMessageCountRef = useRef(0);
   const getCoinIndexRef = useRef(0);
   const dragStateRef = useRef<DragState>('standby');
+  const eventStopRef = useRef(false);
   const [screenClass, setScreenClass] = useState('');
   const [coinClasses, setCoinClasses] = useState(Array(coinPopupElementCount).fill(''));
   const [petMessage, setPetMessage] = useState(false);
@@ -49,9 +57,6 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
   const timeoutIdRef = useRef<NodeJS.Timeout | null>(null);
   const coinValueRef = useRef(Array(coinPopupElementCount).fill(0));
   const coinPositionRef = useRef(Array(coinPopupElementCount).fill({ left: 0, top: 0, rate: 1 }));
-  const randomPositionIndeicesRef = useRef(
-    Array.from({ length: coinBasePositions.length }, (_, i) => i)
-  );
 
   // 初回のセットアップ
   useEffect(() => {
@@ -62,30 +67,19 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
     }
   }, [lotData]);
 
-  // コインの基準位置をランダムにシャッフル
   useEffect(() => {
-    randomPositionIndeicesRef.current = (() => {
-      const arr = Array.from({ length: coinBasePositions.length }, (_, i) => i);
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-      return arr;
-    })();
-  }, []);
+    if (!handleIsLimitOver('nadeneko_first_help')) {
+      setIsHelp(true);
+      handleTokuGet('nadeneko_first_help');
+    }
+  }, [handleIsLimitOver, handleTokuGet]);
 
   const eventStop = (e: WheelEvent | TouchEvent) => {
     e.preventDefault();
   };
 
-  // ドラッグ開始イベント
-  const handleMouseDown = (e: React.MouseEvent) => {
-    draggingRef.current = true;
-    startPosRef.current = { x: e.clientX, y: e.clientY };
-  };
   const handleTouchStart = (e: React.TouchEvent) => {
     const touch = e.touches[0];
-    draggingRef.current = true;
     startPosRef.current = { x: touch.clientX, y: touch.clientY };
   };
 
@@ -196,15 +190,14 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
             };
             return rateMap[addCoinValue] ?? 1.0;
           })();
-          coinPositionRef.current[updateCoinIndex] = {
-            left:
-              coinBasePositions[randomPositionIndeicesRef.current[updateCoinIndex]].left +
-              randomOffetLeft,
-            top:
-              coinBasePositions[randomPositionIndeicesRef.current[updateCoinIndex]].top +
-              randomOffetTop,
-            rate: rateValue,
-          };
+          const nadenekoArea = nadenekoAreaRef.current?.getBoundingClientRect();
+          if (nadenekoArea) {
+            coinPositionRef.current[updateCoinIndex] = {
+              left: startPosRef.current.x - nadenekoArea.left + randomOffetLeft,
+              top: startPosRef.current.y - nadenekoArea.top + randomOffetTop,
+              rate: rateValue,
+            };
+          }
 
           // 一定期間は待ったあと合計コインを加算
           setTimeout(() => {
@@ -254,8 +247,8 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
   useEffect(() => {
     const handleMove = (e: MouseEvent | TouchEvent) => {
       if (!lotData) return;
-      if (draggingRef.current === false) return;
       if (getCoinIndexRef.current >= lotData.addCoins.length) return;
+      if (isHelp) return;
 
       const clientX = 'touches' in e ? e.touches[0].clientX : (e as MouseEvent).clientX;
       const clientY = 'touches' in e ? e.touches[0].clientY : (e as MouseEvent).clientY;
@@ -275,39 +268,36 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
       startPosRef.current = { x: clientX, y: clientY };
     };
 
-    const handleEnd = () => {
-      draggingRef.current = false;
-    };
+    if (lotData && !isHelp) {
+      if (!eventStopRef.current) {
+        window.addEventListener('mousemove', handleMove);
+        window.addEventListener('touchmove', handleMove, { passive: false });
+        window.addEventListener('wheel', eventStop, { passive: false });
+        window.addEventListener('touchmove', eventStop, { passive: false });
+        eventStopRef.current = true;
+      }
+    }
 
-    if (lotData) {
-      window.addEventListener('mousemove', handleMove);
-      window.addEventListener('mouseup', handleEnd);
-      window.addEventListener('touchmove', handleMove, { passive: false });
-      window.addEventListener('touchend', handleEnd);
-
-      window.addEventListener('wheel', eventStop, { passive: false });
-      window.addEventListener('touchmove', eventStop, { passive: false });
-      return () => {
+    return () => {
+      if (eventStopRef.current) {
         window.removeEventListener('mousemove', handleMove);
-        window.removeEventListener('mouseup', handleEnd);
         window.removeEventListener('touchmove', handleMove);
-        window.removeEventListener('touchend', handleEnd);
-
         window.removeEventListener('wheel', eventStop);
         window.removeEventListener('touchmove', eventStop);
-      };
-    }
-  }, [lotData, handleFinished, postSubMessages, petUpdate]);
+        eventStopRef.current = false;
+      }
+    };
+  }, [lotData, handleFinished, postSubMessages, petUpdate, isHelp]);
 
   return (
     <div className="relative w-full h-full flex flex-col items-center justify-center">
       {/* ドラッグ領域 */}
       <div
+        ref={nadenekoAreaRef}
         className={
           'absolute max-w-[30rem] min-w-[25rem] w-[100vw] aspect-square bg-[url("/images/nadeneko/nadeneko_action.webp")] bg-[length:100%_auto] bg-no-repeat rounded-md border-4 border-[rgba(40,20,0,0.5)] ' +
           screenClass
         }
-        onMouseDown={(e) => handleMouseDown(e)}
         onTouchStart={(e) => handleTouchStart(e)}
         style={{ touchAction: 'none' }}
       >
@@ -331,9 +321,6 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
           </>
         )}
 
-        {/* なでる判定領域 */}
-        <div className="absolute top-[26%] left-[26%] w-[48%] h-[68%]" ref={targetAreaRef}></div>
-
         {/* サブメッセージ */}
         <div className="absolute top-1/2 left-1/2 text-center text-white font-bold text-2xl text-shadow-huchi2 whitespace-nowrap">
           {subMessages.map((subMessage) => (
@@ -354,13 +341,15 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
               <div
                 className="absolute"
                 style={{
-                  left: `${coinPositionRef.current[index].left}%`,
-                  top: `${coinPositionRef.current[index].top}%`,
+                  left: `${coinPositionRef.current[index].left}px`,
+                  top: `${coinPositionRef.current[index].top}px`,
                   transform: `scale(${coinPositionRef.current[index].rate})`,
                 }}
               >
                 {/* コインポップアップ */}
-                <div className={`nadeneko-coin -translate-x-1/2 ${coinClasses[index]}`}>
+                <div
+                  className={`nadeneko-coin -translate-x-1/2 -translate-y-1/2 ${coinClasses[index]}`}
+                >
                   <p className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-3/5 text-3xl font-bold text-shadow-huchi">
                     {coinValueRef.current[index]}
                   </p>
@@ -369,10 +358,10 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
               {/* コインの加算エフェクト */}
               {coinClasses[index] !== '' && (
                 <div
-                  className="nadeneko-coin -translate-x-1/2 nadeneko-coin-total-add"
+                  className="nadeneko-coin -translate-x-1/2 -translate-y-1/2 nadeneko-coin-total-add"
                   style={{
-                    left: `${coinPositionRef.current[index].left}%`,
-                    top: `${coinPositionRef.current[index].top}%`,
+                    left: `${coinPositionRef.current[index].left}px`,
+                    top: `${coinPositionRef.current[index].top}px`,
                     transform: `scale(${coinPositionRef.current[index].rate})`,
                   }}
                 ></div>
@@ -404,24 +393,23 @@ export default function NadenekoSeat({ lotData, handleFinished }: Props) {
             disabled={isAuto || isHelp || lotData === null}
           ></Button>
         </div>
-        {/* <button
-              className="absolute top-[4%] right-[4%] w-[2rem] h-[2rem] rounded-full bg-white/80 flex items-center justify-center"
-              onClick={() => {
-                setIsHelp(true);
-                console.log('click');
-              }}
-            >
-              <Image src="/images/icon/icon_help.webp" alt="ヘルプ" width={48} height={48} />
-              あああ
-            </button> */}
 
-        <HelpWindow
+        {/* なでる判定領域 */}
+        <div
+          className="absolute nadeneko-area top-[26%] left-[26%] w-[48%] h-[68%]"
+          ref={targetAreaRef}
+          onClick={() => {
+            console.log('click');
+          }}
+        ></div>
+
+        <Modal
           isOpen={isHelp}
-          className="absolute bg-white rounded-md border-2 border-gray-200 left-8 right-8"
+          className="absolute max-w-[20rem] w-[80vw] min-w-[20rem] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-md border-2 border-gray-200 overscroll-contain"
           handleOutsideClick={() => setIsHelp(false)}
         >
           <NadenekoHelp handleClose={() => setIsHelp(false)} />
-        </HelpWindow>
+        </Modal>
 
         {dragStateRef.current === 'finished' && (
           <div className="absolute w-full h-full flex items-center justify-center">

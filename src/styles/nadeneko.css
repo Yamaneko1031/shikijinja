@@ -41,7 +41,7 @@
 
 @keyframes nadeneko-coin-total-add {
   0% {
-    opacity: 0.3;
+    opacity: 0.5;
   }
   100% {
     left: 20%;
@@ -222,4 +222,10 @@
 }
 .animate-nadeneko-sub-message-4 {
   animation: nadeneko-sub-message-4 var(--nadeneko-sub-message-duration) ease-out forwards;
+}
+
+.nadeneko-area:hover {
+  cursor:
+    url('/images/cursor/cursor_hand.webp') 32 32,
+    grab;
 }

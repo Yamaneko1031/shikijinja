@@ -5,14 +5,22 @@ import { Button } from '../_shared/Button';
 import NadenekoSeat from './NadenekoSeat';
 import { NadenekoResponse } from '@/types/nadeneko';
 import NadenekoResult from './NadenekoResult';
-
+import { TokuId } from '@/types/toku';
 type Props = {
   lotData: NadenekoResponse | null;
   onClose: () => void;
   handleAddCoin: (coin: number) => void;
+  handleTokuGet: (tokuId: TokuId) => void;
+  handleIsLimitOver: (tokuId: TokuId) => boolean;
 };
 
-export default function NadenekoModal({ lotData, onClose, handleAddCoin }: Props) {
+export default function NadenekoModal({
+  lotData,
+  onClose,
+  handleAddCoin,
+  handleTokuGet,
+  handleIsLimitOver,
+}: Props) {
   const [isFinished, setIsFinished] = useState(false);
 
   const handleFinished = () => {
@@ -31,7 +39,12 @@ export default function NadenekoModal({ lotData, onClose, handleAddCoin }: Props
       {isFinished === false ? (
         <div className="min-h-[100lvh] flex flex-col items-center">
           <div className="m-auto">
-            <NadenekoSeat lotData={lotData} handleFinished={handleFinished} />
+            <NadenekoSeat
+              lotData={lotData}
+              handleFinished={handleFinished}
+              handleTokuGet={handleTokuGet}
+              handleIsLimitOver={handleIsLimitOver}
+            />
           </div>
         </div>
       ) : (
