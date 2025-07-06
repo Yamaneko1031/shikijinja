@@ -68,6 +68,8 @@ export default function TrialPage() {
             addCoins: [1, 2, 1, 2, 5, 10, 30, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2],
           }}
           handleFinished={() => {}}
+          handleTokuGet={() => {}}
+          handleIsLimitOver={() => false}
         />
       </div>
     </div>
