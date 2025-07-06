@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 
 type Props = {
@@ -11,6 +11,7 @@ type Props = {
 
 export default function NadenekoAutoHand({ isAuto, nadenekoAreaRef, petUpdate }: Props) {
   const [handPosition, setHandPosition] = useState({ x: 0, y: 0, frame: 0 });
+  const isInitRef = useRef(false);
   // 自動モードの更新処理
   useEffect(() => {
     const autoUpdate = () => {
@@ -34,27 +35,38 @@ export default function NadenekoAutoHand({ isAuto, nadenekoAreaRef, petUpdate }:
     };
     autoUpdate();
     requestAnimationFrame(autoUpdate);
+    isInitRef.current = true;
   }, [isAuto, petUpdate, nadenekoAreaRef]);
 
-  petUpdate(handPosition.x, handPosition.y);
+  useEffect(() => {
+    if (isInitRef.current) {
+      petUpdate(handPosition.x, handPosition.y);
+    }
+  }, [handPosition, petUpdate]);
 
   return (
-    <div className="select-none">
-      <div
-        className="absolute"
-        style={{
-          left: `${handPosition.x}px`,
-          top: `${handPosition.y}px`,
-        }}
-      >
-        <Image
-          src="/images/icon/icon_hand.webp"
-          alt="手"
-          width={100}
-          height={100}
-          className="w-[3rem] h-[3rem] animate-nadeneko-hand"
-        />
-      </div>
-    </div>
+    <>
+      {isInitRef.current ? (
+        <>
+          <div
+            className="absolute"
+            style={{
+              left: `${handPosition.x}px`,
+              top: `${handPosition.y}px`,
+            }}
+          >
+            <Image
+              src="/images/icon/icon_hand.webp"
+              alt="手"
+              width={100}
+              height={100}
+              className="w-[3rem] h-[3rem] animate-nadeneko-hand"
+            />
+          </div>
+        </>
+      ) : (
+        <></>
+      )}
+    </>
   );
 }
