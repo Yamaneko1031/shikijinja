@@ -8,6 +8,8 @@ import { Button } from '../_shared/Button';
 import NadenekoHelp from './NadenekoHelp';
 import Modal from '../_shared/Modal';
 import { TokuId } from '@/types/toku';
+import NadenekoAutoHand from './NadenekoAutoHand';
+
 type Props = {
   lotData: NadenekoResponse | null;
   handleFinished: () => void;
@@ -38,7 +40,6 @@ export default function NadenekoSeat({
   handleTokuGet,
   handleIsLimitOver,
 }: Props) {
-  const startPosRef = useRef({ x: 0, y: 0 });
   const nadenekoAreaRef = useRef<HTMLDivElement>(null);
   const targetAreaRef = useRef<HTMLDivElement>(null);
   const dragCountRef = useRef(0);
@@ -76,11 +77,6 @@ export default function NadenekoSeat({
 
   const eventStop = (e: WheelEvent | TouchEvent) => {
     e.preventDefault();
-  };
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    const touch = e.touches[0];
-    startPosRef.current = { x: touch.clientX, y: touch.clientY };
   };
 
   // なでてメッセージを消す
@@ -130,8 +126,9 @@ export default function NadenekoSeat({
 
   // なでる操作時の更新処理
   const petUpdate = useCallback(
-    (lotData: NadenekoResponse) => {
+    (x: number, y: number) => {
       if (dragStateRef.current !== 'standby') return;
+      if (!lotData) return;
 
       dragCountRef.current = dragCountRef.current - 1;
       subMessageCountRef.current = subMessageCountRef.current - 1;
@@ -190,14 +187,12 @@ export default function NadenekoSeat({
             };
             return rateMap[addCoinValue] ?? 1.0;
           })();
-          const nadenekoArea = nadenekoAreaRef.current?.getBoundingClientRect();
-          if (nadenekoArea) {
-            coinPositionRef.current[updateCoinIndex] = {
-              left: startPosRef.current.x - nadenekoArea.left + randomOffetLeft,
-              top: startPosRef.current.y - nadenekoArea.top + randomOffetTop,
-              rate: rateValue,
-            };
-          }
+
+          coinPositionRef.current[updateCoinIndex] = {
+            left: x + randomOffetLeft,
+            top: y + randomOffetTop,
+            rate: rateValue,
+          };
 
           // 一定期間は待ったあと合計コインを加算
           setTimeout(() => {
@@ -221,6 +216,7 @@ export default function NadenekoSeat({
               dragStateRef.current = 'finished';
               setScreenClass('animate-nadeneko-screen-finish');
               setPetMessageClear(false);
+              setIsAuto(false);
               setTimeout(() => {
                 handleFinished();
               }, finishedTime);
@@ -229,19 +225,8 @@ export default function NadenekoSeat({
         }, 30);
       }
     },
-    [setPetMessageClear, postSubMessages, handleFinished]
+    [setPetMessageClear, postSubMessages, handleFinished, lotData]
   );
-
-  // 自動モードの更新処理
-  useEffect(() => {
-    const autoUpdate = () => {
-      if (isAuto && lotData) {
-        petUpdate(lotData);
-      }
-      requestAnimationFrame(autoUpdate);
-    };
-    requestAnimationFrame(autoUpdate);
-  }, [isAuto, lotData, petUpdate]);
 
   // ドラッグ中の移動処理
   useEffect(() => {
@@ -261,11 +246,12 @@ export default function NadenekoSeat({
           targetArea.top < clientY &&
           clientY < targetArea.bottom
         ) {
-          petUpdate(lotData);
+          const nadenekoArea = nadenekoAreaRef.current?.getBoundingClientRect();
+          if (nadenekoArea) {
+            petUpdate(clientX - nadenekoArea.left, clientY - nadenekoArea.top);
+          }
         }
       }
-
-      startPosRef.current = { x: clientX, y: clientY };
     };
 
     if (lotData && !isHelp) {
@@ -298,7 +284,6 @@ export default function NadenekoSeat({
           'absolute max-w-[30rem] min-w-[25rem] w-[100vw] aspect-square bg-[url("/images/nadeneko/nadeneko_action.webp")] bg-[length:100%_auto] bg-no-repeat rounded-md border-4 border-[rgba(40,20,0,0.5)] ' +
           screenClass
         }
-        onTouchStart={(e) => handleTouchStart(e)}
         style={{ touchAction: 'none' }}
       >
         {lotData === null ? (
@@ -402,6 +387,21 @@ export default function NadenekoSeat({
             console.log('click');
           }}
         ></div>
+
+        {isAuto && lotData && nadenekoAreaRef && (
+          <>
+            <NadenekoAutoHand
+              isAuto={isAuto}
+              nadenekoAreaRef={nadenekoAreaRef as React.RefObject<HTMLDivElement>}
+              petUpdate={petUpdate}
+            />
+            <div className="absolute w-full h-full flex items-center justify-center">
+              <div className="text-white font-bold text-4xl text-shadow-huchi2 animate-brinking">
+                おまかせ中
+              </div>
+            </div>
+          </>
+        )}
 
         <Modal
           isOpen={isHelp}
