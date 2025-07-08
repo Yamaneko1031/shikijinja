@@ -51,7 +51,7 @@ export async function POST(request: Request) {
     }
 
     const checkText = texts[0]?.text + texts[1]?.text;
-    const checkResult = await openaiTemplateRequest('ema_check', checkText);
+    const checkResult = await openaiTemplateRequest('post_check', checkText);
 
     if (!checkResult) {
       return jsonResponse({ error: 'チェック用テンプレートの実行に失敗しました' }, { status: 500 });
