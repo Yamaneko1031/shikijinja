@@ -28,31 +28,33 @@ export default function HelpPolicy({ onClose }: Props) {
           <li>
             <h3>取得する情報と取得方法</h3>
             <table>
-              <tr>
-                <th>区分</th>
-                <th>具体例</th>
-                <th>取得タイミング／方法</th>
-              </tr>
-              <tr>
-                <td>アカウント情報</td>
-                <td>ニックネーム、メールアドレス、SNS連携ID</td>
-                <td>会員登録・SNSログイン時</td>
-              </tr>
-              <tr>
-                <td>ログデータ</td>
-                <td>IPアドレス、ブラウザ種別、参照元URL、操作履歴</td>
-                <td>サイト閲覧時に自動取得</td>
-              </tr>
-              <tr>
-                <td>Cookie／ローカルストレージ</td>
-                <td>セッションID、ゲストID、トークン情報</td>
-                <td>サイト利用時にブラウザへ保存</td>
-              </tr>
-              <tr>
-                <td>投稿データ</td>
-                <td>参拝記録、絵馬の内容、おみくじの選択結果、お守りの授与履歴</td>
-                <td>ユーザー投稿時</td>
-              </tr>
+              <tbody>
+                <tr>
+                  <th>区分</th>
+                  <th>具体例</th>
+                  <th>取得タイミング／方法</th>
+                </tr>
+                <tr>
+                  <td>アカウント情報</td>
+                  <td>ニックネーム、メールアドレス、SNS連携ID</td>
+                  <td>会員登録・SNSログイン時</td>
+                </tr>
+                <tr>
+                  <td>ログデータ</td>
+                  <td>IPアドレス、ブラウザ種別、参照元URL、操作履歴</td>
+                  <td>サイト閲覧時に自動取得</td>
+                </tr>
+                <tr>
+                  <td>Cookie／ローカルストレージ</td>
+                  <td>セッションID、ゲストID、トークン情報</td>
+                  <td>サイト利用時にブラウザへ保存</td>
+                </tr>
+                <tr>
+                  <td>投稿データ</td>
+                  <td>参拝記録、絵馬の内容、おみくじの選択結果、お守りの授与履歴</td>
+                  <td>ユーザー投稿時</td>
+                </tr>
+              </tbody>
             </table>
           </li>
           <li>

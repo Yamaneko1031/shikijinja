@@ -12,6 +12,7 @@ interface HeaderProps {
   user: User;
   isInit: boolean;
   handleAddCoin: (coin: number) => void;
+  setUser: (user: User) => void;
 }
 
 const Header: React.FC<HeaderProps> = (props) => {
@@ -40,6 +41,7 @@ const Header: React.FC<HeaderProps> = (props) => {
           isLoadingUserItems={isLoadingUserItems}
           mutateUserItems={mutateUserItems}
           handleCloseMenu={() => setIsUserMenuOpen(false)}
+          setUser={props.setUser}
         />
       </MenuWindow>
       <MenuWindow
