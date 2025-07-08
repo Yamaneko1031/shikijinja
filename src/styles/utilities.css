@@ -139,3 +139,36 @@ input[type='checkbox'] {
 .help-ul li dl dd {
   @apply text-xs;
 }
+
+.help-ul table {
+  @apply ml-4;
+}
+
+.help-ul li table {
+  @apply border-collapse border border-gray-300;
+}
+
+.help-ul li table th {
+  @apply border border-gray-300 p-1;
+}
+
+.help-ul li table td {
+  @apply border border-gray-300 p-1;
+}
+
+.help-ul li ul {
+  @apply flex flex-col gap-1;
+}
+
+.help-ul li li p {
+  @apply ml-8;
+  text-indent: -1em;
+}
+
+.help-ul li li p::before {
+  content: '・';
+}
+
+.help-ul li li li {
+  @apply ml-8;
+}
