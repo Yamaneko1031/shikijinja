@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "decision" TEXT NOT NULL DEFAULT 'ALLOW',
+ADD COLUMN     "reasons" JSONB NOT NULL DEFAULT '[]';

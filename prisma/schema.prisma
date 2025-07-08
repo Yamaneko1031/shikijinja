@@ -95,7 +95,9 @@ model User {
   isGuest                 Boolean          @default(true)
   email                   String?          @unique
   passwordHash            String?
-  name                    String?
+  name                    String?          @default("")
+  decision                String           @default("ALLOW")
+  reasons                 Json             @default("[]")
   coin                    Int              @default(0)
   fortunes                Json             @default("[]")
   permanentTokuCounts     Json             @default("{}")
@@ -108,6 +110,7 @@ model User {
   emaPosts                EmaPost[]        @relation("UserEmaPosts")
   omikujiResults          OmikujiResult[]  @relation("UserOmikujiResults")
   omamoriItems            Omamori[]        @relation("UserOmamoriItems")
+  pettingLogs             PettingLog[]     @relation("UserPettingLogs")
 
   @@index([isGuest, lastAccessAt])
 }
@@ -151,4 +154,15 @@ model SystemInfomations {
   totalSaisen     Int       @default(0)
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
+}
+
+model PettingLog {
+  id              Int       @id @default(autoincrement())
+  userId          String?
+  pettingCount    Int
+  points          Int
+  createdAt       DateTime  @default(now())
+  user            User?     @relation("UserPettingLogs", fields: [userId], references: [id], onDelete: SetNull)
+  
+  @@index([userId, createdAt])
 }

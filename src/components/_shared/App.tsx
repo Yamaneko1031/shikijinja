@@ -184,7 +184,12 @@ const App = (props: Props) => {
         className="text-white fixed inset-0 overflow-scroll overscroll-contain overflow-x-hidden z-0"
         ref={containerRef}
       >
-        <Header user={user.user} isInit={isInit} handleAddCoin={user.handleAddCoin} />
+        <Header
+          user={user.user}
+          isInit={isInit}
+          handleAddCoin={user.handleAddCoin}
+          setUser={user.setUser}
+        />
 
         {/* 背景画像の管理 */}
         <BackgroundManager

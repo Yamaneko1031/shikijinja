@@ -18,12 +18,24 @@ const Modal: React.FC<ModalProps> = ({
   const portalRoot = useRef<HTMLDivElement | null>(null);
   const modalRef = useRef<HTMLDivElement | null>(null);
   const windowRef = useRef<HTMLDivElement | null>(null);
+  const isMouseDown = useRef(false);
 
   if (!portalRoot.current && typeof document !== 'undefined') {
     portalRoot.current = document.createElement('div');
   }
 
-  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (windowRef.current?.contains(e.target as Node)) {
+      return;
+    }
+    isMouseDown.current = true;
+  };
+
+  const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
+    const failed = !isMouseDown.current;
+    isMouseDown.current = false;
+    if (failed) return;
+
     if (windowRef.current?.contains(e.target as Node)) {
       return;
     }
@@ -55,7 +67,8 @@ const Modal: React.FC<ModalProps> = ({
     <div
       ref={modalRef}
       className="fixed inset-0 z-2 bg-black/80 overflow-scroll overscroll-contain flex justify-center items-center"
-      onClick={handleClick}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
     >
       <div className="absolute top-0 left-0 w-full h-[calc(100%+1px)]" />
       <div

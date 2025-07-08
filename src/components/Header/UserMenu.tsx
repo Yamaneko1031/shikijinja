@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { User, UserItems } from '@/types/user';
 import { signIn, signOut, useSession } from 'next-auth/react';
@@ -19,6 +19,7 @@ interface Props {
   user: User;
   userItems: UserItems | undefined;
   isLoadingUserItems: boolean;
+  setUser: (user: User) => void;
   mutateUserItems: () => void;
   handleCloseMenu: () => void;
 }
@@ -31,7 +32,10 @@ const UserMenu: React.FC<Props> = (props) => {
   const [isEmaOpen, setIsEmaOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+  const [isRenameOpen, setIsRenameOpen] = useState(false);
   const [isFortuneOpen, setIsFortuneOpen] = useState(false);
+  const [renameName, setRenameName] = useState(props.user.name || '');
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const emaCount =
     props.isLoadingUserItems || props.userItems === undefined ? 0 : props.userItems.ema.length;
@@ -39,6 +43,8 @@ const UserMenu: React.FC<Props> = (props) => {
     props.isLoadingUserItems || props.userItems === undefined ? 0 : props.userItems.omamori.length;
   const omikujiCount =
     props.isLoadingUserItems || props.userItems === undefined ? 0 : props.userItems.omikuji.length;
+
+  const name = props.user.name || '名無し';
 
   const handleSignIn = async (provider: 'google' | 'github') => {
     // リダイレクトされるので戻さない
@@ -60,8 +66,43 @@ const UserMenu: React.FC<Props> = (props) => {
     await signOut();
   };
 
+  const handleRenameEnter = () => {
+    props.setUser({ ...props.user, name: renameName });
+    setIsRenameOpen(false);
+    apiFetch('/api/user/rename', {
+      method: 'PATCH',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: renameName }),
+    });
+  };
+
+  useEffect(() => {
+    if (isRenameOpen && inputRef.current) {
+      setRenameName(props.user.name || '');
+      inputRef.current.focus();
+    }
+  }, [isRenameOpen, props.user.name]);
+
   return (
     <div className="min-w-[18rem] text-black flex flex-col items-start p-2">
+      <div className="w-full text-black/40 text-center font-bold">ニックネーム</div>
+      <div className="w-full flex flex-row items-center justify-center">
+        <Button
+          variant="custom"
+          size="custom"
+          className=""
+          onClick={() => setIsRenameOpen(true)}
+          disabled={loading}
+        >
+          <Image src="/images/icon/icon_hude.webp" alt="edit_icon" width={24} height={24} />
+        </Button>
+        <div className="relative w-[10rem]">
+          <div className="w-full text-black text-center">{name ? name : '名無し'}</div>
+          <div className="absolute top-[1.5rem] left-0 w-full border-t border-black"></div>
+        </div>
+      </div>
+      <div className="w-full border-t border-gray-200 my-4"></div>
       {session ? (
         <div className="w-full flex flex-col gap-2 items-center">
           <div className="text-black/40 text-sm font-bold">ログイン中</div>
@@ -180,6 +221,31 @@ const UserMenu: React.FC<Props> = (props) => {
           <div>運パラメータ</div>
         </div>
       </MenuButton>
+
+      <Modal
+        isOpen={isRenameOpen}
+        className="absolute w-[16rem] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-md border-2 border-gray-200"
+        handleOutsideClick={() => setIsRenameOpen(false)}
+      >
+        <div className="p-4 flex flex-col items-center gap-4">
+          <div className="text-black/40 text-sm font-bold">ニックネーム変更</div>
+          <input
+            type="text"
+            className="w-full border-2 border-gray-500 rounded-md text-black p-1"
+            value={renameName}
+            ref={inputRef}
+            onChange={(e) => setRenameName(e.target.value.replace(/\r?\n/g, ''))}
+          />
+          <div className="flex flex-row items-center gap-2">
+            <Button variant="negative" onClick={() => setIsRenameOpen(false)} disabled={loading}>
+              やめる
+            </Button>
+            <Button variant="positive" onClick={() => handleRenameEnter()} disabled={loading}>
+              名前変更
+            </Button>
+          </div>
+        </div>
+      </Modal>
 
       <Modal
         isOpen={isLoginOpen}
