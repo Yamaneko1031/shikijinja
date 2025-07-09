@@ -27,6 +27,13 @@ export const tokuMaster: TokuMasterData[] = [
     permanent: false,
   },
   { tokuId: 'omikuji_omikuji', label: 'おみくじを引いた', limit: 3, coin: 300, permanent: false },
+  {
+    tokuId: 'bantuke',
+    label: '番付を見た',
+    limit: 1,
+    coin: 100,
+    permanent: true,
+  },
   { tokuId: 'nadeneko', label: 'なで猫をなでた', limit: 100, coin: 0, permanent: false }, // 特殊抽選
   {
     tokuId: 'nadeneko_first_help',

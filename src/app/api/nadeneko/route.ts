@@ -92,6 +92,15 @@ export async function POST() {
       },
     });
 
+    // ランキング用にログ追加
+    await prisma.pettingLog.create({
+      data: {
+        userId: user.id,
+        pettingCount: addCoins.length,
+        points: totalAddCoin,
+      },
+    });
+
     const lotData: NadenekoResponse = {
       totalAddCoin: totalAddCoin,
       addCoins: addCoins,

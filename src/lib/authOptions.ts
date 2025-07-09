@@ -118,7 +118,6 @@ export const authOptions: AuthOptions = {
           data: {
             isGuest: false,
             email: user.email,
-            name: user.name,
           },
         });
         // SNS連携情報をAccountに登録

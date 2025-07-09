@@ -6,6 +6,7 @@ export const tokuIds = [
   'omikuji_nekobiyori',
   'omikuji_hitohira',
   'omikuji_omikuji',
+  'bantuke',
   'nadeneko',
   'nadeneko_first_help',
   'omamori_buy',
