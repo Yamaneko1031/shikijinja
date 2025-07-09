@@ -10,6 +10,7 @@ import { pxToRem } from '@/lib/size';
 interface EmaFormEditorProps {
   deityKey: EmaImageKey;
   textsRef: React.RefObject<TextBlock[]>;
+  initialNickname: string;
   setIsOverFlowError: React.Dispatch<React.SetStateAction<boolean>>;
   setIsMainTextEmptyError: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -17,6 +18,7 @@ interface EmaFormEditorProps {
 const EmaFormEditor: React.FC<EmaFormEditorProps> = ({
   deityKey,
   textsRef,
+  initialNickname,
   setIsOverFlowError,
   setIsMainTextEmptyError,
 }) => {
@@ -29,8 +31,9 @@ const EmaFormEditor: React.FC<EmaFormEditorProps> = ({
   const initLineHeight = [1.1, 1.2, 1.3][Math.floor(Math.random() * 3)].toFixed(1);
   // 初期のテキストは一部ランダム
   const [texts, setTexts] = useState<TextBlock[]>(
-    initialTexts.map((text) => ({
+    initialTexts.map((text, index) => ({
       ...text,
+      text: index === 0 ? '' : initialNickname,
       font: initFont,
       fontColor: initFontColor,
       lineHeight: initLineHeight,

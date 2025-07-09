@@ -7,11 +7,17 @@ import EmaFormEditor from './EmaFormEditor';
 
 export interface EmaFormProps {
   initialDeityKey: EmaImageKey;
+  initialNickname: string;
   onSubmit: (post: EmaPost) => void;
   onClose: () => void;
 }
 
-export default function EmaForm({ initialDeityKey, onSubmit, onClose }: EmaFormProps) {
+export default function EmaForm({
+  initialDeityKey,
+  initialNickname,
+  onSubmit,
+  onClose,
+}: EmaFormProps) {
   const [deityKey, setDeityKey] = useState<EmaImageKey>(initialDeityKey);
   const [isOverFlowError, setIsOverFlowError] = useState(false);
   const [isMainTextEmptyError, setIsMainTextEmptyError] = useState(false);
@@ -53,6 +59,7 @@ export default function EmaForm({ initialDeityKey, onSubmit, onClose }: EmaFormP
       <EmaFormEditor
         deityKey={deityKey}
         textsRef={textsRef}
+        initialNickname={initialNickname}
         setIsOverFlowError={setIsOverFlowError}
         setIsMainTextEmptyError={setIsMainTextEmptyError}
       />

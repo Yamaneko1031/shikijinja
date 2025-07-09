@@ -196,6 +196,7 @@ const EmaSection = (props: SectionProps) => {
         ) : (
           <EmaForm
             initialDeityKey={selectedDeity}
+            initialNickname={props.user?.name ? props.user.name : ''}
             onSubmit={handlePostWish}
             onClose={() => setIsPosting(false)}
           />
