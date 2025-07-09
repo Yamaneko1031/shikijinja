@@ -27,9 +27,8 @@ export default function NadenekoHelp({ handleClose }: Props) {
           </li>
           <li>
             <h3>猫が満足したら終わり</h3>
-            <p>
-              なでなでが続くと、突然「満足にゃ！」といって終わり。…え、もう終わり！？なんて言わないで。
-            </p>
+            <p>なでなでが続くと、突然「満足にゃ！」といって終わり。</p>
+            <p>…え、もう終わり！？なんて言わないで。</p>
             <div className="flex flex-col items-center">
               <Image
                 src="/images/nadeneko/nadeneko_help2.webp"

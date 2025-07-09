@@ -405,7 +405,7 @@ export default function NadenekoSeat({
 
         <Modal
           isOpen={isHelp}
-          className="absolute max-w-[20rem] w-[80vw] min-w-[20rem] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-md border-2 border-gray-200 overscroll-contain"
+          className="absolute max-w-[35rem] w-[80vw] min-w-[20rem] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-md border-2 border-gray-200 overscroll-contain"
           handleOutsideClick={() => setIsHelp(false)}
         >
           <NadenekoHelp handleClose={() => setIsHelp(false)} />
