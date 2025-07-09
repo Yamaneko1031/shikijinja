@@ -39,6 +39,9 @@ export default function HelpToku({ onClose }: Props) {
                 <p>なで猫をなでる（1日1回）</p>
               </li>
               <li>
+                <p>番付を見る（初回のみ）</p>
+              </li>
+              <li>
                 <p>アカウント登録をする（初回のみ）</p>
               </li>
               <li>
