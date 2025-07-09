@@ -34,7 +34,7 @@ export const tokuMaster: TokuMasterData[] = [
     coin: 100,
     permanent: true,
   },
-  { tokuId: 'nadeneko', label: 'なで猫をなでた', limit: 100, coin: 0, permanent: false }, // 特殊抽選
+  { tokuId: 'nadeneko', label: 'なで猫をなでた', limit: 1, coin: 0, permanent: false }, // 特殊抽選
   {
     tokuId: 'nadeneko_first_help',
     label: 'なで猫のヘルプを見た',
