@@ -34,7 +34,6 @@ export default function OmamoriList({
   }, [isLoading, isError, omamoriList]);
 
   const handleNextOmamori = () => {
-    console.log('handleNextOmamori');
     if (!activeOmamori) return;
     const nextIndex = (omamoriIndex + 1) % omamoriList.length;
     setOmamoriIndex(nextIndex);

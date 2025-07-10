@@ -8,8 +8,6 @@ import ReafParticles from '../_shared/ReafParticles';
 import { SectionProps } from '@/types/section';
 
 const TopSection = (props: SectionProps) => {
-  console.log('TopSection', props.isActive, props.isNeighbor);
-
   const toriiScale = useTransform(props.scrollY, [0, 400], [1, 3.5]);
   const toriiOpacity = useTransform(props.scrollY, [100, 500], [1, 0]);
   const titleOpacity = useTransform(props.scrollY, [150, 400], [1, 0]);

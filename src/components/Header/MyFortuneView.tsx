@@ -10,7 +10,6 @@ type Props = {
 };
 
 export default function MyFortuneView({ user, onClose }: Props) {
-  console.log(user);
   const totalCount = user.fortunes.length;
   const totalPower = user.fortunes.reduce((sum, fortune) => sum + fortune.power, 0);
   return (

@@ -22,7 +22,6 @@ import { useLoadImages } from '@/hooks/useLoadImages';
 import OmikujiJobSelector from './OmikujiJobSelector';
 
 const OmikujiSection = (props: SectionProps) => {
-  console.log('OmikujiSection', props.isActive, props.isNeighbor);
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isSelector, setIsSelector] = useState(false);
@@ -126,7 +125,6 @@ const OmikujiSection = (props: SectionProps) => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(bodySave),
         });
-        console.log('omikuji', omikujiResponse);
 
         resultRef.current = omikujiResponse;
         setIsOpen(true);

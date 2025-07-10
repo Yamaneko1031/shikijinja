@@ -13,9 +13,8 @@ import useSWR from 'swr';
 import { ShintakuResponse } from '@/types/shintaku';
 import { apiFetch } from '@/lib/api';
 import ShintakuMessage from '../Sando/ShintakuMessage';
-const ShoukaiSection = (props: SectionProps) => {
-  console.log('ShoukaiSection', props.isActive, props.isNeighbor);
 
+const ShoukaiSection = (props: SectionProps) => {
   const [shoukaiModalOpen, setShoukaiModalOpen] = useState(false);
   const [decalogueModalOpen, setDecalogueModalOpen] = useState(false);
   const scrollRef = useRef(null);

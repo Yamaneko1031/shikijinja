@@ -119,9 +119,6 @@ export const BackgroundManager = forwardRef<BackgroundManagerHandle, Props>((pro
         const shouldRender = url === activeUrl || url === prevUrl || delayedLoad;
         if (!shouldRender) return null;
 
-        // if (url === activeUrl) console.log('activeUrl', bgPosition);
-        // if (url === prevUrl) console.log('prevUrl', prevBgPosition);
-
         return (
           // eslint-disable-next-line @next/next/no-img-element
           <img

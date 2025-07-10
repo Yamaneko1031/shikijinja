@@ -9,7 +9,6 @@ interface Props {
 }
 
 const OmamoriLoading: React.FC<Props> = (props: Props) => {
-  console.log('OmamoriLoading', props.loadingState, props.omamoriData);
   let loadingMessage = '';
   let stopNumber = 0;
 

@@ -16,7 +16,6 @@ type Props = {
 };
 
 const EmaCarousel = forwardRef<HTMLDivElement, Props>((props, ref) => {
-  console.log('EmaCarousel');
   const [isAutoScrollStop, setIsAutoScrollStop] = useState(false);
   const innerRef = useRef<HTMLDivElement>(null);
   useImperativeHandle(ref, () => innerRef.current!);

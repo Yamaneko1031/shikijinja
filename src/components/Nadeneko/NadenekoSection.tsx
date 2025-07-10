@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import TextReveal from '@/components/_shared/TextReveal';
 import { Button } from '../_shared/Button';
 import Image from 'next/image';
@@ -33,12 +33,6 @@ const NadenekoSection = (props: SectionProps) => {
   } = useSWR('/api/nadeneko/ranking', fetcher, {
     revalidateOnFocus: false,
   });
-
-  useEffect(() => {
-    if (rankingData) {
-      console.log(rankingData);
-    }
-  }, [rankingData]);
 
   const handlePet = async () => {
     setIsModalOpen(true);

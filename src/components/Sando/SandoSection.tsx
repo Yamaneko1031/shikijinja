@@ -8,9 +8,8 @@ import ShintakuMessage from './ShintakuMessage';
 import useSWR from 'swr';
 import { apiFetch } from '@/lib/api';
 
+// eslint-disable-next-line
 const SandoSection = (props: SectionProps) => {
-  console.log('SandoSection', props.isActive, props.isNeighbor);
-
   const fetcher = (url: string) => apiFetch<ShintakuResponse>(url).then((res) => res);
   const { data, isLoading, error } = useSWR('/api/shintaku', fetcher, {
     revalidateOnFocus: false,

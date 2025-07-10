@@ -77,11 +77,6 @@ const HaidenSection = (props: SectionProps) => {
       inoriResultText.current =
         saisenData.fortune.name + ' が ' + saisenData.fortune.power + ' 上昇';
 
-      console.log(saisenData.fortunes);
-      console.log('saisenData', saisenData);
-
-      console.log('coin', props.user.coin);
-
       props.handleSetUser({
         ...props.user,
         fortunes: saisenData.fortunes,

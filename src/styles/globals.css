@@ -10,9 +10,9 @@
 @import './texts.css';
 
 /* デバッグ用 */
-section {
-  border: 1px dashed red; /* ← お好みで dashed / solid / dotted */
-}
+/* section {
+  border: 1px dashed red;
+} */
 
 html {
   font-size: 16px; /* デフォルトサイズ */

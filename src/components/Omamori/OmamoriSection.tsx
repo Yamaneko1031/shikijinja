@@ -71,7 +71,6 @@ const OmamoriSection = (props: SectionProps) => {
     const effectPromise = (async () => {
       for (const fortune of omamoriDataRef.current?.fortunes ?? []) {
         await new Promise((resolve) => setTimeout(resolve, 2000));
-        console.log('effect', fortune);
         telop.showPop(`${fortune.name} +${fortune.power} を獲得`);
       }
     })();

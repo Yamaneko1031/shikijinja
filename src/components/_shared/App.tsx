@@ -25,7 +25,6 @@ interface Props {
 }
 
 const App = (props: Props) => {
-  console.log('App');
   const { addLog } = useDebugLog();
 
   const user = useUser(props.initialUser);

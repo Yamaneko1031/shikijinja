@@ -19,7 +19,6 @@ export default function EmaItem({ post, setIsAutoScrollStop, handleTokuGet }: Em
   const bounceTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const handleClick = useCallback(() => {
-    console.log('ema handleClick');
     const popupDuration = getCssDuration('--ema-popup-duration');
     const bounceDuration = getCssDuration('--ema-bounce-duration');
 

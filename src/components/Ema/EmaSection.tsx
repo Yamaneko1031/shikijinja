@@ -16,7 +16,6 @@ import { SectionProps } from '@/types/section';
 import { useLoadImages } from '@/hooks/useLoadImages';
 
 const EmaSection = (props: SectionProps) => {
-  console.log('EmaSection', props.isActive, props.isNeighbor);
   /* ----------------- data ----------------- */
   const {
     displayPosts,

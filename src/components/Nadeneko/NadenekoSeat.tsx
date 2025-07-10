@@ -373,7 +373,6 @@ export default function NadenekoSeat({
             className="w-[1.5rem] h-[1.5rem] bg-white disabled:bg-white/50 rounded-full flex items-center justify-center bg-[url('/images/icon/icon_help.webp')] bg-[length:100%_100%] bg-no-repeat"
             onClick={() => {
               setIsHelp(!isHelp);
-              console.log('click');
             }}
             disabled={isAuto || isHelp || lotData === null}
           ></Button>
@@ -383,9 +382,7 @@ export default function NadenekoSeat({
         <div
           className="absolute nadeneko-area top-[26%] left-[26%] w-[48%] h-[68%]"
           ref={targetAreaRef}
-          onClick={() => {
-            console.log('click');
-          }}
+          onClick={() => {}}
         ></div>
 
         {isAuto && lotData && nadenekoAreaRef && (

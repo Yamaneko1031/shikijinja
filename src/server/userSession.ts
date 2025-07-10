@@ -11,7 +11,6 @@ export const getSessionUser = async () => {
   let guestSession = null;
   // 1. OAuthユーザーならセッションのIDを優先
   if (session?.user) {
-    console.log(session.user);
     const providerAccountId = (session.user as UserWithSub).sub;
     const account = await prisma.account.findFirst({
       where: {
