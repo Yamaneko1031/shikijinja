@@ -4,17 +4,27 @@ import React, { useEffect, useState } from 'react';
 // import Image from 'next/image';
 import { Button } from '../_shared/Button';
 import { OmamoriBase } from '@/types/omamori';
+import { UserItems } from '@/types/user';
 
 type Props = {
   onClose: () => void;
   omamoriList: OmamoriBase[];
   isError: boolean;
   isLoading: boolean;
+  userItems: UserItems | undefined;
 };
 
-export default function OmamoriList({ onClose, omamoriList, isError, isLoading }: Props) {
+export default function OmamoriList({
+  onClose,
+  omamoriList,
+  isError,
+  isLoading,
+  userItems,
+}: Props) {
   const [activeOmamori, setActiveOmamori] = useState<OmamoriBase | null>(null);
   const [omamoriIndex, setOmamoriIndex] = useState<number>(0);
+
+  const isAlready = userItems?.omamori.find((omamori) => omamori.name === activeOmamori?.name);
 
   useEffect(() => {
     if (isLoading) return;
@@ -44,6 +54,14 @@ export default function OmamoriList({ onClose, omamoriList, isError, isLoading }
       {isError && <div>お守りの読込みに失敗しました。</div>}
       {activeOmamori && (
         <>
+          <div className="absolute top-14 left-2">
+            {isAlready ? (
+              <div className="relative text-xs">所持</div>
+            ) : (
+              <div className="relative text-xs text-red-400">未所持</div>
+            )}
+          </div>
+
           <div className="w-full text-xl font-bold text-center">
             {activeOmamori.name}（{activeOmamori.hurigana}）
           </div>

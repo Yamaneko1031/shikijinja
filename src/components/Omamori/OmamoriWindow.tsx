@@ -6,10 +6,12 @@ import Modal from '../_shared/Modal';
 import OmamoriList from './OmamoriList';
 import { useState } from 'react';
 import { useOmamoriList } from '@/hooks/useOmamoriList';
+import { UserItems } from '@/types/user';
 
 interface Props {
   handlePurchase: () => void;
   handleIsEnoughCoin: (tokuId: TokuId) => boolean;
+  userItems: UserItems | undefined;
 }
 
 export default function OmamoriWindow(props: Props) {
@@ -65,6 +67,7 @@ export default function OmamoriWindow(props: Props) {
           omamoriList={omamoriList}
           isError={error}
           isLoading={isLoading}
+          userItems={props.userItems}
         />
       </Modal>
     </div>

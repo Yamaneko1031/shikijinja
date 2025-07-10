@@ -13,7 +13,6 @@ import { apiFetch } from '@/lib/api';
 import Image from 'next/image';
 import { getTokuCoin } from '@/utils/toku';
 import { SectionProps } from '@/types/section';
-import { mutate } from 'swr';
 import { useLoadImages } from '@/hooks/useLoadImages';
 
 const EmaSection = (props: SectionProps) => {
@@ -107,7 +106,7 @@ const EmaSection = (props: SectionProps) => {
         );
       }, getCssDuration('--ema-insert-duration'));
 
-      await mutate('/api/user/items');
+      props.handleMutateUserItems();
     } catch (err) {
       console.error('保存に失敗しました:', err);
       alert('投稿に失敗しました。再度お試しください。');

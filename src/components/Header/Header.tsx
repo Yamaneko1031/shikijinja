@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { User, UserItems } from '@/types/user';
 import HeaderCoinCounter from './HeaderCoinCounter';
-import useSWR from 'swr';
-import { apiFetch } from '@/lib/api';
 import HelpMenu from './HelpMenu';
 import UserMenu from './UserMenu';
 import MenuWindow from '../_shared/MenuWindow';
@@ -13,20 +11,13 @@ interface HeaderProps {
   isInit: boolean;
   handleAddCoin: (coin: number) => void;
   setUser: (user: User) => void;
+  userItems: UserItems | undefined;
+  mutateUserItems: () => void;
 }
 
 const Header: React.FC<HeaderProps> = (props) => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isHelpMenuOpen, setIsHelpMenuOpen] = useState(false);
-
-  const fetcher = (url: string) => apiFetch<UserItems>(url).then((res) => res);
-  const {
-    data: userItems,
-    isLoading: isLoadingUserItems,
-    mutate: mutateUserItems,
-  } = useSWR(props.isInit ? '/api/user/items' : null, fetcher, {
-    revalidateOnFocus: false,
-  });
 
   return (
     <header className="fixed top-0 left-0 w-full h-[3.125rem] min-w-[24rem] bg-white z-60 overscroll-contain">
@@ -37,9 +28,8 @@ const Header: React.FC<HeaderProps> = (props) => {
       >
         <UserMenu
           user={props.user}
-          userItems={userItems}
-          isLoadingUserItems={isLoadingUserItems}
-          mutateUserItems={mutateUserItems}
+          userItems={props.userItems}
+          mutateUserItems={props.mutateUserItems}
           handleCloseMenu={() => setIsUserMenuOpen(false)}
           setUser={props.setUser}
         />

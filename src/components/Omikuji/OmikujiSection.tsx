@@ -18,7 +18,6 @@ import OmikujiButton from './OmikujiButton';
 import { getTokuCoin, getTokuMaster } from '@/utils/toku';
 import { SectionProps } from '@/types/section';
 import Head from 'next/head';
-import { mutate } from 'swr';
 import { useLoadImages } from '@/hooks/useLoadImages';
 import OmikujiJobSelector from './OmikujiJobSelector';
 
@@ -143,7 +142,7 @@ const OmikujiSection = (props: SectionProps) => {
             props.handleTokuUsed('omikuji_nekobiyori');
             break;
         }
-        await mutate('/api/user/items');
+        props.handleMutateUserItems();
       } catch (err) {
         console.error(err);
         alert('おみくじの保存に失敗しました。' + err);

@@ -12,7 +12,6 @@ import OmamoriLoading from './OmamoriLoading';
 import OmamoriModal from './OmamoriModal';
 import { useTelop } from '@/hooks/useTelop';
 import { getTokuMaster } from '@/utils/toku';
-import { mutate } from 'swr';
 import { OmamoriLoadingState } from '@/types/omamori';
 import { useLoadImages } from '@/hooks/useLoadImages';
 
@@ -88,7 +87,7 @@ const OmamoriSection = (props: SectionProps) => {
     setLoadingState('none');
     setOmamoriModalOpen(true);
 
-    await mutate('/api/user/items');
+    props.handleMutateUserItems();
   };
 
   return (
@@ -114,6 +113,7 @@ const OmamoriSection = (props: SectionProps) => {
         <OmamoriWindow
           handlePurchase={handlePurchase}
           handleIsEnoughCoin={props.handleIsEnoughCoin}
+          userItems={props.userItems}
         />
       </div>
 

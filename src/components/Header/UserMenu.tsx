@@ -18,7 +18,6 @@ import MyFortuneView from './MyFortuneView';
 interface Props {
   user: User;
   userItems: UserItems | undefined;
-  isLoadingUserItems: boolean;
   setUser: (user: User) => void;
   mutateUserItems: () => void;
   handleCloseMenu: () => void;
@@ -37,12 +36,9 @@ const UserMenu: React.FC<Props> = (props) => {
   const [renameName, setRenameName] = useState(props.user.name || '');
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const emaCount =
-    props.isLoadingUserItems || props.userItems === undefined ? 0 : props.userItems.ema.length;
-  const omamoriCount =
-    props.isLoadingUserItems || props.userItems === undefined ? 0 : props.userItems.omamori.length;
-  const omikujiCount =
-    props.isLoadingUserItems || props.userItems === undefined ? 0 : props.userItems.omikuji.length;
+  const emaCount = props.userItems === undefined ? 0 : props.userItems.ema.length;
+  const omamoriCount = props.userItems === undefined ? 0 : props.userItems.omamori.length;
+  const omikujiCount = props.userItems === undefined ? 0 : props.userItems.omikuji.length;
 
   const name = props.user.name || '名無し';
 

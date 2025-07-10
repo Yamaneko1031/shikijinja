@@ -1,6 +1,6 @@
 import { MotionValue } from 'framer-motion';
 import { TokuId } from './toku';
-import { User } from './user';
+import { User, UserItems } from './user';
 
 export type SectionData = {
   id: string;
@@ -18,6 +18,7 @@ export type SectionProps = {
   isActive: boolean;
   isNeighbor: boolean;
   user: User;
+  userItems: UserItems | undefined;
   scrollY: MotionValue<number>;
   scrollRatio: MotionValue<number>;
   handleSetUser: (user: User) => void;
@@ -26,4 +27,5 @@ export type SectionProps = {
   handleTokuGet: (tokuId: TokuId, dbUpdate?: boolean) => void;
   handleTokuUsed: (tokuId: TokuId, dbUpdate?: boolean) => void;
   handleIsEnoughCoin: (tokuId: TokuId) => boolean;
+  handleMutateUserItems: () => void;
 };

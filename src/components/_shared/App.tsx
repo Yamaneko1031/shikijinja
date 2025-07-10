@@ -15,6 +15,7 @@ import { useMotionValue, useScroll } from 'framer-motion';
 import Footer from '../Footer/Footer';
 import { remToPx } from '@/lib/size';
 import { useLoadImages } from '@/hooks/useLoadImages';
+import { useUserItems } from '@/hooks/useUsetItems';
 
 interface Props {
   initialUser: User;
@@ -31,6 +32,7 @@ const App = (props: Props) => {
   const userRef = useRef(user);
   const [state, setState] = useState({ activeId: sections[0].id });
   const [isInit, setIsInit] = useState(false);
+  const { userItems, mutateUserItems } = useUserItems(isInit);
   const containerRef = useRef<HTMLDivElement>(null);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
   const bgManagerRef = useRef<BackgroundManagerHandle>(null);
@@ -189,6 +191,8 @@ const App = (props: Props) => {
           isInit={isInit}
           handleAddCoin={user.handleAddCoin}
           setUser={user.setUser}
+          userItems={userItems}
+          mutateUserItems={mutateUserItems}
         />
 
         {/* 背景画像の管理 */}
@@ -216,6 +220,7 @@ const App = (props: Props) => {
                   isActive={isActive}
                   isNeighbor={isNeighbor}
                   user={user.user}
+                  userItems={userItems}
                   scrollY={scrollY}
                   scrollRatio={isActive ? scrollRatioMotionValue : fallbackScrollRatio}
                   handleAddCoin={user.handleAddCoin}
@@ -224,6 +229,7 @@ const App = (props: Props) => {
                   handleTokuUsed={user.handleTokuUsed}
                   handleIsEnoughCoin={user.handleIsEnoughCoin}
                   handleSetUser={user.setUser}
+                  handleMutateUserItems={mutateUserItems}
                 />
               )}
             </section>
