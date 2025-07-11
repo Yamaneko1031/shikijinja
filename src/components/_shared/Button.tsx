@@ -1,3 +1,4 @@
+import { useGtag } from '@/hooks/useGtag';
 import React from 'react';
 
 // ボタンのバリアントとサイズ定義
@@ -14,6 +15,10 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   className?: string;
   /** 中身 */
   children?: React.ReactNode; // childrenをオプショナルに変更
+  /** クリック時のアクション */
+  onClick?: () => void;
+  /** ラベル */
+  label?: string;
 }
 
 const variantStyles: Record<ButtonVariant, string> = {
@@ -42,13 +47,23 @@ export const Button: React.FC<ButtonProps> = ({
   size = 'md',
   className = '',
   children = null,
+  label,
   ...props
 }) => {
   const baseStyles = 'focus:outline-none';
+  const { event } = useGtag();
+
+  const handleClick = () => {
+    if (label) {
+      event({ action: 'click', category: 'button', label });
+    }
+    props.onClick?.();
+  };
   return (
     <button
       className={`${baseStyles} ${variantStyles[variant as ButtonVariant]} ${sizeStyles[size as ButtonSize]} ${className} cursor-pointer`}
       style={{ minWidth: '2rem', minHeight: '2rem' }} // 最小サイズを指定
+      onClick={handleClick}
       {...props}
     >
       {children}

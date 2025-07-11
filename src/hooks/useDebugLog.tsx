@@ -10,7 +10,8 @@ type DebugLogContextType = {
 
 const DebugLogContext = createContext<DebugLogContextType | undefined>(undefined);
 
-export const DebugLogProvider = ({ children }: { children: ReactNode }) => {
+// 開発環境用のプロバイダー
+const DevelopmentDebugLogProvider = ({ children }: { children: ReactNode }) => {
   const [logs, setLogs] = useState<string[]>([]);
 
   const addLog = useCallback((msg: string) => {
@@ -25,6 +26,21 @@ export const DebugLogProvider = ({ children }: { children: ReactNode }) => {
     </DebugLogContext.Provider>
   );
 };
+
+// 本番環境用のプロバイダー（何もしない）
+const ProductionDebugLogProvider = ({ children }: { children: ReactNode }) => {
+  const mockValue: DebugLogContextType = {
+    logs: [],
+    addLog: () => {},
+    clearLogs: () => {},
+  };
+
+  return <DebugLogContext.Provider value={mockValue}>{children}</DebugLogContext.Provider>;
+};
+
+// 環境に応じてプロバイダーを切り替え
+export const DebugLogProvider =
+  process.env.NODE_ENV === 'production' ? ProductionDebugLogProvider : DevelopmentDebugLogProvider;
 
 export const useDebugLog = (): DebugLogContextType => {
   const ctx = useContext(DebugLogContext);

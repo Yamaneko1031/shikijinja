@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { GoogleAnalytics } from '@next/third-parties/google';
 import { DebugLogProvider } from '@/hooks/useDebugLog';
 import '../styles/globals.css';
 
@@ -17,6 +18,9 @@ export default function RootLayout({
     <html lang="ja" suppressHydrationWarning>
       <body className="font-default antialiased">
         <DebugLogProvider>{children}</DebugLogProvider>
+        {process.env.NODE_ENV === 'production' && process.env.NEXT_PUBLIC_GA_ID && (
+          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+        )}
       </body>
     </html>
   );
