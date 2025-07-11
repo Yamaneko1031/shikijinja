@@ -8,7 +8,7 @@ const REFRESH_TIME = 10000;
 
 type Props = {
   omamoriData: OmamoriDataResponse;
-  handleAdditionalDescriptionUpdate: () => void;
+  handleAdditionalDescriptionUpdate?: () => void;
 };
 
 export default function OmamoriSeat({ omamoriData, handleAdditionalDescriptionUpdate }: Props) {
@@ -16,7 +16,9 @@ export default function OmamoriSeat({ omamoriData, handleAdditionalDescriptionUp
   const isUpdatedRef = useRef(false);
 
   useEffect(() => {
-    if (omamoriData.additionalDescription == '' && !isUpdatedRef.current) {
+    if (!handleAdditionalDescriptionUpdate) {
+      setUpdateMessage('未鑑定');
+    } else if (omamoriData.additionalDescription == '' && !isUpdatedRef.current) {
       setUpdateMessage('鑑定中...');
       isUpdatedRef.current = true;
       handleAdditionalDescriptionUpdate();
