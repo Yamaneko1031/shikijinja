@@ -5,14 +5,31 @@ import { OmamoriDataResponse } from '@/types/omamori';
 import { Button } from '../_shared/Button';
 import OmamoriSeat from '../Omamori/OmamoriSeat';
 import Image from 'next/image';
+import { apiFetch } from '@/lib/api';
 type Props = {
   omamoriResponses: OmamoriDataResponse[];
   onClose: () => void;
+  handleMutateUserItems: () => void;
 };
 
-export default function MyOmamoriView({ omamoriResponses, onClose }: Props) {
+export default function MyOmamoriView({ omamoriResponses, onClose, handleMutateUserItems }: Props) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [rate, setRate] = useState(1);
+
+  const handleOmamoriCommentUpdate = async () => {
+    if (omamoriResponses[currentIndex].additionalDescription == '') {
+      try {
+        await apiFetch<OmamoriDataResponse>('/api/omamori/comment', {
+          method: 'POST',
+          body: JSON.stringify({ omamoriId: omamoriResponses[currentIndex].id }),
+        });
+      } catch (error) {
+        console.error('コメントの取得に失敗しました', error);
+      }
+      handleMutateUserItems();
+    }
+  };
+
   let transformOrigin = `left top`;
   if (rate < 1) {
     transformOrigin = `center center`;
@@ -27,7 +44,10 @@ export default function MyOmamoriView({ omamoriResponses, onClose }: Props) {
             transformOrigin: transformOrigin,
           }}
         >
-          <OmamoriSeat omamoriData={omamoriResponses[currentIndex]} />
+          <OmamoriSeat
+            omamoriData={omamoriResponses[currentIndex]}
+            handleAdditionalDescriptionUpdate={handleOmamoriCommentUpdate}
+          />
         </div>
       </div>
       <div className="fixed w-full bottom-6 m-auto flex flex-row justify-center gap-2">

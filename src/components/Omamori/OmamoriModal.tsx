@@ -14,6 +14,7 @@ type Props = {
   onClose: () => void;
   handleIsLimitOver: (tokuId: TokuId) => boolean;
   handleTokuGet: (tokuId: TokuId) => void;
+  handleOmamoriCommentUpdate: () => void;
 };
 
 export default function OmamoriModal({
@@ -21,6 +22,7 @@ export default function OmamoriModal({
   onClose,
   handleIsLimitOver,
   handleTokuGet,
+  handleOmamoriCommentUpdate,
 }: Props) {
   const [rate, setRate] = useState(1);
 
@@ -58,7 +60,10 @@ export default function OmamoriModal({
             transformOrigin: transformOrigin,
           }}
         >
-          <OmamoriSeat omamoriData={omamoriData} />
+          <OmamoriSeat
+            omamoriData={omamoriData}
+            handleAdditionalDescriptionUpdate={handleOmamoriCommentUpdate}
+          />
         </div>
       </div>
       <div className="fixed w-full bottom-6 m-auto flex flex-row justify-center gap-2">

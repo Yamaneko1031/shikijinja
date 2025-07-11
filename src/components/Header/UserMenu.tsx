@@ -334,6 +334,7 @@ const UserMenu: React.FC<Props> = (props) => {
           <MyOmamoriView
             omamoriResponses={props.userItems?.omamori}
             onClose={() => setIsOmamoriOpen(false)}
+            handleMutateUserItems={props.mutateUserItems}
           />
         </Modal>
       )}

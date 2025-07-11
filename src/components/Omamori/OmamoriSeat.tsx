@@ -1,14 +1,32 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { OmamoriDataResponse } from '@/types/omamori';
 
+const REFRESH_TIME = 10000;
+
 type Props = {
   omamoriData: OmamoriDataResponse;
+  handleAdditionalDescriptionUpdate: () => void;
 };
 
-export default function OmamoriSeat({ omamoriData }: Props) {
+export default function OmamoriSeat({ omamoriData, handleAdditionalDescriptionUpdate }: Props) {
+  const [updateMessage, setUpdateMessage] = useState('');
+  const isUpdatedRef = useRef(false);
+
+  useEffect(() => {
+    if (omamoriData.additionalDescription == '' && !isUpdatedRef.current) {
+      setUpdateMessage('鑑定中...');
+      isUpdatedRef.current = true;
+      handleAdditionalDescriptionUpdate();
+      setTimeout(() => {
+        isUpdatedRef.current = false;
+        setUpdateMessage('');
+      }, REFRESH_TIME);
+    }
+  }, [omamoriData.additionalDescription, handleAdditionalDescriptionUpdate, updateMessage]);
+
   return (
     <div className="relative w-[25rem] h-[42rem] text-black flex flex-col bg-[url('/images/bg_hude/bg_kanteisho.webp')] bg-[length:100%_100%]">
       <div className="absolute top-7 w-full text-md font-bold text-center mb-2">
@@ -43,9 +61,15 @@ export default function OmamoriSeat({ omamoriData }: Props) {
       {/* 効能説明 */}
       <div className="absolute w-[12.5rem] top-88 left-44 flex flex-col justify-start items-start gap-2">
         <div className="text-md font-bold text-left">効能説明</div>
-        <div className="w-full h-[16.5rem] text-sm text-left whitespace-pre-line overflow-y-auto">
-          {omamoriData.additionalDescription}
-        </div>
+        {omamoriData.additionalDescription ? (
+          <div className="w-full h-[16.5rem] text-sm text-left whitespace-pre-line overflow-y-auto">
+            {omamoriData.additionalDescription}
+          </div>
+        ) : (
+          <div className="w-full h-[16.5rem] text-sm text-left whitespace-pre-line overflow-y-auto">
+            {updateMessage}
+          </div>
+        )}
       </div>
     </div>
   );

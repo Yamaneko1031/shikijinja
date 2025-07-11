@@ -18,6 +18,7 @@ import { useLoadImages } from '@/hooks/useLoadImages';
 const OmamoriSection = (props: SectionProps) => {
   const [omamoriModalOpen, setOmamoriModalOpen] = useState(false);
   const [loadingState, setLoadingState] = useState<OmamoriLoadingState>('none');
+  const [omamoriData, setOmamoriData] = useState<OmamoriDataResponse | null>(null);
   const omamoriDataRef = useRef<OmamoriDataResponse | null>(null);
   const telop = useTelop();
   const loadedImagesRef = useRef<HTMLImageElement[]>([]);
@@ -43,19 +44,23 @@ const OmamoriSection = (props: SectionProps) => {
     telop.clear();
     setLoadingState('shuffle');
 
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    omamoriDataRef.current = await apiFetch<OmamoriDataResponse>('/api/omamori/fortune', {
-      method: 'POST',
-    });
-
-    if (!omamoriDataRef.current) {
+    try {
+      omamoriDataRef.current = await apiFetch<OmamoriDataResponse>('/api/omamori/fortune', {
+        method: 'POST',
+      });
+    } catch (error) {
+      console.error(error);
       alert('お守りの作成に失敗しました。');
+      setLoadingState('none');
       return;
     }
-    // お守りコメントAPIを非同期で実行
+
     const commentPromise = apiFetch<OmamoriDataResponse>('/api/omamori/comment', {
       method: 'POST',
       body: JSON.stringify({ omamoriId: omamoriDataRef.current.id }),
+    }).catch((error) => {
+      console.error('コメントの取得に失敗しました', error);
+      return omamoriDataRef.current!;
     });
 
     // 演出
@@ -83,10 +88,25 @@ const OmamoriSection = (props: SectionProps) => {
 
     props.handleTokuUsed('omamori_buy');
 
+    setOmamoriData(omamoriDataRef.current);
     setLoadingState('none');
     setOmamoriModalOpen(true);
 
     props.handleMutateUserItems();
+  };
+
+  const handleOmamoriCommentUpdate = async () => {
+    if (omamoriData?.additionalDescription == '') {
+      try {
+        omamoriDataRef.current = await apiFetch<OmamoriDataResponse>('/api/omamori/comment', {
+          method: 'POST',
+          body: JSON.stringify({ omamoriId: omamoriData.id }),
+        });
+      } catch (error) {
+        console.error('コメントの取得に失敗しました', error);
+      }
+      setOmamoriData(omamoriDataRef.current);
+    }
   };
 
   return (
@@ -137,12 +157,13 @@ const OmamoriSection = (props: SectionProps) => {
         isOpen={omamoriModalOpen}
         className="absolute top-0 left-0 min-h-[100lvh] min-w-[100vw] bg-transparent overscroll-contain"
       >
-        {omamoriDataRef.current && (
+        {omamoriData && (
           <OmamoriModal
-            omamoriData={omamoriDataRef.current}
+            omamoriData={omamoriData}
             onClose={() => setOmamoriModalOpen(false)}
             handleIsLimitOver={props.handleIsLimitOver}
             handleTokuGet={props.handleTokuGet}
+            handleOmamoriCommentUpdate={handleOmamoriCommentUpdate}
           />
         )}
       </Modal>
