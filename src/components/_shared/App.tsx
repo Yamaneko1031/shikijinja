@@ -259,11 +259,13 @@ const App = (props: Props) => {
           handleScrollToSection={scrollToSection}
         />
 
-        <DebugLogDialog
-          user={user.user}
-          handleTokuGet={user.handleTokuGet}
-          handleTokuUsed={user.handleTokuUsed}
-        />
+        {process.env.NODE_ENV !== 'production' && (
+          <DebugLogDialog
+            user={user.user}
+            handleTokuGet={user.handleTokuGet}
+            handleTokuUsed={user.handleTokuUsed}
+          />
+        )}
       </main>
     </>
   );

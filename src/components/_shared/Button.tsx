@@ -48,6 +48,7 @@ export const Button: React.FC<ButtonProps> = ({
   className = '',
   children = null,
   label,
+  onClick,
   ...props
 }) => {
   const baseStyles = 'focus:outline-none';
@@ -57,7 +58,7 @@ export const Button: React.FC<ButtonProps> = ({
     if (label) {
       event({ action: 'click', category: 'button', label });
     }
-    props.onClick?.();
+    onClick?.();
   };
   return (
     <button
