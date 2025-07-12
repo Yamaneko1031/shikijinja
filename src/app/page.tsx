@@ -5,8 +5,61 @@ import { prisma } from '@/server/prisma';
 import { getJapanTodayMidnight } from '@/server/date';
 import { TokuCounts } from '@/types/toku';
 import { getSessionUser } from '@/server/userSession';
+import { headers } from 'next/headers';
+
+// ボット判定関数
+const isBot = (userAgent: string): boolean => {
+  return userAgent === '';
+  // const botPatterns = [
+  //   /googlebot/i,
+  //   /bingbot/i,
+  //   /slurp/i,
+  //   /duckduckbot/i,
+  //   /baiduspider/i,
+  //   /yandexbot/i,
+  //   /facebookexternalhit/i,
+  //   /twitterbot/i,
+  //   /linkedinbot/i,
+  //   /discordbot/i,
+  //   /uptimerobot/i,
+  //   /pingdom/i,
+  //   /crawler/i,
+  //   /spider/i,
+  //   /bot/i
+  // ];
+
+  // return botPatterns.some(pattern => pattern.test(userAgent));
+};
 
 export default async function Page() {
+  // User-Agentを取得
+  const headersList = await headers();
+  const userAgent = headersList.get('user-agent') || '';
+  // console.log(userAgent);
+
+  if (isBot(userAgent)) {
+    // クライアントで使用するユーザー情報を返す
+    const dummyUser = {
+      id: 'dummy',
+      isGuest: true,
+      email: '',
+      name: '',
+      coin: 0,
+      tokuUpdatedAt: '',
+      tokuCounts: {} as TokuCounts,
+      permanentTokuCounts: {} as TokuCounts,
+      fortunes: [],
+    } as User;
+    return (
+      <App
+        initialUser={dummyUser}
+        guestSessionId={''}
+        serverTime={new Date().toISOString()}
+        memo={'bot'}
+      />
+    );
+  }
+
   let memo = '';
   const { user, guestSession, session } = await getSessionUser();
   let workUser = user;
@@ -24,7 +77,7 @@ export default async function Page() {
   // DB上のユーザー情報が取れなかった場合は新規作成
   if (!workUser) {
     workUser = await prisma.user.create({
-      data: { isGuest: true },
+      data: { isGuest: true, userAgent: userAgent },
     });
     memo += `user create: ${workUser.id}`;
 

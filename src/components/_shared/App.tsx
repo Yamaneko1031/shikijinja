@@ -42,6 +42,7 @@ const App = (props: Props) => {
   const { scrollY } = useScroll({ container: containerRef });
   const scrollRatioMotionValue = useMotionValue(0);
   const fallbackScrollRatio = useMotionValue(0);
+  const isBotRef = useRef(false);
 
   const loadedImagesRef = useRef<HTMLImageElement[]>([]);
   const loadedImages = useLoadImages(true, [
@@ -52,6 +53,10 @@ const App = (props: Props) => {
 
   // 初期処理
   useEffect(() => {
+    if (props.memo == 'bot') {
+      isBotRef.current = true;
+      return;
+    }
     addLog(`user init: ${props.memo}`);
     // サーバー時刻情報更新
     localStorage.setItem(
@@ -119,6 +124,9 @@ const App = (props: Props) => {
   }, [user]);
 
   const onSectionChange = useCallback((prevSection: SectionData, nextSection: SectionData) => {
+    if (isBotRef.current) {
+      return;
+    }
     if (prevSection.id === 'top' && nextSection.id !== 'top') {
       if (!userRef.current.handleIsLimitOver('torii_first')) {
         userRef.current.handleTokuGet('torii_first');

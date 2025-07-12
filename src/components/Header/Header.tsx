@@ -68,10 +68,11 @@ const Header: React.FC<HeaderProps> = (props) => {
             </div>
             <div className="flex items-center">
               <button
-                className="h-[2.5rem] w-[2.5rem] flex justify-center items-center hover:bg-gray-100 rounded-md"
+                className="h-[2.5rem] w-[2.5rem] flex justify-center items-center hover:bg-gray-100 rounded-md disabled:opacity-50"
                 onClick={() => {
                   setIsUserMenuOpen(true);
                 }}
+                disabled={!props.isInit}
               >
                 <Image
                   src="/images/icon/icon_user.webp"
