@@ -1,94 +1,60 @@
-'use client';
+// app/omikuji/[id]/page.tsx
+import type { Metadata } from 'next';
+import { prisma } from '@/server/prisma';
+import OmikujiClientPage from './OmikujiClientPage';
+import { headers } from 'next/headers';
 
-import { use, useEffect, useState } from 'react';
-import useSWR from 'swr';
-import { OmikujiResponse } from '@/types/omikuji';
-import { apiFetch } from '@/lib/api';
-import OmikujiSeat from '@/components/Omikuji/OmikujiSeat';
-import Link from 'next/link';
-import { Button } from '@/components/_shared/Button';
-import Image from 'next/image';
-import Modal from '@/components/_shared/Modal';
+type Props = {
+  params: Promise<{ id: string }>;
+};
 
-export default function OmikujiPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
-  const fetcher = (url: string) => apiFetch<OmikujiResponse>(url).then((res) => res);
-  const { data: omikuji, isLoading: isLoadingOmikuji } = useSWR(`/api/omikuji/${id}`, fetcher, {
-    revalidateOnFocus: false,
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
+  const headersList = await headers();
+
+  const host = headersList.get('host') || headersList.get('x-forwarded-host') || 'shiki-jinja.jp';
+  const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https';
+  const baseUrl = `${protocol}://${host}`;
+
+  const omikuji = await prisma.omikujiResult.findUnique({
+    where: { id },
+    include: { user: true },
   });
-  const [rate, setRate] = useState(1);
-  const [isOpenModal, setIsOpenModal] = useState(false);
 
-  let transformOrigin = `left top`;
-  if (rate < 1) {
-    transformOrigin = `center center`;
+  if (!omikuji) {
+    return { title: 'おみくじが見つかりません - 式岐神社' };
   }
 
-  useEffect(() => {
-    if (omikuji) {
-      setIsOpenModal(true);
-    }
-  }, [omikuji]);
+  const fortune = omikuji.fortune;
 
-  return (
-    <div className="fixed top-0 left-0 w-full h-full bg-[url('/images/bg_hude/bg_omikuji.webp')] bg-cover bg-center">
-      <Modal
-        isOpen={isOpenModal}
-        className="absolute top-0 left-0 min-h-[100lvh] min-w-[100vw] bg-transparent overscroll-contain"
-      >
-        <div className="select-none">
-          <div className="min-h-[100lvh] pt-5 flex flex-col items-center">
-            <div
-              className="m-auto pb-20"
-              style={{
-                transform: `scale(${rate})`,
-                transformOrigin: transformOrigin,
-              }}
-            >
-              <div className="">
-                {isLoadingOmikuji ? (
-                  <div className="flex justify-center items-center h-screen">
-                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
-                  </div>
-                ) : omikuji ? (
-                  <div className="flex justify-center">
-                    <OmikujiSeat omikujiResponse={omikuji} />
-                  </div>
-                ) : (
-                  <div className="flex justify-center">
-                    <p>おみくじの結果が見つかりません</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-          <div className="fixed w-full bottom-6 m-auto flex flex-row justify-center gap-2">
-            <Link href="/" prefetch={true}>
-              <Button variant="positive" size="md">
-                神社に行ってみる
-              </Button>
-            </Link>
-            <Button
-              variant="subNatural"
-              size="md"
-              onClick={() => setRate(rate - 0.05)}
-              aria-label="縮小"
-              disabled={rate <= 0.75}
-            >
-              <Image src="/images/icon/icon_glass_minus.svg" alt="縮小" width={24} height={24} />
-            </Button>
-            <Button
-              variant="subNatural"
-              size="md"
-              onClick={() => setRate(rate + 0.05)}
-              aria-label="拡大"
-              disabled={rate >= 1.25}
-            >
-              <Image src="/images/icon/icon_glass_plus.svg" alt="拡大" width={24} height={24} />
-            </Button>
-          </div>
-        </div>
-      </Modal>
-    </div>
-  );
+  return {
+    title: '式岐神社 -shiki jinja-',
+    description:
+      'オンラインで参拝できる神社。IT業界で働く人にご利益があると言い伝えられている神社です。',
+    openGraph: {
+      title: `${fortune}`,
+      description: '式岐神社でおみくじを引きました！',
+      url: `${baseUrl}/omikuji/${id}`,
+      siteName: '式岐神社',
+      images: [
+        {
+          url: `${baseUrl}/api/og/omikuji?id=${id}`,
+          width: 1200,
+          height: 630,
+          alt: 'おみくじ結果',
+        },
+      ],
+      locale: 'ja_JP',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${fortune}`,
+      description: '式岐神社でおみくじを引きました！',
+    },
+  };
+}
+
+export default function OmikujiPage({ params }: Props) {
+  return <OmikujiClientPage params={params} />;
 }
