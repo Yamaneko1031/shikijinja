@@ -19,7 +19,12 @@ export default function OmikujiJobSelector({ onSelect, onCancel }: OmikujiSelect
   useEffect(() => {
     if (selectedOption === 'other') {
       if (textareaRef.current) {
-        textareaRef.current.focus();
+        textareaRef.current.blur();
+        requestAnimationFrame(() => {
+          if (textareaRef.current) {
+            textareaRef.current.focus();
+          }
+        });
       }
     } else {
       const job = omikujiJobRadioOptions.find((option) => option.value === selectedOption)?.label;
