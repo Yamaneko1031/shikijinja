@@ -48,10 +48,10 @@ export default function OmikujiJobSelector({ onSelect, onCancel }: OmikujiSelect
           maxLength={20}
           rows={1}
           value={jobInput}
-          onChange={(e) => setJobInput(e.target.value)}
-          onClick={() => {
-            if (selectedOption !== 'other') {
-              setSelectedOption('other');
+          onChange={(e) => {
+            setJobInput(e.target.value);
+            if (e.target.value.length > 12) {
+              e.target.value = e.target.value.slice(0, 12);
             }
           }}
           readOnly={selectedOption !== 'other'}
