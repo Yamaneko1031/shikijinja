@@ -20,11 +20,11 @@ export default function OmikujiJobSelector({ onSelect, onCancel }: OmikujiSelect
     if (selectedOption === 'other') {
       if (textareaRef.current) {
         textareaRef.current.blur();
-        requestAnimationFrame(() => {
+        setTimeout(() => {
           if (textareaRef.current) {
             textareaRef.current.focus();
           }
-        });
+        }, 100);
       }
     } else {
       const job = omikujiJobRadioOptions.find((option) => option.value === selectedOption)?.label;
@@ -57,6 +57,11 @@ export default function OmikujiJobSelector({ onSelect, onCancel }: OmikujiSelect
             setJobInput(e.target.value);
             if (e.target.value.length > 12) {
               e.target.value = e.target.value.slice(0, 12);
+            }
+          }}
+          onClick={() => {
+            if (selectedOption !== 'other') {
+              setSelectedOption('other');
             }
           }}
           readOnly={selectedOption !== 'other'}
