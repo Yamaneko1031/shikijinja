@@ -10,7 +10,7 @@ import { SectionProps } from '@/types/section';
 const TopSection = (props: SectionProps) => {
   const toriiScale = useTransform(props.scrollY, [0, 400], [1, 3.5]);
   const toriiOpacity = useTransform(props.scrollY, [100, 500], [1, 0]);
-  const titleOpacity = useTransform(props.scrollY, [150, 400], [1, 0]);
+  const titleOpacity = useTransform(props.scrollY, [0, 120], [1, 0]);
 
   const [suzumeAnimationClass1, setSuzumeAnimationClass1] = useState('hidden');
   const [suzumeAnimationClass2, setSuzumeAnimationClass2] = useState('hidden');
