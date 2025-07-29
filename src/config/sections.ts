@@ -31,7 +31,7 @@ export const sections: SectionData[] = [
     name: 'なで猫の社',
     overlayText: 'なで猫の社',
     component: NadenekoSection,
-    jumpOffset: 12,
+    jumpOffset: 14,
     scrollEffect: [
       { ratio: 0.0, posX: 45, posY: 50, zoom: 1.0 },
       { ratio: 0.4, posX: 52, posY: 50, zoom: 1.15 },
@@ -48,7 +48,7 @@ export const sections: SectionData[] = [
     name: '絵馬掛所',
     overlayText: '絵馬掛所',
     component: EmaSection,
-    jumpOffset: 12,
+    jumpOffset: 14,
     scrollEffect: [
       { ratio: 0.0, posX: 30, posY: 50, zoom: 1.0 },
       { ratio: 0.5, posX: 50, posY: 50, zoom: 1.1 },
@@ -64,7 +64,7 @@ export const sections: SectionData[] = [
     name: '授与所',
     overlayText: '授与所',
     component: OmamoriSection,
-    jumpOffset: 12,
+    jumpOffset: 14,
     scrollEffect: [
       { ratio: 0.0, posX: 30, posY: 50, zoom: 1.0 },
       { ratio: 0.5, posX: 55, posY: 50, zoom: 1.1 },
@@ -80,7 +80,7 @@ export const sections: SectionData[] = [
     name: 'おみくじ結び所',
     overlayText: 'おみくじ結び所',
     component: OmikujiSection,
-    jumpOffset: 12,
+    jumpOffset: 14,
     scrollEffect: [
       { ratio: 0.0, posX: 40, posY: 50, zoom: 1.0 },
       { ratio: 0.4, posX: 52, posY: 50, zoom: 1.2 },
@@ -112,7 +112,7 @@ export const sections: SectionData[] = [
     name: '拝殿',
     overlayText: '拝殿',
     component: HaidenSection,
-    jumpOffset: 12,
+    jumpOffset: 14,
     scrollEffect: [
       { ratio: 0.0, posX: 50, posY: 50, zoom: 1.0 },
       { ratio: 0.5, posX: 50, posY: 50, zoom: 1.5 },
