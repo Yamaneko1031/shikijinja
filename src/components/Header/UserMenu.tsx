@@ -91,12 +91,14 @@ const UserMenu: React.FC<Props> = (props) => {
           onClick={() => setIsRenameOpen(true)}
           disabled={loading}
         >
-          <Image src="/images/icon/icon_hude.webp" alt="edit_icon" width={24} height={24} />
+          <div className="w-full flex flex-row items-center justify-center">
+            <Image src="/images/icon/icon_hude.webp" alt="edit_icon" width={24} height={24} />
+            <div className="relative w-[10rem]">
+              <div className="w-full text-black text-center">{name ? name : '名無し'}</div>
+              <div className="absolute top-[1.5rem] left-0 w-full border-t border-black"></div>
+            </div>
+          </div>
         </Button>
-        <div className="relative w-[10rem]">
-          <div className="w-full text-black text-center">{name ? name : '名無し'}</div>
-          <div className="absolute top-[1.5rem] left-0 w-full border-t border-black"></div>
-        </div>
       </div>
       <div className="w-full border-t border-gray-200 my-4"></div>
       {session ? (
