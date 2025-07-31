@@ -66,7 +66,7 @@ const NadenekoSection = (props: SectionProps) => {
             <TextReveal
               text="（じー・・・）"
               delayPerChar={0.1}
-              className="text-xl md:text-2xl font-bold"
+              className="text-xl md:text-2xl font-bold text-shadow"
             />
           </div>
           <div className="absolute bottom-0 right-0 w-[12.5rem]">
@@ -80,7 +80,7 @@ const NadenekoSection = (props: SectionProps) => {
         </div>
 
         <div className="relative w-full bg-black/50 rounded-lg flex flex-col items-center gap-2 p-4">
-          <div className="w-full text-xl flex flex-col items-start">
+          <div className="w-full text-xl flex flex-col items-start text-shadow">
             <p>なでるとご利益があるとされている「なでねこ像」</p>
             {props.handleIsLimitOver('nadeneko') ? (
               <p>満足そうにしている気がします。</p>

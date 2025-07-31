@@ -116,12 +116,12 @@ const HaidenSection = (props: SectionProps) => {
               <TextReveal
                 text="拝殿。神様に祈りを捧げるための場所です。"
                 delayPerChar={0.1}
-                className="text-xl md:text-2xl font-bold"
+                className="text-xl md:text-2xl font-bold text-shadow"
               />
             </div>
           </div>
 
-          <div className="relative w-full bg-black/50 rounded-lg flex flex-col items-center gap-2 p-4">
+          <div className="relative w-full bg-black/50 rounded-lg flex flex-col items-center gap-2 p-4 text-shadow">
             <div className="w-full text-xl flex flex-col gap-4 items-start">
               賽銭を投げてお祈りをしましょう。信じる者は救われるかも。
             </div>

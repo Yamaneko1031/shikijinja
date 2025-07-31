@@ -68,7 +68,7 @@ const ShoukaiSection = (props: SectionProps) => {
             <TextReveal
               text="資料があるにゃ！"
               delayPerChar={0.1}
-              className="text-xl md:text-2xl font-bold"
+              className="text-xl md:text-2xl font-bold text-shadow"
             />
           </div>
           <div className="absolute bottom-0 right-0 w-[12.5rem]">
@@ -82,7 +82,7 @@ const ShoukaiSection = (props: SectionProps) => {
         </div>
 
         <div className="relative w-full bg-black/50 rounded-lg flex flex-col items-center gap-2 p-4">
-          <div className="w-full text-xl flex flex-col gap-4 items-start">
+          <div className="w-full text-xl flex flex-col gap-4 items-start text-shadow">
             式岐神社に祭られている神様の文献が置かれています。
           </div>
           <Button

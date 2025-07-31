@@ -3,6 +3,7 @@
   background-color: #358019;
   color: #ffffff;
   border: 2px solid #275a15;
+  text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.8);
 }
 
 .btn-positive:hover {
@@ -22,6 +23,7 @@
   @apply rounded-md;
   background-color: #8e2c16;
   color: #ffffff;
+  text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.8);
 }
 
 .btn-negative:hover {

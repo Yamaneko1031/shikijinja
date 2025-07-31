@@ -124,7 +124,7 @@ const EmaSection = (props: SectionProps) => {
             <TextReveal
               text="願い事を書いていくにゃ！"
               delayPerChar={0.1}
-              className="text-xl md:text-2xl font-bold"
+              className="text-xl md:text-2xl font-bold text-shadow"
             />
           </div>
           <div className="absolute bottom-0 right-0 w-[12.5rem]">

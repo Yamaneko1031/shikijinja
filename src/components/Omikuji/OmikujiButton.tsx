@@ -15,7 +15,7 @@ type Props = {
 export default function OmikujiButton({ title, imagePath, imageAlt, onClick, type, coin }: Props) {
   return (
     <div className="w-full max-w-md">
-      <div className="flex flex-row justify-center items-end">
+      <div className="flex flex-row justify-center items-end text-shadow">
         <div className="text-xl font-bold">{title}</div>
         <div className="text-sm font-bold">の運勢</div>
       </div>
@@ -30,7 +30,7 @@ export default function OmikujiButton({ title, imagePath, imageAlt, onClick, typ
         <div className="text-xl font-bold">引く</div>
         <div className="flex flex-row items-center">
           <Image src="/images/icon/icon_coin.webp" alt="omikuji_button" width={24} height={24} />
-          <div className="text-sm text-white font-bold">{coin}消費</div>
+          <div className="text-sm text-white font-bold text-shadow">{coin}消費</div>
         </div>
       </Button>
     </div>

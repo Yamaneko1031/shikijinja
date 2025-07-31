@@ -31,7 +31,7 @@ export default function OmamoriWindow(props: Props) {
 
   return (
     <div className="relative w-full bg-black/50 rounded-lg flex flex-col items-center gap-2 p-4">
-      <div className="text-xl flex flex-col gap-4 items-start">
+      <div className="text-xl flex flex-col gap-4 items-start text-shadow">
         <p>
           みこ猫があなたに必要なお守りを（適当に）選び、そのお守りに祈りを捧げることで様々な効能を付与してくれます。
         </p>
