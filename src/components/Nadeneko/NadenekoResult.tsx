@@ -10,6 +10,8 @@ type Props = {
 };
 
 export default function NadenekoResult({ lotData }: Props) {
+  // const [loading, setLoading] = useState(false);
+
   const rank =
     nadenekoRank.find((rank) => rank.coin > lotData.totalAddCoin) ??
     nadenekoRank[nadenekoRank.length - 1];

@@ -9,6 +9,7 @@ export const tokuIds = [
   'bantuke',
   'nadeneko',
   'nadeneko_first_help',
+  'nadeneko_first_result',
   'omamori_buy',
   'regist_reward',
   'saisen',

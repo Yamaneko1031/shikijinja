@@ -42,6 +42,13 @@ export const tokuMaster: TokuMasterData[] = [
     coin: 0,
     permanent: true,
   },
+  {
+    tokuId: 'nadeneko_first_result',
+    label: 'なで猫の結果を見た',
+    limit: 1,
+    coin: 0,
+    permanent: true,
+  },
   { tokuId: 'omamori_buy', label: 'お守りを購入', limit: 10, coin: 500, permanent: false },
   {
     tokuId: 'regist_reward',
